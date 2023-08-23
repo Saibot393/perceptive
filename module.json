@@ -1,0 +1,38 @@
+{
+  "id": "perceptive",
+  "title": "Perceptive",
+  "description": "A small module to handle peaking through door locks.",
+  "authors": [
+    {
+    "name": "saibot"
+    }
+  ],
+  "version": "0.0.0",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "11"
+  },
+  "socket": "true",
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json",
+      "flags": {}
+    },
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "lang/de.json",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+  ],
+  "url": "https://github.com/Saibot393/perceptive",
+  "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v1.9.4.zip",
+  "manifest": "https://github.com/Saibot393/perceptive/releases/latest/download/module.json",
+  "readme": "https://github.com/Saibot393/perceptive/blob/main/README.md",
+  "changelog": "https://github.com/Saibot393/perceptive/blob/main/CHANGELOG.md",
+  "allowBugReporter": true
+}
