@@ -28,6 +28,10 @@
     }
   ],
   "esmodules": [
+	"scripts/helpers/PerceptiveMouseHandler.js",
+	"scripts/helpers/PerceptiveFlags.js",
+	"scripts/PeekingScript.js",
+	"scripts/DoorMovingScript.js"
   ],
   "url": "https://github.com/Saibot393/perceptive",
   "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v1.9.4.zip",

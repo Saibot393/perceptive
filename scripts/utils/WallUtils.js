@@ -1,0 +1,132 @@
+import {GeometricUtils} from "./GeometricUtils.js";
+import {cModuleName} from "./PerceptiveUtils.js";
+
+const cisPerceptiveWall = "isPerceptiveWall";
+const cisPerceptiveWallstring = '{"' + cModuleName + '" : {"' + cisPerceptiveWall + '" : "true"}}';
+const cisPerceptiveWallData = JSON.parse(cisPerceptiveWallstring);
+
+class WallUtils {
+	//IMPLEMENTATIONS
+	//basics
+	static isLocked(pDoor) {} //returns of pDoor is locked
+	
+	static isDoor(pWall) {} //returns if pWall is door
+	
+	static isOpened(pDoor) {} //returns of pDoor is locked
+	
+	static openDoor(pDoor) {} //open pDoor
+	
+	static deletewall(pWall) {} //deletes pWall (only if it is a perceptive wall)
+	
+	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {} //created a new wall
+	
+	static async clonedoorasWall(pDoor, pRenderable = true) {} //creates copy of pDoor as wall
+	
+	static async syncWallfromDoor(pDoor, pWall) {} //synchs the setting of pWall to that of pDoor
+	
+	//calculations
+	static cornerposition(pWallPosition) {} //returns the corners of pWallPosition
+	
+	static wallposition(pCornerA, pCornerB) {} //returns the wall position belonging to the corners
+	
+	static calculateSlide(pOriginalPosition, pSlideState) {} //returns a new position of wall, pSlideState is a 2d-array discribing the percentage of the left and right point
+	
+	static calculateSwing(pOriginalPosition, pSwingState, phinge) {} //returns a new position of wall, phinge is corner around which pSwing is applied
+	
+	//DECLARATIONS
+	//basics
+	static isLocked(pDoor) {
+		return pDoor.ds == 2;
+	}
+	
+	static isDoor(pWall) {
+		return pWall.door == 1;
+	}
+	
+	static isOpened(pDoor) {
+		return pDoor.ds == 1;
+	}
+	
+	static openDoor(pDoor) {
+		pDoor.update({ds : 1});
+	}
+	
+	static deletewall(pWall) {
+		if (pWall.flags && pWall.flags[cModuleName] && pWall.flags[cModuleName][cisPerceptiveWall]) {
+			pWall.delete();
+		}
+	}
+	
+	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {
+		let vSettings = {...pSetting};
+		
+		vSettings["c"] = pPosition;
+		
+		vSettings["flags"] = cisPerceptiveWallData;
+		
+		vSettings["renderable"] = pRenderable;
+		
+		return await WallDocument.createDocuments([vSettings], {parent : pScene});
+	}
+	
+	static async clonedoorasWall(pDoor, pRenderable = true) {
+		let vData = {...pDoor};
+		
+		vData["door"] = 0;
+		
+		return (await WallUtils.createperceptivewall(pDoor.parent, pDoor.c, vData, pRenderable))[0];
+	}
+	
+	static async syncWallfromDoor(pDoor, pWall) {
+		let vData = {...pDoor};
+		
+		vData["door"] = 0;
+		
+		await pWall.update({vData});
+	}
+	
+	//calculations
+	static cornerposition(pWallPosition) {
+		return [[pWallPosition[0], pWallPosition[1]],[pWallPosition[2], pWallPosition[3]]];
+	}
+	
+	static wallposition(pCornerA, pCornerB) {
+		return [pCornerA[0], pCornerA[1], pCornerB[0], pCornerB[1]];
+	}
+	
+	static calculateSlide(pOriginalPosition, pSlideState, phinge) {
+		let vOriginalState = WallUtils.cornerposition(pOriginalPosition);
+		
+		let vWallLine = GeometricUtils.Difference(vOriginalState[1], vOriginalState[0]);
+		
+		switch (phinge) {
+			case 0:
+				return WallUtils.wallposition(vOriginalState[0], GeometricUtils.Summ(vOriginalState[0], GeometricUtils.scale(vWallLine, pSlideState)));
+				break;
+			case 1:
+				return WallUtils.wallposition(GeometricUtils.Summ(vOriginalState[1], GeometricUtils.scale(vWallLine, -pSlideState)), vOriginalState[1]);
+				break;
+			default:
+				return pOriginalPosition;
+		}
+	}
+	
+	static calculateSwing(pOriginalPosition, pSwingState, phinge) {
+		let vOriginalState = WallUtils.cornerposition(pOriginalPosition);
+		
+		let vWallLine = GeometricUtils.Difference(vOriginalState[1], vOriginalState[0]);
+
+		switch (phinge) {
+			case 0:
+				return WallUtils.wallposition(vOriginalState[0], GeometricUtils.Summ(vOriginalState[0], GeometricUtils.Rotated(vWallLine, pSwingState)));
+				break;
+			case 1:
+				return WallUtils.wallposition(GeometricUtils.Summ(vOriginalState[1], GeometricUtils.Rotated(GeometricUtils.scale(vWallLine, -1), pSwingState)), vOriginalState[1]);
+				break;
+			default:
+				return pOriginalPosition;
+		}
+	}
+}
+
+export {WallUtils, cisPerceptiveWall}
