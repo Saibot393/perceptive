@@ -2,7 +2,7 @@ import {GeometricUtils} from "./GeometricUtils.js";
 import {cModuleName} from "./PerceptiveUtils.js";
 
 const cisPerceptiveWall = "isPerceptiveWallFlag";
-const cisPerceptiveWallstring = '{"' + cModuleName + '" : {"' + cisPerceptiveWall + '" : "true"}}';
+const cisPerceptiveWallstring = '{"' + cModuleName + '" : {"' + cisPerceptiveWall + '" : true}}';
 const cisPerceptiveWallData = JSON.parse(cisPerceptiveWallstring);
 
 class WallUtils {
@@ -21,6 +21,8 @@ class WallUtils {
 	static deletewall(pWall) {} //deletes pWall (only if it is a perceptive wall)
 	
 	static hidewall(pWall) {} //makes sure, that pWall has no restrictions
+	
+	static makewalltransparent(pWall) {} //sets wall to be transparent for light, sound and vision
 	
 	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {} //created a new wall
 	
@@ -69,6 +71,10 @@ class WallUtils {
 		pWall.update({move : 0, sight : 0, light : 0, sound : 0});
 	} 
 	
+	static makewalltransparent(pWall) {
+		pWall.update({sight : 0, light : 0, sound : 0});
+	} 
+	
 	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {
 		let vSettings = {...pSetting};
 		
@@ -98,7 +104,7 @@ class WallUtils {
 		
 		//delete some stuff
 		delete vData._object;
-		delete vData.flags;
+		delete vData.flags.perceptive;
 		delete vData.ds;
 		delete vData._destroyed;
 		delete vData.doorSound;

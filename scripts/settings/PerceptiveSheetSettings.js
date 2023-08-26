@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, cHingePositions} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -17,53 +17,65 @@ class PerceptiveSheetSettings {
 	//IMPLEMENTATIONS
 	
 	static WallSheetSettings(pApp, pHTML, pData) {
-		//setup
-		let vprevElement = pHTML.find(`fieldset.door-options`);
-		if (!vprevElement.length) {
-			//if door options was not found, try other search
-			vprevElement = pHTML.find(`select[name="ds"]`).closest(".form-group");
-		}
-		
-		
-		let vNewSection = `	<fieldset class="${cModuleName}-options">
-								<legend><i class="${cPerceptiveIcon}"></i> ${Translate("Titles."+cModuleName)}</legend>
-							</fieldset>`;
-							
-		vprevElement.after(vNewSection);
-		
-		//wall movement type
-		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
-													vhint : Translate("SheetSettings."+ cDoorMovementF +".descrp"), 
-													vtype : "select", 
-													voptions : cDoorMoveTypes,
-													vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
-													vflagname : cDoorMovementF
-													}, `fieldset.${cModuleName}-options`);
+		if (!PerceptiveFlags.isPerceptiveWall(pApp.document)) {
+			//setup
+			let vprevElement = pHTML.find(`fieldset.door-options`);
+			if (!vprevElement.length) {
+				//if door options was not found, try other search
+				vprevElement = pHTML.find(`select[name="ds"]`).closest(".form-group");
+			}
+			
+			
+			let vNewSection = `	<fieldset class="${cModuleName}-options">
+									<legend><i class="${cPerceptiveIcon}"></i> ${Translate("Titles."+cModuleName)}</legend>
+								</fieldset>`;
+								
+			vprevElement.after(vNewSection);
+			
+			//wall movement type
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
+														vhint : Translate("SheetSettings."+ cDoorMovementF +".descrp"), 
+														vtype : "select", 
+														voptions : cDoorMoveTypes,
+														vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
+														vflagname : cDoorMovementF
+														}, `fieldset.${cModuleName}-options`);
 
-		//wall hinge position
-		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
-													vhint : Translate("SheetSettings."+ cDoorHingePositionF +".descrp"), 
-													vtype : "select", 
-													voptions : cHingePositions,
-													vvalue : PerceptiveFlags.DoorHingePosition(pApp.document), 
-													vflagname : cDoorHingePositionF
-													}, `fieldset.${cModuleName}-options`);
-											
-		//wall swing speed
-		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingSpeedF +".name"), 
-													vhint : Translate("SheetSettings."+ cDoorSwingSpeedF +".descrp"), 
-													vtype : "number", 
-													vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
-													vflagname : cDoorSwingSpeedF
-													}, `fieldset.${cModuleName}-options`);
-													
-		//wall slide speed
-		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSlideSpeedF +".name"), 
-													vhint : Translate("SheetSettings."+ cDoorSlideSpeedF +".descrp"), 
-													vtype : "number", 
-													vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
-													vflagname : cDoorSlideSpeedF
-													}, `fieldset.${cModuleName}-options`);
+			//wall hinge position
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
+														vhint : Translate("SheetSettings."+ cDoorHingePositionF +".descrp"), 
+														vtype : "select", 
+														voptions : cHingePositions,
+														vvalue : PerceptiveFlags.DoorHingePosition(pApp.document), 
+														vflagname : cDoorHingePositionF
+														}, `fieldset.${cModuleName}-options`);
+												
+			//wall swing speed
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingSpeedF +".name"), 
+														vhint : Translate("SheetSettings."+ cDoorSwingSpeedF +".descrp"), 
+														vtype : "number", 
+														//vrange : cSwingSpeedRange,
+														vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
+														vflagname : cDoorSwingSpeedF
+														}, `fieldset.${cModuleName}-options`);
+														
+			//wall slide speed
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSlideSpeedF +".name"), 
+														vhint : Translate("SheetSettings."+ cDoorSlideSpeedF +".descrp"), 
+														vtype : "number", 
+														//vrange : cSlideSpeedRange,
+														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
+														vflagname : cDoorSlideSpeedF
+														}, `fieldset.${cModuleName}-options`);
+														
+			//wall can be lockpeeked
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
+														vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 
+														vtype : "checkbox", 
+														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
+														vflagname : ccanbeLockpeekedF
+														}, `fieldset.${cModuleName}-options`);
+		}
 	}
 	
 	//support
@@ -111,6 +123,11 @@ class PerceptiveSheetSettings {
 		let voptions = [];
 		if (pInfos.hasOwnProperty("voptions")) {
 			voptions = pInfos.voptions;
+		} 
+		
+		let vrange = [0, 0];
+		if (pInfos.hasOwnProperty("vrange")) {
+			vrange = pInfos.vrange;
 		} 
 		
 		let vnewHTML = ``;
@@ -162,6 +179,9 @@ class PerceptiveSheetSettings {
 				}
 				
 				vnewHTML = vnewHTML + `</select>`;
+				break;
+			case "range":
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}">`;
 				break;
 			case "numberpart":
 				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}"><label>/</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}">`;

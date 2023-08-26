@@ -99,11 +99,14 @@ class DoorMovingManager {
 			}	
 		}
 		else {
+			/*
 			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
 			
 			if (vreplacementWall) {
 				WallUtils.deletewall(vreplacementWall);
 			}
+			*/
+			PerceptiveFlags.deleteMovingWall(pDoor);
 		}
 	}
 	
@@ -123,11 +126,14 @@ class DoorMovingManager {
 	}
 	
 	static onDeleteWall(pWall) {
+		PerceptiveFlags.deleteMovingWall(pWall);
+		/*
 		let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pWall), pWall.parent);
 		
 		if (vreplacementWall) {
 			WallUtils.deletewall(vreplacementWall);
-		}		
+		}
+*/		
 	}
 }
 

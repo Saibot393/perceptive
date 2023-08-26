@@ -9,6 +9,12 @@ const cDoorScrollsTurnoff = {
 	default : true
 } //keys at which canvas scrolling is turned off when a door control is hovered
 
+const cDoorRClickTurnoff = {
+	shiftKey : false,
+	ctrlKey : true,
+	altKey : false
+} //keys at which canvas scrolling is turned off when a door control is hovered
+
 //takes care of additional mouse handling
 class PerceptiveMouseHandler {
 	//DECLARATIONS
@@ -16,7 +22,7 @@ class PerceptiveMouseHandler {
 	static RegisterControls() {} //call all register functions
 	
 	//doors
-	static RegisterDoorLeftClick() {} //register Door leftclick
+	static RegisterDoorRightClick() {} //register Door reicht click
 	
 	static RegisterDoorWheel() {} //register Door Mousewheel
 	
@@ -24,7 +30,7 @@ class PerceptiveMouseHandler {
 	static RegisterCanvasWheel() {} //register Door Mousewheel
 	
 	//ons
-	static onDoorLeftClick(pDoorEvent, pWall) {} //called if Door is left clicked
+	static onDoorRightClick(pDoorEvent, pWall) {} //called if Door is left clicked
 	
 	static onDoorWheel(pDoorEvent, pWall) {} //called if Door is wheeled
 	
@@ -33,7 +39,7 @@ class PerceptiveMouseHandler {
 	//IMPLEMENTATIONS
 	//registers
 	static RegisterControls() {
-		PerceptiveMouseHandler.RegisterDoorLeftClick();
+		PerceptiveMouseHandler.RegisterDoorRightClick();
 		
 		PerceptiveMouseHandler.RegisterDoorWheel();
 		
@@ -41,22 +47,27 @@ class PerceptiveMouseHandler {
 	}
 	
 	//doors
-	static RegisterDoorLeftClick() {
-		const vOldDoorCall = DoorControl.prototype.onclick;
-		
-		DoorControl.prototype.onclick = function (pEvent) {
-			PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall);
+	static RegisterDoorRightClick() {
+		//register onDoorRightClick (if possible with lib-wrapper)
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorRightClick(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+		}
+		else {
+			const vOldDoorCall = DoorControl.prototype._onRightDown;
 			
-			if (vOldDoorCall) {
-				let vDoorCallBuffer = vOldDoorCall.bind(this);
-				vDoorCallBuffer(pEvent);
+			DoorControl.prototype._onRightDown = function (pEvent) {
+				if (PerceptiveMouseHandler.onDoorRightClick(pEvent, this.wall)) {
+				
+					let vDoorCallBuffer = vOldDoorCall.bind(this);
+					vDoorCallBuffer(pEvent);
+				}
 			}
-		}	
-	}
+		}		
+	} 
 	
 	static RegisterDoorWheel() {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPED");
 		}
 		else {
 			const vOldDoorCall = DoorControl.prototype.onwheel;
@@ -92,8 +103,15 @@ class PerceptiveMouseHandler {
 	}
 	
 	//ons	
-	static onDoorLeftClick(pDoorEvent, pWall) {
-		Hooks.callAll(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
+	static onDoorRightClick(pDoorEvent, pWall) {
+		Hooks.callAll(cModuleName + "." + "DoorRClick", pWall.document, FCore.keysofevent(pDoorEvent));
+		
+		if ((pDoorEvent.shiftKey && cDoorRClickTurnoff.shiftKey) || (pDoorEvent.ctrlKey && cDoorRClickTurnoff.ctrlKey) || (pDoorEvent.altKey && cDoorRClickTurnoff.altKey)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	static onDoorWheel(pDoorEvent, pWall) {

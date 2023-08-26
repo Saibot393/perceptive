@@ -19,6 +19,8 @@ class PerceptiveUtils {
 	
 	static WallsfromIDs(pIDs, pScene = null) {} //returns the Wall matching pID
 	
+	static IDsfromWalls(pWalls) {} //returns IDs of pWalls
+	
 	static hoveredWall() {} //get first hovered wall
 	
 	static hoveredObject() {} //get first hovered object
@@ -120,6 +122,10 @@ class PerceptiveUtils {
 	
 	static WallsfromIDs(pIDs, pScene = null) {
 		return pIDs.map(vID => PerceptiveUtils.WallfromID(vID, pScene));
+	}
+	
+	static IDsfromWalls(pWalls) {
+		return pWalls.map(vWall => vWall.id);
 	}
 	
 	//Token Controls

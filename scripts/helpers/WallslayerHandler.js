@@ -1,6 +1,6 @@
 import {PerceptiveFlags} from "./PerceptiveFlags.js";
 
-const cPerceptiveWallsInvisible = false;
+const cPerceptiveWallsInvisible = true;
 
 //hooks
 Hooks.on("deactivateWallsLayer", () => {
