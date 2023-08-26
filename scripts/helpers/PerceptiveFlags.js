@@ -8,6 +8,10 @@ const cLockSize = 0.01; //size of locks
 
 const ccanbeLockpeekedbyStandard = true;
 
+const cDoorMoveTypes = ["none", "slide", "swing"];
+const cHingePositions = [0, 1];
+
+export {cDoorMoveTypes, cHingePositions}
 //Flags
 const cisPerceptiveWallF = cisPerceptiveWall; //if this wall was created by this module
 const ccanbeLockpeekedF = "canbeLockpeekedFlag"; //Flag that signals, that this wall can be lock peeked
@@ -15,8 +19,14 @@ const cLockPeekingWallIDsF = "LockPeekingWallIDsFlag"; //Flag for ids of the Loc
 const cLockpeekedbyF = "LockpeekedbyFlag"; //Flag that stores ids of tokens lock peeking this wall
 const cisLockPeekingWallF = "isLockpeekingWallFlag"; //Flag that signals, that this wall is a lock peeking wall
 const cDoormovingWallIDF = "DoormovingWallIDFlag"; //Flag for id of the DoormovingWall belonging to this door
+const cDoorMovementF = "DoorMovementFlag"; //Flag that contains the movement type of this door
+const cDoorHingePositionF = "DoorHingePositionFlag"; //flag to contain the info where the hinge of this door is placed
+const cDoorSwingSpeedF = "DoorSwingSpeedFlag"; //Flag to save the swing Speed of a door
+const cDoorSlideSpeedF = "DoorSlideSpeedFlag"; //Flag to save the slide Speed of a door
 const cDoorSwingStateF = "DoorSwingStateFlag"; //Flag to save the currrent swing state of a door
 const cDoorSlideStateF = "DoorSlideStateFlag"; //Flag to save the currrent slide state of a door
+
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -40,23 +50,39 @@ class PerceptiveFlags {
 	static isLockpeekingWall(pWall) {} //returns of this wall is a lockpeeking wall (and should normally be ignored)
 	
 	//moving door
+	static Doorcanbemoved(pDoor) {} //if pDoor is a moving door
+	
 	static DoorStateisClosed(pDoor) {} //returns if moving state of pDoor is closed
+	
+	static DoorMovementType(pDoor) {} //returns the movement type of pDoor
+	
+	static DoorHingePosition(pDoor) {} //returns the hinge position of pDoor
 	
 	static getmovingWallID(pDoor) {} //returns the id of the moving wall belonging to this door
 	
 	static async createMovingWall(pDoor) {} //creates a new moving wall for pDoor
 	
+	static async deleteMovingWall(pDoor) {} //creates a new moving wall for pDoor
+	
+	static async hideMovingWall(pDoor) {} //hides the moving wall of pDoor
+	
+	static async synchMovingWall(pDoor) {} //synchs the moving wall of pDoor
+	
 	static async setDoorSwingState(pDoor, pAngle) {} //sets the swing state of pDoor
 	
 	static async changeDoorSwingState(pDoor, pChange) {} //change the swing state of pDoor
+
+	static getDoorSwingSpeed(pDoor) {} //gets the swing speed of pDoor
+	
+	static getDoorSlideSpeed(pDoor) {} //gets the Slide speed of pDoor
 	
 	static getDoorSwingState(pDoor) {} //gets the swing state of pDoor
+	
+	static getDoorSlideState(pDoor) {} //gets the Slide state of pDoor
 	
 	static async setDoorSlideState(pDoor, pSlide) {} //sets the Slide state of pDoor
 	
 	static async changeDoorSlideState(pDoor, pChange) {} //change the Slide state of pDoor
-	
-	static getDoorSlideState(pDoor) {} //gets the Slide state of pDoor
 	
 	static resetDoorMovement(pDoor) {} //resets data related to door movement
 	
@@ -155,6 +181,58 @@ class PerceptiveFlags {
 		
 		return ""; //default if anything fails
 	} 
+
+	static #DoorMovementFlag (pWall) { 
+	//returns content of DoorMovementFlag of pWall (must be Doormovement type)
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cDoorMovementF)) {
+				return vFlag.DoorMovementFlag;
+			}
+		}
+		
+		return cDoorMoveTypes[0]; //default if anything fails
+	} 
+	
+	static #DoorHingePositionFlag (pWall) { 
+	//returns content of DoorHingePositionFlag of pWall (must be 0 or 1)
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cDoorHingePositionF)) {
+				return vFlag.DoorHingePositionFlag;
+			}
+		}
+		
+		return 0; //default if anything fails
+	} 
+	
+	static #DoorSwingSpeedFlag (pWall) { 
+	//returns content of DoorSwingSpeedFlag of pWall (in degrees)
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cDoorSwingSpeedF)) {
+				return vFlag.DoorSwingSpeedFlag;
+			}
+		}
+		
+		return 5; //default if anything fails
+	} 
+	
+	static #DoorSlideSpeedFlag (pWall) { 
+	//returns content of DoorSlideSpeedFlag of pWall (in degrees)
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cDoorSlideSpeedF)) {
+				return vFlag.DoorSlideSpeedFlag;
+			}
+		}
+		
+		return 0.05; //default if anything fails
+	} 
 	
 	static #DoorSwingStateFlag (pWall) { 
 	//returns content of DoorSwingStateFlag of pWall (in degrees)
@@ -234,7 +312,7 @@ class PerceptiveFlags {
 	
 	//basics
 	static isPerceptiveWall(pWall) {
-		return this.#isPerceptiveWallFlag(pWall);
+		return Boolean(this.#isPerceptiveWallFlag(pWall));
 	}
 	
 	//peeking
@@ -311,8 +389,32 @@ class PerceptiveFlags {
 	}
 	
 	//moving door
+	static Doorcanbemoved(pDoor) {
+		return this.#DoorMovementFlag(pDoor) != cDoorMoveTypes[0];
+	}
+	
 	static DoorStateisClosed(pDoor) {
-		return Math.abs(PerceptiveFlags.getDoorSwingState(pDoor)) <= cangleepsilon;
+		switch (PerceptiveFlags.DoorMovementType(pDoor)) {
+			case "none":
+				return !WallUtils.isOpened(pDoor);
+				break;
+			case "slide":
+				return PerceptiveFlags.getDoorSlideState(pDoor) >= 1;
+				break;
+			case "swing":
+				return Math.abs(PerceptiveFlags.getDoorSwingState(pDoor)) <= cangleepsilon;
+				break;
+			default :
+				true;
+		}
+	}
+	
+	static DoorMovementType(pDoor) {
+		return this.#DoorMovementFlag(pDoor);
+	}
+	
+	static DoorHingePosition(pDoor) {
+		return this.#DoorHingePositionFlag(pDoor);
 	}
 	
 	static getmovingWallID(pDoor) {
@@ -320,9 +422,31 @@ class PerceptiveFlags {
 	}
 	
 	static async createMovingWall(pDoor) {
-		let vWall = await WallUtils.clonedoorasWall(pDoor);
-		
-		await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
+		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor))) {
+			let vWall = await WallUtils.clonedoorasWall(pDoor);
+			
+			await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
+		}
+	}
+	
+	static async deleteMovingWall(pDoor) {
+		if (PerceptiveFlags.getmovingWallID(pDoor)) {
+			WallUtils.deletewall(PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
+			
+			await this.#setDoormovingWallIDFlag(pDoor, "");
+		}
+	}
+	
+	static async hideMovingWall(pDoor) {
+		if (PerceptiveFlags.getmovingWallID(pDoor)) {
+			WallUtils.hidewall(PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
+		}		
+	}
+	
+	static async synchMovingWall(pDoor) {
+		if (PerceptiveFlags.getmovingWallID(pDoor)) {
+			WallUtils.syncWallfromDoor(pDoor, PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
+		}			
 	}
 	
 	static async setDoorSwingState(pDoor, pAngle) {
@@ -333,8 +457,20 @@ class PerceptiveFlags {
 		await PerceptiveFlags.setDoorSwingState(pDoor, PerceptiveFlags.getDoorSwingState(pDoor) + pChange)
 	} 
 	
+	static getDoorSwingSpeed(pDoor) {
+		return this.#DoorSwingSpeedFlag(pDoor)%360;
+	}
+	
+	static getDoorSlideSpeed(pDoor) {
+		return this.#DoorSlideSpeedFlag(pDoor);
+	}
+	
 	static getDoorSwingState(pDoor) {
 		return this.#DoorSwingStateFlag(pDoor)%360;
+	}
+	
+	static getDoorSlideState(pDoor) {
+		return PerceptiveFlags.slideMinMax(this.#DoorSlideStateFlag(pDoor));
 	}
 	
 	static async setDoorSlideState(pDoor, pSlide) {
@@ -344,10 +480,6 @@ class PerceptiveFlags {
 	static async changeDoorSlideState(pDoor, pChange) {
 		await PerceptiveFlags.setDoorSlideState(pDoor, PerceptiveFlags.getDoorSlideState(pDoor) + pChange)
 	} 
-	
-	static getDoorSlideState(pDoor) {
-		return PerceptiveFlags.slideMinMax(this.#DoorSlideStateFlag(pDoor));
-	}
 	
 	static resetDoorMovement(pDoor) {
 		PerceptiveFlags.setDoorSwingState(pDoor, 0);
@@ -361,7 +493,7 @@ class PerceptiveFlags {
 
 }
 
-Hooks.on("refreshWall", (pWall) => {PerceptiveFlags.synchLockpeekingWalls(pWall.document)});
+//Hooks.on("refreshWall", (pWall) => {PerceptiveFlags.synchLockpeekingWalls(pWall.document)});
 
 //Export PerceptiveFlags Class
 export{ PerceptiveFlags };

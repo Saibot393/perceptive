@@ -38,6 +38,7 @@ class PeekingManager {
 	}
 }
 
+/*
 Hooks.on("init", function() {
 	const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
 	
@@ -57,3 +58,4 @@ Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfos) => {
 		PeekingManager.updatePeekDoor(pWall);
 	}
 });
+*/

@@ -28,10 +28,13 @@
     }
   ],
   "esmodules": [
+	"scripts/helpers/WallslayerHandler.js",
 	"scripts/helpers/PerceptiveMouseHandler.js",
 	"scripts/helpers/PerceptiveFlags.js",
 	"scripts/PeekingScript.js",
-	"scripts/DoorMovingScript.js"
+	"scripts/DoorMovingScript.js",
+	"scripts/helpers/SocketHandler.js",
+	"scripts/settings/PerceptiveSheetSettings.js"
   ],
   "url": "https://github.com/Saibot393/perceptive",
   "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v1.9.4.zip",

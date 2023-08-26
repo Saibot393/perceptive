@@ -1,7 +1,7 @@
 import {GeometricUtils} from "./GeometricUtils.js";
 import {cModuleName} from "./PerceptiveUtils.js";
 
-const cisPerceptiveWall = "isPerceptiveWall";
+const cisPerceptiveWall = "isPerceptiveWallFlag";
 const cisPerceptiveWallstring = '{"' + cModuleName + '" : {"' + cisPerceptiveWall + '" : "true"}}';
 const cisPerceptiveWallData = JSON.parse(cisPerceptiveWallstring);
 
@@ -14,15 +14,19 @@ class WallUtils {
 	
 	static isOpened(pDoor) {} //returns of pDoor is locked
 	
-	static openDoor(pDoor) {} //open pDoor
+	static async closeDoor(pDoor) {} //closes (not locks) door
+	
+	static async openDoor(pDoor) {} //open pDoor
 	
 	static deletewall(pWall) {} //deletes pWall (only if it is a perceptive wall)
+	
+	static hidewall(pWall) {} //makes sure, that pWall has no restrictions
 	
 	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {} //created a new wall
 	
 	static async clonedoorasWall(pDoor, pRenderable = true) {} //creates copy of pDoor as wall
 	
-	static async syncWallfromDoor(pDoor, pWall) {} //synchs the setting of pWall to that of pDoor
+	static async syncWallfromDoor(pDoor, pWall, pincludeposition = true) {} //synchs the setting of pWall to that of pDoor
 	
 	//calculations
 	static cornerposition(pWallPosition) {} //returns the corners of pWallPosition
@@ -47,8 +51,12 @@ class WallUtils {
 		return pDoor.ds == 1;
 	}
 	
-	static openDoor(pDoor) {
-		pDoor.update({ds : 1});
+	static async closeDoor(pDoor) {
+		await pDoor.update({ds : 0}, {PerceptiveChange : true});
+	}
+	
+	static async openDoor(pDoor) {
+		await pDoor.update({ds : 1}, {PerceptiveChange : true});
 	}
 	
 	static deletewall(pWall) {
@@ -56,6 +64,10 @@ class WallUtils {
 			pWall.delete();
 		}
 	}
+	
+	static hidewall(pWall) {
+		pWall.update({move : 0, sight : 0, light : 0, sound : 0});
+	} 
 	
 	static async createperceptivewall(pScene, pPosition, pSetting = {move : 20, sight : 20, light : 20, sound : 20}, pRenderable = true) {
 		let vSettings = {...pSetting};
@@ -77,12 +89,22 @@ class WallUtils {
 		return (await WallUtils.createperceptivewall(pDoor.parent, pDoor.c, vData, pRenderable))[0];
 	}
 	
-	static async syncWallfromDoor(pDoor, pWall) {
+	static async syncWallfromDoor(pDoor, pWall, pincludeposition = true) {
 		let vData = {...pDoor};
 		
-		vData["door"] = 0;
+		if (!pincludeposition) {
+			delete vData.c;
+		}
 		
-		await pWall.update({vData});
+		//delete some stuff
+		delete vData._object;
+		delete vData.flags;
+		delete vData.ds;
+		delete vData._destroyed;
+		delete vData.doorSound;
+		delete vData.door;
+		
+		await pWall.update(vData, {PerceptiveChange : true});
 	}
 	
 	//calculations
@@ -99,7 +121,7 @@ class WallUtils {
 		
 		let vWallLine = GeometricUtils.Difference(vOriginalState[1], vOriginalState[0]);
 		
-		switch (phinge) {
+		switch (Number(phinge)) {
 			case 0:
 				return WallUtils.wallposition(vOriginalState[0], GeometricUtils.Summ(vOriginalState[0], GeometricUtils.scale(vWallLine, pSlideState)));
 				break;
@@ -115,8 +137,8 @@ class WallUtils {
 		let vOriginalState = WallUtils.cornerposition(pOriginalPosition);
 		
 		let vWallLine = GeometricUtils.Difference(vOriginalState[1], vOriginalState[0]);
-
-		switch (phinge) {
+		
+		switch (Number(phinge)) {
 			case 0:
 				return WallUtils.wallposition(vOriginalState[0], GeometricUtils.Summ(vOriginalState[0], GeometricUtils.Rotated(vWallLine, pSwingState)));
 				break;

@@ -1,12 +1,13 @@
 import * as FCore from "../CoreVersionComp.js";
-import { cModuleName } from "../utils/PerceptiveUtils.js";
+import { PerceptiveUtils, cModuleName } from "../utils/PerceptiveUtils.js";
 import { PerceptiveCompUtils, cLibWrapper } from "../compatibility/PerceptiveCompUtils.js";
 
-const cCanvesScrollsTurnoff = {
-	shiftKey : true,
+const cDoorScrollsTurnoff = {
+	shiftKey : false,
 	ctrlKey : false,
-	altKey : false
-} //keys at which canvas scrolling is turned off
+	altKey : false,
+	default : true
+} //keys at which canvas scrolling is turned off when a door control is hovered
 
 //takes care of additional mouse handling
 class PerceptiveMouseHandler {
@@ -100,7 +101,12 @@ class PerceptiveMouseHandler {
 	} 
 	
 	static onCanvasWheel(pEvent) {
-		return !((pEvent.shiftKey && cCanvesScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cCanvesScrollsTurnoff.ctrlKey) || (pEvent.altKey && cCanvesScrollsTurnoff.altKey));
+		if (PerceptiveUtils.hoveredWall()) {
+			return !((pEvent.shiftKey && cDoorScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cDoorScrollsTurnoff.ctrlKey) || (pEvent.altKey && cDoorScrollsTurnoff.altKey) || cDoorScrollsTurnoff.default); 
+		}
+		else {
+			return true;
+		}
 	}
 }
 
