@@ -87,7 +87,7 @@
 
 			"DoorSlideSpeedFlag" : {
 				"name" 					: "Slide speed",
-				"descrp"				: "The slide speed of the door in  parts of door size (0-1)°"
+				"descrp"				: "The slide speed of the door in  parts of door size (0-1)"
 			}	
 		}
 	}
