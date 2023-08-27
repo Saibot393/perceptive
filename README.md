@@ -2,7 +2,7 @@
 
  A Foundry VTT module to add a few vision based loosely related features, currently implemented features are:
 
-## Door lock peeking:
+## Door lock peeking
 
 Allows doors to be set a lock peekable. When a player ctrl+right-clicks a lock peekable door they can see through a small hole in the door until the ctrl+right-clicks it again or move. Only one lock can be peeked at a time.
 
