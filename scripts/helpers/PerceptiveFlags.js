@@ -154,7 +154,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return false; //default if anything fails
+		return game.settings.get(cModuleName, "Peekablebydefault") && WallUtils.isDoor(pWall); //default if anything fails
 	}
 	
 	static #LockpeekedbyFlag (pWall) { 
@@ -193,7 +193,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 0.1; //default if anything fails
+		return game.settings.get(cModuleName, "LockpeekstandardSize"); //default if anything fails
 	}
 	
 	static #DoormovingWallIDFlag (pWall) { 
@@ -219,7 +219,12 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return cDoorMoveTypes[0]; //default if anything fails
+		if (WallUtils.isDoor(pWall)) {
+			return game.settings.get(cModuleName, "DoorstandardMove"); //default if anything fails
+		}
+		else {
+			return cDoorMoveTypes[0];
+		}
 	} 
 	
 	static #DoorHingePositionFlag (pWall) { 
@@ -232,7 +237,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 0; //default if anything fails
+		return game.settings.get(cModuleName, "DoorstandardHinge"); //default if anything fails
 	} 
 	
 	static #DoorSwingSpeedFlag (pWall) { 
@@ -245,7 +250,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 5; //default if anything fails
+		return game.settings.get(cModuleName, "DoorstandardSwingSpeed"); //default if anything fails
 	} 
 	
 	static #DoorSlideSpeedFlag (pWall) { 
@@ -258,7 +263,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 0.05; //default if anything fails
+		return game.settings.get(cModuleName, "DoorstandardSlideSpeed"); //default if anything fails
 	} 
 	
 	static #DoorSwingStateFlag (pWall) { 
