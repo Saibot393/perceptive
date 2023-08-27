@@ -1,0 +1,94 @@
+{
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"				: "Perceptive"
+		},
+		
+		"Settings" : {
+			"Peekablebydefault" : {
+				"name" 					: "Schlösser standardmäßig durchschaubar",
+				"descrp" 				: "Ob Schlösser standardmäßig durchschaut werden können"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "Standard größe von Schlüssellöchern",
+				"descrp" 				: "Die standard Größe von Schlüssellöchern relativ zur Tür Größe (0-1)"
+			}, 
+			
+			"DoorstandardMove" : {
+				"name" 					: "Standard Tür Bewegung",
+				"descrp" 				: "Die standard Bewegungsart von Türen",
+				"options" : {
+					"none"				: "Keine Bewegung (normale Tür)",
+					"swing"				: "Schwing-Tür",
+					"slide"				: "Siebe-Tür"
+				}
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "Türangel standard Position",
+				"descrp" 				: "Die standard Position von Türangeln",
+				"options" : {
+					"0"				: "Links",
+					"1"				: "Rechts"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "Standard Tür Schwing-Geschwindigkeit",
+				"descrp" 				: "Die standard Tür Schwing-Geschwindigkeit in Winkel°"
+			}, 
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "Standard Tür Schiebe-Geschwindigkeit",
+				"descrp" 				: "Die standard Tür Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
+			}, 
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Zeige Perceptive Wände [DEBUG]",
+				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "Schloss durchschaubar",
+				"descrp"				: "Ob Spieler durch das Schloss der Tür schauen können"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "Schlüsselloch Größe",
+				"descrp"				: "Die standard Größe des Schlüssellochs relativ zur Tür Größe (0-1)"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "Tür Bewegung",
+				"descrp"				: "Standard Bewegungsart der Tür",
+				"options" : {
+					"none"				: "Keine Bewegung (normale Tür)",
+					"swing"				: "Schwing-Tür",
+					"slide"				: "Siebe-Tür"
+				}
+			},
+			
+			"DoorHingePositionFlag" : {
+				"name" 					: "Türangel Position",
+				"descrp"				: "Die Position der Türangel",
+				"options" : {
+					"0"				: "Links",
+					"1"				: "Rechts"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "Schwing-Geschwindigkeit",
+				"descrp"				: "Schwing-Geschwindigkeit in Winkel°"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "Schiebe-Geschwindigkeit",
+				"descrp"				: "Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
+			}	
+		}
+	}
+}

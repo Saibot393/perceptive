@@ -6,8 +6,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
   //peeking
   game.settings.register(cModuleName, "Peekablebydefault", {
-	name: Translate("Settings.peekablebydefault.name"),
-	hint: Translate("Settings.peekablebydefault.descrp"),
+	name: Translate("Settings.Peekablebydefault.name"),
+	hint: Translate("Settings.Peekablebydefault.descrp"),
 	scope: "world",
 	config: true,
 	type: Boolean,
@@ -15,8 +15,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   }); 
 
   game.settings.register(cModuleName, "LockpeekstandardSize", {
-	name: Translate("Settings.peekstandardsize.name"),
-	hint: Translate("Settings.peekstandardsize.descrp"),
+	name: Translate("Settings.LockpeekstandardSize.name"),
+	hint: Translate("Settings.LockpeekstandardSize.descrp"),
 	scope: "world",
 	config: true,
 	type: Number,

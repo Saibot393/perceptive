@@ -110,11 +110,11 @@ class PeekingManager {
 			
 			if (vPeekedWall) {
 				await PerceptiveFlags.removeLockpeekedby(vPeekedWall, pToken.id);
-				
-				await PerceptiveFlags.stopLockpeeking(pToken);
-				
-				pToken.object.updateVisionSource();
 			}
+			
+			await PerceptiveFlags.stopLockpeeking(pToken);
+				
+			pToken.object.updateVisionSource();
 		}
 	}
 	

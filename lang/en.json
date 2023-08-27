@@ -1,4 +1,94 @@
 {
-	"Rideable" : {
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"				: "Perceptive"
+		},
+		
+		"Settings" : {
+			"Peekablebydefault" : {
+				"name" 					: "Lock peekable by default",
+				"descrp" 				: "If doors can be lock peeked by default"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "Standard size of lock peeks",
+				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size"
+			}, 
+			
+			"DoorstandardMove" : {
+				"name" 					: "Door standard movement type",
+				"descrp" 				: "The standard movement type of doors",
+				"options" : {
+					"none"				: "No movement (normal door)",
+					"swing"				: "Swinging door",
+					"slide"				: "Sliding door"
+				}
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "Door standard hinge position",
+				"descrp" 				: "The position a which a doors hinge is located",
+				"options" : {
+					"0"				: "Left",
+					"1"				: "Right"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "Standard swing speed",
+				"descrp" 				: "The standard swing speed of doors in angles°"
+			}, 
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "Standard slide speed",
+				"descrp" 				: "The standard slide speed of doors in parts of door size (0-1)"
+			}, 
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Show Perceptive walls [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "Can be lock peeked",
+				"descrp"				: "If this lock can peeked by a player"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "Lock peek size",
+				"descrp"				: "The gap size used when peeking a lock relativ to the doors size"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "Door movement type",
+				"descrp"				: "The standard movement type of this door",
+				"options" : {
+					"none"				: "No movement (normal door)",
+					"swing"				: "Swinging door",
+					"slide"				: "Sliding door"
+				}
+			},
+			
+			"DoorHingePositionFlag" : {
+				"name" 					: "Door hinge position",
+				"descrp"				: "The position a which the doors hinge is located",
+				"options" : {
+					"0"				: "Left",
+					"1"				: "Right"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "Swing speed",
+				"descrp"				: "The swing speed of the door in angles°"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "Slide speed",
+				"descrp"				: "The slide speed of the door in  parts of door size (0-1)°"
+			}	
+		}
 	}
 }

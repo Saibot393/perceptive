@@ -32,6 +32,24 @@ class PerceptiveSheetSettings {
 								
 			vprevElement.after(vNewSection);
 			
+			//wall can be lockpeeked
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
+														vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 
+														vtype : "checkbox", 
+														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
+														vflagname : ccanbeLockpeekedF
+														}, `fieldset.${cModuleName}-options`);
+														
+			//lock peeking size
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
+														vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
+														vtype : "number", 
+														//vrange : cSwingSpeedRange,
+														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
+														vstep : 0.01,
+														vflagname : cLockPeekSizeF
+														}, `fieldset.${cModuleName}-options`);
+			
 			//wall movement type
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
 														vhint : Translate("SheetSettings."+ cDoorMovementF +".descrp"), 
@@ -67,24 +85,6 @@ class PerceptiveSheetSettings {
 														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
 														vstep : 0.01,
 														vflagname : cDoorSlideSpeedF
-														}, `fieldset.${cModuleName}-options`);
-														
-			//wall can be lockpeeked
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
-														vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 
-														vtype : "checkbox", 
-														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
-														vflagname : ccanbeLockpeekedF
-														}, `fieldset.${cModuleName}-options`);
-														
-			//lock peeking size
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
-														vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
-														vtype : "number", 
-														//vrange : cSwingSpeedRange,
-														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
-														vstep : 0.01,
-														vflagname : cLockPeekSizeF
 														}, `fieldset.${cModuleName}-options`);
 		}
 	}

@@ -4,7 +4,7 @@ import {cModuleName, PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
-const cDoorMoveTypes = ["none", "slide", "swing"];
+const cDoorMoveTypes = ["none", "swing", "slide"];
 const cHingePositions = [0, 1];
 
 const cSwingSpeedRange = [-180, 180];
@@ -193,7 +193,7 @@ class PerceptiveFlags {
 		let vFlag = this.#PerceptiveFlags(pWall);
 
 		if (vFlag) {
-			if (vFlag.hasOwnProperty(cLockPeekSizeF)) {
+			if (vFlag.hasOwnProperty(cLockPeekSizeF) && vFlag.LockPeekSizeFlag != null) {
 				return vFlag.LockPeekSizeFlag;
 			}
 		}
@@ -263,7 +263,7 @@ class PerceptiveFlags {
 		let vFlag = this.#PerceptiveFlags(pWall);
 		
 		if (vFlag) {
-			if (vFlag.hasOwnProperty(cDoorSwingSpeedF)) {
+			if (vFlag.hasOwnProperty(cDoorSwingSpeedF) && vFlag.DoorSwingSpeedFlag != null) {
 				return vFlag.DoorSwingSpeedFlag;
 			}
 		}
@@ -276,7 +276,7 @@ class PerceptiveFlags {
 		let vFlag = this.#PerceptiveFlags(pWall);
 		
 		if (vFlag) {
-			if (vFlag.hasOwnProperty(cDoorSlideSpeedF)) {
+			if (vFlag.hasOwnProperty(cDoorSlideSpeedF) && vFlag.DoorSlideSpeedFlag != null) {
 				return vFlag.DoorSlideSpeedFlag;
 			}
 		}
@@ -464,6 +464,10 @@ class PerceptiveFlags {
 	}
 	
 	static async removeallLockpeekedby(pWall) {
+		for (let i = 0; i < this.#LockpeekedbyFlag(pWall).length; i++) {
+			PerceptiveFlags.stopLockpeeking(pWall.parent.tokens.get(this.#LockpeekedbyFlag(pWall)[i]));
+		}
+		
 		await PerceptiveFlags.setLockpeekedby(pWall, []);
 	}
 	
