@@ -294,7 +294,7 @@ class PerceptiveFlags {
 	
 	static async #setLockPeekingWallIDs (pWall, pContent) {
 	//sets content of LockPeekingWallIDsFlag (must be array of id)
-		pWall.update({
+		await pWall.update({
 			flags: {
 				[cModuleName]: {
 					[cLockPeekingWallIDsF]: pContent
@@ -307,17 +307,20 @@ class PerceptiveFlags {
 	
 	static async #setLockpeekedby (pWall, pContent) {
 	//sets content of DoormovingWallIDFlag (must be id)
-		if (pWall) {
-			await pWall.setFlag(cModuleName, cLockpeekedbyF, pContent);
-			
-			return true;
-		}
-		return false;
+		await pWall.update({
+			flags: {
+				[cModuleName]: {
+					[cLockpeekedbyF]: pContent
+				}
+			}
+		}, {PerceptiveChange : true});
+		
+		return true;
 	}
 	
 	static async #setDoormovingWallIDFlag (pWall, pContent) {
 	//sets content of DoormovingWallIDFlag (must be id)
-		pWall.update({
+		await pWall.update({
 			flags: {
 				[cModuleName]: {
 					[cDoormovingWallIDF]: pContent
@@ -330,22 +333,28 @@ class PerceptiveFlags {
 	
 	static async #setDoorSwingStateFlag (pWall, pContent) {
 	//sets content of DoorSwingStateFlag (must be boolean)
-		if (pWall) {
-			await pWall.setFlag(cModuleName, cDoorSwingStateF, Number(pContent));
-			
-			return true;
-		}
-		return false;
+		await pWall.update({
+			flags: {
+				[cModuleName]: {
+					[cDoorSwingStateF]: Number(pContent)
+				}
+			}
+		}, {PerceptiveChange : true});
+		
+		return true;
 	}
 	
 	static async #setDoorSlideStateFlag (pWall, pContent) {
 	//sets content of DoorSlideStateFlag (must be boolean)
-		if (pWall) {
-			await pWall.setFlag(cModuleName, cDoorSlideStateF, Number(pContent));
-			
-			return true;
-		}
-		return false;
+		await pWall.update({
+			flags: {
+				[cModuleName]: {
+					[cDoorSlideStateF]: Number(pContent)
+				}
+			}
+		}, {PerceptiveChange : true});
+		
+		return true;
 	}
 	
 	//basics
@@ -363,7 +372,7 @@ class PerceptiveFlags {
 	}
 	
 	static async createLockpeekingWalls(pDoor) {
-		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getLockpeekingWallIDs(pDoor))) {
+		if (!PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor)).length) {
 			
 			let vWalls = [];
 

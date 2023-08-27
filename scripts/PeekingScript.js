@@ -27,11 +27,15 @@ class PeekingManager {
 	//IMPLEMENTATIONS
 	static async PeekDoorGM(pDoor, pTokens) {
 		if (PerceptiveFlags.canbeLockpeeked(pDoor) && !WallUtils.isOpened(pDoor)) {		
+			await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
+		
 			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id));
 			
 			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken));
 			
 			await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
+			
+			await PeekingManager.updateDoorPeekingWall(pDoor);
 			
 			//await PerceptiveFlags.removeLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vRemoves));
 			
@@ -139,7 +143,7 @@ Hooks.on("init", function() {
 	}
 });
 
-Hooks.on("updateWall", (pWall, pchanges, pinfos) => {
+Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 	if (game.user.isGM) {	
 		if (pchanges.hasOwnProperty("ds")) {
 			if (WallUtils.isOpened(pWall)) {
@@ -151,7 +155,7 @@ Hooks.on("updateWall", (pWall, pchanges, pinfos) => {
 		}
 		else {
 			if (!pinfos.PerceptiveChange) {
-				PeekingManager.updateDoorPeekingWall(pWall);
+				await PeekingManager.updateDoorPeekingWall(pWall);
 			}
 		}
 	}

@@ -28,7 +28,10 @@ class DoorMovingManager {
 	//IMPLEMENTATIONS
 	static async DoorMoveGM(pDoor, pDirectionInfo) {
 		if (!WallUtils.isLocked(pDoor) && PerceptiveFlags.Doorcanbemoved(pDoor)) {
+			await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
+			
 			let vDirection = Math.sign(pDirectionInfo.y);
+			
 			if (!WallUtils.isOpened(pDoor)) {	
 				await WallUtils.openDoor(pDoor);
 			}
@@ -131,10 +134,10 @@ Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
 	DoorMovingManager.RequestDoorMove(pWall, pScrollInfos);
 }); 
 
-Hooks.on("updateWall", (pWall, pchanges, pinfos) => {
+Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 	if (game.user.isGM) {
 		if (!pinfos.PerceptiveChange) {		
-			DoorMovingManager.updateDoorMovementWall(pWall);
+			await DoorMovingManager.updateDoorMovementWall(pWall);
 			
 			if (pchanges.hasOwnProperty("ds")) {
 				if (WallUtils.isOpened(pWall)) {
