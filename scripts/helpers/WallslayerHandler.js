@@ -1,6 +1,5 @@
 import {PerceptiveFlags} from "./PerceptiveFlags.js";
-
-const cPerceptiveWallsInvisible = true;
+import {cModuleName} from "../utils/PerceptiveUtils.js";
 
 //hooks
 Hooks.on("deactivateWallsLayer", () => {
@@ -16,7 +15,7 @@ Hooks.on("deactivateWallsLayer", () => {
 
 Hooks.on("activateWallsLayer", () => {
 	//make Perceptive Walls visible
-	if (cPerceptiveWallsInvisible) {
+	if (game.settings.get(cModuleName, "hidePerceptiveWalls")) {
 		let vPlaceables = canvas.walls.placeables;
 		
 		for (let i = 0; i < vPlaceables.length; i++) {

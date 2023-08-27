@@ -42,12 +42,12 @@ class DoorMovingManager {
 						await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor));
 					break;
 			}
-			
-			DoorMovingManager.updateDoorMovementWall(pDoor);
-			
+						
 			if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
-				WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+				await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
 			}
+			
+			await DoorMovingManager.updateDoorMovementWall(pDoor);
 		}
 	}
 	
@@ -77,7 +77,7 @@ class DoorMovingManager {
 			}
 			
 			if (vreplacementWall) {
-				WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
+				await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
 				
 				switch (PerceptiveFlags.DoorMovementType(pDoor)) {
 					case "swing":
@@ -91,7 +91,7 @@ class DoorMovingManager {
 						await WallUtils.deletewall(vreplacementWall);
 				}
 				
-				if (!WallUtils.isOpened(pDoor)) {
+				if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
 					WallUtils.hidewall(vreplacementWall);
 				}
 				
@@ -116,21 +116,13 @@ class DoorMovingManager {
 	}
 	
 	static async onDoorClose(pDoor) {
-		
 		await PerceptiveFlags.resetDoorMovement(pDoor);
 		
 		DoorMovingManager.updateDoorMovementWall(pDoor);
 	}
 	
 	static onDeleteWall(pWall) {
-		PerceptiveFlags.deleteMovingWall(pWall);
-		/*
-		let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pWall), pWall.parent);
-		
-		if (vreplacementWall) {
-			WallUtils.deletewall(vreplacementWall);
-		}
-*/		
+		PerceptiveFlags.deleteMovingWall(pWall, true);
 	}
 }
 

@@ -150,7 +150,7 @@ Hooks.on("updateWall", (pWall, pchanges, pinfos) => {
 			}
 		}
 		else {
-			if (!pinfos.PerceptiveChange) {	
+			if (!pinfos.PerceptiveChange) {
 				PeekingManager.updateDoorPeekingWall(pWall);
 			}
 		}

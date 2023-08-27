@@ -74,7 +74,7 @@ class PerceptiveFlags {
 	
 	static async createMovingWall(pDoor) {} //creates a new moving wall for pDoor
 	
-	static async deleteMovingWall(pDoor) {} //creates a new moving wall for pDoor
+	static async deleteMovingWall(pDoor, pSelfDelete = false) {} //creates a new moving wall for pDoor
 	
 	static async hideMovingWall(pDoor) {} //hides the moving wall of pDoor
 	
@@ -108,9 +108,11 @@ class PerceptiveFlags {
 	static #PerceptiveFlags (pObject) {	
 	//returns all Module Flags of pObject (if any)
 		if (pObject) {
-			if (pObject.flags.hasOwnProperty(cModuleName)) {
-				return pObject.flags[cModuleName];
+			if (!pObject.flags.hasOwnProperty(cModuleName)) {
+				return pObject.flags[cModuleName] = {};
 			}
+			
+			return pObject.flags[cModuleName];
 		}
 		
 		return; //if anything fails
@@ -287,12 +289,15 @@ class PerceptiveFlags {
 	
 	static async #setLockPeekingWallIDs (pWall, pContent) {
 	//sets content of LockPeekingWallIDsFlag (must be array of id)
-		if (pWall) {
-			await pWall.setFlag(cModuleName, cLockPeekingWallIDsF, pContent);
-			
-			return true;
-		}
-		return false;
+		pWall.update({
+			flags: {
+				[cModuleName]: {
+					[cLockPeekingWallIDsF]: pContent
+				}
+			}
+		}, {PerceptiveChange : true});
+		
+		return true;
 	}
 	
 	static async #setLockpeekedby (pWall, pContent) {
@@ -307,12 +312,15 @@ class PerceptiveFlags {
 	
 	static async #setDoormovingWallIDFlag (pWall, pContent) {
 	//sets content of DoormovingWallIDFlag (must be id)
-		if (pWall && typeof(pContent) == "string") {
-			await pWall.setFlag(cModuleName, cDoormovingWallIDF, pContent);
-			
-			return true;
-		}
-		return false;
+		pWall.update({
+			flags: {
+				[cModuleName]: {
+					[cDoormovingWallIDF]: pContent
+				}
+			}
+		}, {PerceptiveChange : true});
+		
+		return true;
 	}
 	
 	static async #setDoorSwingStateFlag (pWall, pContent) {
@@ -351,6 +359,7 @@ class PerceptiveFlags {
 	
 	static async createLockpeekingWalls(pDoor) {
 		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getLockpeekingWallIDs(pDoor))) {
+			
 			let vWalls = [];
 
 			vWalls[0] = await WallUtils.clonedoorasWall(pDoor); //vision block 1
@@ -461,10 +470,12 @@ class PerceptiveFlags {
 		}
 	}
 	
-	static async deleteMovingWall(pDoor) {
+	static async deleteMovingWall(pDoor, pSelfDelete = false) {
 		if (PerceptiveFlags.getmovingWallID(pDoor)) {
 			WallUtils.deletewall(PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
-			
+		}
+		
+		if (!pSelfDelete) {
 			await this.#setDoormovingWallIDFlag(pDoor, "");
 		}
 	}

@@ -50,7 +50,7 @@ class WallUtils {
 	}
 	
 	static isOpened(pDoor) {
-		return pDoor.ds == 1;
+		return (pDoor.ds == 1);
 	}
 	
 	static async closeDoor(pDoor) {
