@@ -15,6 +15,8 @@ class PeekingManager {
 	
 	static async updateDoorPeekingWall(pDoor) {} //updates the peeking walls of pDoor
 	
+	static async stopLockpeeking(pToken) {} //stops pToken from peeking
+	
 	static IgnoreWall(pWall, pToken) {} //if pWall should be ignored by pToken
 	
 	//ons
@@ -23,6 +25,8 @@ class PeekingManager {
 	static onDoorOpen(pDoor) {} //called when a door opened external
 	
 	static async onDoorClose(pDoor) {} //called when a door closed external
+	
+	static OnTokenupdate(pToken, pchanges, pInfos) {} //called when a token is updated
 	
 	//IMPLEMENTATIONS
 	static async PeekDoorGM(pDoor, pTokens) {
@@ -98,6 +102,22 @@ class PeekingManager {
 		}
 	}
 	
+	static async stopLockpeeking(pToken) {
+		if (PerceptiveFlags.isLockpeeking(pToken)) {
+			let vPeekedWall = PerceptiveFlags.getLockpeekedWall(pToken);
+			
+			console.log(vPeekedWall);
+			
+			if (vPeekedWall) {
+				await PerceptiveFlags.removeLockpeekedby(vPeekedWall, pToken.id);
+				
+				await PerceptiveFlags.stopLockpeeking(pToken);
+				
+				pToken.object.updateVisionSource();
+			}
+		}
+	}
+	
 	static IgnoreWall(pWall, pToken) {
 		if (WallUtils.isDoor(pWall)) {
 			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken); //is a lock peeked door
@@ -111,6 +131,10 @@ class PeekingManager {
 	}
 	
 	//ons
+	static async onDeleteWall(pWall) {
+		await PerceptiveFlags.deleteLockpeekingWalls(pWall, true);
+	}
+	
 	static onDoorOpen(pDoor) {
 		PerceptiveFlags.removeallLockpeekedby(pDoor);
 	}
@@ -119,8 +143,10 @@ class PeekingManager {
 		
 	}
 	
-	static async onDeleteWall(pWall) {
-		await PerceptiveFlags.deleteLockpeekingWalls(pWall, true);
+	static OnTokenupdate(pToken, pchanges, pInfos) {
+		if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
+			PeekingManager.stopLockpeeking(pToken);
+		}
 	}
 }
 
@@ -162,6 +188,8 @@ Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 		}
 	}
 });
+
+Hooks.on("updateToken", (...args) => PeekingManager.OnTokenupdate(...args));
 
 Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 	if (game.user.isGM) {

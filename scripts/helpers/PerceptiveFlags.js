@@ -448,7 +448,7 @@ class PerceptiveFlags {
 	}
 	
 	static isLockpeekedby(pWall, pID) {
-		return this.#LockpeekedbyFlag(pWall).includes(pID)
+		return this.#LockpeekedbyFlag(pWall).includes(pID);
 	}
 	
 	static async addLockpeekedby(pWall, pIDs) {
@@ -484,7 +484,7 @@ class PerceptiveFlags {
 	}
 	
 	static getLockpeekedWall(pToken) {
-		pToken.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
+		return pToken.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
 	}
 	
 	//moving door
