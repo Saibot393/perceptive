@@ -24,6 +24,12 @@ Allows doors to be incrementally opened in either a swinging or sliding motion. 
 
 ## General features:
 
+### Settings:
+
+#### World:
+#### Client:
+#### Walls:
+
 ### Compatibility:
 
 The module should be compatible with most game systems on Foundry v11. If you encounter any bugs please [let me know](https://github.com/Saibot393/perceptive/issues).
