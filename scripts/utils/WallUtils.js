@@ -102,13 +102,8 @@ class WallUtils {
 			delete vData.c;
 		}
 		
-		//delete some stuff
-		delete vData._object;
-		delete vData.flags.perceptive;
-		delete vData.ds;
-		delete vData._destroyed;
-		delete vData.doorSound;
-		delete vData.door;
+		vData.door = 0;
+		vData.flags = {};
 		
 		await pWall.update(vData, {PerceptiveChange : true});
 	}

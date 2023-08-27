@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -65,6 +65,7 @@ class PerceptiveSheetSettings {
 														vtype : "number", 
 														//vrange : cSlideSpeedRange,
 														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
+														vstep : 0.01,
 														vflagname : cDoorSlideSpeedF
 														}, `fieldset.${cModuleName}-options`);
 														
@@ -74,6 +75,16 @@ class PerceptiveSheetSettings {
 														vtype : "checkbox", 
 														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
 														vflagname : ccanbeLockpeekedF
+														}, `fieldset.${cModuleName}-options`);
+														
+			//lock peeking size
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
+														vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
+														vtype : "number", 
+														//vrange : cSwingSpeedRange,
+														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
+														vstep : 0.01,
+														vflagname : cLockPeekSizeF
 														}, `fieldset.${cModuleName}-options`);
 		}
 	}
@@ -103,6 +114,11 @@ class PerceptiveSheetSettings {
 		let vvalue = "";	
 		if (pInfos.hasOwnProperty("vvalue")) {
 			vvalue = pInfos.vvalue;
+		}
+		
+		let vstep = 1;	
+		if (pInfos.hasOwnProperty("vstep")) {
+			vstep = pInfos.vstep;
 		}
 		
 		let vflagname = "";	
@@ -153,6 +169,8 @@ class PerceptiveSheetSettings {
 		
 		switch (vtype){
 			case "number":
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" step="${vstep}">`;
+				break;
 			case "text":
 				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}">`;
 				break;

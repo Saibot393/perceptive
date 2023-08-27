@@ -29,7 +29,6 @@ class DoorMovingManager {
 	static async DoorMoveGM(pDoor, pDirectionInfo) {
 		if (!WallUtils.isLocked(pDoor) && PerceptiveFlags.Doorcanbemoved(pDoor)) {
 			let vDirection = Math.sign(pDirectionInfo.y);
-			
 			if (!WallUtils.isOpened(pDoor)) {	
 				await WallUtils.openDoor(pDoor);
 			}
@@ -78,7 +77,7 @@ class DoorMovingManager {
 			}
 			
 			if (vreplacementWall) {
-				WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false)
+				WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
 				
 				switch (PerceptiveFlags.DoorMovementType(pDoor)) {
 					case "swing":
@@ -92,6 +91,10 @@ class DoorMovingManager {
 						await WallUtils.deletewall(vreplacementWall);
 				}
 				
+				if (!WallUtils.isOpened(pDoor)) {
+					WallUtils.hidewall(vreplacementWall);
+				}
+				
 				if (cMoveControl) {
 					/*console.log(pDoor);
 					canvas.walls.doors[0].doorControl.position.x = 1000*/
@@ -99,13 +102,6 @@ class DoorMovingManager {
 			}	
 		}
 		else {
-			/*
-			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
-			
-			if (vreplacementWall) {
-				WallUtils.deletewall(vreplacementWall);
-			}
-			*/
 			PerceptiveFlags.deleteMovingWall(pDoor);
 		}
 	}
@@ -120,6 +116,7 @@ class DoorMovingManager {
 	}
 	
 	static async onDoorClose(pDoor) {
+		
 		await PerceptiveFlags.resetDoorMovement(pDoor);
 		
 		DoorMovingManager.updateDoorMovementWall(pDoor);

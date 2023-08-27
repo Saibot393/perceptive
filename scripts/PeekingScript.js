@@ -7,11 +7,15 @@ const cLockSize = 0.1; //size of locks
 
 class PeekingManager {
 	//DECLARATION
-	static IgnoreWall(pWall, pToken) {} //if pWall should be ignored by pToken
+	static async PeekDoorGM(pDoor) {} //start peeking pWall with all selected tokens
 	
-	static async updatePeekDoor(pDoor) {} //start peeking pWall with all selected tokens
+	static async RequestPeekDoor(pDoor, pDirectionInfo) {} //starts a request to peek door
+	
+	static async PeekDoorRequest(pDoorID, pSceneID, pDirectionInfo) {} //answers a door peek request
 	
 	static async updateDoorPeekingWall(pDoor) {} //updates the peeking walls of pDoor
+	
+	static IgnoreWall(pWall, pToken) {} //if pWall should be ignored by pToken
 	
 	//ons
 	static async onDeleteWall(pWall) {} //called when a wall is deleted
@@ -21,38 +25,35 @@ class PeekingManager {
 	static async onDoorClose(pDoor) {} //called when a door closed external
 	
 	//IMPLEMENTATIONS
-	static IgnoreWall(pWall, pToken) {
-		if (WallUtils.isDoor(pWall)) {
-			console.log(PerceptiveFlags.isLockpeekedby(pWall, pToken.id));
-			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a lock peeked door
-		}
-		
-		if (PerceptiveFlags.isLockpeekingWall(pWall)) {
-			console.log(!PerceptiveFlags.isLockpeekedby(pWall, pToken.id));
-			return !PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a wall to limit lockpeeking sight
-		}
-		
-		return false;
-	}
-	
-	static async updatePeekDoor(pDoor) {
-		if (PerceptiveFlags.canbeLockpeeked(pDoor) && !WallUtils.isOpened(pDoor)) {
-			let vTokens = PerceptiveUtils.selectedTokens();
+	static async PeekDoorGM(pDoor, pTokens) {
+		if (PerceptiveFlags.canbeLockpeeked(pDoor) && !WallUtils.isOpened(pDoor)) {		
+			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id));
 			
-			let vAdds = vTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id));
-			
-			let vRemoves = vTokens.filter(vToken => !vAdds.includes(vToken));
-			
-			console.log(vAdds, vRemoves);
+			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken));
 			
 			await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
 			
 			//await PerceptiveFlags.removeLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vRemoves));
 			
-			for (let i = 0; i < vTokens.length; i++) {
-				vTokens[i].object.updateVisionSource();
+			for (let i = 0; i < pTokens.length; i++) {
+				pTokens[i].object.updateVisionSource();
 			}
 		}
+	}
+	
+	static async RequestPeekDoor(pDoor, pTokens) {
+		if (game.user.isGM) {
+			PeekingManager.PeekDoorGM(pDoor, pTokens);
+		}
+		else {
+			game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
+		}		
+	}
+	
+	static async PeekDoorRequest(pDoorID, pSceneID, pTokenIDs) {
+		if (game.user.isGM) {
+			PeekingManager.PeekDoorGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), PerceptiveUtils.TokensfromIDs(pTokenIDs, game.scenes.get(pSceneID)))
+		}		
 	}
 	
 	static async updateDoorPeekingWall(pDoor) {
@@ -67,10 +68,10 @@ class PeekingManager {
 			
 			if (vLockPeekingWalls.length) {	
 				for (let i = 0; i < vLockPeekingWalls.length; i++) {
-					WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
+					await WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
 					
 					if (i >= 0 && i <= 1) {
-						vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, (1-cLockSize)/2, i).map(vvalue => Math.round(vvalue))});
+						vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, (1-PerceptiveFlags.LockPeekingSize(pDoor))/2, i).map(vvalue => Math.round(vvalue))});
 					}
 					
 					if (i > 1) {
@@ -89,6 +90,18 @@ class PeekingManager {
 			*/
 			PerceptiveFlags.deleteLockpeekingWalls(pDoor);
 		}
+	}
+	
+	static IgnoreWall(pWall, pToken) {
+		if (WallUtils.isDoor(pWall)) {
+			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a lock peeked door
+		}
+		
+		if (PerceptiveFlags.isLockpeekingWall(pWall)) {
+			return !PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a wall to limit lockpeeking sight
+		}
+		
+		return false;
 	}
 	
 	//ons
@@ -127,18 +140,17 @@ Hooks.on("init", function() {
 });
 
 Hooks.on("updateWall", (pWall, pchanges, pinfos) => {
-	if (game.user.isGM) {
-		if (!pinfos.PerceptiveChange) {		
-			
-			if (pchanges.hasOwnProperty("ds")) {
-				if (WallUtils.isOpened(pWall)) {
-					PeekingManager.onDoorOpen(pWall);
-				}
-				else {
-					PeekingManager.onDoorClose(pWall);
-				}
+	if (game.user.isGM) {	
+		if (pchanges.hasOwnProperty("ds")) {
+			if (WallUtils.isOpened(pWall)) {
+				PeekingManager.onDoorOpen(pWall);
 			}
 			else {
+				PeekingManager.onDoorClose(pWall);
+			}
+		}
+		else {
+			if (!pinfos.PerceptiveChange) {	
 				PeekingManager.updateDoorPeekingWall(pWall);
 			}
 		}
@@ -153,6 +165,9 @@ Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 
 Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
 	if (pKeyInfos.ctrlKey) {
-		PeekingManager.updatePeekDoor(pWall);
+		PeekingManager.RequestPeekDoor(pWall, PerceptiveUtils.selectedTokens());
 	}
 });
+
+//socket exports
+export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs} = {}) {return PeekingManager.PeekDoorRequest(pDoorID, pSceneID, pTokenIDs)};

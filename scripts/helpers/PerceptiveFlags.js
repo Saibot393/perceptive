@@ -13,10 +13,13 @@ const cSlideSpeedRange = [-1, 1];
 export {cDoorMoveTypes, cHingePositions, cSwingSpeedRange, cSlideSpeedRange}
 //Flags
 const cisPerceptiveWallF = cisPerceptiveWall; //if this wall was created by this module
+
 const ccanbeLockpeekedF = "canbeLockpeekedFlag"; //Flag that signals, that this wall can be lock peeked
 const cLockPeekingWallIDsF = "LockPeekingWallIDsFlag"; //Flag for ids of the Lockpeekingwalls belonging to this door
 const cLockpeekedbyF = "LockpeekedbyFlag"; //Flag that stores ids of tokens lock peeking this wall
 const cisLockPeekingWallF = "isLockpeekingWallFlag"; //Flag that signals, that this wall is a lock peeking wall
+const cLockPeekSizeF = "LockPeekSizeFlag"; //Flag that stores the size of the LockPeek
+
 const cDoormovingWallIDF = "DoormovingWallIDFlag"; //Flag for id of the DoormovingWall belonging to this door
 const cDoorMovementF = "DoorMovementFlag"; //Flag that contains the movement type of this door
 const cDoorHingePositionF = "DoorHingePositionFlag"; //flag to contain the info where the hinge of this door is placed
@@ -25,7 +28,7 @@ const cDoorSlideSpeedF = "DoorSlideSpeedFlag"; //Flag to save the slide Speed of
 const cDoorSwingStateF = "DoorSwingStateFlag"; //Flag to save the currrent swing state of a door
 const cDoorSlideStateF = "DoorSlideStateFlag"; //Flag to save the currrent slide state of a door
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -34,11 +37,13 @@ class PerceptiveFlags {
 	static isPerceptiveWall(pWall) {} //returns if this wall was created by this Module
 	
 	//peeking
+	static canbeLockpeeked(pWall) {} //returns of pWall can be lock peeked
+	
+	static LockPeekingSize(pWall) {} //returns the LockPeekingSize of pWall
+	
 	static async createLockpeekingWalls(pDoor) {} //creates the appropiate perceptive walls of pDoor
 	
 	static async deleteLockpeekingWalls(pDoor, pSelfDelete = false) {} //creates the appropiate perceptive walls of pDoor
-	
-	static canbeLockpeeked(pWall) {} //returns of pWall can be lock peeked
 	
 	static async setLockpeekedby(pWall, pIDs) {} //set the Lockppekedby Flag of pWall
 	
@@ -104,7 +109,7 @@ class PerceptiveFlags {
 	//returns all Module Flags of pObject (if any)
 		if (pObject) {
 			if (pObject.flags.hasOwnProperty(cModuleName)) {
-				return pObject.flags.perceptive;
+				return pObject.flags[cModuleName];
 			}
 		}
 		
@@ -176,6 +181,19 @@ class PerceptiveFlags {
 		return false; //default if anything fails
 	}
 	
+	static #LockPeekSizeFlag (pWall) { 
+	//returns content of isLockPeekingWallFlag of pWall (if any) (boolean)
+		let vFlag = this.#PerceptiveFlags(pWall);
+
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cLockPeekSizeF)) {
+				return vFlag.LockPeekSizeFlag;
+			}
+		}
+		
+		return 0.1; //default if anything fails
+	}
+	
 	static #DoormovingWallIDFlag (pWall) { 
 	//returns content of DoormovingWallIDFlag of pWall (if any) (1 id)
 		let vFlag = this.#PerceptiveFlags(pWall);
@@ -192,7 +210,7 @@ class PerceptiveFlags {
 	static #DoorMovementFlag (pWall) { 
 	//returns content of DoorMovementFlag of pWall (must be Doormovement type)
 		let vFlag = this.#PerceptiveFlags(pWall);
-		
+
 		if (vFlag) {
 			if (vFlag.hasOwnProperty(cDoorMovementF)) {
 				return vFlag.DoorMovementFlag;
@@ -323,6 +341,14 @@ class PerceptiveFlags {
 	}
 	
 	//peeking
+	static canbeLockpeeked(pWall) {
+		return this.#canbeLockpeekedFlag(pWall) && !PerceptiveFlags.isLockpeekingWall(pWall);
+	}
+	
+	static LockPeekingSize(pWall) {
+		return this.#LockPeekSizeFlag(pWall);
+	}
+	
 	static async createLockpeekingWalls(pDoor) {
 		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getLockpeekingWallIDs(pDoor))) {
 			let vWalls = [];
@@ -337,43 +363,6 @@ class PerceptiveFlags {
 			
 			await this.#setLockPeekingWallIDs(pDoor, PerceptiveUtils.IDsfromWalls(vWalls));
 		}
-		/*
-		if (pWall.id) {
-			//only synch already created walls
-			let vLockPeekingWalls = [];
-			
-			if (WallUtils.isDoor(pWall)) {
-				//only relevant for doors
-				
-				if (PerceptiveFlags.canbeLockpeeked(pWall)) {			
-					if (!PerceptiveFlags.#LockPeekingWallIDsFlag(pWall).length) {
-						//create two lock peeking sight block walls				
-						vLockPeekingWalls[0] = await WallUtils.clonedoorasWall(pWall, false);
-						vLockPeekingWalls[1] = await WallUtils.clonedoorasWall(pWall, false);
-						
-						await PerceptiveFlags.#setLockPeekingWallIDs(pWall, vLockPeekingWalls.map(vWall => vWall.id));
-					}
-					
-					vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.#LockPeekingWallIDsFlag(pWall));
-					
-					for (let i = 0; i < vLockPeekingWalls.length; i++) {
-						WallUtils.syncWallfromDoor(pWall, vLockPeekingWalls[i]);
-						
-						vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pWall.c, (1-cLockSize)/2, i).map(vvalue => Math.round(vvalue))});
-					}
-				}	
-			}
-			
-			if (!PerceptiveFlags.canbeLockpeeked(pWall) && PerceptiveFlags.#LockPeekingWallIDsFlag(pWall).length) {
-				//delete lock peeking sight block walls
-				vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.#LockPeekingWallIDsFlag(pWall), pWall.parent);
-				
-				for (let i = 0; i < vLockPeekingWalls.length; i++) {
-					WallUtils.deletewall(vLockPeekingWalls[i]);
-				}				
-			}	
-		}
-		*/
 	}
 	
 	static async deleteLockpeekingWalls(pDoor, pSelfDelete = false) {
@@ -386,10 +375,6 @@ class PerceptiveFlags {
 		if (!pSelfDelete) {
 			this.#setLockPeekingWallIDs(pDoor, []);
 		}
-	}
-	
-	static canbeLockpeeked(pWall) {
-		return this.#canbeLockpeekedFlag(pWall) && !PerceptiveFlags.isLockpeekingWall(pWall);
 	}
 	
 	static async setLockpeekedby(pWall, pIDs) {
