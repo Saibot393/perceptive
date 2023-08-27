@@ -28,18 +28,20 @@ class PeekingManager {
 	static async PeekDoorGM(pDoor, pTokens) {
 		if (PerceptiveFlags.canbeLockpeeked(pDoor) && !WallUtils.isOpened(pDoor)) {		
 			await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
-		
-			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id));
 			
-			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken));
+			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
+			
+			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
 			
 			await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
 			
 			await PeekingManager.updateDoorPeekingWall(pDoor);
 			
-			//await PerceptiveFlags.removeLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vRemoves));
-			
 			for (let i = 0; i < pTokens.length; i++) {
+				if (vRemoves.includes(pTokens[i])) {
+					await PerceptiveFlags.stopLockpeeking(pTokens[i]);
+				}
+				
 				pTokens[i].object.updateVisionSource();
 			}
 		}
@@ -98,11 +100,11 @@ class PeekingManager {
 	
 	static IgnoreWall(pWall, pToken) {
 		if (WallUtils.isDoor(pWall)) {
-			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a lock peeked door
+			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken); //is a lock peeked door
 		}
 		
 		if (PerceptiveFlags.isLockpeekingWall(pWall)) {
-			return !PerceptiveFlags.isLockpeekedby(pWall, pToken.id); //is a wall to limit lockpeeking sight
+			return !(PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken)); //is a wall to limit lockpeeking sight
 		}
 		
 		return false;

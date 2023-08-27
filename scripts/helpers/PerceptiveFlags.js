@@ -19,6 +19,7 @@ const cLockPeekingWallIDsF = "LockPeekingWallIDsFlag"; //Flag for ids of the Loc
 const cLockpeekedbyF = "LockpeekedbyFlag"; //Flag that stores ids of tokens lock peeking this wall
 const cisLockPeekingWallF = "isLockpeekingWallFlag"; //Flag that signals, that this wall is a lock peeking wall
 const cLockPeekSizeF = "LockPeekSizeFlag"; //Flag that stores the size of the LockPeek
+const cisLockpeekingF = "isLockpeekingFlag"; //Flag that signals, that this token is lock peeking
 
 const cDoormovingWallIDF = "DoormovingWallIDFlag"; //Flag for id of the DoormovingWall belonging to this door
 const cDoorMovementF = "DoorMovementFlag"; //Flag that contains the movement type of this door
@@ -60,6 +61,12 @@ class PerceptiveFlags {
 	static isLockpeekingWall(pWall) {} //returns of this wall is a lockpeeking wall (and should normally be ignored)
 	
 	static getLockpeekingWallIDs(pDoor) {} //returns the IDs of the Lockpeeking walls of pDoor
+	
+	static isLockpeeking(pToken) {} //returns if pToken is lock peeking
+	
+	static async stopLockpeeking(pToken) {} //set pToken to no longer be lockpeeking
+	
+	static getLockpeekedWall(pToken) {} //returns the wall that is peeked by pToken (if any)
 	
 	//moving door
 	static Doorcanbemoved(pDoor) {} //if pDoor is a moving door
@@ -108,11 +115,9 @@ class PerceptiveFlags {
 	static #PerceptiveFlags (pObject) {	
 	//returns all Module Flags of pObject (if any)
 		if (pObject) {
-			if (!pObject.flags.hasOwnProperty(cModuleName)) {
-				return pObject.flags[cModuleName] = {};
+			if (pObject.flags.hasOwnProperty(cModuleName)) {
+				return pObject.flags[cModuleName];
 			}
-			
-			return pObject.flags[cModuleName];
 		}
 		
 		return; //if anything fails
@@ -194,6 +199,19 @@ class PerceptiveFlags {
 		}
 		
 		return game.settings.get(cModuleName, "LockpeekstandardSize"); //default if anything fails
+	}
+	
+	static #isLockpeekingFlag (pToken) { 
+	//returns content of isLockpeekingFlag of pWall (if any) (boolean)
+		let vFlag = this.#PerceptiveFlags(pToken);
+
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cisLockpeekingF)) {
+				return vFlag.isLockpeekingFlag;
+			}
+		}
+		
+		return false; //default if anything fails
 	}
 	
 	static #DoormovingWallIDFlag (pWall) { 
@@ -357,6 +375,16 @@ class PerceptiveFlags {
 		return true;
 	}
 	
+	static async #setisLockpeekingFlag (pToken, pContent) {
+		//sets content of isLockpeekingFlag (must be boolean)
+		if (pToken) {
+			await pToken.setFlag(cModuleName, cisLockpeekingF, Boolean(pContent)); 
+			
+			return true;
+		}
+		return false;
+	}
+	
 	//basics
 	static isPerceptiveWall(pWall) {
 		return Boolean(this.#isPerceptiveWallFlag(pWall));
@@ -403,6 +431,10 @@ class PerceptiveFlags {
 	static async setLockpeekedby(pWall, pIDs) {
 		let vLockPeekingWallIDs = this.#LockPeekingWallIDsFlag(pWall);
 		
+		for (let i = 0; i < pIDs.length; i++) {
+			this.#setisLockpeekingFlag(PerceptiveUtils.TokenfromID(pIDs[i], pWall.parent), true);
+		}
+		
 		await this.#setLockpeekedby(pWall, pIDs)
 		
 		for (let i = 0; i < vLockPeekingWallIDs.length; i++) {
@@ -410,7 +442,7 @@ class PerceptiveFlags {
 			let vWall = PerceptiveUtils.WallfromID(vLockPeekingWallIDs[i]);
 			
 			if (vWall) {
-				await PerceptiveFlags.setLockpeekedby(vWall, pIDs);
+				await PerceptiveFlags.#setLockpeekedby(vWall, pIDs);
 			}
 		}
 	}
@@ -441,6 +473,18 @@ class PerceptiveFlags {
 	
 	static getLockpeekingWallIDs(pDoor) {
 		return this.#LockPeekingWallIDsFlag(pDoor);
+	}
+	
+	static isLockpeeking(pToken) {
+		return this.#isLockpeekingFlag(pToken);
+	}
+	
+	static async stopLockpeeking(pToken) {
+		await this.#setisLockpeekingFlag(pToken, false);
+	}
+	
+	static getLockpeekedWall(pToken) {
+		pToken.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
 	}
 	
 	//moving door
