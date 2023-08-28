@@ -5,6 +5,7 @@
 - Added key control support for peeking and moving locks
 - Added Integration with the [Lock & Key](https://foundryvtt.com/packages/locknkey) module
   - A "Peek lock" options will be shown on the lock interaction menu of Lock & Key
+- Added setting Stop lock peeking on movement to stop lock peeking even if the moving token is still within the interaction distance
 
 ## v1.0.0
 - First release on Foundry
