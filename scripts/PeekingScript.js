@@ -106,8 +106,6 @@ class PeekingManager {
 		if (PerceptiveFlags.isLockpeeking(pToken)) {
 			let vPeekedWall = PerceptiveFlags.getLockpeekedWall(pToken);
 			
-			console.log(vPeekedWall);
-			
 			if (vPeekedWall) {
 				await PerceptiveFlags.removeLockpeekedby(vPeekedWall, pToken.id);
 			}
@@ -161,7 +159,7 @@ Hooks.on("init", function() {
 		
 		ClockwiseSweepPolygon.prototype._testWallInclusion = function (wall, bounds) {
 			if (PeekingManager.IgnoreWall(wall.document, this.config.source.object.document)) {
-				return false
+				return false;
 			}
 			
 			let vTokenCallBuffer = vOldTokenCall.bind(this);

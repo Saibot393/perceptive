@@ -50,7 +50,7 @@ class PerceptiveMouseHandler {
 	static RegisterDoorRightClick() {
 		//register onDoorRightClick (if possible with lib-wrapper)
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorRightClick(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", function(vWrapped, ...args) {if (PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
 		}
 		else {
 			const vOldDoorCall = DoorControl.prototype._onRightDown;
@@ -66,8 +66,8 @@ class PerceptiveMouseHandler {
 	} 
 	
 	static RegisterDoorWheel() {
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPED");
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false /*strange bug, turn off for now*/) {
+			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
 		}
 		else {
 			const vOldDoorCall = DoorControl.prototype.onwheel;
