@@ -115,18 +115,22 @@ class WallUtils {
 		let vRange = pRange;
 		
 		if (vRange < 0) {
-			if (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold)) {
-				return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
-			}
-			
 			vRange = game.settings.get(cModuleName, "InteractionDistance");
+			if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
+				vRange = PerceptiveCompUtils.ARReachDistance();
+				//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
+			}
+		}
+		
+		if (vRange < 0) {
+			return true;
 		}
 		
 		let vTokenposition  = GeometricUtils.CenterPosition(pToken);
 		
-		let vWallposition  = CenterPositionWall.CenterPosition(pWall);
+		let vWallposition  = GeometricUtils.CenterPositionWall(pWall);
 		
-		return GeometricUtils.Distance(vTokenposition, vWallposition) <= vRange;
+		return GeometricUtils.Distance(vTokenposition, vWallposition)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) <= vRange;
 	}
 	
 	//calculations

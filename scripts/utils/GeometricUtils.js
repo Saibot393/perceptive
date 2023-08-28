@@ -85,7 +85,7 @@ class GeometricUtils {
 	} 
 	
 	static CenterPositionWall(pWall) {
-		return [(pWall.c[0] + pWall[2])/2, (pWall.c[1] + pWall[3])/2];
+		return [(pWall.c[0] + pWall.c[2])/2, (pWall.c[1] + pWall.c[3])/2];
 	} 
 	
 	static NewCenterPosition(pDocument, pChanges) {

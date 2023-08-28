@@ -12,7 +12,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	scope: "world",
 	config: true,
 	type: Number,
-	default: 15
+	default: 10
   });   
   
   game.settings.register(cModuleName, "UseArmsreachDistance", {
@@ -42,6 +42,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Number,
 	default: 0.05
   }); 
+  
+  game.settings.register(cModuleName, "StopPeekonMove", {
+	name: Translate("Settings.StopPeekonMove.name"),
+	hint: Translate("Settings.StopPeekonMove.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });
   
   //door moving
   game.settings.register(cModuleName, "DoorstandardMove", {

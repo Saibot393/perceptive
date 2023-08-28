@@ -161,16 +161,16 @@ class PerceptiveUtils {
 	}
 	
 	static hoveredObject() {
-		if (LnKutils.hoveredWall()) {
-			return LnKutils.hoveredWall();
+		if (PerceptiveUtils.hoveredWall()) {
+			return PerceptiveUtils.hoveredWall();
 		}
 		else {
-			return LnKutils.hoveredToken();
+			return PerceptiveUtils.hoveredToken();
 		}
 	}
 	
 	static PrimaryCharacter() {
-		let vCharacter = LnKutils.selectedTokens()[0];
+		let vCharacter = PerceptiveUtils.selectedTokens()[0];
 		
 		if ((!vCharacter || !vCharacter.isOwner) && game.user.character) {
 			//select a token representing the standard character of the player

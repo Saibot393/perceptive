@@ -50,7 +50,7 @@ class PerceptiveCompUtils {
 	static ARWithinDistance(pCharacter, pObject) {
 		if (PerceptiveCompUtils.isactiveModule(cArmReach)) {
 			if (game.modules.get(cArmReach).api) {
-				return game.modules.get(cArmReach).api.isReachable(pCharacter, pObject);
+				return game.modules.get(cArmReach).api.isReachable(pCharacter.object, pObject.object);
 			}
 		}		
 		

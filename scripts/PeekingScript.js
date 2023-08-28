@@ -9,7 +9,7 @@ class PeekingManager {
 	//DECLARATION
 	static async PeekDoorGM(pDoor) {} //start peeking pWall with all selected tokens
 	
-	static async RequestPeekDoor(pDoor, pDirectionInfo) {} //starts a request to peek door
+	static async RequestPeekDoor(pDoor, pTokens) {} //starts a request to peek door
 	
 	static async PeekDoorRequest(pDoorID, pSceneID, pDirectionInfo) {} //answers a door peek request
 	
@@ -34,6 +34,7 @@ class PeekingManager {
 			await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
 			
 			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
+			vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor))
 			
 			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
 			
@@ -142,12 +143,17 @@ class PeekingManager {
 	}
 	
 	static OnTokenupdate(pToken, pchanges, pInfos) {
-		if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
-			PeekingManager.stopLockpeeking(pToken);
+		if (game.user.isGM) {
+			if (PerceptiveFlags.isLockpeeking(pToken)) {
+				if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
+					if (game.settings.get(cModuleName, "StopPeekonMove") || !WallUtils.isWithinRange(pToken, PerceptiveFlags.getLockpeekedWall(pToken))) {
+						PeekingManager.stopLockpeeking(pToken);
+					}
+				}
+			}
 		}
 	}
 }
-
 
 //Hooks
 Hooks.on("init", function() {
@@ -203,3 +209,6 @@ Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
 
 //socket exports
 export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs} = {}) {return PeekingManager.PeekDoorRequest(pDoorID, pSceneID, pTokenIDs)};
+
+//exports
+export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.RequestPeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
