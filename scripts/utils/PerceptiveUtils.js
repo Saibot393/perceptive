@@ -27,6 +27,8 @@ class PerceptiveUtils {
 	
 	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
 	
+	static SelectedandPrimary() {} //returns all selected tokens and the primary character (if not allready included)
+	
 	//Token Controls
 	static selectedTokens() {} //get array of all selected tokens
 	
@@ -178,6 +180,18 @@ class PerceptiveUtils {
 		}
 		
 		return vCharacter;
+	}
+	
+	static SelectedandPrimary() {
+		let vPrimeCharacter = canvas.scene.tokens.find(vToken => vToken.actor.id == game.user.character.id);
+		
+		let vSelected = PerceptiveUtils.selectedTokens();
+		
+		if (vPrimeCharacter && !vSelected.includes(vPrimeCharacter)) {
+			vSelected = vSelected.concat(vPrimeCharacter);
+		}
+		
+		return vSelected;
 	}
 }
 

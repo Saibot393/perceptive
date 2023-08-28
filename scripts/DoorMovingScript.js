@@ -55,12 +55,14 @@ class DoorMovingManager {
 	}
 	
 	static async RequestDoorMove(pDoor, pDirectionInfo) {
-		if (game.user.isGM) {
-			DoorMovingManager.DoorMoveGM(pDoor, pDirectionInfo);
-		}
-		else {
-			if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor))) {
-				game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirectionInfo : pDirectionInfo}});
+		if (pDoor) {
+			if (game.user.isGM) {
+				DoorMovingManager.DoorMoveGM(pDoor, pDirectionInfo);
+			}
+			else {
+				if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor))) {
+					game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirectionInfo : pDirectionInfo}});
+				}
 			}
 		}
 	}
@@ -161,3 +163,6 @@ Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 
 //socket exports
 export function DoorMoveRequest({pDoorID, pSceneID, pDirectionInfo} = {}) {return DoorMovingManager.DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo)};
+
+//exports
+export function MoveHoveredDoor(pDirection) {DoorMovingManager.RequestDoorMove(PerceptiveUtils.hoveredWall(), {y : pDirection})};

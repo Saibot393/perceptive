@@ -1,10 +1,23 @@
 {
 	"perceptive" : {
 		"Titles" : {
-			"perceptive"				: "Perceptive"
+			"perceptive"				: "Perceptive",
+			"LockPeekSettings"			: "Lock peeking settings",
+			"DoorMoveSettings"			: "Door movement settings",
+			"PeekLock"					: "Peek lock"
 		},
 		
 		"Settings" : {
+			"InteractionDistance" : {
+				"name"					: "Maximum interaction distance",
+				"descrp"				: "Maximum distance over which player can interact with objects (-1 for unlimited)"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Use Arms Reach distance",
+				"descrp"				: "Use the Arms Reach distance for the maximum interaction distance"
+			},
+			
 			"Peekablebydefault" : {
 				"name" 					: "Lock peekable by default",
 				"descrp" 				: "If doors can be lock peeked by default"
@@ -13,6 +26,11 @@
 			"LockpeekstandardSize" : {
 				"name" 					: "Standard size of lock peeks",
 				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size"
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "Stop lock peeking on movement",
+				"descrp" 				: "Stops tokens from lockpeeking as soon as they move, even if they are still within the interaction distance"
 			}, 
 			
 			"DoorstandardMove" : {
@@ -47,6 +65,20 @@
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			}
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "Peek lock"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "Move door to the left"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "Move door to the right"
 			}
 		},
 		

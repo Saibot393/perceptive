@@ -2,6 +2,9 @@ import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/PerceptiveCompUtils.js";
 
+import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
+import {MoveHoveredDoor} from "../DoorMovingScript.js";
+
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
@@ -107,8 +110,50 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Boolean,
 	default: true
   }); 
+  
+  //Keys (GM)
+  game.keybindings.register(cModuleName, "PeekLock", {
+	name: Translate("Keys.PeekLock.name"),
+	editable: [
+      {
+        key: "KeyO"
+      }
+    ],
+	onDown: () => { SelectedPeekhoveredDoor(); },
+	restricted: true,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  game.keybindings.register(cModuleName, "MoveDoorLeft", {
+	name: Translate("Keys.MoveDoorLeft.name"),
+	onDown: () => { MoveHoveredDoor(1); },
+	restricted: true,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+   game.keybindings.register(cModuleName, "MoveDoorRight", {
+	name: Translate("Keys.MoveDoorRight.name"),
+	onDown: () => { MoveHoveredDoor(-1); },
+	restricted: true,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
 });
 
 //Hooks
 Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
+	//add a few titles	
+	
+	let vnewHTML;
+	
+	if (game.user.isGM) {
+		//first peek setting
+		vnewHTML = `<h4 class="border"><u>${Translate("Titles.LockPeekSettings")}</u></h4>`;
+		 
+		pHTML.find('input[name="' + cModuleName + '.Peekablebydefault"]').closest(".form-group").before(vnewHTML);
+
+		//first door move setting
+		vnewHTML = `<h4 class="border"><u>${Translate("Titles.DoorMoveSettings")}</u></h4>`;
+		 
+		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
+	}
 });

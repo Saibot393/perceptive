@@ -1,10 +1,23 @@
 {
 	"perceptive" : {
 		"Titles" : {
-			"perceptive"				: "Perceptive"
+			"perceptive"				: "Perceptive",
+			"LockPeekSettings"			: "Schloss-durchschau Einstellungen",
+			"DoorMoveSettings"			: "Tür-Bewegung Einstellungen",
+			"PeekLock"					: "Durchschaue Schloss"
 		},
 		
 		"Settings" : {
+			"InteractionDistance" : {
+				"name"					: "Maximale Interaktionsdistanz",
+				"descrp"				: "Maximale Distanz über welche Spieler mit Türen interagieren können (-1 für unbeschränkt)"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Nutze Arms Reach Distanz",
+				"descrp"				: "Nutze die Arms Reach distance für die maximale Interaktionsdistanz"
+			},
+			
 			"Peekablebydefault" : {
 				"name" 					: "Schlösser standardmäßig durchschaubar",
 				"descrp" 				: "Ob Schlösser standardmäßig durchschaut werden können"
@@ -13,6 +26,11 @@
 			"LockpeekstandardSize" : {
 				"name" 					: "Standard größe von Schlüssellöchern",
 				"descrp" 				: "Die standard Größe von Schlüssellöchern relativ zur Tür Größe (0-1)"
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "Stope Schloss-durchschauen bei Bewegung",
+				"descrp" 				: "Stops das Schloss-durchschauen von Figuren sobald sie sich bewegen, selbst wenn sie sich noch in der Interaktionsdistanz befinden"
 			}, 
 			
 			"DoorstandardMove" : {
@@ -47,6 +65,20 @@
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
 				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
+			}
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "Durchschaue Schloss"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "Bewege Tür nach links"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "Bewege Tür nach rechts"
 			}
 		},
 		

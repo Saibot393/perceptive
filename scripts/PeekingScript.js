@@ -53,12 +53,14 @@ class PeekingManager {
 	}
 	
 	static async RequestPeekDoor(pDoor, pTokens) {
-		if (game.user.isGM) {
-			PeekingManager.PeekDoorGM(pDoor, pTokens);
+		if (pDoor) {
+			if (game.user.isGM) {
+				PeekingManager.PeekDoorGM(pDoor, pTokens);
+			}
+			else {
+				game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
+			}	
 		}
-		else {
-			game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
-		}		
 	}
 	
 	static async PeekDoorRequest(pDoorID, pSceneID, pTokenIDs) {
@@ -212,3 +214,5 @@ export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs} = {}) {return Pee
 
 //exports
 export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.RequestPeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
+
+export function SelectedPeekhoveredDoor() {PeekingManager.RequestPeekDoor(PerceptiveUtils.hoveredWall(), PerceptiveUtils.selectedTokens())}
