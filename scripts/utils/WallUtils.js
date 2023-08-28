@@ -1,5 +1,6 @@
 import {GeometricUtils} from "./GeometricUtils.js";
 import {cModuleName} from "./PerceptiveUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/PerceptiveCompUtils.js";
 
 const cisPerceptiveWall = "isPerceptiveWallFlag";
 const cisPerceptiveWallstring = '{"' + cModuleName + '" : {"' + cisPerceptiveWall + '" : true}}';
@@ -29,6 +30,8 @@ class WallUtils {
 	static async clonedoorasWall(pDoor, pRenderable = true) {} //creates copy of pDoor as wall
 	
 	static async syncWallfromDoor(pDoor, pWall, pincludeposition = true) {} //synchs the setting of pWall to that of pDoor
+	
+	static isWithinRange(pToken, pWall, pRange = -1) {} //returns if pToken is within pRange of pWall (leave pRange at negative value to use setting range)
 	
 	//calculations
 	static cornerposition(pWallPosition) {} //returns the corners of pWallPosition
@@ -106,6 +109,24 @@ class WallUtils {
 		vData.flags = {};
 		
 		await pWall.update(vData, {PerceptiveChange : true});
+	}
+	
+	static isWithinRange(pToken, pWall, pRange = -1) {
+		let vRange = pRange;
+		
+		if (vRange < 0) {
+			if (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold)) {
+				return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
+			}
+			
+			vRange = game.settings.get(cModuleName, "InteractionDistance");
+		}
+		
+		let vTokenposition  = GeometricUtils.CenterPosition(pToken);
+		
+		let vWallposition  = CenterPositionWall.CenterPosition(pWall);
+		
+		return GeometricUtils.Distance(vTokenposition, vWallposition) <= vRange;
 	}
 	
 	//calculations

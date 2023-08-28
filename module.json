@@ -35,7 +35,8 @@
 	"scripts/DoorMovingScript.js",
 	"scripts/helpers/SocketHandler.js",
 	"scripts/settings/PerceptiveSheetSettings.js",
-	"scripts/settings/PerceptiveSettings.js"
+	"scripts/settings/PerceptiveSettings.js",
+	"scripts/compatibility/PerceptiveCompatibility.js"
   ],
   "url": "https://github.com/Saibot393/perceptive",
   "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v1.0.0.zip",

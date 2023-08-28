@@ -6,8 +6,14 @@ import { GeometricUtils } from "../utils/GeometricUtils.js";
 const cLibWrapper = "lib-wrapper";
 const cArmReach = "foundryvtt-arms-reach";
 const cArmReachold = "arms-reach";
+const cLocknKey = "LocknKey";
 
-export { cLibWrapper}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey}
+
+//const
+const cLockTypeDoor = "LTDoor"; //type for door locks
+
+export { cLockTypeDoor }
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -15,9 +21,9 @@ class PerceptiveCompUtils {
 	static isactiveModule(pModule) {} //determines if module with id pModule is active
 	
 	//specific: Foundry ArmsReach, ArmsReach
-	static ARReachDistance() {} //[ArmReach]gives the current arms reach distance
+	static ARReachDistance() {} //[ArmReach] retunrs the set interactions distance of armsreach
 	
-	static ARWithinLockingDistance(pCharacter, pObject) {} //[ArmReach] returns if pCharacter is close enought to pLock to interact
+	static ARWithinDistance(pCharacter, pObject) {} //[ArmReach] returns if pCharacter is close enought to pLock to interact
 	
 	
 	//IMPLEMENTATIONS
@@ -41,22 +47,16 @@ class PerceptiveCompUtils {
 		}
 	}
 	
-	static ARWithinLockingDistance(pCharacter, pObject) {
+	static ARWithinDistance(pCharacter, pObject) {
 		if (PerceptiveCompUtils.isactiveModule(cArmReach)) {
 			if (game.modules.get(cArmReach).api) {
 				return game.modules.get(cArmReach).api.isReachable(pCharacter, pObject);
-			}
-			else {
-				return Geometricutils.ObjectDistance(pCharacter, pObject) <= PerceptiveCompUtils.ARReachDistance();
 			}
 		}		
 		
 		if (PerceptiveCompUtils.isactiveModule(cArmReachold)) {
 			if (game.modules.get(cArmReachold).api) {
 				return game.modules.get(cArmReachold).api.isReachable(pCharacter, pObject);
-			}
-			else {
-				return Geometricutils.ObjectDistance(pCharacter, pObject) <= PerceptiveCompUtils.ARReachDistance();
 			}
 		}	
 		

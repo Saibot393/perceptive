@@ -1,9 +1,29 @@
 import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/PerceptiveCompUtils.js";
 
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
+  //general
+  game.settings.register(cModuleName, "InteractionDistance", {
+	name: Translate("Settings.InteractionDistance.name"),
+	hint: Translate("Settings.InteractionDistance.descrp"),
+	scope: "world",
+	config: true,
+	type: Number,
+	default: 15
+  });   
+  
+  game.settings.register(cModuleName, "UseArmsreachDistance", {
+	name: Translate("Settings.UseArmsreachDistance.name"),
+	hint: Translate("Settings.UseArmsreachDistance.descrp"),
+	scope: "world",
+	config: PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold),
+	type: Boolean,
+	default: false
+  }); 
+  
   //peeking
   game.settings.register(cModuleName, "Peekablebydefault", {
 	name: Translate("Settings.Peekablebydefault.name"),

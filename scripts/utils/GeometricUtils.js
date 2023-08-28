@@ -23,6 +23,8 @@ class GeometricUtils {
 	
 	static CenterPosition(pToken) {} //returns the position of the Center of pToken
 	
+	static CenterPositionWall(pWall) {} //returns the position of the Center of pWall
+	
 	static NewCenterPosition(pDocument, pChanges) {} //returns the new position of the Center of pDocument (usefull for updates)
 	
 	static Difference(pPositionA, pPositionB) {} //returns the x and y differenc of pPositionA to pPositionB (x-y arrays)
@@ -80,6 +82,10 @@ class GeometricUtils {
 	
 	static CenterPosition(pToken) {
 		return [pToken.x + GeometricUtils.insceneWidth(pToken)/2, pToken.y + GeometricUtils.insceneHeight(pToken)/2];
+	} 
+	
+	static CenterPositionWall(pWall) {
+		return [(pWall.c[0] + pWall[2])/2, (pWall.c[1] + pWall[3])/2];
 	} 
 	
 	static NewCenterPosition(pDocument, pChanges) {
