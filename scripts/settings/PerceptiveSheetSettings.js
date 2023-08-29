@@ -4,7 +4,7 @@ import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, 
 import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
-const cPerceptiveIcon = "fa-solid fa-eye";
+const cPerceptiveIcon = "fa-regular fa-eye";
 
 class PerceptiveSheetSettings {
 	//DECLARATIONS	
