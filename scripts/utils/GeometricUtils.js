@@ -37,6 +37,8 @@ class GeometricUtils {
 	
 	static value(pVector) {} //returns the pythagoras value
 	
+	static average(pVectors) {} //returns the average of pVectors
+	
 	static scale(pNumberArray, pfactor) {} //scales pNumberarray by pfactor
 	
 	static scalexy(pNumberArray, pfactorarray) {} //scales pNumberarray by pfactorarray (position by position)
@@ -126,7 +128,23 @@ class GeometricUtils {
 	
 	static value(pVector) {
 		return Math.sqrt(pVector[0] ** 2 + pVector[1] ** 2);
-	} 
+	}
+
+	static average(pVectors) {
+		let vAverage = [];
+		
+		for (let i = 0; i < pVectors.length; i++) {
+			for (let j = 0; j < pVectors[i].length; j++) {
+				if (vAverage.length <= j) {
+					vAverage[j] = 0;
+				}
+				
+				vAverage[j] = ((i * vAverage[j]) + pVectors[i][j])/(i+1);
+			}
+		}
+		
+		return vAverage;
+	}
 	
 	static scale(pNumberArray, pfactor) {
 		return pNumberArray.map(pValue => pValue*pfactor);

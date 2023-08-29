@@ -3,10 +3,8 @@ import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 
-const cLockSize = 0.1; //size of locks
-
 class PeekingManager {
-	//DECLARATION
+	//DECLARATIONS
 	static async PeekDoorGM(pDoor) {} //start peeking pWall with all selected tokens
 	
 	static async RequestPeekDoor(pDoor, pTokens) {} //starts a request to peek door

@@ -2,6 +2,7 @@ import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF} from "../helpers/PerceptiveFlags.js";
 import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
+import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -18,6 +19,10 @@ class PerceptiveSheetSettings {
 	
 	static WallSheetSettings(pApp, pHTML, pData) {
 		if (!PerceptiveFlags.isPerceptiveWall(pApp.document)) {
+			//create Tabs if necessary
+			WallTabInserter.InsertWallTabs(pApp, pHTML, pData);
+			
+			/*
 			//setup
 			let vprevElement = pHTML.find(`fieldset.door-options`);
 			if (!vprevElement.length) {
@@ -31,6 +36,21 @@ class PerceptiveSheetSettings {
 								</fieldset>`;
 								
 			vprevElement.after(vNewSection);
+			*/
+			
+			let vTabbar = pHTML.find(`nav.sheet-tabs`);
+			let vprevTab = pHTML.find(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
+			
+			let vTabButtonHTML = 	`
+							<a class="item" data-tab="${cModuleName}">
+								<i class="fas ${cPerceptiveIcon}"></i>
+								${Translate("Titles."+cModuleName)}
+							</a>
+							`; //tab button HTML
+			let vTabContentHTML = `<div class="tab" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+			
+			vTabbar.append(vTabButtonHTML);
+			vprevTab.after(vTabContentHTML);	
 			
 			//wall can be lockpeeked
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
@@ -38,7 +58,7 @@ class PerceptiveSheetSettings {
 														vtype : "checkbox", 
 														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
 														vflagname : ccanbeLockpeekedF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 														
 			//lock peeking size
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
@@ -48,7 +68,7 @@ class PerceptiveSheetSettings {
 														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
 														vstep : 0.01,
 														vflagname : cLockPeekSizeF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 			
 			//wall movement type
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
@@ -57,7 +77,7 @@ class PerceptiveSheetSettings {
 														voptions : cDoorMoveTypes,
 														vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
 														vflagname : cDoorMovementF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 
 			//wall hinge position
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
@@ -66,7 +86,7 @@ class PerceptiveSheetSettings {
 														voptions : cHingePositions,
 														vvalue : PerceptiveFlags.DoorHingePosition(pApp.document), 
 														vflagname : cDoorHingePositionF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 												
 			//wall swing speed
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingSpeedF +".name"), 
@@ -75,7 +95,7 @@ class PerceptiveSheetSettings {
 														//vrange : cSwingSpeedRange,
 														vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
 														vflagname : cDoorSwingSpeedF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 														
 			//wall slide speed
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSlideSpeedF +".name"), 
@@ -85,7 +105,7 @@ class PerceptiveSheetSettings {
 														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
 														vstep : 0.01,
 														vflagname : cDoorSlideSpeedF
-														}, `fieldset.${cModuleName}-options`);
+														}, `div[data-tab="${cModuleName}"]`);
 		}
 	}
 	

@@ -33,7 +33,9 @@
 	"scripts/helpers/PerceptiveFlags.js",
 	"scripts/PeekingScript.js",
 	"scripts/DoorMovingScript.js",
+	"scripts/StalkingScript.js",
 	"scripts/helpers/SocketHandler.js",
+	"scripts/helpers/WallTabInserter.js",
 	"scripts/settings/PerceptiveSheetSettings.js",
 	"scripts/settings/PerceptiveSettings.js",
 	"scripts/compatibility/PerceptiveCompatibility.js"

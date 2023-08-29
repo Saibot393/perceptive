@@ -4,7 +4,8 @@
 			"perceptive"				: "Perceptive",
 			"LockPeekSettings"			: "Lock peeking settings",
 			"DoorMoveSettings"			: "Door movement settings",
-			"PeekLock"					: "Peek lock"
+			"PeekLock"					: "Peek lock",
+			"Basic"						: "Basic"
 		},
 		
 		"Settings" : {
