@@ -43,7 +43,7 @@ class PerceptiveSheetSettings {
 			
 			let vTabButtonHTML = 	`
 							<a class="item" data-tab="${cModuleName}">
-								<i class="fas ${cPerceptiveIcon}"></i>
+								<i class="${cPerceptiveIcon}"></i>
 								${Translate("Titles."+cModuleName)}
 							</a>
 							`; //tab button HTML

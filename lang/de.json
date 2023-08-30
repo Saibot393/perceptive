@@ -40,7 +40,7 @@
 				"options" : {
 					"none"				: "Keine Bewegung (normale Tür)",
 					"swing"				: "Schwing-Tür",
-					"slide"				: "Siebe-Tür"
+					"slide"				: "Schiebe-Tür"
 				}
 			}, 
 			
@@ -100,7 +100,7 @@
 				"options" : {
 					"none"				: "Keine Bewegung (normale Tür)",
 					"swing"				: "Schwing-Tür",
-					"slide"				: "Siebe-Tür"
+					"slide"				: "Schiebe-Tür"
 				}
 			},
 			

@@ -105,6 +105,8 @@ class PerceptiveFlags {
 	
 	static resetDoorMovement(pDoor) {} //resets data related to door movement
 	
+	static getDoorPosition(pDoor) {} //returns the calculated position of a moving door pDoor
+	
 	//support
 	static slideMinMax(pSlide) {} //returns a slide with both values within [0,1]
 	
@@ -589,6 +591,20 @@ class PerceptiveFlags {
 	static resetDoorMovement(pDoor) {
 		PerceptiveFlags.setDoorSwingState(pDoor, 0);
 		PerceptiveFlags.setDoorSlideState(pDoor, 1);
+	}
+	
+	static getDoorPosition(pDoor) {
+		switch (PerceptiveFlags.DoorMovementType(pDoor)) {
+			case "swing":
+					return WallUtils.calculateSwing(pDoor.c, PerceptiveFlags.getDoorSwingState(pDoor), PerceptiveFlags.DoorHingePosition(pDoor)).map(vvalue => Math.round(vvalue));
+				break;
+				
+			case "slide":
+					return WallUtils.calculateSlide(pDoor.c, PerceptiveFlags.getDoorSlideState(pDoor), PerceptiveFlags.DoorHingePosition(pDoor)).map(vvalue => Math.round(vvalue));
+				break;
+		}
+		
+		return [];
 	}
 	
 	//support

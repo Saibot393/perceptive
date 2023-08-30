@@ -1,10 +1,10 @@
 import {PerceptiveUtils, cModuleName} from "./utils/PerceptiveUtils.js";
 import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags, cDoorMoveTypes} from "./helpers/PerceptiveFlags.js";
+import { GeometricUtils } from "./utils/GeometricUtils.js";
+import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 
-const cDoorMovement = "Slide";
-const cSwingSpeed = 20;//in degrees
-const cSlideSpeed = 0.2; //in percent
+const cMoveDoorControl = true;
 
 const cMoveControl = true;
 
@@ -17,6 +17,10 @@ class DoorMovingManager {
 	static async DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo) {} //answers a door move request
 	
 	static async updateDoorMovementWall(pDoor) {} //updates the position of the movement wall belonging to pDoor
+	
+	static async placeDoorControl(pWall) {} //places the DoorControl of pWall
+	
+	static DControlProxyVisible(pDoorControl) {} //makes sure moving door controls are visible
 	
 	//ons
 	static onDoorOpen(pDoor) {} //called when a door opened external
@@ -32,10 +36,6 @@ class DoorMovingManager {
 			
 			let vDirection = Math.sign(pDirectionInfo.y);
 			
-			if (!WallUtils.isOpened(pDoor)) {	
-				await WallUtils.openDoor(pDoor);
-			}
-			
 			switch (PerceptiveFlags.DoorMovementType(pDoor)) {
 				case "swing":
 						await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor));
@@ -48,6 +48,11 @@ class DoorMovingManager {
 						
 			if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
 				await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+			}
+			else {
+				if (!WallUtils.isOpened(pDoor)) {	
+					WallUtils.openDoor(pDoor);
+				}				
 			}
 			
 			await DoorMovingManager.updateDoorMovementWall(pDoor);
@@ -86,31 +91,73 @@ class DoorMovingManager {
 			if (vreplacementWall) {
 				await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
 				
-				switch (PerceptiveFlags.DoorMovementType(pDoor)) {
-					case "swing":
-							await vreplacementWall.update({c : WallUtils.calculateSwing(pDoor.c, PerceptiveFlags.getDoorSwingState(pDoor), PerceptiveFlags.DoorHingePosition(pDoor)).map(vvalue => Math.round(vvalue))});
-						break;
-						
-					case "slide":
-							await vreplacementWall.update({c : WallUtils.calculateSlide(pDoor.c, PerceptiveFlags.getDoorSlideState(pDoor), PerceptiveFlags.DoorHingePosition(pDoor)).map(vvalue => Math.round(vvalue))});
-						break;
-					default:
-						await WallUtils.deletewall(vreplacementWall);
+				let vTargetPosition = PerceptiveFlags.getDoorPosition(pDoor);
+				
+				if (vTargetPosition.length == 0) {
+					await WallUtils.deletewall(vreplacementWall);
+				}
+				else {
+					await vreplacementWall.update({c : vTargetPosition});
 				}
 				
-				if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
+				//await DoorMovingManager.placeDoorControl(pDoor);
+				
+				if (!WallUtils.isOpened(pDoor)) {
 					WallUtils.hidewall(vreplacementWall);
-				}
-				
-				if (cMoveControl) {
-					/*console.log(pDoor);
-					canvas.walls.doors[0].doorControl.position.x = 1000*/
 				}
 			}	
 		}
 		else {
 			PerceptiveFlags.deleteMovingWall(pDoor);
 		}
+	}
+	
+	static async placeDoorControl(pWall) {
+		if (PerceptiveFlags.Doorcanbemoved(pWall)) {
+			if (cMoveDoorControl) {
+				if (pWall.object.doorControl) {
+					let vCenterPosition = GeometricUtils.CenterPositionWall({c : PerceptiveFlags.getDoorPosition(pWall)});
+					
+					let vDoorControl = pWall.object.doorControl;
+					
+					vDoorControl.position.x = Math.round(vCenterPosition[0] - vDoorControl.width/2);
+					vDoorControl.position.y = Math.round(vCenterPosition[1] - vDoorControl.height/2);
+				}
+			}
+		}
+	}
+	
+	static DControlProxyVisible(pDoorControl) {
+		//adapted from foundry.js get isVisible()
+		
+		if ( !canvas.effects.visibility.tokenVision ) return true;
+
+		if (cMoveControl && PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
+			// Hide secret doors from players
+			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoorControl.wall.document), pDoorControl.wall.scene).object;
+			
+			const w = vreplacementWall;
+			if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
+
+			// Test two points which are perpendicular to the door midpoint
+			const ray = vreplacementWall.toRay();
+			const [x, y] = w.midpoint;
+			const [dx, dy] = [-ray.dy, ray.dx];
+			const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+			const points = [
+			  {x: x + (t * dx), y: y + (t * dy)},
+			  {x: x - (t * dx), y: y - (t * dy)}
+			];
+
+			// Test each point for visibility
+			return points.some(p => {
+			  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
+			});
+		}
+		else {
+			return false;
+		}
+		
 	}
 	
 	//ons
@@ -134,6 +181,27 @@ class DoorMovingManager {
 }
 
 //hooks
+
+Hooks.on("init", function() {
+	//replace control visible to allow moved door controls to be visible as long as the replacement is visible
+	if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
+		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype.isVisible", function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
+	}
+	else {
+		const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
+		
+		DoorControl.prototype.__defineGetter__("isVisible", function () {
+			if (DoorMovingManager.DControlProxyVisible(this)) {
+				return true;
+			}
+			
+			let vDControlCallBuffer = vOldDControlCall.bind(this);
+			
+			return vDControlCallBuffer();
+		});
+	}
+});
+
 Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
 	DoorMovingManager.RequestDoorMove(pWall, pScrollInfos);
 }); 
@@ -148,11 +216,13 @@ Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 					DoorMovingManager.onDoorOpen(pWall);
 				}
 				else {
-					DoorMovingManager.onDoorClose(pWall);
+					await DoorMovingManager.onDoorClose(pWall);
 				}
 			}
 		}
 	}
+	
+	DoorMovingManager.placeDoorControl(pWall);
 });
 
 Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
