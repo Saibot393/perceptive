@@ -3,6 +3,8 @@ import { GeometricUtils } from "./utils/GeometricUtils.js";
 
 const cStalking = true;
 
+const cAreaScale = 1.2;
+
 class StalkingManager {
 	//DECLARATIONS
 	
@@ -14,28 +16,33 @@ class StalkingManager {
 	
 	//ons
 	static OnTokenrefresh(pToken, pchanges) {
-		console.log(pToken);
-		console.log(pchanges);
 		if (cStalking && pchanges.refreshPosition) {
-			console.log(GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken))));
+			console.log();
 			if (PerceptiveUtils.selectedTokens().includes(pToken.document)) {
-				canvas.pan({x : pToken.center.x, y : pToken.center.y});
-			}
-		}
-	}
-	
-	static OnTokenupdate(pToken, pchanges) {
-		console.log(pToken);
-		console.log(pchanges);
-		if (cStalking && pchanges.refreshPosition) {
-			console.log(GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken))));
-			if (PerceptiveUtils.selectedTokens().includes(pToken.document)) {
-				//canvas.animatePan({x : pToken.center.x, y : pToken.center.y});
+				let cCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken)));
+				
+				let vArea = GeometricUtils.GetArea(PerceptiveUtils.selectedTokens());
+				
+				vArea = GeometricUtils.ScaleArea(vArea, cAreaScale);
+				
+				let vScreenWidth = canvas.screenDimensions[0];
+				
+				let vPanTarget = {x : cCenter[0], y : cCenter[1]}
+				
+				if (!ui.sidebar._collapsed) {
+					vScreenWidth = vScreenWidth - ui.sidebar.position.width;
+				}
+				
+				let vScale = (canvas.screenDimensions[0] - ui.chat.position.width)/GeometricUtils.AreaWidth(vArea);
+				
+				if (vScale < canvas.stage.scale.x) {
+					vPanTarget.scale = vScale;
+				}
+				
+				canvas.pan(vPanTarget);
 			}
 		}
 	}
 }
 
 Hooks.on("refreshToken", (...args) => StalkingManager.OnTokenrefresh(...args));
-
-Hooks.on("updateToken", (...args) => StalkingManager.OnTokenupdate(...args));

@@ -76,6 +76,15 @@ class GeometricUtils {
 	//grids
 	static GridSnap(ppositon, pGridType, podd) {}//snaps ppositon to grid, podd should be an array of boolean refering to x and y (e.g. if summ of rider and ridden size is odd)
 	
+	//areas
+	static GetArea(pTokens) {} //returns the smallest area (top, left, bttom, right) in which all pTokens lie
+	
+	static ScaleArea(pArea, pScale) {} //scales pArea
+	
+	static AreaWidth(pArea) {} //returns the width of pArea
+	
+	static AreaHeight(pArea) {} //returns the height of pArea
+	
 	//IMPLEMENTATIONS
 	//basics
 	static Rotated(pPosition, protation) {
@@ -380,6 +389,55 @@ class GeometricUtils {
 			default:
 				return vsnapposition;
 		}
+	}
+	
+	//areas
+	static GetArea(pTokens) {
+		let vArea = {left : pTokens[0].x, top : pTokens[0].y, right : pTokens[0].x + GeometricUtils.insceneWidth(pTokens[0]), bottom : pTokens[0].y + GeometricUtils.insceneHeight(pTokens[0])};
+		
+		for (let i = 1; i < pTokens.length; i++) {
+			if (pTokens[i].x < vArea.left) {
+				vArea.left = pTokens[i].x;
+			}
+			
+			if (pTokens[i].y < vArea.top) {
+				vArea.top = pTokens[i].y;
+			}
+			
+			if ((pTokens[i].x + GeometricUtils.insceneWidth(pTokens[i])) > vArea.right) {
+				vArea.right = pTokens[i].x + GeometricUtils.insceneWidth(pTokens[i]);
+			}
+			
+			if ((pTokens[i].y + GeometricUtils.insceneHeight(pTokens[i])) > vArea.bottom) {
+				vArea.bottom = pTokens[i].y + GeometricUtils.insceneHeight(pTokens[i]);
+			}
+		}
+		
+		return vArea;
+	}
+	
+	static ScaleArea(pArea, pScale) {
+		let vxchange = Math.round((pArea.right - pArea.left) * (pScale - 1)/2);
+		
+		let vychange = Math.round((pArea.bottom - pArea.top) * (pScale - 1)/2);
+		
+		let vresult = {left : 0, top : 0, right : 0, bottom : 0};
+		
+		vresult.left = pArea.left - vxchange;
+		vresult.right = pArea.right + vxchange;
+		
+		vresult.top = pArea.top - vychange;
+		vresult.bottom = pArea.bottom + vychange;
+		
+		return vresult;
+	}
+	
+	static AreaWidth(pArea) {
+		return pArea.right - pArea.left;
+	}
+	
+	static AreaHeight(pArea) {
+		return pArea.bottom - pArea.top;
 	}
 }
 
