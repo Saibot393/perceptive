@@ -4,10 +4,6 @@ import {PerceptiveFlags, cDoorMoveTypes} from "./helpers/PerceptiveFlags.js";
 import { GeometricUtils } from "./utils/GeometricUtils.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 
-const cMoveDoorControl = true;
-
-const cMoveControl = true;
-
 class DoorMovingManager {
 	//DECLARATION
 	static async DoorMoveGM(pDoor, pDirectionInfo) {} //slide or swing a pDoor open in direction pDirectionInfo
@@ -114,7 +110,7 @@ class DoorMovingManager {
 	
 	static async placeDoorControl(pWall) {
 		if (PerceptiveFlags.Doorcanbemoved(pWall)) {
-			if (cMoveDoorControl) {
+			if (game.settings.get(cModuleName, "moveDoorControls")) {
 				if (pWall.object.doorControl) {
 					let vCenterPosition = GeometricUtils.CenterPositionWall({c : PerceptiveFlags.getDoorPosition(pWall)});
 					
@@ -132,7 +128,7 @@ class DoorMovingManager {
 		
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (cMoveControl && PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
+		if (game.settings.get(cModuleName, "moveDoorControls") && PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
 			// Hide secret doors from players
 			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoorControl.wall.document), pDoorControl.wall.scene).object;
 			

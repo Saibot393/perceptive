@@ -111,6 +111,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: true
   }); 
   
+  //client
+  game.settings.register(cModuleName, "moveDoorControls", {
+	name: Translate("Settings.moveDoorControls.name"),
+	hint: Translate("Settings.moveDoorControls.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   //Keys (GM)
   game.keybindings.register(cModuleName, "PeekLock", {
 	name: Translate("Keys.PeekLock.name"),
