@@ -5,7 +5,7 @@ import {cModuleName, PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 const cangleepsilon = 1; //epsilon around zero for angles
 
 const cDoorMoveTypes = ["none", "swing", "slide"];
-const cHingePositions = [0, 1];
+const cHingePositions = [0, 1, 2];
 
 const cSwingSpeedRange = [-180, 180];
 const cSlideSpeedRange = [-1, 1];

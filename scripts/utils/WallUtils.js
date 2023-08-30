@@ -154,6 +154,9 @@ class WallUtils {
 			case 1:
 				return WallUtils.wallposition(GeometricUtils.Summ(vOriginalState[1], GeometricUtils.scale(vWallLine, -pSlideState)), vOriginalState[1]);
 				break;
+			case 2:
+				return WallUtils.wallposition(GeometricUtils.Summ(vOriginalState[0], GeometricUtils.scale(vWallLine, (1-pSlideState)/2)), GeometricUtils.Summ(vOriginalState[1], GeometricUtils.scale(vWallLine, -(1-pSlideState)/2)));
+				break;
 			default:
 				return pOriginalPosition;
 		}
@@ -170,6 +173,9 @@ class WallUtils {
 				break;
 			case 1:
 				return WallUtils.wallposition(GeometricUtils.Summ(vOriginalState[1], GeometricUtils.Rotated(GeometricUtils.scale(vWallLine, -1), pSwingState)), vOriginalState[1]);
+				break;
+			case 2:
+				return WallUtils.wallposition(GeometricUtils.Summ(GeometricUtils.CenterPositionWall({c : pOriginalPosition}), GeometricUtils.Rotated(GeometricUtils.scale(vWallLine, 0.5), pSwingState)), GeometricUtils.Summ(GeometricUtils.CenterPositionWall({c : pOriginalPosition}), GeometricUtils.Rotated(GeometricUtils.scale(vWallLine, -0.5), pSwingState)));
 				break;
 			default:
 				return pOriginalPosition;

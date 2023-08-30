@@ -78,7 +78,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Number,
 	choices: {
 		0: Translate("Settings.DoorstandardHinge.options." + 0),
-		1: Translate("Settings.DoorstandardHinge.options." + 1)
+		1: Translate("Settings.DoorstandardHinge.options." + 1),
+		2: Translate("Settings.DoorstandardHinge.options." + 1)
 	},
 	default: 0
   });  

@@ -11,7 +11,6 @@ class StalkingManager {
 	//ons
 	static OnTokenrefresh(pToken, pchanges, pInfos) {} //called when a token is updated
 	
-	static OnTokenupdate(pToken, pchanges, pInfos) {} //called when a token is updated
 	//IMPLEMENTATIONS
 	
 	//ons
@@ -33,7 +32,10 @@ class StalkingManager {
 					vScreenWidth = vScreenWidth - ui.sidebar.position.width;
 				}
 				
-				let vScale = (canvas.screenDimensions[0] - ui.chat.position.width)/GeometricUtils.AreaWidth(vArea);
+				let vxScale = (vScreenWidth)/GeometricUtils.AreaWidth(vArea);
+				let vyScale = (canvas.screenDimensions[1])/GeometricUtils.AreaHeight(vArea);
+				
+				let vScale = Math.min(vxScale, vyScale);
 				
 				if (vScale < canvas.stage.scale.x) {
 					vPanTarget.scale = vScale;

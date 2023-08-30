@@ -158,7 +158,7 @@ class PeekingManager {
 //Hooks
 Hooks.on("init", function() {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(vWrapped, vwall, vbounds) {console.log("here");if (PeekingManager.IgnoreWall(vwall.document, this.config.source.object.document)){return false} return vWrapped(vwall, vbounds)}, "MIXED");
+		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(vWrapped, vwall, vbounds) {if (PeekingManager.IgnoreWall(vwall.document, this.config.source.object.document)){return false} return vWrapped(vwall, vbounds)}, "MIXED");
 	}
 	else {
 		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
