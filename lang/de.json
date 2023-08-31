@@ -48,8 +48,9 @@
 				"name" 					: "Türangel standard Position",
 				"descrp" 				: "Die standard Position von Türangeln",
 				"options" : {
-					"0"				: "Links",
-					"1"				: "Rechts"
+					"0"					: "Links",
+					"1"					: "Rechts",
+					"2"					: "Mitte"
 				}
 			}, 
 			
@@ -108,8 +109,9 @@
 				"name" 					: "Türangel Position",
 				"descrp"				: "Die Position der Türangel",
 				"options" : {
-					"0"				: "Links",
-					"1"				: "Rechts"
+					"0"					: "Links",
+					"1"					: "Rechts",
+					"2"					: "Mitte"
 				}
 			},
 			

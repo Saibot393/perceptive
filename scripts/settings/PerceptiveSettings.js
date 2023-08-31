@@ -122,6 +122,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "followTokens", {
+	name: Translate("Settings.followTokens.name"),
+	hint: Translate("Settings.followTokens.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   //Keys (GM)
   game.keybindings.register(cModuleName, "PeekLock", {
 	name: Translate("Keys.PeekLock.name"),
@@ -142,9 +151,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
   
-   game.keybindings.register(cModuleName, "MoveDoorRight", {
+  game.keybindings.register(cModuleName, "MoveDoorRight", {
 	name: Translate("Keys.MoveDoorRight.name"),
 	onDown: () => { MoveHoveredDoor(-1); },
+	restricted: true,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+ 
+  game.keybindings.register(cModuleName, "ToggleTokenFollowing", {
+	name: Translate("Keys.ToggleTokenFollowing.name"),
+	onDown: () => { game.settings.set(cModuleName, "followTokens", !game.settings.get(cModuleName, "followTokens")) },
 	restricted: true,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
@@ -166,5 +182,10 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		vnewHTML = `<h4 class="border"><u>${Translate("Titles.DoorMoveSettings")}</u></h4>`;
 		 
 		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
+		
+		//first client setting
+		vnewHTML = `<h4 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
+		 
+		pHTML.find('select[name="' + cModuleName + '.moveDoorControls"]').closest(".form-group").before(vnewHTML);	
 	}
 });

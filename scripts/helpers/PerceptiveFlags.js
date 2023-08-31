@@ -507,7 +507,7 @@ class PerceptiveFlags {
 				return PerceptiveFlags.getDoorSlideState(pDoor) >= 1;
 				break;
 			case "swing":
-				return Math.abs(PerceptiveFlags.getDoorSwingState(pDoor)) <= cangleepsilon;
+				return (Math.abs(PerceptiveFlags.getDoorSwingState(pDoor)) <= cangleepsilon) || (PerceptiveFlags.DoorHingePosition(pDoor) == 2 && Math.abs(PerceptiveFlags.getDoorSwingState(pDoor) % 180) <= cangleepsilon);
 				break;
 			default :
 				true;
