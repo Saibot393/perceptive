@@ -1,3 +1,6 @@
+## v1.2.2
+- Fixed compatibility issue with drag-ruler
+
 ## v1.2.1
 - Fixed bug that caused Token following not to work
 
