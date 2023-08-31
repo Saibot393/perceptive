@@ -6,11 +6,11 @@ import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveComp
 
 class DoorMovingManager {
 	//DECLARATION
-	static async DoorMoveGM(pDoor, pDirectionInfo) {} //slide or swing a pDoor open in direction pDirectionInfo
+	static async DoorMoveGM(pDoor, pDirectionInfo, pSpeed = 1) {} //slide or swing a pDoor open in direction pDirectionInfo
 	
-	static async RequestDoorMove(pDoor, pDirectionInfo) {} //starts a request to move door
+	static async RequestDoorMove(pDoor, pDirectionInfo, pSpeed = 1) {} //starts a request to move door
 	
-	static async DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo) {} //answers a door move request
+	static async DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo, pSpeed = 1) {} //answers a door move request
 	
 	static async updateDoorMovementWall(pDoor) {} //updates the position of the movement wall belonging to pDoor
 	
@@ -23,22 +23,24 @@ class DoorMovingManager {
 	
 	static async onDoorClose(pDoor) {} //called when a door closed external
 	
+	static onPreupdateWall(pWall, pchanges, pinfos) {} //called before a wall is updated
+	
 	static onDeleteWall(pWall) {} //called when a wall is deleted
 	
 	//IMPLEMENTATIONS
-	static async DoorMoveGM(pDoor, pDirectionInfo) {
+	static async DoorMoveGM(pDoor, pDirection, pSpeed = 1) {
 		if (!WallUtils.isLocked(pDoor) && PerceptiveFlags.Doorcanbemoved(pDoor)) {
 			await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
 			
-			let vDirection = Math.sign(pDirectionInfo.y);
+			let vDirection = Math.sign(pDirection);
 			
 			switch (PerceptiveFlags.DoorMovementType(pDoor)) {
 				case "swing":
-						await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor));
+						await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor) * pSpeed);
 					break;
 					
 				case "slide":
-						await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor));
+						await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor) * pSpeed);
 					break;
 			}
 						
@@ -55,22 +57,24 @@ class DoorMovingManager {
 		}
 	}
 	
-	static async RequestDoorMove(pDoor, pDirectionInfo) {
+	static async RequestDoorMove(pDoor, pDirection, pSpeed = 1) {
 		if (pDoor) {
 			if (game.user.isGM) {
-				DoorMovingManager.DoorMoveGM(pDoor, pDirectionInfo);
+				DoorMovingManager.DoorMoveGM(pDoor, pDirection, pSpeed);
 			}
 			else {
-				if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor))) {
-					game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirectionInfo : pDirectionInfo}});
+				if (!game.paused) {
+					if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor))) {
+						game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirection : pDirection, pSpeed : pSpeed}});
+					}
 				}
 			}
 		}
 	}
 	
-	static async DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo) {
+	static async DoorMoveRequest(pDoorID, pSceneID, pDirection, pSpeed = 1) {
 		if (game.user.isGM) {
-			DoorMovingManager.DoorMoveGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), pDirectionInfo)
+			DoorMovingManager.DoorMoveGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), pDirection, pSpeed)
 		}
 	}
 	
@@ -128,7 +132,7 @@ class DoorMovingManager {
 		
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (game.settings.get(cModuleName, "moveDoorControls") && PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
+		if (PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
 			// Hide secret doors from players
 			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoorControl.wall.document), pDoorControl.wall.scene);
 			
@@ -173,6 +177,12 @@ class DoorMovingManager {
 		DoorMovingManager.updateDoorMovementWall(pDoor);
 	}
 	
+	static onPreupdateWall(pWall, pchanges, pinfos) {
+		if (!game.user.isGM && WallUtils.isOpened(pchanges) && PerceptiveFlags.PreventNormalOpen(pWall)) {
+			delete pchanges.ds;
+		}
+	}
+	
 	static onDeleteWall(pWall) {
 		PerceptiveFlags.deleteMovingWall(pWall, true);
 	}
@@ -201,7 +211,12 @@ Hooks.on("init", function() {
 });
 
 Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
-	DoorMovingManager.RequestDoorMove(pWall, pScrollInfos);
+	if (pKeyInfos.altKey) {
+		DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y, game.settings.get(cModuleName, "SpeedDoorMovefactor"));
+	}
+	else {
+		DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y);
+	}
 }); 
 
 Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
@@ -223,6 +238,10 @@ Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 	DoorMovingManager.placeDoorControl(pWall);
 });
 
+Hooks.on("preUpdateWall", async (pWall, pchanges, pinfos) => {
+	DoorMovingManager.onPreupdateWall(pWall, pchanges, pinfos)
+});
+
 Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 	if (game.user.isGM) {
 		DoorMovingManager.onDeleteWall(pWall);
@@ -230,7 +249,7 @@ Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 });
 
 //socket exports
-export function DoorMoveRequest({pDoorID, pSceneID, pDirectionInfo} = {}) {return DoorMovingManager.DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo)};
+export function DoorMoveRequest({pDoorID, pSceneID, pDirection, pSpeed} = {}) {return DoorMovingManager.DoorMoveRequest(pDoorID, pSceneID, pDirection, pSpeed)};
 
 //exports
 export function MoveHoveredDoor(pDirection) {DoorMovingManager.RequestDoorMove(PerceptiveUtils.hoveredWall(), {y : pDirection})};

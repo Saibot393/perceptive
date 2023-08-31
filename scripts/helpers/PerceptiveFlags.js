@@ -30,8 +30,9 @@ const cDoorSlideSpeedF = "DoorSlideSpeedFlag"; //Flag to save the slide Speed of
 const cDoorSwingStateF = "DoorSwingStateFlag"; //Flag to save the currrent swing state of a door
 const cDoorSwingRangeF = "DoorSwingRangeFlag"; //Flag to save the maximum range of the swing state
 const cDoorSlideStateF = "DoorSlideStateFlag"; //Flag to save the currrent slide state of a door
+const cPreventNormalOpenF = "PreventNormalOpenFlag"; //Flag to signal that normal foundry opens of this door should be prevented
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cDoorSlideSpeedF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -113,10 +114,14 @@ class PerceptiveFlags {
 	
 	static getDoorPosition(pDoor) {} //returns the calculated position of a moving door pDoor
 	
+	static PreventNormalOpen(pDoor, pRaw = false) {} //returns if this door should be normal openable
+	
 	//support
 	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
 	
 	static SwingRangecorrected(pRange) {} //returns a valid, corrected range based on pRange
+	
+	static StringtoRange(pString, pDelimiter = ":") {} //get a range from a given string, default is [-Infinity, Infinity]
 	
 	//IMPLEMENTATIONS
 	
@@ -221,7 +226,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 0.5; //default if anything fails
+		return game.settings.get(cModuleName, "LockpeekstandardPosition"); //default if anything fails
 	}
 	
 	static #isLockpeekingFlag (pToken) { 
@@ -325,12 +330,12 @@ class PerceptiveFlags {
 		let vFlag = this.#PerceptiveFlags(pWall);
 		
 		if (vFlag) {
-			if (vFlag.hasOwnProperty(cDoorSwingStateF)) {
+			if (vFlag.hasOwnProperty(cDoorSwingRangeF)) {
 				return vFlag.DoorSwingRangeFlag;
 			}
 		}
 		
-		return [-Infinity, Infinity]; //default if anything fails
+		return PerceptiveFlags.StringtoRange(game.settings.get(cModuleName, "DoorStandardSwingRange"));//[-Infinity, Infinity]; //default if anything fails
 	} 
 	
 	static #DoorSlideStateFlag (pWall) { 
@@ -344,7 +349,20 @@ class PerceptiveFlags {
 		}
 		
 		return 1; //default if anything fails
-	} 
+	}
+	
+	static #PreventNormalOpenFlag (pWall) { 
+	//returns content of PreventNormalOpenFlag of pWall
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPreventNormalOpenF)) {
+				return vFlag.PreventNormalOpenFlag;
+			}
+		}
+		
+		return game.settings.get(cModuleName, "PreventNormalOpenbydefault"); //default if anything fails
+	}
 	
 	static async #setLockPeekingWallIDs (pWall, pContent) {
 	//sets content of LockPeekingWallIDsFlag (must be array of id)
@@ -648,6 +666,10 @@ class PerceptiveFlags {
 		
 		return [];
 	}
+
+	static PreventNormalOpen(pDoor, pRaw = false) {
+		return this.#PreventNormalOpenFlag(pDoor) && (pRaw || PerceptiveFlags.Doorcanbemoved(pDoor));
+	}
 	
 	//support
 	static DoorMinMax(pSlide) {
@@ -668,12 +690,28 @@ class PerceptiveFlags {
 				vRange[1] = vBuffer;
 			}
 			
-			if (isNaN(vRange[0])) {
+			if (isNaN(vRange[0]) || vRange[0] == null) {
 				vRange[0] = -Infinity;
 			}
 			
-			if (isNaN(vRange[1])) {
+			if (isNaN(vRange[1]) || vRange[1] == null) {
 				vRange[1] = Infinity;
+			}
+		}
+		
+		return vRange;
+	}
+	
+	static StringtoRange(pString, pDelimiter = ":") {
+		let vRange = [-Infinity, Infinity];
+		
+		let vParts = pString.split(pDelimiter);
+		
+		if (vParts.length == 2) {
+			for (let i = 0; i < vParts.length; i++) {
+				if (!(vParts[i] == "" || isNaN(Number(vParts[i])))) {
+					vRange[i] = Number(vParts[i]);
+				}
 			}
 		}
 		

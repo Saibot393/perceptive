@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
@@ -88,6 +88,14 @@ class PerceptiveSheetSettings {
 														vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
 														vflagname : cDoorMovementF
 														}, `div[data-tab="${cModuleName}"]`);
+														
+			//prevent normal open if applicable
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPreventNormalOpenF +".name"), 
+														vhint : Translate("SheetSettings."+ cPreventNormalOpenF +".descrp"), 
+														vtype : "checkbox", 
+														vvalue : PerceptiveFlags.PreventNormalOpen(pApp.document, true), 
+														vflagname : cPreventNormalOpenF
+														}, `div[data-tab="${cModuleName}"]`);
 
 			//wall hinge position
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
@@ -110,7 +118,7 @@ class PerceptiveSheetSettings {
 			//wall swing range
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingRangeF +".name"), 
 														vhint : Translate("SheetSettings."+ cDoorSwingRangeF +".descrp"), 
-														vtype : "numberpart", 
+														vtype : "numberinterval", 
 														//vrange : cSwingSpeedRange,
 														vvalue : PerceptiveFlags.getDoorSwingRange(pApp.document), 
 														vflagname : [cDoorSwingRangeF, cDoorSwingRangeF],
@@ -212,7 +220,7 @@ class PerceptiveSheetSettings {
 			case "numberpart":
 				vNumberSeperator = "/";
 				break;
-			case "numberpart":
+			case "numberinterval":
 				vNumberSeperator = "-";
 				break;
 		}
@@ -249,7 +257,7 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `</select>`;
 				break;
 			case "range":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}">`;
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}">`;
 				break;
 			case "numberpart":
 			case "numberinterval":

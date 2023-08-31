@@ -58,7 +58,9 @@ class PeekingManager {
 				PeekingManager.PeekDoorGM(pDoor, pTokens);
 			}
 			else {
-				game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
+				if (!game.paused) {
+					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
+				}
 			}	
 		}
 	}

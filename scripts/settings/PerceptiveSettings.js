@@ -43,6 +43,11 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	scope: "world",
 	config: true,
 	type: Number,
+	range: {
+		min: 0,
+		max: 1,
+		step: 0.01
+	},
 	default: 0.05
   }); 
   
@@ -52,8 +57,13 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	scope: "world",
 	config: true,
 	type: Number,
+	range: {
+		min: 0,
+		max: 1,
+		step: 0.01
+	},
 	default: 0.5
-  });
+  }); 
   
   game.settings.register(cModuleName, "StopPeekonMove", {
 	name: Translate("Settings.StopPeekonMove.name"),
@@ -77,7 +87,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		[cDoorMoveTypes[2]]: Translate("Settings.DoorstandardMove.options." + cDoorMoveTypes[2])
 	},
 	default: cDoorMoveTypes[0]
-  });  
+  });
+
+  game.settings.register(cModuleName, "PreventNormalOpenbydefault", {
+	name: Translate("Settings.PreventNormalOpenbydefault.name"),
+	hint: Translate("Settings.PreventNormalOpenbydefault.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });   
   
   game.settings.register(cModuleName, "DoorstandardHinge", {
 	name: Translate("Settings.DoorstandardHinge.name"),
@@ -101,10 +120,19 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Number,
 	default: 5
   }); 
+  
+  game.settings.register(cModuleName, "DoorStandardSwingRange", {
+	name: Translate("Settings.DoorStandardSwingRange.name"),
+	hint: Translate("Settings.DoorStandardSwingRange.descrp"),
+	scope: "world",
+	config: true,
+	type: String,
+	default: ""
+  }); 
 
   game.settings.register(cModuleName, "DoorstandardSlideSpeed", {
-	name: Translate("Settings.DoorstandardSwingSpeed.name"),
-	hint: Translate("Settings.DoorstandardSwingSpeed.descrp"),
+	name: Translate("Settings.DoorstandardSlideSpeed.name"),
+	hint: Translate("Settings.DoorstandardSlideSpeed.descrp"),
 	scope: "world",
 	config: true,
 	type: Number,
@@ -123,6 +151,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   }); 
   
   //client
+  game.settings.register(cModuleName, "followTokens", {
+	name: Translate("Settings.followTokens.name"),
+	hint: Translate("Settings.followTokens.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   game.settings.register(cModuleName, "moveDoorControls", {
 	name: Translate("Settings.moveDoorControls.name"),
 	hint: Translate("Settings.moveDoorControls.descrp"),
@@ -132,14 +169,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
-  game.settings.register(cModuleName, "followTokens", {
-	name: Translate("Settings.followTokens.name"),
-	hint: Translate("Settings.followTokens.descrp"),
+  game.settings.register(cModuleName, "SpeedDoorMovefactor", {
+	name: Translate("Settings.SpeedDoorMovefactor.name"),
+	hint: Translate("Settings.SpeedDoorMovefactor.descrp"),
 	scope: "client",
 	config: true,
-	type: Boolean,
-	default: false
-  }); 
+	type: Number,
+	default: 3
+  });   
   
   //Keys (GM)
   game.keybindings.register(cModuleName, "PeekLock", {
@@ -194,8 +231,9 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
 		
 		//first client setting
-		vnewHTML = `<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
+		vnewHTML = `<hr>
+					<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
 		 
-		pHTML.find('input[name="' + cModuleName + '.moveDoorControls"]').closest(".form-group").before(vnewHTML);	
+		pHTML.find('input[name="' + cModuleName + '.followTokens"]').closest(".form-group").before(vnewHTML);	
 	}
 });

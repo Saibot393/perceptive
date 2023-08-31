@@ -4,6 +4,7 @@
 			"perceptive"				: "Perceptive",
 			"LockPeekSettings"			: "Lock peeking settings",
 			"DoorMoveSettings"			: "Door movement settings",
+			"ClientSettings"			: "Client Settings",
 			"PeekLock"					: "Peek lock",
 			"Basic"						: "Basic"
 		},
@@ -26,7 +27,12 @@
 			
 			"LockpeekstandardSize" : {
 				"name" 					: "Standard size of lock peeks",
-				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size"
+				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size (0-1)"
+			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "Standard position of lock peeks",
+				"descrp" 				: "The standard gap position used when peeking a lock relativ to the doors size (0-1)"
 			}, 
 			
 			"StopPeekonMove" : {
@@ -44,6 +50,11 @@
 				}
 			}, 
 			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "Prevent normal open by default",
+				"descrp" 				: "The standard setting wether doors that can swing or slide are still openable with a left click"
+			}, 
+			
 			"DoorstandardHinge" : {
 				"name" 					: "Door standard hinge position",
 				"descrp" 				: "The position a which a doors hinge is located",
@@ -57,7 +68,12 @@
 			"DoorstandardSwingSpeed" : {
 				"name" 					: "Standard swing speed",
 				"descrp" 				: "The standard swing speed of doors in degrees°"
-			}, 
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "Standard swing range",
+				"descrp" 				: "The range in which doors can swing in degrees° ({min}:{max} leave empty for no limit)"
+			}, 			
 			
 			"DoorstandardSlideSpeed" : {
 				"name" 					: "Standard slide speed",
@@ -67,6 +83,21 @@
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "Follow tokens",
+				"descrp" 				: "If the camera should follow the selected token when they move"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "Move door controls",
+				"descrp" 				: "If door controls should move with the moving walls"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "Fast door move factor",
+				"descrp" 				: "Speed factor when moving doors with alt+mouse-wheel"
 			}
 		},
 		
@@ -81,6 +112,10 @@
 			
 			"MoveDoorRight" : {
 				"name" 					: "Move door to the right"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "Toggle Follow tokens"
 			}
 		},
 		
@@ -92,7 +127,12 @@
 			
 			"LockPeekSizeFlag" : {
 				"name" 					: "Lock peek size",
-				"descrp"				: "The gap size used when peeking a lock relativ to the doors size"
+				"descrp"				: "The gap size used when peeking a lock relativ to the doors size (0-1)"
+			},
+			
+			"LockPeekPositionFlag" : {
+				"name" 					: "Lock peek position",
+				"descrp"				: "The gap position used when peeking a lock relativ to the doors size (0-1)"
 			},
 			
 			"DoorMovementFlag" : {
@@ -103,6 +143,11 @@
 					"swing"				: "Swinging door",
 					"slide"				: "Sliding door"
 				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "Prevent normal opening",
+				"descrp"				: "If this door can stil be opened with a left click (only moving doors)"
 			},
 			
 			"DoorHingePositionFlag" : {
@@ -118,6 +163,11 @@
 			"DoorSwingSpeedFlag" : {
 				"name" 					: "Swing speed",
 				"descrp"				: "The swing speed of the door in degrees°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "Swing range",
+				"descrp"				: "Range in which this door can swing in degrees° (min-max)"
 			},		
 
 			"DoorSlideSpeedFlag" : {

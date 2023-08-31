@@ -4,6 +4,7 @@
 			"perceptive"				: "Perceptive",
 			"LockPeekSettings"			: "Schloss-durchschau Einstellungen",
 			"DoorMoveSettings"			: "Tür-Bewegung Einstellungen",
+			"ClientSettings"			: "Spieler Einstellungen",
 			"PeekLock"					: "Durchschaue Schloss",
 			"Basic"						: "Basis"
 		},
@@ -25,9 +26,14 @@
 			}, 
 			
 			"LockpeekstandardSize" : {
-				"name" 					: "Standard größe von Schlüssellöchern",
+				"name" 					: "Standard Größe von Schlüssellöchern",
 				"descrp" 				: "Die standard Größe von Schlüssellöchern relativ zur Tür Größe (0-1)"
 			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "Standard Position von Schlüssellöchern",
+				"descrp" 				: "Die standard Position von Schlüssellöchern relativ zur Tür Größe (0-1)"
+			},  
 			
 			"StopPeekonMove" : {
 				"name" 					: "Stope Schloss-durchschauen bei Bewegung",
@@ -44,6 +50,11 @@
 				}
 			}, 
 			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "Verhindere normales öffnen als Standard",
+				"descrp" 				: "Die standard Einstellung ob bewegbare Türen noch per links click geöffnet werden können"
+			}, 
+			
 			"DoorstandardHinge" : {
 				"name" 					: "Türangel standard Position",
 				"descrp" 				: "Die standard Position von Türangeln",
@@ -57,7 +68,12 @@
 			"DoorstandardSwingSpeed" : {
 				"name" 					: "Standard Tür Schwing-Geschwindigkeit",
 				"descrp" 				: "Die standard Tür Schwing-Geschwindigkeit in Grad°"
-			}, 
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "Standard Tür Schwing-Bereich",
+				"descrp" 				: "Der standard Tür Schwing-Bereich in Grad({min}:{max} leer lassen für unbegrenzt)"
+			}, 	
 			
 			"DoorstandardSlideSpeed" : {
 				"name" 					: "Standard Tür Schiebe-Geschwindigkeit",
@@ -67,6 +83,21 @@
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
 				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "Folge Figuren",
+				"descrp" 				: "Ob die Kamera den ausgewählten Figuren bei Bewegungen folgen soll"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "Bewege Tür Kontrollen",
+				"descrp" 				: "Ob die Tür Kontrollen mit der bewegten Tür versetzt werden sollen"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "Schnell-Türbewegungs-Faktor",
+				"descrp" 				: "Geschwindigkeits Faktor wenn Türen mit alt+Mausras bewegt werden"
 			}
 		},
 		
@@ -81,6 +112,10 @@
 			
 			"MoveDoorRight" : {
 				"name" 					: "Bewege Tür nach rechts"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "Folge Figuren umschalten"
 			}
 		},
 		
@@ -95,6 +130,11 @@
 				"descrp"				: "Die standard Größe des Schlüssellochs relativ zur Tür Größe (0-1)"
 			},
 			
+			"LockPeekPositionFlag" : {
+				"name" 					: "Schlüsselloch Position",
+				"descrp"				: "Die standard Position des Schlüssellochs relativ zur Tür Größe (0-1)"
+			},
+			
 			"DoorMovementFlag" : {
 				"name" 					: "Tür Bewegung",
 				"descrp"				: "Standard Bewegungsart der Tür",
@@ -103,6 +143,11 @@
 					"swing"				: "Schwing-Tür",
 					"slide"				: "Schiebe-Tür"
 				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "Verhindere normales öffnen",
+				"descrp"				: "Ob diese Tür mit Links-Click geöffnet werden kann (nur bewegliche Türen)"
 			},
 			
 			"DoorHingePositionFlag" : {
@@ -118,6 +163,11 @@
 			"DoorSwingSpeedFlag" : {
 				"name" 					: "Schwing-Geschwindigkeit",
 				"descrp"				: "Schwing-Geschwindigkeit in Grad°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "Schwing-Bereich",
+				"descrp"				: "Bereich in welchem diese Tür schwingen kann in Grad° (min-max)"
 			},		
 
 			"DoorSlideSpeedFlag" : {
