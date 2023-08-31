@@ -1,3 +1,6 @@
+## v1.2.1
+- Fixed bug that caused Token following not to work
+
 ## v1.2.0
 - Added settings tab for walls settings
 - General improvements regarding compatibility and bug prevention
