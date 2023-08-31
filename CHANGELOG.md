@@ -7,7 +7,7 @@
   - Added control key to toggle Follow tokens setting
 - Door peeking
   - Added wall setting Lock peek position to change the position of the lock gap
-  - Added worl setting Standard position of lock peeks to set the default value for the Lock peek position
+  - Added world setting Standard position of lock peeks to set the default value for the Lock peek position
 - Door moving
   - Door controlls will no longer be hidden by their swinging door
   - Added center as hinge position option
