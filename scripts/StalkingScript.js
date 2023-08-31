@@ -43,6 +43,8 @@ class StalkingManager {
 		}
 		
 		vPanTarget.x = vPanTarget.x + (canvas.screenDimensions[0] - vScreenWidth)/vPanTarget.scale/2;	
+		
+		canvas.pan(vPanTarget);
 	}
 	
 	static PanwithChange(pToken, pchanges) {
