@@ -46,6 +46,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 0.05
   }); 
   
+  game.settings.register(cModuleName, "LockpeekstandardPosition", {
+	name: Translate("Settings.LockpeekstandardPosition.name"),
+	hint: Translate("Settings.LockpeekstandardPosition.descrp"),
+	scope: "world",
+	config: true,
+	type: Number,
+	default: 0.5
+  });
+  
   game.settings.register(cModuleName, "StopPeekonMove", {
 	name: Translate("Settings.StopPeekonMove.name"),
 	hint: Translate("Settings.StopPeekonMove.descrp"),
@@ -103,13 +112,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   });    
   
   //general
-  game.settings.register(cModuleName, "hidePerceptiveWalls", {
+  
+  game.settings.register(cModuleName, "showPerceptiveWalls", {
 	name: Translate("Settings.showPerceptiveWalls.name"),
 	hint: Translate("Settings.showPerceptiveWalls.descrp"),
 	scope: "world",
 	config: true,
 	type: Boolean,
-	default: true
+	default: false
   }); 
   
   //client
@@ -184,8 +194,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
 		
 		//first client setting
-		vnewHTML = `<h4 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
+		vnewHTML = `<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
 		 
-		pHTML.find('select[name="' + cModuleName + '.moveDoorControls"]').closest(".form-group").before(vnewHTML);	
+		pHTML.find('input[name="' + cModuleName + '.moveDoorControls"]').closest(".form-group").before(vnewHTML);	
 	}
 });

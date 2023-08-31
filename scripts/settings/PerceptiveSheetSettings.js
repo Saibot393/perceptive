@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
-import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
+import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
@@ -69,6 +69,16 @@ class PerceptiveSheetSettings {
 														vstep : 0.01,
 														vflagname : cLockPeekSizeF
 														}, `div[data-tab="${cModuleName}"]`);
+														
+			//lock peeking position
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekPositionF +".name"), 
+														vhint : Translate("SheetSettings."+ cLockPeekPositionF +".descrp"), 
+														vtype : "number", 
+														//vrange : [0,1],
+														vvalue : PerceptiveFlags.LockPeekingPosition(pApp.document), 
+														vstep : 0.01,
+														vflagname : cLockPeekPositionF
+														}, `div[data-tab="${cModuleName}"]`);
 			
 			//wall movement type
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
@@ -95,6 +105,15 @@ class PerceptiveSheetSettings {
 														//vrange : cSwingSpeedRange,
 														vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
 														vflagname : cDoorSwingSpeedF
+														}, `div[data-tab="${cModuleName}"]`);
+														
+			//wall swing range
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingRangeF +".name"), 
+														vhint : Translate("SheetSettings."+ cDoorSwingRangeF +".descrp"), 
+														vtype : "numberpart", 
+														//vrange : cSwingSpeedRange,
+														vvalue : PerceptiveFlags.getDoorSwingRange(pApp.document), 
+														vflagname : [cDoorSwingRangeF, cDoorSwingRangeF],
 														}, `div[data-tab="${cModuleName}"]`);
 														
 			//wall slide speed
@@ -187,6 +206,17 @@ class PerceptiveSheetSettings {
 			`;
 		}
 		
+		let vNumberSeperator;
+		
+		switch (vtype){
+			case "numberpart":
+				vNumberSeperator = "/";
+				break;
+			case "numberpart":
+				vNumberSeperator = "-";
+				break;
+		}
+				
 		switch (vtype){
 			case "number":
 				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" step="${vstep}">`;
@@ -222,7 +252,8 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}">`;
 				break;
 			case "numberpart":
-				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}"><label>/</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}">`;
+			case "numberinterval":
+				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}"><label>${vNumberSeperator}</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}">`;
 				break;
 		}
 			

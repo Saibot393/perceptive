@@ -19,6 +19,7 @@ const cLockPeekingWallIDsF = "LockPeekingWallIDsFlag"; //Flag for ids of the Loc
 const cLockpeekedbyF = "LockpeekedbyFlag"; //Flag that stores ids of tokens lock peeking this wall
 const cisLockPeekingWallF = "isLockpeekingWallFlag"; //Flag that signals, that this wall is a lock peeking wall
 const cLockPeekSizeF = "LockPeekSizeFlag"; //Flag that stores the size of the LockPeek
+const cLockPeekPositionF = "LockPeekPositionFlag"; //Flag that stores the position of the LockPeek
 const cisLockpeekingF = "isLockpeekingFlag"; //Flag that signals, that this token is lock peeking
 
 const cDoormovingWallIDF = "DoormovingWallIDFlag"; //Flag for id of the DoormovingWall belonging to this door
@@ -27,9 +28,10 @@ const cDoorHingePositionF = "DoorHingePositionFlag"; //flag to contain the info 
 const cDoorSwingSpeedF = "DoorSwingSpeedFlag"; //Flag to save the swing Speed of a door
 const cDoorSlideSpeedF = "DoorSlideSpeedFlag"; //Flag to save the slide Speed of a door
 const cDoorSwingStateF = "DoorSwingStateFlag"; //Flag to save the currrent swing state of a door
+const cDoorSwingRangeF = "DoorSwingRangeFlag"; //Flag to save the maximum range of the swing state
 const cDoorSlideStateF = "DoorSlideStateFlag"; //Flag to save the currrent slide state of a door
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cDoorSlideSpeedF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -41,6 +43,8 @@ class PerceptiveFlags {
 	static canbeLockpeeked(pWall) {} //returns of pWall can be lock peeked
 	
 	static LockPeekingSize(pWall) {} //returns the LockPeekingSize of pWall
+	
+	static LockPeekingPosition(pWall) {} //returns the LockpeekingPosition of pWall
 	
 	static async createLockpeekingWalls(pDoor) {} //creates the appropiate perceptive walls of pDoor
 	
@@ -97,6 +101,8 @@ class PerceptiveFlags {
 	
 	static getDoorSwingState(pDoor) {} //gets the swing state of pDoor
 	
+	static getDoorSwingRange(pDoor) {} //gets the swing state of pDoor
+	
 	static getDoorSlideState(pDoor) {} //gets the Slide state of pDoor
 	
 	static async setDoorSlideState(pDoor, pSlide) {} //sets the Slide state of pDoor
@@ -108,7 +114,9 @@ class PerceptiveFlags {
 	static getDoorPosition(pDoor) {} //returns the calculated position of a moving door pDoor
 	
 	//support
-	static slideMinMax(pSlide) {} //returns a slide with both values within [0,1]
+	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
+	
+	static SwingRangecorrected(pRange) {} //returns a valid, corrected range based on pRange
 	
 	//IMPLEMENTATIONS
 	
@@ -201,6 +209,19 @@ class PerceptiveFlags {
 		}
 		
 		return game.settings.get(cModuleName, "LockpeekstandardSize"); //default if anything fails
+	}
+	
+	static #LockPeekPositionFlag (pWall) { 
+	//returns content of isLockPeekingWallFlag of pWall (if any) (boolean)
+		let vFlag = this.#PerceptiveFlags(pWall);
+
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cLockPeekSizeF) && vFlag.LockPeekPositionFlag != null) {
+				return vFlag.LockPeekPositionFlag;
+			}
+		}
+		
+		return 0.5; //default if anything fails
 	}
 	
 	static #isLockpeekingFlag (pToken) { 
@@ -297,6 +318,19 @@ class PerceptiveFlags {
 		}
 		
 		return 0; //default if anything fails
+	} 
+	
+	static #DoorSwingRangeFlag (pWall) { 
+	//returns content of DoorSwingRangeFlag of pWall (in degrees)
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cDoorSwingStateF)) {
+				return vFlag.DoorSwingRangeFlag;
+			}
+		}
+		
+		return [-Infinity, Infinity]; //default if anything fails
 	} 
 	
 	static #DoorSlideStateFlag (pWall) { 
@@ -398,7 +432,11 @@ class PerceptiveFlags {
 	}
 	
 	static LockPeekingSize(pWall) {
-		return this.#LockPeekSizeFlag(pWall);
+		return PerceptiveFlags.DoorMinMax(this.#LockPeekSizeFlag(pWall));
+	}
+	
+	static LockPeekingPosition(pWall) {
+		return PerceptiveFlags.DoorMinMax(this.#LockPeekPositionFlag(pWall));
 	}
 	
 	static async createLockpeekingWalls(pDoor) {
@@ -441,7 +479,7 @@ class PerceptiveFlags {
 		
 		for (let i = 0; i < vLockPeekingWallIDs.length; i++) {
 			
-			let vWall = PerceptiveUtils.WallfromID(vLockPeekingWallIDs[i]);
+			let vWall = PerceptiveUtils.WallfromID(vLockPeekingWallIDs[i], pWall.parent);
 			
 			if (vWall) {
 				await PerceptiveFlags.#setLockpeekedby(vWall, pIDs);
@@ -527,7 +565,7 @@ class PerceptiveFlags {
 	}
 	
 	static async createMovingWall(pDoor) {
-		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor))) {
+		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent)) {
 			let vWall = await WallUtils.clonedoorasWall(pDoor);
 			
 			await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
@@ -546,18 +584,18 @@ class PerceptiveFlags {
 	
 	static async hideMovingWall(pDoor) {
 		if (PerceptiveFlags.getmovingWallID(pDoor)) {
-			WallUtils.hidewall(PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
+			WallUtils.hidewall(PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent));
 		}		
 	}
 	
 	static async synchMovingWall(pDoor) {
 		if (PerceptiveFlags.getmovingWallID(pDoor)) {
-			WallUtils.syncWallfromDoor(pDoor, PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor)));
+			WallUtils.syncWallfromDoor(pDoor, PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent));
 		}			
 	}
 	
 	static async setDoorSwingState(pDoor, pAngle) {
-		await this.#setDoorSwingStateFlag(pDoor, pAngle%360);
+		await this.#setDoorSwingStateFlag(pDoor, Math.max(PerceptiveFlags.getDoorSwingRange(pDoor)[0], Math.min(PerceptiveFlags.getDoorSwingRange(pDoor)[1], pAngle%360)));
 	}
 	
 	static async changeDoorSwingState(pDoor, pChange) {
@@ -576,12 +614,16 @@ class PerceptiveFlags {
 		return this.#DoorSwingStateFlag(pDoor)%360;
 	}
 	
+	static getDoorSwingRange(pDoor) {
+		return PerceptiveFlags.SwingRangecorrected(this.#DoorSwingRangeFlag(pDoor));
+	}
+	
 	static getDoorSlideState(pDoor) {
-		return PerceptiveFlags.slideMinMax(this.#DoorSlideStateFlag(pDoor));
+		return PerceptiveFlags.DoorMinMax(this.#DoorSlideStateFlag(pDoor));
 	}
 	
 	static async setDoorSlideState(pDoor, pSlide) {
-		await this.#setDoorSlideStateFlag(pDoor, PerceptiveFlags.slideMinMax(pSlide));
+		await this.#setDoorSlideStateFlag(pDoor, PerceptiveFlags.DoorMinMax(pSlide));
 	}
 	
 	static async changeDoorSlideState(pDoor, pChange) {
@@ -608,10 +650,36 @@ class PerceptiveFlags {
 	}
 	
 	//support
-	static slideMinMax(pSlide) {
+	static DoorMinMax(pSlide) {
 		return Math.min(1, Math.max(0, pSlide));
 	}
 
+	static SwingRangecorrected(pRange) {
+		let vRange = pRange;
+		
+		if (!vRange || vRange.length < 2) {
+			vRange = [-Infinity, Infinity];
+		}
+		else {		
+			if (vRange[0] > vRange[1]) {
+				let vBuffer = vRange[0];
+				
+				vRange[0] = vRange[1];
+				vRange[1] = vBuffer;
+			}
+			
+			if (isNaN(vRange[0])) {
+				vRange[0] = -Infinity;
+			}
+			
+			if (isNaN(vRange[1])) {
+				vRange[1] = Infinity;
+			}
+		}
+		
+		return vRange;
+	}
+	
 }
 
 //Export PerceptiveFlags Class

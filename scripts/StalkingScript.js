@@ -42,10 +42,7 @@ class StalkingManager {
 			vPanTarget.scale = canvas.stage.scale.x;
 		}
 		
-		vPanTarget.x = vPanTarget.x + (canvas.screenDimensions[0] - vScreenWidth)/vPanTarget.scale/2;
-		
-		console.log(vPanTarget);
-		canvas.pan(vPanTarget);		
+		vPanTarget.x = vPanTarget.x + (canvas.screenDimensions[0] - vScreenWidth)/vPanTarget.scale/2;	
 	}
 	
 	static PanwithChange(pToken, pchanges) {
@@ -62,4 +59,4 @@ class StalkingManager {
 	}
 }
 
-Hooks.on("refreshToken", (...args) => {console.log(args); StalkingManager.OnTokenrefresh(...args)});
+Hooks.on("refreshToken", (...args) => {StalkingManager.OnTokenrefresh(...args)});

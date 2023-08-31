@@ -56,7 +56,7 @@
 			
 			"DoorstandardSwingSpeed" : {
 				"name" 					: "Standard Tür Schwing-Geschwindigkeit",
-				"descrp" 				: "Die standard Tür Schwing-Geschwindigkeit in Winkel°"
+				"descrp" 				: "Die standard Tür Schwing-Geschwindigkeit in Grad°"
 			}, 
 			
 			"DoorstandardSlideSpeed" : {
@@ -117,7 +117,7 @@
 			
 			"DoorSwingSpeedFlag" : {
 				"name" 					: "Schwing-Geschwindigkeit",
-				"descrp"				: "Schwing-Geschwindigkeit in Winkel°"
+				"descrp"				: "Schwing-Geschwindigkeit in Grad°"
 			},		
 
 			"DoorSlideSpeedFlag" : {

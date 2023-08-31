@@ -45,7 +45,9 @@ class PeekingManager {
 					await PerceptiveFlags.stopLockpeeking(pTokens[i]);
 				}
 				
-				pTokens[i].object.updateVisionSource();
+				if (pTokens[i].object) {
+					pTokens[i].object.updateVisionSource();
+				}
 			}
 		}
 	}
@@ -79,14 +81,19 @@ class PeekingManager {
 			
 			if (vLockPeekingWalls.length) {	
 				for (let i = 0; i < vLockPeekingWalls.length; i++) {
-					await WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
-					
-					if (i >= 0 && i <= 1) {
-						vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, (1-PerceptiveFlags.LockPeekingSize(pDoor))/2, i).map(vvalue => Math.round(vvalue))});
+					if (WallUtils.isOpened(pDoor)) {
+						WallUtils.hidewall(vLockPeekingWalls[i]);
 					}
-					
-					if (i > 1) {
-						WallUtils.makewalltransparent(vLockPeekingWalls[i]);
+					else {
+						await WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
+						
+						if (i >= 0 && i <= 1) {
+							vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, PerceptiveFlags.DoorMinMax(i+(1-2*i)*PerceptiveFlags.LockPeekingPosition(pDoor)-PerceptiveFlags.LockPeekingSize(pDoor)/2), i).map(vvalue => Math.round(vvalue))});
+						}
+						
+						if (i > 1) {
+							WallUtils.makewalltransparent(vLockPeekingWalls[i]);
+						}
 					}
 				}
 			}	
@@ -136,10 +143,16 @@ class PeekingManager {
 	
 	static onDoorOpen(pDoor) {
 		PerceptiveFlags.removeallLockpeekedby(pDoor);
+		
+		let vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor), pDoor.parent);
+		
+		for (let i = 0; i < vLockPeekingWalls.length; i++) {
+			WallUtils.hidewall(vLockPeekingWalls[i]);
+		}
 	}
 	
 	static async onDoorClose(pDoor) {
-		
+
 	}
 	
 	static OnTokenupdate(pToken, pchanges, pInfos) {
@@ -164,7 +177,7 @@ Hooks.on("init", function() {
 		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
 		
 		ClockwiseSweepPolygon.prototype._testWallInclusion = function (wall, bounds) {
-			if (PeekingManager.IgnoreWall(wall.document, this.config.source.object.document)) {
+			if (wall && this.config.source.object && PeekingManager.IgnoreWall(wall.document, this.config.source.object.document)) {
 				return false;
 			}
 			

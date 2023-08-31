@@ -15,7 +15,7 @@ Hooks.on("deactivateWallsLayer", () => {
 
 Hooks.on("activateWallsLayer", () => {
 	//make Perceptive Walls visible
-	if (game.settings.get(cModuleName, "hidePerceptiveWalls")) {
+	if (!game.settings.get(cModuleName, "showPerceptiveWalls")) {
 		let vPlaceables = canvas.walls.placeables;
 		
 		for (let i = 0; i < vPlaceables.length; i++) {

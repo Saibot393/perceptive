@@ -109,7 +109,7 @@ class DoorMovingManager {
 	}
 	
 	static async placeDoorControl(pWall) {
-		if (PerceptiveFlags.Doorcanbemoved(pWall)) {
+		if (PerceptiveFlags.Doorcanbemoved(pWall) && pWall.object && pWall.object.doorControl) {
 			if (game.settings.get(cModuleName, "moveDoorControls")) {
 				if (pWall.object.doorControl) {
 					let vCenterPosition = GeometricUtils.CenterPositionWall({c : PerceptiveFlags.getDoorPosition(pWall)});
@@ -130,30 +130,32 @@ class DoorMovingManager {
 
 		if (game.settings.get(cModuleName, "moveDoorControls") && PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
 			// Hide secret doors from players
-			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoorControl.wall.document), pDoorControl.wall.scene).object;
+			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoorControl.wall.document), pDoorControl.wall.scene);
 			
-			const w = vreplacementWall;
-			if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
+			if (vreplacementWall && vreplacementWall.object) {
+				vreplacementWall = vreplacementWall.object;
+				
+				const w = vreplacementWall;
+				if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
 
-			// Test two points which are perpendicular to the door midpoint
-			const ray = vreplacementWall.toRay();
-			const [x, y] = w.midpoint;
-			const [dx, dy] = [-ray.dy, ray.dx];
-			const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
-			const points = [
-			  {x: x + (t * dx), y: y + (t * dy)},
-			  {x: x - (t * dx), y: y - (t * dy)}
-			];
+				// Test two points which are perpendicular to the door midpoint
+				const ray = vreplacementWall.toRay();
+				const [x, y] = w.midpoint;
+				const [dx, dy] = [-ray.dy, ray.dx];
+				const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+				const points = [
+				  {x: x + (t * dx), y: y + (t * dy)},
+				  {x: x - (t * dx), y: y - (t * dy)}
+				];
 
-			// Test each point for visibility
-			return points.some(p => {
-			  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
-			});
-		}
-		else {
-			return false;
+				// Test each point for visibility
+				return points.some(p => {
+				  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
+				});
+			}
 		}
 		
+		return false;
 	}
 	
 	//ons
