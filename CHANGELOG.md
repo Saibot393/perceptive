@@ -1,12 +1,22 @@
-## v1.2.0 (unreleased)
-- Added settings tabs for walls settings
+## v1.2.0
+- Added settings tab for walls settings
 - General improvements regarding compatibility and bug prevention
+- routing lib should now work correctly with peekable doors
 - New feature: Token following
-  - Added worl setting
+  - Added client setting Follow tokens to follow the selected tokens when thy move
+  - Added control key to toggle Follow tokens setting
 - Door peeking
+  - Added wall setting Lock peek position to change the position of the lock gap
+  - Added worl setting Standard position of lock peeks to set the default value for the Lock peek position
 - Door moving
   - Door controlls will no longer be hidden by their swinging door
   - Added center as hinge position option
+  - Added wall setting Prevent normal opening to prevent this door from being opened with left-click if it is a moving door
+  - Added wall setting Swing range to limit the range in which this door can swing
+  - Added world setting Prevent normal open by default to set the default value for the Prevent normal opening wall setting
+  - Added world setting Standard swing range to set the default value for the Swing range wall setting
+  - Added client setting Move door controls to move the door controls with the moving doors
+  - Added client setting Fast door move factor to set a speed factor when moving a wall with alt+mouse-wheel
 
 ## v1.1.0
 - Added setting Maximum Interaction Distance to limit the distance over which players can interact with doors
