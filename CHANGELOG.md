@@ -1,3 +1,6 @@
+## v1.2.3
+- Small compatibility fix
+
 ## v1.2.2
 - Fixed compatibility issue with drag-ruler
 
