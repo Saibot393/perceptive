@@ -46,10 +46,9 @@ Allows doors to be incrementally opened in either a swinging or sliding motion. 
 Allow players to automatically follow selected tokens with the camera. Can also be toggled with a key bind.
 
 ### Settings:
-- Follow tokens: to follow the selected tokens when they move
 
 #### Client:
-
+- Follow tokens: to follow the selected tokens when they move
 
 ## General features:
 
