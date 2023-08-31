@@ -1,4 +1,4 @@
-## v1.2.0 (unreleased)
+## v1.2.0
 - Added settings tab for walls settings
 - General improvements regarding compatibility and bug prevention
 - routing lib should now work correctly with peekable doors
