@@ -1,5 +1,7 @@
 ## v1.2.0 (unreleased)
 - Added settings tabs for walls settings
+- New feature token following
+  - Added worl setting
 - Door peeking
 - Door moving
   - Door controlls will no longer be hidden by their swinging door
