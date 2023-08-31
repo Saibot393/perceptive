@@ -1,6 +1,7 @@
 ## v1.2.0 (unreleased)
 - Added settings tabs for walls settings
-- New feature token following
+- General improvements regarding compatibility and bug prevention
+- New feature: Token following
   - Added worl setting
 - Door peeking
 - Door moving
