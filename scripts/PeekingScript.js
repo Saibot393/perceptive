@@ -185,7 +185,7 @@ Hooks.on("init", function() {
 			
 			let vTokenCallBuffer = vOldTokenCall.bind(this);
 			
-			return vTokenCallBuffer(vwall, bounds);
+			return vTokenCallBuffer(vwall, vbounds);
 		}
 	}
 });
