@@ -1,6 +1,8 @@
 //CONSTANTS
 const cModuleName = "perceptive"; //name of Module
 
+const cPf2eName = "pf2e";
+
 //a few support functions
 class PerceptiveUtils {
 	//DECLARATIONS
@@ -35,6 +37,8 @@ class PerceptiveUtils {
 	static targetedToken() {} //get first selected token
 	
 	static hoveredToken() {} //get first hovered token
+	
+	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
 	
 	//IMPLEMENTATIONS
 	
@@ -151,6 +155,17 @@ class PerceptiveUtils {
 		else {
 			return null;
 		}
+	}
+	
+	static PrimaryCharacter() {
+		let vCharacter = LnKutils.selectedTokens()[0];
+		
+		if ((!vCharacter || !vCharacter.isOwner) && game.user.character) {
+			//select a token representing the standard character of the player
+			vCharacter = canvas.scene.tokens.find(vToken => vToken.actor.id == game.user.character.id);
+		}
+		
+		return vCharacter;
 	}
 	
 	static hoveredWall() {

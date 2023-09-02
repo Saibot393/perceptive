@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
@@ -132,6 +132,30 @@ class PerceptiveSheetSettings {
 														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
 														vstep : 0.01,
 														vflagname : cDoorSlideSpeedF
+														}, `div[data-tab="${cModuleName}"]`);
+														
+			//can be spotted
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeSpottedF +".name"), 
+														vhint : Translate("SheetSettings."+ ccanbeSpottedF +".descrp"), 
+														vtype : "checkbox", 
+														vvalue : PerceptiveFlags.canbeSpotted(pApp.document), 
+														vflagname : ccanbeSpottedF
+														}, `div[data-tab="${cModuleName}"]`);
+														
+			//passive perception dc
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPPDCF +".name"), 
+														vhint : Translate("SheetSettings."+ cPPDCF +".descrp"), 
+														vtype : "number", 
+														vvalue : PerceptiveFlags.getPPDC(pApp.document, true), 
+														vflagname : cPPDCF
+														}, `div[data-tab="${cModuleName}"]`);
+						
+			//active perception dc
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cAPDCF +".name"), 
+														vhint : Translate("SheetSettings."+ cAPDCF +".descrp"), 
+														vtype : "number", 
+														vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
+														vflagname : cAPDCF
 														}, `div[data-tab="${cModuleName}"]`);
 		}
 	}

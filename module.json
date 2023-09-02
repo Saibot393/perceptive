@@ -34,6 +34,7 @@
 	"scripts/PeekingScript.js",
 	"scripts/DoorMovingScript.js",
 	"scripts/StalkingScript.js",
+	"scripts/SpottingScript.js",
 	"scripts/helpers/SocketHandler.js",
 	"scripts/helpers/WallTabInserter.js",
 	"scripts/settings/PerceptiveSheetSettings.js",

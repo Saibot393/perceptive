@@ -127,7 +127,7 @@ class DoorMovingManager {
 		}
 	}
 	
-	static DControlProxyVisible(pDoorControl) {
+	static DControlProxyVisible(pDoorControl) {//modified from foundry.js
 		//adapted from foundry.js get isVisible()
 		
 		if ( !canvas.effects.visibility.tokenVision ) return true;

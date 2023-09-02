@@ -32,7 +32,12 @@ const cDoorSwingRangeF = "DoorSwingRangeFlag"; //Flag to save the maximum range 
 const cDoorSlideStateF = "DoorSlideStateFlag"; //Flag to save the currrent slide state of a door
 const cPreventNormalOpenF = "PreventNormalOpenFlag"; //Flag to signal that normal foundry opens of this door should be prevented
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF}
+const ccanbeSpottedF = "canbeSpottedFlag"; //returns if this object can be spotted
+const cPPDCF = "PPDCFlag"; //Flag for the passive perception DC of this object
+const cAPDCF = "APDCFlag"; //Flag for the passive perception DC of this object
+const cSpottedbyF = "SpottedbyFlag"; //Flag to save the ids of actors by which this object has been spotted
+
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -115,6 +120,23 @@ class PerceptiveFlags {
 	static getDoorPosition(pDoor) {} //returns the calculated position of a moving door pDoor
 	
 	static PreventNormalOpen(pDoor, pRaw = false) {} //returns if this door should be normal openable
+	
+	//spotting
+	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
+		
+	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
+	
+	static canbeSpottedactive(pObject) {}//returns if this pObject can be spotted actively
+	
+	static getPPDC(pObject, praw = false) {} //returns the Passiv perception DC
+	
+	static getAPDC(pObject, praw = false) {} //returns the Active perception DC
+	
+	static isSpottedby(pObject, pToken) {} //returns if pObject is spotted by pToken
+	
+	static isSpottedbyone(pObject, pTokens) {} //returns if pObject is spotted by one of pTokens
+	
+	static async addSpottedby(pObject, pToken) {} //adds pToken to the list of tokens that spotted pObject
 	
 	//support
 	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
@@ -364,6 +386,58 @@ class PerceptiveFlags {
 		return game.settings.get(cModuleName, "PreventNormalOpenbydefault"); //default if anything fails
 	}
 	
+	static #canbeSpottedFlag (pWall) { 
+	//returns content of PreventNormalOpenFlag of pWall
+		let vFlag = this.#PerceptiveFlags(pWall);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(ccanbeSpottedF)) {
+				return vFlag.canbeSpottedFlag;
+			}
+		}
+		
+		return false; //default if anything fails
+	}
+	
+	static #PPDCFlag (pObject) { 
+	//returns content of PPDCFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPPDCF)) {
+				return vFlag.PPDCFlag;
+			}
+		}
+		
+		return -1; //default if anything fails
+	}
+	
+	static #APDCFlag (pObject) { 
+	//returns content of PPDCFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cAPDCF)) {
+				return vFlag.APDCFlag;
+			}
+		}
+		
+		return null; //default if anything fails
+	}	
+	
+	static #SpottedbyFlag (pObject) { 
+	//returns content of PPDCFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cSpottedbyF)) {
+				return vFlag.SpottedbyFlag;
+			}
+		}
+		
+		return []; //default if anything fails
+	}
+	
 	static async #setLockPeekingWallIDs (pWall, pContent) {
 	//sets content of LockPeekingWallIDsFlag (must be array of id)
 		await pWall.update({
@@ -437,6 +511,16 @@ class PerceptiveFlags {
 			return true;
 		}
 		return false;
+	}
+	
+	static async #setSpottedby (pObject, pContent) {
+		//sets content of isSpottedbyFlag (array of IDs)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, cSpottedbyF, pContent); 
+			
+			return true;
+		}
+		return false;		
 	}
 	
 	//basics
@@ -546,7 +630,7 @@ class PerceptiveFlags {
 	}
 	
 	static getLockpeekedWall(pToken) {
-		return pToken.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
+		return pToken.object.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
 	}
 	
 	//moving door
@@ -669,6 +753,55 @@ class PerceptiveFlags {
 
 	static PreventNormalOpen(pDoor, pRaw = false) {
 		return this.#PreventNormalOpenFlag(pDoor) && (pRaw || PerceptiveFlags.Doorcanbemoved(pDoor));
+	}
+	
+	//spotting
+	static canbeSpotted(pObject) {
+		return PerceptiveFlags.#canbeSpottedFlag(pObject);
+	}
+	
+	static canbeSpottedpassiv(pObject) {
+		return this.#PPDCFlag(pObject) >= 0; //for speed
+	}
+	
+	static canbeSpottedactive(pObject) {
+		return PerceptiveFlags.getAPDC(pObject) < Infinity;
+	}
+	
+	static getPPDC(pObject, praw = false) {
+		let vDC = this.#PPDCFlag(pObject);
+		
+		if ((vDC <= 0) && !praw) {
+			return Infinity;
+		}
+		else {
+			return vDC;
+		}
+	}
+	
+	static getAPDC(pObject, praw = false) {
+		let vDC = this.#APDCFlag(pObject);
+		
+		if ((vDC == null) && !praw) {
+			return PerceptiveFlags.getPPDC(pObject);
+		}
+		else {
+			return vDC;
+		}		
+	}
+	
+	static isSpottedby(pObject, pToken) {
+		return this.#SpottedbyFlag(pObject).includes(pToken.id);
+	}
+	
+	static isSpottedbyone(pObject, pTokens) {
+		return pTokens.find(vToken => PerceptiveFlags.isSpottedby(pObject, vToken));
+	}
+	
+	static async addSpottedby(pObject, pToken) {
+		if (!PerceptiveFlags.isSpottedby(pObject, pToken)) {
+			await this.#setSpottedby(pObject, this.#SpottedbyFlag(pObject).concat([pToken.id]));
+		}
 	}
 	
 	//support
