@@ -112,25 +112,29 @@ class WallUtils {
 	}
 	
 	static isWithinRange(pToken, pWall, pRange = -1) {
-		let vRange = pRange;
-		
-		if (vRange < 0) {
-			vRange = game.settings.get(cModuleName, "InteractionDistance");
-			if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
-				vRange = PerceptiveCompUtils.ARReachDistance();
-				//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
+		if (pToken && pWall) {
+			let vRange = pRange;
+			
+			if (vRange < 0) {
+				vRange = game.settings.get(cModuleName, "InteractionDistance");
+				if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
+					vRange = PerceptiveCompUtils.ARReachDistance();
+					//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
+				}
 			}
+			
+			if (vRange < 0) {
+				return true;
+			}
+			
+			let vTokenposition  = GeometricUtils.CenterPosition(pToken);
+			
+			let vWallposition  = GeometricUtils.CenterPositionWall(pWall);
+			
+			return GeometricUtils.Distance(vTokenposition, vWallposition)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) <= vRange;
 		}
 		
-		if (vRange < 0) {
-			return true;
-		}
-		
-		let vTokenposition  = GeometricUtils.CenterPosition(pToken);
-		
-		let vWallposition  = GeometricUtils.CenterPositionWall(pWall);
-		
-		return GeometricUtils.Distance(vTokenposition, vWallposition)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) <= vRange;
+		return false;
 	}
 	
 	//calculations
