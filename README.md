@@ -50,6 +50,21 @@ Allow players to automatically follow selected tokens with the camera. Can also 
 #### Client:
 - Follow tokens: to follow the selected tokens when they move
 
+## Spot Invisible
+Allows for player to either passively or actively spot secret doors and make them visible to other players by left clicking them. GMs can set seperate passiv and active DCs for spotting (or synch them).
+
+### Settings:
+
+#### World:
+- Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
+- Passive perception formula: to set the formula used for passive perception (if not automated)
+- Perception key-word: to set the key word used to find perception rolls (if not automated)
+
+#### Walls:
+- Can be spotted: to activate the spotting feature on this wall
+- Passive perception DC: to set the DC for passive perception (-1 for impossible)
+- Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
+
 ## General features:
 
 ### Settings:
