@@ -1,12 +1,12 @@
 ## v1.3.0
--Several small bug fixes and improvements
--Added spotting feature:
-  -added World setting Activate Spotting feature to activate/deactivate spotting feature
-  -added World setting Passive perception formula to set the formula used for passive perception (if not automated)
-  -added World setting Perception key-word to set the key word used to find perception rolls (if not automated)
-  -added Wall setting Can be spotted to activate the spotting feature on this wall
-  -added Wall setting Passive perception DC to set the DC for passive perception (-1 for impossible)
-  -added Wall setting Active perception DC to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
+- Several small bug fixes and improvements
+- Added spotting feature:
+  - added World setting Activate Spotting feature to activate/deactivate spotting feature
+  - added World setting Passive perception formula to set the formula used for passive perception (if not automated)
+  - added World setting Perception key-word to set the key word used to find perception rolls (if not automated)
+  - added Wall setting Can be spotted to activate the spotting feature on this wall
+  - added Wall setting Passive perception DC to set the DC for passive perception (-1 for impossible)
+  - added Wall setting Active perception DC to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
 
 ## v1.2.4
 - Small bug fix
