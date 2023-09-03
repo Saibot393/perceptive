@@ -4,7 +4,7 @@
 			"perceptive"				: "Perceptive",
 			"LockPeekSettings"			: "Lock peeking settings",
 			"DoorMoveSettings"			: "Door movement settings",
-			"SpottingSettings"			: "Spotting settings",
+			"SpottingSettings"			: "Spot Invisible settings",
 			"ClientSettings"			: "Client Settings",
 			"PeekLock"					: "Peek lock",
 			"Basic"						: "Basic"
@@ -82,8 +82,8 @@
 			},
 			
 			"ActivateSpotting" : {
-				"name"					: "Activate Spotting feature",
-				"descrp"				: "If the spotting feature should be activated (turn off to improve performance)"
+				"name"					: "Activate Spot Invisible feature",
+				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
 			},
 			
 			"PassivePerceptionFormula" : {
