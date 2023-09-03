@@ -1,3 +1,6 @@
+## v1.3.1
+- Small bug fix
+
 ## v1.3.0
 - Several small bug fixes and improvements
 - Added Spot Invisible feature:
