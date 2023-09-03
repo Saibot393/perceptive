@@ -4,6 +4,7 @@
 			"perceptive"				: "Perceptive",
 			"LockPeekSettings"			: "Schloss-durchschau Einstellungen",
 			"DoorMoveSettings"			: "Tür-Bewegung Einstellungen",
+			"SpottingSettings"			: "Aufdecken Einstellungen",
 			"ClientSettings"			: "Spieler Einstellungen",
 			"PeekLock"					: "Durchschaue Schloss",
 			"Basic"						: "Basis"
@@ -78,7 +79,22 @@
 			"DoorstandardSlideSpeed" : {
 				"name" 					: "Standard Tür Schiebe-Geschwindigkeit",
 				"descrp" 				: "Die standard Tür Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
-			}, 
+			},
+			
+			"ActivateSpotting" : {
+				"name"					: "Aktiviere Aufdecken Funktionalität",
+				"descrp"				: "Ob die Aufdecken Funktionalität aktiviert werden soll (ausstellen um Leistung zu verbessern)"
+			},
+			
+			"PassivePerceptionFormula" : {
+				"name"					: "Passive-Wahrnehmung Formel",
+				"descrp"				: "Passive-Wahrnehmung Formel des Systems (z.B. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", hilfe can auf der Git Hub Seite des Moduls gefunden werden)"
+			},
+
+			"PerceptionKeyWord" : {
+				"name"					: "Wahrnehmungs Stichwort",
+				"descrp"				: "Stichwort welches benutzt wird um Wahrnehmungswürfe zu identifizieren (ein String/Wort welches im Text des Wahrnehmungswurf vorhanden ist)"
+			},  
 			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
@@ -173,7 +189,22 @@
 			"DoorSlideSpeedFlag" : {
 				"name" 					: "Schiebe-Geschwindigkeit",
 				"descrp"				: "Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
-			}	
+			},
+			
+			"canbeSpottedFlag" : {
+				"name" 					: "Kann aufgedeckt werden",
+				"descrp"				: "Ob diese Tür aufgedeckt werden kann (Passiv order Aktiv)"
+			},
+			
+			"PPDCFlag" : {
+				"name" 					: "Passive Wahrnehmung SG",
+				"descrp"				: "Schwierigkeitsklasse um mit passiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich)"
+			},
+			
+			"APDCFlag" : {
+				"name" 					: "Aktive Wahrnehmung SG",
+				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			}
 		}
 	}
 }

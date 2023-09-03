@@ -22,6 +22,8 @@ class PerceptiveMouseHandler {
 	static RegisterControls() {} //call all register functions
 	
 	//doors
+	static RegisterDoorLeftClick() {} //register Door leftclick
+	
 	static RegisterDoorRightClick() {} //register Door reicht click
 	
 	static RegisterDoorWheel() {} //register Door Mousewheel
@@ -30,6 +32,8 @@ class PerceptiveMouseHandler {
 	static RegisterCanvasWheel() {} //register Door Mousewheel
 	
 	//ons
+	static onDoorLeftClick(pDoorEvent, pWall) {} //called if Door is left clicked
+	
 	static onDoorRightClick(pDoorEvent, pWall) {} //called if Door is left clicked
 	
 	static onDoorWheel(pDoorEvent, pWall) {} //called if Door is wheeled
@@ -39,6 +43,8 @@ class PerceptiveMouseHandler {
 	//IMPLEMENTATIONS
 	//registers
 	static RegisterControls() {
+		PerceptiveMouseHandler.RegisterDoorLeftClick();
+		
 		PerceptiveMouseHandler.RegisterDoorRightClick();
 		
 		PerceptiveMouseHandler.RegisterDoorWheel();
@@ -47,6 +53,46 @@ class PerceptiveMouseHandler {
 	}
 	
 	//doors
+	static RegisterDoorLeftClick() {
+		//register onDoorLeftClick (if possible with lib-wrapper)
+		/*
+		if (LnKCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "DoorControl.prototype.onclick", function(vWrapped, ...args) {LnKMouseHandler.onDoorLeftClick(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+		}
+		else {
+		*/
+		if (FCore.Fversion() > 10) {
+			const vOldDoorCall = DoorControl.prototype.onclick;
+			
+			DoorControl.prototype.onclick = function (pEvent) {
+				PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall);
+				
+				if (vOldDoorCall) {
+					let vDoorCallBuffer = vOldDoorCall.bind(this);
+					vDoorCallBuffer(pEvent);
+				}
+			}			
+		}
+		else {
+			if (LnKCompUtils.isactiveModule(cLibWrapper)) {
+				libWrapper.register(cModuleName, "DoorControl.prototype._onMouseDown", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorLeftClick(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+			}
+			else {
+				const vOldDoorCall = DoorControl.prototype._onMouseDown;
+				
+				DoorControl.prototype._onMouseDown = function (pEvent) {
+					PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall);
+					
+					if (vOldDoorCall) {
+						let vDoorCallBuffer = vOldDoorCall.bind(this);
+						vDoorCallBuffer(pEvent);
+					}
+				}
+			}
+		}
+		//}		
+	}
+	
 	static RegisterDoorRightClick() {
 		//register onDoorRightClick (if possible with lib-wrapper)
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
@@ -103,6 +149,10 @@ class PerceptiveMouseHandler {
 	}
 	
 	//ons	
+	static onDoorLeftClick(pDoorEvent, pWall) {
+		Hooks.callAll(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
+	} 
+	
 	static onDoorRightClick(pDoorEvent, pWall) {
 		Hooks.callAll(cModuleName + "." + "DoorRClick", pWall.document, FCore.keysofevent(pDoorEvent));
 		

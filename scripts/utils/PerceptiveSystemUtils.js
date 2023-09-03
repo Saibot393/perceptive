@@ -1,3 +1,5 @@
+import { cModuleName} from "./PerceptiveUtils.js";
+
 //system names
 const cPf2eName = "pf2e"; //name of Pathfinder 2. edition system
 const cPf1eName = "pf1"; //name of Pathfinder 1. edition system
@@ -25,55 +27,72 @@ class PerceptiveSystemUtils {
 	//DELCARATIONS	
 	static isSystemPerceptionRoll(pMessage, pInfos) {} //returns if the message belongs to a perception roll (AP)
 	
+	static canAutodetectPerceptionRolls() {} //returns if perception rolls can be recognized in this system
+	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
-	static SystemdefaultAPformula() {} //returns the default formula for Lock Picking in the current system	
+	static SystemdefaultPerceptionKeyWord() {} //returns the systems default key word for perceptions
 	
 	//IMPLEMENTATIONS
 	static isSystemPerceptionRoll(pMessage) {
 		if (pMessage.isRoll) {
-			let vSystemInfo = pMessage.flags?.[game.system.id];
-			
-			if (vSystemInfo) {
-				switch (game.system.id) {
-					case cPf2eName:
-						return vSystemInfo.context.type == "perception-check";
-						break;
-					case cDnD5e:
-						return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
-						break;
+			if (PerceptiveSystemUtils.canAutodetectPerceptionRolls()) {
+				let vSystemInfo = pMessage.flags?.[game.system.id];
+				
+				if (vSystemInfo) {
+					switch (game.system.id) {
+						case cPf2eName:
+							return vSystemInfo.context.type == "perception-check";
+							break;
+						case cDnD5e:
+							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
+							break;
+						case cPf1eName:
+							return vSystemInfo.subject.skill == "per";
+							break;
+					}
 				}
 			}
+			else {
+				return pMessage.flavor.includes(game.settings.get(cModuleName, "PerceptionKeyWord"));
+			}
+		}
+		else {
+			//key word recognition
 		}
 		
 		return false;
 	}
 	
+	static canAutodetectPerceptionRolls() {
+		switch (game.system.id) {
+			case cPf2eName:
+			case cDnD5e:
+			case cPf1eName:
+				return true;
+				break;	
+			default:
+				return false;
+				break;
+		}
+	}
+	
 	//system defaults
 	static SystemdefaultPPformula() {
 		switch (game.system.id) {
-			case cPf2eName:
-				return "1d20 + @actor.skills.athletics.mod - 2";
-				break;
 			case cDnD5e:
-				return "1d20 + @actor.system.abilities.str.mod + @actor.system.skills.ath.value";
+				return "10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value";
 				break;
 			default:
 				return "";
 		}		
 	}
 	
-	static SystemdefaultAPformula() {
+	static SystemdefaultPerceptionKeyWord() {
 		switch (game.system.id) {
-			case cPf2eName:
-				return "1d20 + @actor.skills.thievery.mod";
-				break;
-			case cDnD5e:
-				return "1d20 + @actor.system.abilities.dex.mod + @actor.system.tools.thief.total";
-				break;
 			default:
-				return "";
+				return "Perception";
 		}
 	}
 }

@@ -140,7 +140,7 @@ class DoorMovingManager {
 				vreplacementWall = vreplacementWall.object;
 				
 				const w = vreplacementWall;
-				if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
+				if ( (pDoorControl.wall.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
 
 				// Test two points which are perpendicular to the door midpoint
 				const ray = vreplacementWall.toRay();

@@ -5,6 +5,8 @@ import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/Pe
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
 
+import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
+import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
@@ -139,6 +141,35 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 0.05
   });    
   
+  //spotting
+  game.settings.register(cModuleName, "ActivateSpotting", {
+	name: Translate("Settings.ActivateSpotting.name"),
+	hint: Translate("Settings.ActivateSpotting.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: true,
+	requiresReload: true
+  });   
+  
+  game.settings.register(cModuleName, "PassivePerceptionFormula", {
+	name: Translate("Settings.PassivePerceptionFormula.name"),
+	hint: Translate("Settings.PassivePerceptionFormula.descrp"),
+	scope: "world",
+	config: !PerceptiveUtils.isPf2e() && game.settings.get(cModuleName, "ActivateSpotting"),
+	type: String,
+	default: PerceptiveSystemUtils.SystemdefaultPPformula()
+  }); 
+  
+  game.settings.register(cModuleName, "PerceptionKeyWord", {
+	name: Translate("Settings.PerceptionKeyWord.name"),
+	hint: Translate("Settings.PerceptionKeyWord.descrp"),
+	scope: "world",
+	config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls() && game.settings.get(cModuleName, "ActivateSpotting"),
+	type: String,
+	default: PerceptiveSystemUtils.SystemdefaultPerceptionKeyWord()
+  }); 
+  
   //general
   
   game.settings.register(cModuleName, "showPerceptiveWalls", {
@@ -229,6 +260,11 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		vnewHTML = `<h4 class="border"><u>${Translate("Titles.DoorMoveSettings")}</u></h4>`;
 		 
 		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
+		
+		//first spotting setting
+		vnewHTML = `<h4 class="border"><u>${Translate("Titles.SpottingSettings")}</u></h4>`;
+		 
+		pHTML.find('input[name="' + cModuleName + '.ActivateSpotting"]').closest(".form-group").before(vnewHTML);	
 		
 		//first client setting
 		vnewHTML = `<hr>
