@@ -123,6 +123,8 @@ class PerceptiveFlags {
 	
 	//spotting
 	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
+	
+	static canbeSpottedwith(pObject, pTokens, pPPvalue) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
@@ -758,6 +760,10 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {
 		return PerceptiveFlags.#canbeSpottedFlag(pObject);
+	}
+	
+	static canbeSpottedwith(pObject, pTokens, pPPvalue) {
+		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDC(pObject) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {

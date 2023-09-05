@@ -10,6 +10,11 @@ class PerceptiveSheetSettings {
 	//DECLARATIONS	
 	static WallSheetSettings(pApp, pHTML, pData) {} //add settinsg to wall sheet
 	
+	static async TokenSheetSettings(pApp, pHTML, pData) {} //add settinsg to token sheet
+	
+	//standard settings
+	static AddSpottableSettings(pApp, pHTML, pData, pto) {} //adds the Spottable settings to pApp
+	
 	//support
 	static AddHTMLOption(pHTML, pInfos, pto) {} //adds a new HTML option to pto in pHTML
 	
@@ -134,32 +139,60 @@ class PerceptiveSheetSettings {
 														vflagname : cDoorSlideSpeedF
 														}, `div[data-tab="${cModuleName}"]`);
 							
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {
-				//can be spotted
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeSpottedF +".name"), 
-															vhint : Translate("SheetSettings."+ ccanbeSpottedF +".descrp"), 
-															vtype : "checkbox", 
-															vvalue : PerceptiveFlags.canbeSpotted(pApp.document), 
-															vflagname : ccanbeSpottedF
-															}, `div[data-tab="${cModuleName}"]`);
-															
-				//passive perception dc
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPPDCF +".name"), 
-															vhint : Translate("SheetSettings."+ cPPDCF +".descrp"), 
-															vtype : "number", 
-															vvalue : PerceptiveFlags.getPPDC(pApp.document, true), 
-															vflagname : cPPDCF
-															}, `div[data-tab="${cModuleName}"]`);
-							
-				//active perception dc
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cAPDCF +".name"), 
-															vhint : Translate("SheetSettings."+ cAPDCF +".descrp"), 
-															vtype : "number", 
-															vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
-															vflagname : cAPDCF
-															}, `div[data-tab="${cModuleName}"]`);
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {			
+				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 			}
 		}
+	}
+	
+	static async TokenSheetSettings(pApp, pHTML, pData) {
+		if (game.user.isGM) {
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {	
+				//add new tab
+				let vTabbar = pHTML.find(`[data-group="main"].sheet-tabs`);
+				let vprevTab = pHTML.find(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
+				
+				let vTabButtonHTML = 	`
+								<a class="item" data-tab="${cModuleName}">
+									<i class="fas ${cPerceptiveIcon}"></i>
+									${Translate("Titles."+cModuleName)}
+								</a>
+								`; //tab button HTML
+				let vTabContentHTML = `<div class="tab" data-group="main" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+				
+				vTabbar.append(vTabButtonHTML);
+				vprevTab.after(vTabContentHTML);	
+				
+				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+			}			
+		}
+	}
+	
+	//standard settings
+	static AddSpottableSettings(pApp, pHTML, pData, pto) {
+		//can be spotted
+		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeSpottedF +".name"), 
+													vhint : Translate("SheetSettings."+ ccanbeSpottedF +".descrp"), 
+													vtype : "checkbox", 
+													vvalue : PerceptiveFlags.canbeSpotted(pApp.document), 
+													vflagname : ccanbeSpottedF
+													}, pto);
+													
+		//passive perception dc
+		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPPDCF +".name"), 
+													vhint : Translate("SheetSettings."+ cPPDCF +".descrp"), 
+													vtype : "number", 
+													vvalue : PerceptiveFlags.getPPDC(pApp.document, true), 
+													vflagname : cPPDCF
+													}, pto);
+					
+		//active perception dc
+		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cAPDCF +".name"), 
+													vhint : Translate("SheetSettings."+ cAPDCF +".descrp"), 
+													vtype : "number", 
+													vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
+													vflagname : cAPDCF
+													}, pto);		
 	}
 	
 	//support
@@ -326,7 +359,8 @@ class PerceptiveSheetSettings {
 
 Hooks.once("ready", () => {
 	if (game.user.isGM) {
-
 		Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML, vData)); //for walls
+		
+		Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
 	}
 });

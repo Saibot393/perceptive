@@ -10,6 +10,8 @@ class SpottingManager {
 	//DECLARATIONS
 	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
 	
+	static TokenSpottingVisible(pToken) {} //returns wether this pWall is visible though spotting
+	
 	static async updatePPvalue() {} //retruns the passive perception value of pToken
 	
 	static lastPPvalue() {} //returns the last updated passiveperception value
@@ -25,6 +27,7 @@ class SpottingManager {
 	static RequestDoorVisible(pDoor) {} //starts a request to make pDoor visible
 	
 	static DoorVisibleRequest(pDoor) {} //handels a request to make pDoor visible
+	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
 	
@@ -37,13 +40,17 @@ class SpottingManager {
 	//support
 	static spotableDoorsinVision(pToken) {} //returns an array of walls that are spotable and within the vision of pToken
 	
+	static spotableTokensinVision(pToken) {} //returns an array of tokens that are spotable and within the vision of pToken
+	
 	static async PassivPerception(pToken) {} //returns the passive perception of pToken
+	
+	static async GenerateSpotables() {} //generates door controls for spotables
 	
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpotted(pDoorControl.wall.document) && ((PerceptiveFlags.getPPDC(pDoorControl.wall.document) <= SpottingManager.lastPPvalue()) || PerceptiveFlags.isSpottedbyone(pDoorControl.wall.document, PerceptiveUtils.selectedTokens()))) {
+		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), SpottingManager.lastPPvalue())) {
 			// Hide secret doors from players
 			let vWallObject = pDoorControl.wall;
 			
@@ -68,6 +75,25 @@ class SpottingManager {
 			}
 		}
 		
+		return false;
+	}
+	
+	static TokenSpottingVisible(pToken) { //modified from foundry.js
+		// Clear the detection filter
+		pToken.detectionFilter = undefined;
+
+
+		// Some tokens are always visible
+		if ( !canvas.effects.visibility.tokenVision ) return true;
+		if ( pToken.controlled ) return true;
+
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), SpottingManager.lastPPvalue()) ) {
+			// Otherwise, test visibility against current sight polygons
+			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
+			const tolerance = Math.min(pToken.w, pToken.h) / 4;
+			return canvas.effects.visibility.testVisibility(pToken.center, {tolerance, object: pToken});
+		}
+
 		return false;
 	}
 	
@@ -112,14 +138,14 @@ class SpottingManager {
 		}
 		else {
 			if (!game.paused) {
-				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : {Walls : PerceptiveUtils.IDsfromWalls(pObjects)}, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
+				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))}, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
 			}
 		}	
 	}
 	
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			await SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
+			await SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
 		}
 	}
 	
@@ -150,16 +176,8 @@ class SpottingManager {
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {
 		if (pToken.isOwner && pToken.parent == canvas.scene) {
-			let vDoors = canvas.walls.doors;
-			//make sure all spotable doors have doorcontrols
 			
-			for (let i = 0; i < vDoors.length; i++) {
-				if (!vDoors[i].doorControl && PerceptiveFlags.canbeSpotted(vDoors[i].document)) {
-					vDoors[i].doorControl = canvas.controls.doors.addChild(new DoorControl(vDoors[i]));
-					vDoors[i].doorControl.draw();
-					//vDoors[i].doorControl.visible = false;
-				}
-			}
+			SpottingManager.GenerateSpotables();
 			
 			SpottingManager.updatePPvalue();
 		}
@@ -182,19 +200,26 @@ class SpottingManager {
 				if (vActorID.length > 0) {
 					let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == vActorID);
 					
-					let vSpottables = SpottingManager.spotableDoorsinVision();
+					let vSpotables = SpottingManager.spotableDoorsinVision();
+					
+					vSpotables = vSpotables.concat(SpottingManager.spotableTokensinVision());
 					
 					let vPerceptionResult = pMessage.roll.total;
 					
-					vSpottables = vSpottables.filter(vObject => PerceptiveFlags.getAPDC(vObject) <= vPerceptionResult);
+					vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDC(vObject) <= vPerceptionResult);
 					
-					for (let i = 0; i < vSpottables.length; i++) {
-						if (vSpottables[i]._object?.doorControl) {
-							vSpottables[i]._object.doorControl.visible = true;
+					for (let i = 0; i < vSpotables.length; i++) {
+						if ((vSpotables[i].documentName == "Wall") && vSpotables[i]._object?.doorControl) {
+							vSpotables[i]._object.doorControl.visible = true;
+						}
+						
+						if ((vSpotables[i].documentName == "Token") && !vSpotables[i].object?.visible) {
+							vSpotables[i].object.visible = true;
+							vSpotables[i].object.mesh.alpha = 0.5;
 						}
 					}
 					
-					await SpottingManager.RequestSpotObjects(vSpottables, vRelevantTokens, {APerceptionResult : vPerceptionResult})
+					await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult})
 				}
 			}
 		}
@@ -254,6 +279,38 @@ class SpottingManager {
 		return vDoorsinRange.map(vDoor => vDoor.document);
 	}
 	
+	static spotableTokensinVision(pToken) {
+		let vTokens = canvas.tokens.placeables;
+		
+		let vTokensinRange = [];
+		
+		let vinVision;
+		
+		for (let i = 0; i < vTokens.length; i++) {
+			vinVision = false;
+			
+			if (PerceptiveFlags.canbeSpotted(vTokens[i].document)) {//partly modified from foundry.js
+				// Clear the detection filter
+				vTokens[i].detectionFilter = undefined;
+
+				// Some tokens are always visible
+				if ( !canvas.effects.visibility.tokenVision ) return true;
+				if ( vTokens[i].controlled ) return true;
+				
+				// Otherwise, test visibility against current sight polygons
+				if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
+				const tolerance = Math.min(vTokens[i].w, vTokens[i].h) / 4;
+				vinVision = canvas.effects.visibility.testVisibility(vTokens[i].center, {tolerance, object: vTokens[i]});
+			}
+			
+			if (vinVision) {
+				vTokensinRange.push(vTokens[i]);
+			}
+		}
+		
+		return vTokensinRange.map(vToken => vToken.document);
+	}
+	
 	static async PassivPerception(pToken) {
 		if (pToken && pToken.actor) {
 			if (PerceptiveUtils.isPf2e()) {
@@ -271,13 +328,35 @@ class SpottingManager {
 		
 		return 0; //if anything fails
 	}
+	
+	static async GenerateSpotables() {
+		let vDoors = canvas.walls.doors;
+		
+		for (let i = 0; i < vDoors.length; i++) {
+			//make sure all spotable doors have doorcontrols
+			if (!vDoors[i].doorControl && PerceptiveFlags.canbeSpotted(vDoors[i].document)) {
+				vDoors[i].doorControl = canvas.controls.doors.addChild(new DoorControl(vDoors[i]));
+				vDoors[i].doorControl.draw();
+				//vDoors[i].doorControl.visible = false;
+			}
+		}
+
+		let vTokens = canvas.tokens.placeables;
+		
+		for (let i = 0; i < vTokens.length; i++) {
+			if (vTokens[i].document.hidden && PerceptiveFlags.canbeSpotted(vTokens[i].document)) {
+				//make token mesh half visible
+				vTokens[i].mesh.alpha = 0.5;
+			}
+		}
+	}
 }
 
 Hooks.on("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
-			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.DControlSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.DControlSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
 		}
 		else {
 			const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
@@ -290,6 +369,24 @@ Hooks.on("ready", function() {
 				let vDControlCallBuffer = vOldDControlCall.bind(this);
 				
 				return vDControlCallBuffer();
+			});
+		}
+		
+		//allow tokens to be spotted
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.TokenSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
+		}
+		else {
+			const vOldTokenCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");
+			
+			CONFIG.Token.objectClass.prototype.__defineGetter__("isVisible", function () {
+				if (SpottingManager.TokenSpottingVisible(this)) {
+					return true;
+				}
+				
+				let vTokenCallBuffer = vOldTokenCall.bind(this);
+				
+				return vTokenCallBuffer();
 			});
 		}
 		
