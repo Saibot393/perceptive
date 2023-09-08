@@ -173,19 +173,19 @@ class PeekingManager {
 //Hooks
 Hooks.on("init", function() {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(vWrapped, vwall, vbounds) {if (vwall && this?.config?.source?.object && PeekingManager.IgnoreWall(vwall.document, this.config.source.object.document)){return false} return vWrapped(vwall, vbounds)}, "MIXED");
+		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pwall, pbounds) {if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)){return false} return pWrapped(pwall, pbounds)}, "MIXED");
 	}
 	else {
 		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
 		
-		ClockwiseSweepPolygon.prototype._testWallInclusion = function (vwall, vbounds) {
-			if (vwall && this?.config?.source?.object && PeekingManager.IgnoreWall(vwall.document, this.config.source.object.document)) {
+		ClockwiseSweepPolygon.prototype._testWallInclusion = function (pwall, pbounds) {
+			if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)) {
 				return false;
 			}
 			
 			let vTokenCallBuffer = vOldTokenCall.bind(this);
 			
-			return vTokenCallBuffer(vwall, vbounds);
+			return vTokenCallBuffer(pwall, pbounds);
 		}
 	}
 });
@@ -229,3 +229,5 @@ export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs} = {}) {return Pee
 export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.RequestPeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
 
 export function SelectedPeekhoveredDoor() {PeekingManager.RequestPeekDoor(PerceptiveUtils.hoveredWall(), PerceptiveUtils.selectedTokens())}
+
+export function PeekingIgnoreWall(pWall, pToken) {return PeekingManager.IgnoreWall(pWall, pToken)}

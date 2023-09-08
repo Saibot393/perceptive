@@ -1,6 +1,6 @@
 import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cLockTypeDoor } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
-import {RequestPeekDoor} from "../PeekingScript.js";
+import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
@@ -21,6 +21,8 @@ class PerceptiveCompatibility {
 	}
 }
 
+export function IgnoreWall(pWallDoc, pTokenDoc) {return PeekingIgnoreWall(pWallDoc, pTokenDoc)}
+
 Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.ignore_conflicts(cModuleName, cArmReach, "DoorControl.prototype._onRightDown");
@@ -33,4 +35,9 @@ Hooks.once("init", () => {
 			};
 		});
 	};
+	
+	//compatibility exports
+	game.modules.get(cModuleName).api = {
+		IgnoreWall
+	}
 });

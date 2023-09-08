@@ -193,7 +193,7 @@ class DoorMovingManager {
 Hooks.on("init", function() {
 	//replace control visible to allow moved door controls to be visible as long as the replacement is visible
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
-		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype.isVisible", function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
+		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
 	}
 	else {
 		const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
