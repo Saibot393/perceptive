@@ -1,3 +1,6 @@
+## v1.3.2
+- Added api for compatibility
+
 ## v1.3.1
 - Small bug fix
 
