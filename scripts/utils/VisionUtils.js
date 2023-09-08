@@ -16,7 +16,9 @@ class VisionUtils {
 	
 	static MaketempVisible(pObjects) {} //makes pObjects visible until next vision refresh
 	
-	static async GenerateSpotables() {} //generates spotables and makes them pre visible
+	static async PrepareSpotables() {} //generates spotables and makes them pre visible
+	
+	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
@@ -90,7 +92,7 @@ class VisionUtils {
 				// Otherwise, test visibility against current sight polygons
 				if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
 				const tolerance = Math.min(vTokens[i].w, vTokens[i].h) / 4;
-				vinVision = canvas.effects.visibility.testVisibility(vTokens[i].center, {tolerance, object: vTokens[i]});
+				vinVision = VisionUtils.simpletestVisibility(vTokens[i].center, {tolerance, object: vTokens[i]});
 			}
 			
 			if (vinVision) {
@@ -132,7 +134,7 @@ class VisionUtils {
 		}		
 	}
 	
-	static async GenerateSpotables() {
+	static async PrepareSpotables() {
 		let vDoors = canvas.walls.doors;
 		
 		for (let i = 0; i < vDoors.length; i++) {
@@ -152,6 +154,20 @@ class VisionUtils {
 				vTokens[i].mesh.alpha = cTransparentalpha;
 			}
 		}
+	}
+	
+	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) { //adapted from foundry.js
+		// If no vision sources are present, the visibility is dependant of the type of user
+		if ( !canvas.effects.visionSources.some(s => s.active) ) return game.user.isGM;
+
+		// Prepare an array of test points depending on the requested tolerance
+		const t = pInfos.tolerance;
+		const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
+		const points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+
+		return points.some(p => {
+			return canvas.effects.visibility.testVisibility(p);
+		});
 	}
 }
 

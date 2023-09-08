@@ -27,12 +27,18 @@ class PerceptiveSystemUtils {
 	//DELCARATIONS	
 	static isSystemPerceptionRoll(pMessage, pInfos) {} //returns if the message belongs to a perception roll (AP)
 	
+	static isSystemStealthRoll(pMessage, pInfos) {} //returns if the message belongs to a stealth roll
+	
 	static canAutodetectPerceptionRolls() {} //returns if perception rolls can be recognized in this system
+	
+	static canAutodetectPerceptionRolls() {} //returns if stealth rolls can be recognized in this system
 	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
 	static SystemdefaultPerceptionKeyWord() {} //returns the systems default key word for perceptions
+	
+	static SystemdefaultStealthKeyWord() {} //returns the systems default key word for stealths
 	
 	//IMPLEMENTATIONS
 	static isSystemPerceptionRoll(pMessage) {
@@ -49,7 +55,7 @@ class PerceptiveSystemUtils {
 							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
 							break;
 						case cPf1eName:
-							return vSystemInfo.subject.skill == "per";
+							return vSystemInfo.subject.skill == "ste";
 							break;
 					}
 				}
@@ -65,6 +71,36 @@ class PerceptiveSystemUtils {
 		return false;
 	}
 	
+	static isSystemStealthRoll(pMessage, pInfos) {
+		if (pMessage.isRoll) {
+			if (PerceptiveSystemUtils.canAutodetectPerceptionRolls()) {
+				let vSystemInfo = pMessage.flags?.[game.system.id];
+				
+				if (vSystemInfo) {
+					switch (game.system.id) {
+						case cPf2eName:
+							return vSystemInfo.context.domains.includes("check") && vSystemInfo.context.domains.includes("stealth")
+							break;
+						case cDnD5e:
+							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "ste";
+							break;
+						case cPf1eName:
+							return vSystemInfo.subject.skill == "per";
+							break;
+					}
+				}
+			}
+			else {
+				return pMessage.flavor.includes(game.settings.get(cModuleName, "PerceptionKeyWord"));
+			}
+		}
+		else {
+			//key word recognition
+		}
+		
+		return false;		
+	}
+	
 	static canAutodetectPerceptionRolls() {
 		switch (game.system.id) {
 			case cPf2eName:
@@ -76,6 +112,19 @@ class PerceptiveSystemUtils {
 				return false;
 				break;
 		}
+	}
+	
+	static canAutodetectPerceptionRolls() {
+		switch (game.system.id) {
+			case cPf2eName:
+			case cDnD5e:
+			case cPf1eName:
+				return true;
+				break;	
+			default:
+				return false;
+				break;
+		}		
 	}
 	
 	//system defaults
@@ -94,6 +143,13 @@ class PerceptiveSystemUtils {
 			default:
 				return "Perception";
 		}
+	}
+	
+	static SystemdefaultStealthKeyWord() {
+		switch (game.system.id) {
+			default:
+				return "Stealth";
+		}		
 	}
 }
 

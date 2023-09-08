@@ -363,6 +363,6 @@ Hooks.once("ready", () => {
 	if (game.user.isGM) {
 		Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML, vData)); //for walls
 		
-		//Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
+		Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
 	}
 });

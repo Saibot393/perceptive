@@ -83,7 +83,8 @@ class SpottingManager {
 			// Otherwise, test visibility against current sight polygons
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
 			const tolerance = Math.min(pToken.w, pToken.h) / 4;
-			return canvas.effects.visibility.testVisibility(pToken.center, {tolerance, object: pToken});
+			//return canvas.effects.visibility.testVisibility(pToken.center, {tolerance, object: pToken});
+			return VisionUtils.simpletestVisibility(pToken.center, {tolerance, object: pToken});
 		}
 
 		return false;
@@ -169,7 +170,7 @@ class SpottingManager {
 	static onTokenupdate(pToken, pchanges, pInfos) {
 		if (pToken.isOwner && pToken.parent == canvas.scene) {
 			
-			VisionUtils.GenerateSpotables();
+			VisionUtils.PrepareSpotables();
 			
 			SpottingManager.updatePPvalue();
 		}
@@ -245,7 +246,6 @@ Hooks.on("ready", function() {
 			});
 		}
 		
-		/*
 		//allow tokens to be spotted
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.TokenSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
@@ -263,7 +263,6 @@ Hooks.on("ready", function() {
 				return vTokenCallBuffer();
 			});
 		}
-		*/
 		
 		Hooks.on("updateToken", (...args) => {SpottingManager.onTokenupdate(...args)});
 
