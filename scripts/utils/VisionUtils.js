@@ -18,6 +18,8 @@ class VisionUtils {
 	
 	static async PrepareSpotables() {} //generates spotables and makes them pre visible
 	
+	static async PreapreSpotableToken(pToken) {} //generates pToken and makes them pre visible
+	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
 	//IMPLEMENTATIONS
@@ -151,9 +153,13 @@ class VisionUtils {
 		for (let i = 0; i < vTokens.length; i++) {
 			if (vTokens[i].document.hidden && PerceptiveFlags.canbeSpotted(vTokens[i].document)) {
 				//make token mesh half visible
-				vTokens[i].mesh.alpha = cTransparentalpha;
+				VisionUtils.PreapreSpotableToken(vTokens[i]);
 			}
 		}
+	}
+	
+	static async PreapreSpotableToken(pToken) {
+		pToken.mesh.alpha = cTransparentalpha;
 	}
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) { //adapted from foundry.js

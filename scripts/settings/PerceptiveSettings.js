@@ -156,7 +156,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.PassivePerceptionFormula.name"),
 	hint: Translate("Settings.PassivePerceptionFormula.descrp"),
 	scope: "world",
-	config: !PerceptiveUtils.isPf2e() && game.settings.get(cModuleName, "ActivateSpotting"),
+	config: !PerceptiveUtils.isPf2e(),
 	type: String,
 	default: PerceptiveSystemUtils.SystemdefaultPPformula()
   }); 
@@ -165,10 +165,42 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.PerceptionKeyWord.name"),
 	hint: Translate("Settings.PerceptionKeyWord.descrp"),
 	scope: "world",
-	config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls() && game.settings.get(cModuleName, "ActivateSpotting"),
+	config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls(),
 	type: String,
 	default: PerceptiveSystemUtils.SystemdefaultPerceptionKeyWord()
-  }); 
+  });  
+  
+  game.settings.register(cModuleName, "StealthKeyWord", {
+	name: Translate("Settings.StealthKeyWord.name"),
+	hint: Translate("Settings.StealthKeyWord.descrp"),
+	scope: "world",
+	config: !PerceptiveSystemUtils.canAutodetectStealthRolls(),
+	type: String,
+	default: PerceptiveSystemUtils.SystemdefaultStealthKeyWord()
+  });  
+  
+  game.settings.register(cModuleName, "AutoStealthDCbehaviour", {
+	name: Translate("Settings.AutoStealthDCbehaviour.name"),
+	hint: Translate("Settings.AutoStealthDCbehaviour.descrp"),
+	scope: "world",
+	config: true,
+	type: String,
+	choices: {
+		"off" : Translate("Settings.AutoStealthDCbehaviour.options." + "off"),
+		"both" : Translate("Settings.AutoStealthDCbehaviour.options." + "both"),
+		"activeonly": Translate("Settings.AutoStealthDCbehaviour.options." + "activeonly")
+	},
+	default: "both"
+  });   
+  
+  game.settings.register(cModuleName, "resetSpottedbyMovedefault", {
+	name: Translate("Settings.resetSpottedbyMovedefault.name"),
+	hint: Translate("Settings.resetSpottedbyMovedefault.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });   
   
   //general
   

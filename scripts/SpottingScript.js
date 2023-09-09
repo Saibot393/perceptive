@@ -36,6 +36,8 @@ class SpottingManager {
 	
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {} //called when a wall is updates
 	
+	static onrefreshToken(pToken, pInfos) {} //called when a token is refreshed
+	
 	static onDoorLClick(pWall, pKeyInfo) {} //called when a door control is left clicked
 	
 	//IMPLEMENTATIONS
@@ -174,25 +176,33 @@ class SpottingManager {
 			
 			SpottingManager.updatePPvalue();
 		}
+		
+		if (game.user.isGM) {
+			if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
+				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
+					PerceptiveFlags.clearSpottedby(pToken);
+				}
+			}
+		}
 	}
 	
 	static async onChatMessage(pMessage, pInfos, pSenderID) {
 		if (game.userId == pSenderID) {
+			let vActorID = "";
+				
+			if (pMessage.actor) {
+				vActorID = pMessage.actor.id;
+			}
+			else {
+				if (pMessage.speaker) {
+					vActorID = pMessage.speaker.actor;
+				}
+			}
+			
+			let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == vActorID);
+			
 			if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-				let vActorID = "";
-				
-				if (pMessage.actor) {
-					vActorID = pMessage.actor.id;
-				}
-				else {
-					if (pMessage.speaker) {
-						vActorID = pMessage.speaker.actor;
-					}
-				}
-				
 				if (vActorID.length > 0) {
-					let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == vActorID);
-					
 					let vSpotables = VisionUtils.spotablesinVision();
 					
 					let vPerceptionResult = pMessage.roll.total;
@@ -202,6 +212,31 @@ class SpottingManager {
 					VisionUtils.MaketempVisible(vSpotables);
 					
 					await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult})
+				}
+			}
+			
+			if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
+				let vNewDCs = {};
+				
+				let vStealthResult = pMessage.roll.total;
+				
+				if (game.settings.get(cModuleName, "AutoStealthDCbehaviour") != "off") {
+					switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
+						case "both":
+							vNewDCs.PPDC = vStealthResult;
+							break;
+					}
+					
+					switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
+						case "both":
+						case "activeonly":
+							vNewDCs.APDC = vStealthResult;
+							break;
+					}
+					
+					for (let i = 0; i < vRelevantTokens.length; i++) {
+						PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
+					}
 				}
 			}
 		}
@@ -215,6 +250,12 @@ class SpottingManager {
 					pWall.update({door : 1});
 				}
 			}
+		}
+	}
+	
+	static onrefreshToken(pToken, pInfos) {
+		if (PerceptiveFlags.canbeSpotted(pToken.document)) {
+			VisionUtils.PreapreSpotableToken(pToken);
 		}
 	}
 	
@@ -269,6 +310,8 @@ Hooks.on("ready", function() {
 		Hooks.on("createChatMessage", (pMessage, pInfos, pSenderID) => {SpottingManager.onChatMessage(pMessage, pInfos, pSenderID)});
 
 		Hooks.on("updateWall", (pWall, pChanges, pInfos, pSender) => {SpottingManager.onWallUpdate(pWall, pChanges, pInfos, pSender)});
+		
+		Hooks.on("refreshToken", (pToken, pInfos) => {SpottingManager.onrefreshToken(pToken, pInfos)});
 
 		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)});	
 	}

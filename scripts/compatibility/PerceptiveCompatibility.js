@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cLockTypeDoor } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -26,6 +26,8 @@ export function IgnoreWall(pWallDoc, pTokenDoc) {return PeekingIgnoreWall(pWallD
 Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.ignore_conflicts(cModuleName, cArmReach, "DoorControl.prototype._onRightDown");
+		
+		libWrapper.ignore_conflicts(cModuleName, cWallHeight, "DoorControl.prototype.isVisible");
 	}	
 	
 	if (PerceptiveCompUtils.isactiveModule(cLocknKey)) {

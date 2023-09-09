@@ -7,8 +7,9 @@ const cLibWrapper = "lib-wrapper";
 const cArmReach = "foundryvtt-arms-reach";
 const cArmReachold = "arms-reach";
 const cLocknKey = "LocknKey";
+const cWallHeight = "wall-height";
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight}
 
 //const
 const cLockTypeDoor = "LTDoor"; //type for door locks

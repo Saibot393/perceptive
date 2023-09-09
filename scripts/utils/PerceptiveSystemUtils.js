@@ -29,7 +29,7 @@ class PerceptiveSystemUtils {
 	
 	static isSystemStealthRoll(pMessage, pInfos) {} //returns if the message belongs to a stealth roll
 	
-	static canAutodetectPerceptionRolls() {} //returns if perception rolls can be recognized in this system
+	static canAutodetectStealthRolls() {} //returns if perception rolls can be recognized in this system
 	
 	static canAutodetectPerceptionRolls() {} //returns if stealth rolls can be recognized in this system
 	
@@ -55,7 +55,7 @@ class PerceptiveSystemUtils {
 							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
 							break;
 						case cPf1eName:
-							return vSystemInfo.subject.skill == "ste";
+							return vSystemInfo.subject.skill == "per";
 							break;
 					}
 				}
@@ -85,13 +85,13 @@ class PerceptiveSystemUtils {
 							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "ste";
 							break;
 						case cPf1eName:
-							return vSystemInfo.subject.skill == "per";
+							return vSystemInfo.subject.skill == "ste";
 							break;
 					}
 				}
 			}
 			else {
-				return pMessage.flavor.includes(game.settings.get(cModuleName, "PerceptionKeyWord"));
+				return pMessage.flavor.includes(game.settings.get(cModuleName, "StealthKeyWord"));
 			}
 		}
 		else {
@@ -101,7 +101,7 @@ class PerceptiveSystemUtils {
 		return false;		
 	}
 	
-	static canAutodetectPerceptionRolls() {
+	static canAutodetectStealthRolls() {
 		switch (game.system.id) {
 			case cPf2eName:
 			case cDnD5e:

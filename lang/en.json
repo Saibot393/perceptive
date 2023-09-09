@@ -96,6 +96,26 @@
 				"descrp"				: "Key word to recognise perception rolls (a string present in the flavour text of perception rolls)"
 			}, 
 			
+			"StealthKeyWord" : {
+				"name"					: "Stealth key-word",
+				"descrp"				: "Key word to recognise stealth rolls (a string present in the flavour text of stealth rolls)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "Auto stealth behaviour",
+				"descrp"				: "What should happen when a stealth check is rolled",
+				"options" : {
+					"off"				: "nothing",
+					"both"				: "Set active and passive perception DC",
+					"activeonly"		: "Set only active perception DC"
+				}
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "Reset spotted on token movement by default",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon movement"
+			}, 
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
@@ -204,6 +224,11 @@
 			"APDCFlag" : {
 				"name" 					: "Active perception DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "Reset spotted on token movement",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
 			}
 		}
 	}

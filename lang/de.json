@@ -96,6 +96,26 @@
 				"descrp"				: "Stichwort welches benutzt wird um Wahrnehmungswürfe zu identifizieren (ein String/Wort welches im Text des Wahrnehmungswurf vorhanden ist)"
 			},  
 			
+			"StealthKeyWord" : {
+				"name"					: "Verstecken Stichwort",
+				"descrp"				: "Stichwort welches benutzt wird um Versteckenwürfe zu identifizieren (ein String/Wort welches im Text des Versteckenwurfs vorhanden ist)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "Auto verstecken Verhalten",
+				"descrp"				: "Was passieren soll wenn ein Versteckenswurf gewürfelt wird",
+				"options" : {
+					"off"				: "nichts",
+					"both"				: "Setze Aktiven- und Passiven-Wahrnehmungs SG",
+					"activeonly"		: "Setze nur Aktiven-Wahrnehmungs SG"
+				}
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "Setze Entdeckt bei Figurbewegung standardmäßig zurück",
+				"descrp"				: "Ob die aktiven Beobachter einer Figur bei ihrer Bewegung zurück gesetzt wird"
+			}, 
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
 				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
@@ -204,6 +224,11 @@
 			"APDCFlag" : {
 				"name" 					: "Aktive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "Setze Entdeckt bei Figurbewegung zurück",
+				"descrp"				: "Ob die aktiven Beobachter dieser Figur bei ihrer Bewegung zurück gesetzt wird"
 			}
 		}
 	}

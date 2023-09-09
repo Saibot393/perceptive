@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
@@ -164,10 +164,16 @@ class PerceptiveSheetSettings {
 				vprevTab.after(vTabContentHTML);	
 				
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+				
+				//reset spotted by on move
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cresetSpottedbyMoveF +".name"), 
+													vhint : Translate("SheetSettings."+ cresetSpottedbyMoveF +".descrp"), 
+													vtype : "checkbox", 
+													vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
+													vflagname : cresetSpottedbyMoveF
+													}, `div[data-tab="${cModuleName}"]`);
 			}			
 		}
-		
-		pHTML.css("width", "max-content");
 	}
 	
 	//standard settings
