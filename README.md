@@ -29,7 +29,7 @@ Allows doors to be incrementally opened in either a swinging or sliding motion. 
 - Prevent normal open by default: to set the default value for the Prevent normal opening wall setting
 - Door standard hinge position: The standard hinge positions of doors
 - Standard swing speed: The standard swing speed of doors
-- - Swing range: to limit the range in which this door can swing
+- Swing range: to limit the range in which this door can swing
 - Standard slide speed: The standard slide speed of doors
 #### Client:
 - Move door controls: to move the door controls with the moving doors
