@@ -579,7 +579,7 @@ class PerceptiveFlags {
 			this.#setisLockpeekingFlag(PerceptiveUtils.TokenfromID(pIDs[i], pWall.parent), true);
 		}
 		
-		await this.#setLockpeekedby(pWall, pIDs)
+		await this.#setLockpeekedby(pWall, pIDs.filter(vID => PerceptiveFlags.#LockpeekedbyFlag(pWall).includes(vID)));
 		
 		for (let i = 0; i < vLockPeekingWallIDs.length; i++) {
 			
@@ -589,6 +589,8 @@ class PerceptiveFlags {
 				await PerceptiveFlags.#setLockpeekedby(vWall, pIDs);
 			}
 		}
+		
+		await this.#setLockpeekedby(pWall, pIDs);
 	}
 	
 	static isLockpeekedby(pWall, pID) {
