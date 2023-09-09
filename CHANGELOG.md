@@ -1,3 +1,12 @@
+## v1.4.0
+- Small bug fixes regarding lock peeking
+- Tokens can now be spotted
+  - Added world setting Stealth key-word to set the key word used to find stealth rolls (if not automated)
+  - Added world setting Auto stealth behaviour to set which perception DC values should be set when a stealth roll is detected
+  - Added world setting Reset spotted on token movement by default to reset the spotters of moving tokens
+  - Added spotting related wall settings to tokens (seperate tab)
+    - Added token setting Reset spotted on token movement to reset spotters of this token on movement
+
 ## v1.3.2
 - Added api for compatibility
 
