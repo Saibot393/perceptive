@@ -159,7 +159,9 @@ class VisionUtils {
 	}
 	
 	static async PreapreSpotableToken(pToken) {
-		pToken.mesh.alpha = cTransparentalpha;
+		if (pToken.mesh.alpha < cTransparentalpha) {
+			pToken.mesh.alpha = cTransparentalpha;
+		}
 	}
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) { //adapted from foundry.js
