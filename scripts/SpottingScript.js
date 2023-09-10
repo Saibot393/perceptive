@@ -29,6 +29,8 @@ class SpottingManager {
 	
 	static DoorVisibleRequest(pDoor) {} //handels a request to make pDoor visible
 	
+	static TestSpottedHovered() {} //test if one of the sellected tokens can spot the hovered token
+	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
 	
@@ -166,6 +168,10 @@ class SpottingManager {
 		if (game.user.isGM) {
 			SpottingManager.MakeDoorVisibleGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)));
 		}
+	}
+	
+	static TestSpottedHovered() {
+		console.log(PerceptiveFlags.canbeSpottedwith(PerceptiveUtils.hoveredToken(), PerceptiveUtils.selectedTokens(), Math.max(PerceptiveUtils.selectedTokens().map(vToken => VisionUtils.PassivPerception(vToken)))));
 	}
 	
 	//ons
@@ -321,3 +327,5 @@ Hooks.on("ready", function() {
 export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} = {}) {return SpottingManager.SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos)};
 
 export function DoorVisibleRequest({pDoorID, pSceneID} = {}) {return SpottingManager.DoorVisibleRequest(pDoorID, pSceneID)};
+
+export function TestSpottedHovered() {return SpottingManager.TestSpottedHovered()};

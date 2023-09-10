@@ -116,11 +116,11 @@ class WallUtils {
 			let vRange = pRange;
 			
 			if (vRange < 0) {
-				vRange = game.settings.get(cModuleName, "InteractionDistance");
 				if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
-					vRange = PerceptiveCompUtils.ARReachDistance();
+					return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
 					//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
 				}
+				vRange = game.settings.get(cModuleName, "InteractionDistance");
 			}
 			
 			if (vRange < 0) {

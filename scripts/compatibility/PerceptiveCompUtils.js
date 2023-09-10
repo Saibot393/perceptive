@@ -57,7 +57,7 @@ class PerceptiveCompUtils {
 		
 		if (PerceptiveCompUtils.isactiveModule(cArmReachold)) {
 			if (game.modules.get(cArmReachold).api) {
-				return game.modules.get(cArmReachold).api.isReachable(pCharacter, pObject);
+				return game.modules.get(cArmReachold).api.isReachable(pCharacter.object, pObject.object);
 			}
 		}	
 		

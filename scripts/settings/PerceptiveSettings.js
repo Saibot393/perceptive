@@ -4,6 +4,7 @@ import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/Pe
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
+import {TestSpottedHovered} from "../SpottingScript.js";
 
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
@@ -241,7 +242,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 3
   });   
   
-  //Keys (GM)
+  //Keys
   game.keybindings.register(cModuleName, "PeekLock", {
 	name: Translate("Keys.PeekLock.name"),
 	editable: [
@@ -250,30 +251,40 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
       }
     ],
 	onDown: () => { SelectedPeekhoveredDoor(); },
-	restricted: true,
+	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
   
   game.keybindings.register(cModuleName, "MoveDoorLeft", {
 	name: Translate("Keys.MoveDoorLeft.name"),
 	onDown: () => { MoveHoveredDoor(1); },
-	restricted: true,
+	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
   
   game.keybindings.register(cModuleName, "MoveDoorRight", {
 	name: Translate("Keys.MoveDoorRight.name"),
 	onDown: () => { MoveHoveredDoor(-1); },
-	restricted: true,
+	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
  
   game.keybindings.register(cModuleName, "ToggleTokenFollowing", {
 	name: Translate("Keys.ToggleTokenFollowing.name"),
 	onDown: () => { game.settings.set(cModuleName, "followTokens", !game.settings.get(cModuleName, "followTokens")) },
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  /*
+  game.keybindings.register(cModuleName, "TestSpotted", {
+	name: Translate("Keys.TestSpotted.name"),
+	hint: Translate("Keys.TestSpotted.name"),
+	onDown: () => { TestSpottedHovered() },
 	restricted: true,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
+  */
 });
 
 //Hooks
