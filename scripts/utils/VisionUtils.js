@@ -37,13 +37,13 @@ class VisionUtils {
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
-	static LightningLevel(pPoint, pScene = null) {} //returns the lightning level at a given point in a given scene (Dark = 0, Dim = 1, Bright = 2)
+	static LightingLevel(pPoint, pScene = null) {} //returns the lightning level at a given point in a given scene (Dark = 0, Dim = 1, Bright = 2)
 	
 	static correctedLightLevel(pLightLevel, pVisionLevel) {} //returns pLightLevel with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
 	
-	static LightningPDCModifier(pLightLevel) {} //returns the PDC modifier for pLightLevel
+	static LightingPDCModifier(pLightLevel) {} //returns the PDC modifier for pLightLevel
 	
-	static LightningPDCModifierToken(pToken, pVisionLevel) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
+	static LightingPDCModifierToken(pToken, pVisionLevel) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
 	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
@@ -201,7 +201,7 @@ class VisionUtils {
 		});
 	}
 	
-	static LightningLevel(pPoint, pScene = null) {
+	static LightingLevel(pPoint, pScene = null) {
 		//start value Darkness
 		let vLightningLevel = cLightLevel.Dark;
 		
@@ -256,7 +256,7 @@ class VisionUtils {
 		return vValue;
 	}
 	
-	static LightningPDCModifier(pLightLevel) {
+	static LightingPDCModifier(pLightLevel) {
 		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier");
 		
 		if (isNaN(vModifier) || vModifier == undefined) {
@@ -266,12 +266,12 @@ class VisionUtils {
 		return vModifier;
 	}
 	
-	static LightningPDCModifierToken(pToken, pVisionLevel) {
+	static LightingPDCModifierToken(pToken, pVisionLevel) {
 		if (!game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue != 0)) {
 			return 0;
 		}
 		else {
-			return VisionUtils.LightningPDCModifier(VisionUtils.correctedLightLevel(VisionUtils.LightningLevel(pToken, pToken.parent), pVisionLevel));
+			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(VisionUtils.LightingLevel(pToken, pToken.parent), pVisionLevel));
 		}
 	}
 }
