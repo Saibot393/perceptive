@@ -1,3 +1,6 @@
+## v1.4.1
+- small visual bug fix for spotable tokens
+
 ## v1.4.0
 - Small bug fixes regarding lock peeking
 - Tokens can now be spotted
