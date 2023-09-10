@@ -1,3 +1,6 @@
+## v1.4.2
+- Fixed bug with arms reach integration
+
 ## v1.4.1
 - small visual bug fix for spotable tokens
 
