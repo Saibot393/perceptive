@@ -29,7 +29,7 @@ Allows doors to be incrementally opened in either a swinging or sliding motion. 
 - Prevent normal open by default: to set the default value for the Prevent normal opening wall setting
 - Door standard hinge position: The standard hinge positions of doors
 - Standard swing speed: The standard swing speed of doors
-- - Swing range: to limit the range in which this door can swing
+- Swing range: to limit the range in which this door can swing
 - Standard slide speed: The standard slide speed of doors
 #### Client:
 - Move door controls: to move the door controls with the moving doors
@@ -51,7 +51,7 @@ Allow players to automatically follow selected tokens with the camera. Can also 
 - Follow tokens: to follow the selected tokens when they move
 
 ## Spot Invisible
-Allows for player to either passively or actively spot secret doors and make them visible to other players by left clicking them. GMs can set seperate passiv and active DCs for spotting (or synch them).
+Allows for player to either passively or actively spot secret doors and hidden tokens and make secret doors visible to other players by left clicking them. GMs can set seperate passiv and active DCs for spotting (or synch them).
 
 ### Settings:
 
@@ -59,11 +59,15 @@ Allows for player to either passively or actively spot secret doors and make the
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
 - Passive perception formula: to set the formula used for passive perception (if not automated)
 - Perception key-word: to set the key word used to find perception rolls (if not automated)
+- Stealth key-word: to set the key word used to find stealth rolls (if not automated)
+- Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
+- Reset spotted on token movement by default: to reset the spotters of moving tokens
 
-#### Walls:
+#### Walls/Tokens:
 - Can be spotted: to activate the spotting feature on this wall
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
+- Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
 
 ## General features:
 
