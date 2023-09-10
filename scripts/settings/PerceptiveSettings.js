@@ -203,6 +203,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });   
   
+  game.settings.register(cModuleName, "IlluminationPDCModifier", {
+	name: Translate("Settings.IlluminationPDCModifier.name"),
+	hint: Translate("Settings.IlluminationPDCModifier.descrp"),
+	scope: "world",
+	config: true,
+	type: Array,
+	default: [0, 0, 0]
+  }); 
+  
   //general
   
   game.settings.register(cModuleName, "showPerceptiveWalls", {

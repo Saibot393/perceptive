@@ -1,6 +1,7 @@
 import {WallUtils, cisPerceptiveWall} from "../utils/WallUtils.js";
 import {GeometricUtils} from "../utils/GeometricUtils.js";
 import {cModuleName, PerceptiveUtils} from "../utils/PerceptiveUtils.js";
+import {VisionUtils} from "../utils/VisionUtils.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
@@ -134,6 +135,10 @@ class PerceptiveFlags {
 	static getPPDC(pObject, praw = false) {} //returns the Passiv perception DC
 	
 	static getAPDC(pObject, praw = false) {} //returns the Active perception DC
+	
+	static getPPDCModified(pObject, pVisionMode = 0) {} //returns the Passiv perception DC
+	
+	static getAPDCModifie(pObject, pVisionMode = 0) {} //returns the Active perception DC
 	
 	static isSpottedby(pObject, pToken) {} //returns if pObject is spotted by pToken
 	
@@ -835,6 +840,24 @@ class PerceptiveFlags {
 		}
 		else {
 			return vDC;
+		}		
+	}
+	
+	static getPPDCModified(pObject, pVisionMode = 0) {
+		if (pVisionMode < 0) {
+			return PerceptiveFlags.getPPDC(pObject);
+		}
+		else {
+			return PerceptiveFlags.getPPDC(pObject) + VisionUtils.LightningPDCModifierToken(pObject, pVisionMode);
+		}
+	}
+	
+	static getAPDCModifie(pObject, pVisionMode = 0) {
+		if (pVisionMode < 0) {
+			return PerceptiveFlags.getAPDC(pObject);
+		}
+		else {
+			return PerceptiveFlags.getAPDC(pObject) + VisionUtils.LightningPDCModifierToken(pObject, pVisionMode);
 		}		
 	}
 	

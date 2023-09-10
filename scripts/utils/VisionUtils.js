@@ -1,7 +1,22 @@
+import {GeometricUtils} from "./GeometricUtils.js";
 import { PerceptiveUtils, cModuleName } from "./PerceptiveUtils.js";
 import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
 
 const cTransparentalpha = 0.5;
+
+const cDimInterval = [1/4, 3/4]; //Scene darkness values between which the scene is dim (lower is bright, higher is dark)
+
+const cLightLevel = {
+					Dark : 0,
+					Dim : 1,
+					Bright : 2
+					};
+					
+const cVisionLevel = {
+					 Normal : 0,
+					 LowLight : 1,
+					 Dark : 2
+					 };
 
 class VisionUtils {
 	//DECLARATIONS
@@ -21,6 +36,14 @@ class VisionUtils {
 	static async PreapreSpotableToken(pToken) {} //generates pToken and makes them pre visible
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
+	
+	static LightningLevel(pPoint, pScene = null) {} //returns the lightning level at a given point in a given scene (Dark = 0, Dim = 1, Bright = 2)
+	
+	static correctedLightLevel(pLightLevel, pVisionLevel) {} //returns pLightLevel with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
+	
+	static LightningPDCModifier(pLightLevel) {} //returns the PDC modifier for pLightLevel
+	
+	static LightningPDCModifierToken(pToken, pVisionLevel) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
 	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
@@ -176,6 +199,80 @@ class VisionUtils {
 		return points.some(p => {
 			return canvas.effects.visibility.testVisibility(p);
 		});
+	}
+	
+	static LightningLevel(pPoint, pScene = null) {
+		//start value Darkness
+		let vLightningLevel = cLightLevel.Dark;
+		
+		let vScene = pScene;
+		
+		if (!vScene) {
+			vScene = canvas.scene;
+		}
+		
+		if (vScene) {
+			if (vScene.darkness < cDimInterval[0]) {
+				vLightningLevel = cLightLevel.Bright;
+			}
+			else {
+				if (vScene.darkness < cDimInterval[1]) {
+					vLightningLevel = cLightLevel.Dim;
+				}
+				
+				let vrelevantLightSources = vScene.lights.filter(vDocument => vDocument._object?.source.shape.contains(pPoint.x, pPoint.y));
+				
+				if (vrelevantLightSources.length > 0) {
+					//at least Dim
+					vLightningLevel = cLightLevel.Dim;
+					
+					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument) < vDocument.config.bright)) {
+						//is Bright
+						vLightningLevel = cLightLevel.Bright;
+					}
+				}
+			}
+		}
+		
+		return vLightningLevel;
+	}
+	
+	static correctedLightLevel(pLightLevel, pVisionLevel) {
+		let vValue = pLightLevel;
+		
+		switch (pVisionLevel) {
+			case cVisionLevel.LowLight:
+				if (vValue < cLightLevel.Dim) {
+					vValue = cLightLevel.Dim;
+				}
+				break;
+			case cVisionLevel.Dark:
+				if (vValue < cLightLevel.Dark) {
+					vValue = cLightLevel.Dark;
+				}
+				break;
+		}
+		
+		return vValue;
+	}
+	
+	static LightningPDCModifier(pLightLevel) {
+		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier");
+		
+		if (isNaN(vModifier) || vModifier == undefined) {
+			vModifier = 0;
+		}
+		
+		return vModifier;
+	}
+	
+	static LightningPDCModifierToken(pToken, pVisionLevel) {
+		if (!game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue != 0)) {
+			return 0;
+		}
+		else {
+			return VisionUtils.LightningPDCModifier(VisionUtils.correctedLightLevel(VisionUtils.LightningLevel(pToken, pToken.parent), pVisionLevel));
+		}
 	}
 }
 
