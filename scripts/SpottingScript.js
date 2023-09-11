@@ -44,6 +44,8 @@ class SpottingManager {
 	
 	static onDoorLClick(pWall, pKeyInfo) {} //called when a door control is left clicked
 	
+	static onCanvasReady(pCanvas) {} //called when a canvas is ready
+	
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
@@ -266,8 +268,8 @@ class SpottingManager {
 			VisionUtils.PreapreSpotableToken(pToken);
 			
 			if (pToken.isOwner) {
-				if (game.settings.get(cModuleName, "useSpottingLightLevels")) {
-					PerceptiveFlags.CheckLightLevel(pToken.document);
+				if (game.settings.get(cModuleName, "useSpottingLightLevels") && !pToken.isPreview) {
+					PerceptiveFlags.CheckLightLevel(pToken.document, true);
 				}
 			}
 		}
@@ -277,6 +279,12 @@ class SpottingManager {
 		if (!game.user.isGM) {
 			SpottingManager.RequestDoorVisible(pWall);
 		}
+	}
+	
+	static onCanvasReady(pCanvas) {
+		VisionUtils.PrepareSpotables();
+			
+		SpottingManager.updatePPvalue();		
 	}
 }
 
@@ -327,7 +335,9 @@ Hooks.on("ready", function() {
 		
 		Hooks.on("refreshToken", (pToken, pInfos) => {SpottingManager.onrefreshToken(pToken, pInfos)});
 
-		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)});	
+		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)}); 
+		
+		Hooks.on("canvasReady", (pCanvas) => {SpottingManager.onCanvasReady(pCanvas)});
 	}
 });
 

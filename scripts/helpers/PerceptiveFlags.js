@@ -157,7 +157,7 @@ class PerceptiveFlags {
 	
 	static LightLevel(pObject) {} //returns the last calculated light level of pObject
 	
-	static CheckLightLevel(pObject) {} //updates the light level calculation of pObject
+	static CheckLightLevel(pObject, pUsePosition = false) {} //updates the light level calculation of pObject
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {} //returns the current light level modifier of pObject
 	
@@ -842,7 +842,6 @@ class PerceptiveFlags {
 	}
 	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {
-		console.log(PerceptiveFlags.getPPDCModified(pObject, pVisionLevel));
 		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
@@ -924,8 +923,15 @@ class PerceptiveFlags {
 		return this.#LightLevelFlag(pObject);
 	}
 	
-	static CheckLightLevel(pObject) {
-		this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+	static CheckLightLevel(pObject, pUsePosition = false) {
+		if (pUsePosition) {
+			//console.log(GeometricUtils.CenterPositionXY(pObject.object));
+			//console.log(pObject);
+			this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.CenterPositionXY(pObject.object), pObject.parent));
+		}
+		else {
+			this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+		}
 	}
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {

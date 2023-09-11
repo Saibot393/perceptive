@@ -261,11 +261,11 @@ class VisionUtils {
 	}
 	
 	static LightingPDCModifier(pLightLevel) {
-		if (pLightLevel <= 0) {
+		if (pLightLevel < 0) {
 			return 0;
 		}
 		
-		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier")[pLightLevel-1];
+		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier")[Math.max(0, pLightLevel-1)];
 		
 		return Number(vModifier);
 	}
