@@ -7,7 +7,13 @@
 			"SpottingSettings"			: "Spot Invisible settings",
 			"ClientSettings"			: "Client Settings",
 			"PeekLock"					: "Peek lock",
-			"Basic"						: "Basic"
+			"Basic"						: "Basic",
+			"SpottingInfos"	: {
+				"Title"					: "Spotting infos",
+				"PP"					: "Calculated passive perception: {pValue}",
+				"Spottedby"				: "Spotted by: {pNames}",
+				"LightModifier"			: "Illumination perception DC modifier: {pValue}"
+			}
 		},
 		
 		"Settings" : {

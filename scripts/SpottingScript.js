@@ -7,6 +7,8 @@ import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveComp
 
 var vlastPPvalue = 0;
 
+var vlastVisionLevel = 0;
+
 class SpottingManager {
 	//DECLARATIONS
 	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
@@ -46,7 +48,7 @@ class SpottingManager {
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), SpottingManager.lastPPvalue())) {
+		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue())) {
 			// Hide secret doors from players
 			let vWallObject = pDoorControl.wall;
 			
@@ -83,7 +85,7 @@ class SpottingManager {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
 
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), SpottingManager.lastPPvalue()) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
 			// Otherwise, test visibility against current sight polygons
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
 			const tolerance = Math.min(pToken.w, pToken.h) / 4;
@@ -120,7 +122,7 @@ class SpottingManager {
 	}
 	
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
-		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDC(vObject) <= pInfos.APerceptionResult);
+		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= pInfos.APerceptionResult);
 		
 		for (let i = 0; i < pSpotters.length; i++) {		
 			for(let j = 0; j < vSpottables.length; j++) {
@@ -171,7 +173,7 @@ class SpottingManager {
 	}
 	
 	static TestSpottedHovered() {
-		console.log(PerceptiveFlags.canbeSpottedwith(PerceptiveUtils.hoveredToken(), PerceptiveUtils.selectedTokens(), Math.max(PerceptiveUtils.selectedTokens().map(vToken => VisionUtils.PassivPerception(vToken)))));
+		console.log(PerceptiveFlags.canbeSpottedwith(PerceptiveUtils.hoveredToken(), PerceptiveUtils.selectedTokens(), vlastVisionLevel, Math.max(PerceptiveUtils.selectedTokens().map(vToken => VisionUtils.PassivPerception(vToken)))));
 	}
 	
 	//ons
@@ -213,7 +215,7 @@ class SpottingManager {
 					
 					let vPerceptionResult = pMessage.roll.total;
 					
-					vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDC(vObject) <= vPerceptionResult);
+					vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
 					
 					VisionUtils.MaketempVisible(vSpotables);
 					
@@ -262,6 +264,12 @@ class SpottingManager {
 	static onrefreshToken(pToken, pInfos) {
 		if (PerceptiveFlags.canbeSpotted(pToken.document)) {
 			VisionUtils.PreapreSpotableToken(pToken);
+			
+			if (pToken.isOwner) {
+				if (game.settings.get(cModuleName, "useSpottingLightLevels")) {
+					PerceptiveFlags.CheckLightLevel(pToken.document);
+				}
+			}
 		}
 	}
 	

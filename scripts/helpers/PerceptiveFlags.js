@@ -38,6 +38,7 @@ const cPPDCF = "PPDCFlag"; //Flag for the passive perception DC of this object
 const cAPDCF = "APDCFlag"; //Flag for the passive perception DC of this object
 const cSpottedbyF = "SpottedbyFlag"; //Flag to save the ids of actors by which this object has been spotted
 const cresetSpottedbyMoveF = "resetSpottedbyMoveFlag"; //Flag to reset the spooted by ids of this (Token) when it moves
+const cLightLevelF = "LightLevelFlag"; //stores the current light level of an object
 
 export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF}
 
@@ -126,7 +127,7 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
 	
-	static canbeSpottedwith(pObject, pTokens, pPPvalue) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
@@ -138,7 +139,7 @@ class PerceptiveFlags {
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {} //returns the Passiv perception DC
 	
-	static getAPDCModifie(pObject, pVisionMode = 0) {} //returns the Active perception DC
+	static getAPDCModified(pObject, pVisionMode = 0) {} //returns the Active perception DC
 	
 	static isSpottedby(pObject, pToken) {} //returns if pObject is spotted by pToken
 	
@@ -146,11 +147,19 @@ class PerceptiveFlags {
 	
 	static async addSpottedby(pObject, pToken) {} //adds pToken to the list of tokens that spotted pObject
 	
+	static SpottedbyNames(pObject) {} //returns the names of tokens this object is spotted by
+	
 	static async clearSpottedby(pObject) {} //clears the list of tokens that spotted pObject
 	
 	static async setSpottingDCs(pObject, pDCs) {} //sets the spotting dcs of pObject, pDCs can have attributed PPDC and APDC
 	
 	static resetSpottedbyMove(pToken) {} //returns if the spottedbys of this pToken should be reset on move
+	
+	static LightLevel(pObject) {} //returns the last calculated light level of pObject
+	
+	static CheckLightLevel(pObject) {} //updates the light level calculation of pObject
+	
+	static getLightLevelModifier(pObject, pVisionLevel = 0) {} //returns the current light level modifier of pObject
 	
 	//support
 	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
@@ -358,7 +367,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return 0; //default if anything fails
+		return -1; //default if anything fails
 	} 
 	
 	static #DoorSwingRangeFlag (pWall) { 
@@ -450,6 +459,19 @@ class PerceptiveFlags {
 		}
 		
 		return []; //default if anything fails
+	}
+	
+	static #LightLevelFlag (pObject) { 
+	//returns content of LightLevelFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cLightLevelF)) {
+				return vFlag.LightLevelFlag;
+			}
+		}
+		
+		return 0; //default if anything fails
 	}
 	
 	static #resetSpottedbyMoveFlag (pObject) { 
@@ -564,6 +586,16 @@ class PerceptiveFlags {
 		//sets content of APDCFlag (number)
 		if (pObject && !isNaN(pContent)) {
 			await pObject.setFlag(cModuleName, cAPDCF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setLightLevel (pObject, pContent) {
+		//sets content of APDCFlag (number)
+		if (pObject && !isNaN(pContent)) {
+			await pObject.setFlag(cModuleName, cLightLevelF, pContent); 
 			
 			return true;
 		}
@@ -809,8 +841,9 @@ class PerceptiveFlags {
 		return PerceptiveFlags.#canbeSpottedFlag(pObject);
 	}
 	
-	static canbeSpottedwith(pObject, pTokens, pPPvalue) {
-		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDC(pObject) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {
+		console.log(PerceptiveFlags.getPPDCModified(pObject, pVisionLevel));
+		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {
@@ -844,21 +877,11 @@ class PerceptiveFlags {
 	}
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {
-		if (pVisionMode < 0) {
-			return PerceptiveFlags.getPPDC(pObject);
-		}
-		else {
-			return PerceptiveFlags.getPPDC(pObject) + VisionUtils.LightningPDCModifierToken(pObject, pVisionMode);
-		}
+		return PerceptiveFlags.getPPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);
 	}
 	
-	static getAPDCModifie(pObject, pVisionMode = 0) {
-		if (pVisionMode < 0) {
-			return PerceptiveFlags.getAPDC(pObject);
-		}
-		else {
-			return PerceptiveFlags.getAPDC(pObject) + VisionUtils.LightningPDCModifierToken(pObject, pVisionMode);
-		}		
+	static getAPDCModified(pObject, pVisionMode = 0) {
+		return PerceptiveFlags.getAPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
 	}
 	
 	static isSpottedby(pObject, pToken) {
@@ -873,6 +896,10 @@ class PerceptiveFlags {
 		if (!PerceptiveFlags.isSpottedby(pObject, pToken)) {
 			await this.#setSpottedby(pObject, this.#SpottedbyFlag(pObject).concat([pToken.id]));
 		}
+	}
+	
+	static SpottedbyNames(pObject) {
+		return PerceptiveUtils.TokenNamesfromIDs(this.#SpottedbyFlag(pObject), pObject.parent);
 	}
 	
 	static async clearSpottedby(pObject) {
@@ -891,6 +918,23 @@ class PerceptiveFlags {
 	
 	static resetSpottedbyMove(pToken) {
 		return this.#resetSpottedbyMoveFlag(pToken);
+	}
+	
+	static LightLevel(pObject) {
+		return this.#LightLevelFlag(pObject);
+	}
+	
+	static CheckLightLevel(pObject) {
+		this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+	}
+	
+	static getLightLevelModifier(pObject, pVisionLevel = 0) {
+		if (pVisionLevel < 0 || !game.settings.get(cModuleName, "useSpottingLightLevels")) {
+			return 0;
+		}
+		else {
+			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel));
+		}
 	}
 	
 	//support

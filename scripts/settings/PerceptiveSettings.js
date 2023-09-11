@@ -209,7 +209,17 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	scope: "world",
 	config: true,
 	type: Array,
-	default: [0, 0, 0]
+	default: [0, 0],
+	onChange: pValues => {if (pValues.length == 1) {game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
+						  game.settings.set(cModuleName, "useSpottingLightLevels", pValues.find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
+						 }
+  }); 
+  
+  game.settings.register(cModuleName, "useSpottingLightLevels", {
+	scope: "world",
+	config: false,
+	type: Boolean,
+	default: false
   }); 
   
   //general

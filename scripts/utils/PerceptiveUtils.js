@@ -31,6 +31,8 @@ class PerceptiveUtils {
 	
 	static SelectedandPrimary() {} //returns all selected tokens and the primary character (if not allready included)
 	
+	static TokenNamesfromIDs(pIDs, pScene = null) {} //returns an array matching pIDs Tokens
+	
 	//Token Controls
 	static selectedTokens() {} //get array of all selected tokens
 	
@@ -208,11 +210,48 @@ class PerceptiveUtils {
 		
 		return vSelected;
 	}
+	
+	static TokenNamesfromIDs(pIDs, pScene = null) {
+		let vNames = "";
+		
+		let vToken;
+		
+		for (let i = 0; i < pIDs.length; i++) {
+			if (vNames.length) {
+				vNames = vNames + ", "
+			}
+			
+			vToken = PerceptiveUtils.TokenfromID(pIDs[i], pScene);
+			
+			if (vToken) {
+				vNames = vNames + vToken.name;
+			}
+			else {
+				vNames = vNames + "[" + pIDs[i] + "]";
+			}
+		}
+		
+		if (vNames.length == 0) {
+			vNames = "-";
+		}
+		
+		return vNames;
+	} 
 }
 
 function Translate(pName){
-  return game.i18n.localize(cModuleName+"."+pName);
+	return game.i18n.localize(cModuleName+"."+pName);
+}
+
+function TranslateandReplace(pName, pWords = {}){
+	let vContent = Translate(pName);
+	
+	for (let vWord of Object.keys(pWords)) {
+		vContent = vContent.replace("{" + vWord + "}", pWords[vWord]);
+	}
+ 
+	return vContent;
 }
 
 //Export RideableFlags Class
-export{ PerceptiveUtils, Translate, cModuleName };
+export{ PerceptiveUtils, Translate, TranslateandReplace, cModuleName };

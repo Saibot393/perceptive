@@ -43,7 +43,7 @@ class VisionUtils {
 	
 	static LightingPDCModifier(pLightLevel) {} //returns the PDC modifier for pLightLevel
 	
-	static LightingPDCModifierToken(pToken, pVisionLevel) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
+	static LightingPDCModifierToken(pToken, pVisionLevel = 0) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
 	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
@@ -220,13 +220,13 @@ class VisionUtils {
 					vLightningLevel = cLightLevel.Dim;
 				}
 				
-				let vrelevantLightSources = vScene.lights.filter(vDocument => vDocument._object?.source.shape.contains(pPoint.x, pPoint.y));
+				let vrelevantLightSources = vScene.lights.filter(vDocument => vDocument._object?.source.shape?.contains(pPoint.x, pPoint.y));
 				
 				if (vrelevantLightSources.length > 0) {
 					//at least Dim
 					vLightningLevel = cLightLevel.Dim;
 					
-					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument) < vDocument.config.bright)) {
+					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) < vDocument.config.bright)) {
 						//is Bright
 						vLightningLevel = cLightLevel.Bright;
 					}
@@ -239,6 +239,10 @@ class VisionUtils {
 	
 	static correctedLightLevel(pLightLevel, pVisionLevel) {
 		let vValue = pLightLevel;
+		
+		if (vValue < 0) {
+			return vValue;
+		}
 		
 		switch (pVisionLevel) {
 			case cVisionLevel.LowLight:
@@ -257,16 +261,16 @@ class VisionUtils {
 	}
 	
 	static LightingPDCModifier(pLightLevel) {
-		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier");
-		
-		if (isNaN(vModifier) || vModifier == undefined) {
-			vModifier = 0;
+		if (pLightLevel <= 0) {
+			return 0;
 		}
 		
-		return vModifier;
+		let vModifier = game.settings.get(cModuleName, "IlluminationPDCModifier")[pLightLevel-1];
+		
+		return Number(vModifier);
 	}
 	
-	static LightingPDCModifierToken(pToken, pVisionLevel) {
+	static LightingPDCModifierToken(pToken, pVisionLevel = 0) {
 		if (!game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue != 0)) {
 			return 0;
 		}

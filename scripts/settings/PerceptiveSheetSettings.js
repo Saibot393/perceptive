@@ -1,8 +1,10 @@
 import * as FCore from "../CoreVersionComp.js";
-import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
+import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
 import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
+import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
+import {VisionUtils} from "../utils/VisionUtils.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
 
@@ -172,6 +174,15 @@ class PerceptiveSheetSettings {
 													vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
 													vflagname : cresetSpottedbyMoveF
 													}, `div[data-tab="${cModuleName}"]`);
+								
+				//infos 
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.PP", {pValue :  await VisionUtils.PassivPerception(pApp.document)})}</p>`);
+				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`);
 			}			
 		}
 	}
