@@ -3,6 +3,7 @@ import {VisionUtils} from "./utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "./utils/PerceptiveSystemUtils.js";
 import { GeometricUtils } from "./utils/GeometricUtils.js";
 import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
+import {EffectManager } from "./helpers/EffectManager.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 
 var vlastPPvalue = 0;
@@ -37,6 +38,10 @@ class SpottingManager {
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
 	
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chat message is send 
+	
+	static async onPerceptionRoll(pActor, pRoll) {} //called when a perception roll is rolled
+	
+	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
 	
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {} //called when a wall is updates
 	
@@ -209,47 +214,55 @@ class SpottingManager {
 				}
 			}
 			
-			let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == vActorID);
-			
 			if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-				if (vActorID.length > 0) {
-					let vSpotables = VisionUtils.spotablesinVision();
-					
-					let vPerceptionResult = pMessage.roll.total;
-					
-					vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
-					
-					VisionUtils.MaketempVisible(vSpotables);
-					
-					await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult})
-				}
+				SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
 			}
 			
 			if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
-				let vNewDCs = {};
-				
-				let vStealthResult = pMessage.roll.total;
-				
-				if (game.settings.get(cModuleName, "AutoStealthDCbehaviour") != "off") {
-					switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
-						case "both":
-							vNewDCs.PPDC = vStealthResult;
-							break;
-					}
-					
-					switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
-						case "both":
-						case "activeonly":
-							vNewDCs.APDC = vStealthResult;
-							break;
-					}
-					
-					for (let i = 0; i < vRelevantTokens.length; i++) {
-						PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
-					}
-				}
+				SpottingManager.onStealthRoll(vActorID, pMessage.roll);
 			}
 		}
+	}
+	
+	static async onPerceptionRoll(pActor, pRoll) {
+		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
+		
+		let vSpotables = VisionUtils.spotablesinVision();
+		
+		let vPerceptionResult = pRoll.total;
+		
+		vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
+		
+		VisionUtils.MaketempVisible(vSpotables);
+		
+		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult});
+	}
+	
+	static async onStealthRoll(pActor, pRoll) {
+		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
+		
+		let vNewDCs = {};
+		
+		let vStealthResult = pRoll.total;
+		
+		if (game.settings.get(cModuleName, "AutoStealthDCbehaviour") != "off") {
+			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
+				case "both":
+					vNewDCs.PPDC = vStealthResult;
+					break;
+			}
+			
+			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
+				case "both":
+				case "activeonly":
+					vNewDCs.APDC = vStealthResult;
+					break;
+			}
+			
+			for (let i = 0; i < vRelevantTokens.length; i++) {
+				PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
+			}
+		}		
 	}
 	
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {

@@ -8,13 +8,11 @@ const cArmReach = "foundryvtt-arms-reach";
 const cArmReachold = "arms-reach";
 const cLocknKey = "LocknKey";
 const cWallHeight = "wall-height";
+const cDfredCE = "dfreds-convenient-effects";
 
 export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight}
 
-//const
-const cLockTypeDoor = "LTDoor"; //type for door locks
-
-export { cLockTypeDoor }
+export { cDfredCE }
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -26,6 +24,12 @@ class PerceptiveCompUtils {
 	
 	static ARWithinDistance(pCharacter, pObject) {} //[ArmReach] returns if pCharacter is close enought to pLock to interact
 	
+	//specific: dfreds-convenient-effects
+	static async AddDfredEffect(pEffects, pToken) {} //uses dfreds api to add effects with pEffectNames to pToken
+	
+	static async RemoveRideableDfredEffect(pEffects, pToken) {} //uses dfreds api to remove effects with pEffectNames to pToken
+	
+	static FilterEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	//IMPLEMENTATIONS
 	//basic
@@ -62,6 +66,60 @@ class PerceptiveCompUtils {
 		}	
 		
 		return true;//if anything fails
+	}
+	
+	//specific: dfreds-convenient-effects
+	static async AddDfredEffect(pEffects, pToken) {
+		for (let i = 0; i < pEffects.length; i++) {
+			await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
+			  effect: pEffects[i].toObject(),
+			  uuid : pToken.actor.uuid,
+			  origin : cModuleName
+			});
+			/*
+			game.dfreds.effectInterface.addEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+			*/
+		}
+	}
+	
+	static async RemoveRideableDfredEffect(pEffects, pToken) {
+		for (let i = 0; i < pEffects.length; i++) {
+			let vName = pEffects[i].name;
+			
+			if (!vName) {
+				vName = pEffects[i].label;
+			}
+			
+			await game.dfreds.effectInterface._socket.executeAsGM('removeEffect', {
+			  effectName: vName,
+			  uuid : pToken.actor.uuid,
+			  origin : cModuleName
+			});
+			//game.dfreds.effectInterface.removeEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+		}		
+	}
+	
+	static FilterEffects(pNameIDs) {
+		let vNameIDs = [];
+		
+		let vBuffer;
+		
+		for (let i = 0; i < pNameIDs.length; i++) {
+			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] || vEffect.label == pNameIDs[i]);
+			
+			if (vBuffer) {
+				vNameIDs.push(vBuffer);
+			}
+			else {
+				vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem().effects.get(pNameIDs[i]);
+				
+				if (vBuffer) {
+					vNameIDs.psuh(vBuffer.name);
+				}
+			}
+		}
+		
+		return vNameIDs;
 	}
 }
 
