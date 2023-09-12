@@ -10,9 +10,12 @@ const cLocknKey = "LocknKey";
 const cWallHeight = "wall-height";
 const cDfredCE = "dfreds-convenient-effects";
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight}
+//const
+const cLockTypeDoor = "LTDoor"; //type for door locks
 
-export { cDfredCE }
+export { cLockTypeDoor }
+
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS

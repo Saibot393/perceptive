@@ -214,12 +214,14 @@ class SpottingManager {
 				}
 			}
 			
-			if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-				SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
-			}
-			
-			if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
-				SpottingManager.onStealthRoll(vActorID, pMessage.roll);
+			if (!keyboard.downKeys.has("AltLeft")) {
+				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
+					SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
+				}
+				
+				if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
+					SpottingManager.onStealthRoll(vActorID, pMessage.roll);
+				}
 			}
 		}
 	}
