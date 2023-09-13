@@ -214,7 +214,7 @@ class SpottingManager {
 				}
 			}
 			
-			if (!keyboard.downKeys.has("AltLeft")) {
+			if (!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) {
 				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
 					SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
 				}
@@ -264,7 +264,11 @@ class SpottingManager {
 			for (let i = 0; i < vRelevantTokens.length; i++) {
 				PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
 			}
-		}		
+		}	
+
+		for (let i = 0; i < vRelevantTokens.length; i++) {
+			EffectManager.applyStealthEffects(vRelevantTokens[i]);
+		}
 	}
 	
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {

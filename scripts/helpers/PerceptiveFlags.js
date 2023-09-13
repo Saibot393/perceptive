@@ -11,6 +11,8 @@ const cHingePositions = [0, 1, 2];
 const cSwingSpeedRange = [-180, 180];
 const cSlideSpeedRange = [-1, 1];
 
+const cDelimiter = ";";
+
 export {cDoorMoveTypes, cHingePositions, cSwingSpeedRange, cSlideSpeedRange}
 //Flags
 const cisPerceptiveWallF = cisPerceptiveWall; //if this wall was created by this module
@@ -39,8 +41,12 @@ const cAPDCF = "APDCFlag"; //Flag for the passive perception DC of this object
 const cSpottedbyF = "SpottedbyFlag"; //Flag to save the ids of actors by which this object has been spotted
 const cresetSpottedbyMoveF = "resetSpottedbyMoveFlag"; //Flag to reset the spooted by ids of this (Token) when it moves
 const cLightLevelF = "LightLevelFlag"; //stores the current light level of an object
+const cStealthEffectsF = "StealthEffectsFlag"; //Flag to to store custom stealth effects of this token
+const cOverrideWorldSEffectsF = "OverrideWorldSEffectsFlag"; //Flag to override the world stealth effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF}
+const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
+
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -160,6 +166,15 @@ class PerceptiveFlags {
 	static CheckLightLevel(pObject, pUsePosition = false) {} //updates the light level calculation of pObject
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {} //returns the current light level modifier of pObject
+	
+	static StealthEffects(pToken, pRaw = false) {} //returns the stealth effects of pToken
+	
+	static OverrideWorldSEffects(pToken) {} //returns if this pTokens effects override the worlds effect
+	
+	//effects
+	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
+	
+	static isPerceptiveEffect(pEffect) {} //returns if pEffect is perceptive effect
 	
 	//support
 	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
@@ -472,6 +487,32 @@ class PerceptiveFlags {
 		}
 		
 		return 0; //default if anything fails
+	}
+	
+	static #StealthEffectsFlag (pObject) { 
+	//returns content of StealthEffectsFlag of object (string)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cStealthEffectsF)) {
+				return vFlag.StealthEffectsFlag;
+			}
+		}
+		
+		return ""; //default if anything fails
+	}
+	
+	static #OverrideWorldSEffectsFlag (pObject) { 
+	//returns content of CustomStealthEffectsFlag of object (string)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cOverrideWorldSEffectsF)) {
+				return vFlag.OverrideWorldSEffectsFlag;
+			}
+		}
+		
+		return false; //default if anything fails
 	}
 	
 	static #resetSpottedbyMoveFlag (pObject) { 
@@ -941,6 +982,36 @@ class PerceptiveFlags {
 		else {
 			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel));
 		}
+	}
+	
+	static StealthEffects(pToken, pRaw = false) {
+		if (pRaw) {
+			return this.#StealthEffectsFlag(pToken);
+		}
+		else {
+			return this.#StealthEffectsFlag(pToken).split(cDelimiter);
+		}
+	}
+	
+	static OverrideWorldSEffects(pToken) {
+		return this.#OverrideWorldSEffectsFlag(pToken);
+	}
+	
+	//effects
+	static async MarkasPerceptiveEffect(pEffect) {
+		if (pEffect) {
+			pEffect.setFlag(cModuleName, cPerceptiveEffectF, true)
+		}
+	}
+	
+	static isPerceptiveEffect(pEffect) {
+		let vFlag = this.#PerceptiveFlags(pEffect);
+		
+		if (vFlag) {
+			return (vFlag.hasOwnProperty(cPerceptiveEffectF) && vFlag.PerceptiveEffectFlag);
+		}
+		
+		return false;
 	}
 	
 	//support

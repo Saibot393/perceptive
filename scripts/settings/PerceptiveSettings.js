@@ -1,6 +1,6 @@
 import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
@@ -26,6 +26,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Settings.UseArmsreachDistance.descrp"),
 	scope: "world",
 	config: PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold),
+	type: Boolean,
+	default: false
+  }); 
+  
+  game.settings.register(cModuleName, "DFredsEffectsIntegration", {
+	name: Translate("Settings.DFredsEffectsIntegration.name"),
+	hint: Translate("Settings.DFredsEffectsIntegration.descrp"),
+	scope: "world",
+	config: PerceptiveCompUtils.isactiveModule(cDfredCE),
 	type: Boolean,
 	default: false
   }); 
@@ -192,6 +201,24 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		"activeonly": Translate("Settings.AutoStealthDCbehaviour.options." + "activeonly")
 	},
 	default: "both"
+  });  
+
+  game.settings.register(cModuleName, "applySystemStealthEffect", {
+	name: Translate("Settings.applySystemStealthEffect.name"),
+	hint: Translate("Settings.applySystemStealthEffect.descrp"),
+	scope: "world",
+	config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+	type: Boolean,
+	default: false
+  });   
+  
+  game.settings.register(cModuleName, "customStealthEffects", {
+	name: Translate("Settings.customStealthEffects.name"),
+	hint: Translate("Settings.customStealthEffects.descrp"),
+	scope: "world",
+	config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+	type: String,
+	default: ""
   });   
   
   game.settings.register(cModuleName, "resetSpottedbyMovedefault", {
@@ -293,6 +320,18 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   game.keybindings.register(cModuleName, "ToggleTokenFollowing", {
 	name: Translate("Keys.ToggleTokenFollowing.name"),
 	onDown: () => { game.settings.set(cModuleName, "followTokens", !game.settings.get(cModuleName, "followTokens")) },
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  game.keybindings.register(cModuleName, "IgnoreRoll", {
+	name: Translate("Keys.IgnoreRoll.name"),
+	hint: Translate("Keys.IgnoreRoll.descrp"),
+	editable: [
+      {
+        key: "AltLeft"
+      }
+    ],
 	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });

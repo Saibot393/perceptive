@@ -1,10 +1,11 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
+import { PerceptiveCompUtils, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
 
@@ -174,6 +175,25 @@ class PerceptiveSheetSettings {
 													vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
 													vflagname : cresetSpottedbyMoveF
 													}, `div[data-tab="${cModuleName}"]`);
+								
+				if (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
+					//stealth effects
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
+														vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
+														vtype : "text", 
+														vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
+														vflagname : cStealthEffectsF
+														}, `div[data-tab="${cModuleName}"]`);			
+
+					//stealth effects override
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".name"), 
+														vhint : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".descrp"), 
+														vtype : "checkbox", 
+														vwide : true,
+														vvalue : PerceptiveFlags.OverrideWorldSEffects(pApp.document), 
+														vflagname : cOverrideWorldSEffectsF
+														}, `div[data-tab="${cModuleName}"]`);
+				}
 								
 				//infos 
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);

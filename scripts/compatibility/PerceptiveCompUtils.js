@@ -10,10 +10,12 @@ const cLocknKey = "LocknKey";
 const cWallHeight = "wall-height";
 const cDfredCE = "dfreds-convenient-effects";
 
-//const
+//special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
 
-export { cLockTypeDoor }
+const cStealthEffectName = "Invisible"; //For convenient effects
+
+export { cLockTypeDoor, cStealthEffectName }
 
 export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE}
 
@@ -30,9 +32,9 @@ class PerceptiveCompUtils {
 	//specific: dfreds-convenient-effects
 	static async AddDfredEffect(pEffects, pToken) {} //uses dfreds api to add effects with pEffectNames to pToken
 	
-	static async RemoveRideableDfredEffect(pEffects, pToken) {} //uses dfreds api to remove effects with pEffectNames to pToken
+	static async RemovePerceptiveDfredEffect(pEffects, pToken) {} //uses dfreds api to remove effects with pEffectNames to pToken
 	
-	static FilterEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
+	static FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	//IMPLEMENTATIONS
 	//basic
@@ -85,7 +87,7 @@ class PerceptiveCompUtils {
 		}
 	}
 	
-	static async RemoveRideableDfredEffect(pEffects, pToken) {
+	static async RemovePerceptiveDfredEffect(pEffects, pToken) {
 		for (let i = 0; i < pEffects.length; i++) {
 			let vName = pEffects[i].name;
 			
@@ -102,7 +104,7 @@ class PerceptiveCompUtils {
 		}		
 	}
 	
-	static FilterEffects(pNameIDs) {
+	static FilterDFEffects(pNameIDs) {
 		let vNameIDs = [];
 		
 		let vBuffer;

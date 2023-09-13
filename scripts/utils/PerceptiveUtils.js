@@ -3,6 +3,12 @@ const cModuleName = "perceptive"; //name of Module
 
 const cPf2eName = "pf2e";
 
+//type names
+const cPf2EffectType = "effect"; //the item type of Pf2e effects
+const cPf2ConditionType = "condition"; //the item type of Pf2e conditions
+
+const cDelimiter = ";";
+
 //a few support functions
 class PerceptiveUtils {
 	//DECLARATIONS
@@ -27,8 +33,6 @@ class PerceptiveUtils {
 	
 	static hoveredObject() {} //get first hovered object
 	
-	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
-	
 	static SelectedandPrimary() {} //returns all selected tokens and the primary character (if not allready included)
 	
 	static TokenNamesfromIDs(pIDs, pScene = null) {} //returns an array matching pIDs Tokens
@@ -41,6 +45,12 @@ class PerceptiveUtils {
 	static hoveredToken() {} //get first hovered token
 	
 	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
+	
+	//Pf2e specific
+	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
+	
+	//effects
+	static CustomWorldStealthEffects() {} //returns array of stealth effects for this world
 	
 	//IMPLEMENTATIONS
 	
@@ -237,6 +247,69 @@ class PerceptiveUtils {
 		
 		return vNames;
 	} 
+	
+	//Pf2e specific
+	static async ApplicableEffects(pIdentifications) {
+		let vEffects = [];
+		
+		for (let i = 0; i < pIdentifications.length; i++) {
+			//world
+			//-uuid
+			let vBuffer = await game.items.get(pIdentifications[i]);
+			
+			//-name
+			if (!vBuffer) {
+				vBuffer = await game.items.find(vEffect => vEffect.name == pIdentifications[i]);
+			}
+			
+			//direct id
+			if (!vBuffer) {
+				vBuffer = await fromUuid(pIdentifications[i]);
+			}
+			
+			//compendium
+			if (!vBuffer) {
+				let vElement;
+				let vPacks = game.packs.filter(vPacks => vPacks.documentName == "Item");//.map(vPack => vPack.index);
+				
+				//-uuid
+				let vPack = vPacks.find(vPack => vPack.index.get(pIdentifications[i]));
+				
+				if (vPack) {
+					vElement = vPack.index.get(pIdentifications[i]);
+				}
+				else {//-name
+					vPack = vPacks.find(vPack => vPack.index.find(vData => vData.name == pIdentifications[i]));
+					
+					if (vPack) {
+						vElement = vPack.index.find(vData => vData.name == pIdentifications[i]);
+					}
+				}
+			
+				if (vElement) {
+					vBuffer = vElement;
+					/*
+					vBuffer = await game.items.filter(vToken => vToken.flags.core).find(vToken => vToken.flags.core.sourceId == "Compendium." + vPack.collection + ".Item." + vElement._id);
+					
+					if (!vBuffer) {
+						vBuffer = await game.items.importFromCompendium(vPack, vElement._id);
+					};
+					*/
+				}
+			}
+			
+			if (vBuffer && [cPf2ConditionType, cPf2EffectType].includes(vBuffer.type) ) {
+				vEffects[vEffects.length] = vBuffer.toObject();
+			}
+		}
+		
+		return vEffects;		
+	}
+	
+	//effects
+	static CustomWorldStealthEffects() {
+		return game.settings.get(cModuleName, "customStealthEffects").split(cDelimiter);
+	}
 }
 
 function Translate(pName){
