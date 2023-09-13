@@ -12,7 +12,14 @@
 				"Title"					: "Spotting infos",
 				"PP"					: "Calculated passive perception: {pValue}",
 				"Spottedby"				: "Spotted by: {pNames}",
-				"LightModifier"			: "Illumination perception DC modifier: {pValue}"
+				"LightModifier"			: "Illumination perception DC modifier: {pValue}",
+				"VisionLevel" : {
+					"name"				: "Vision level: ",
+					"value0"			: "Basic sight",
+					"value1"			: "Low-light vision",
+					"value2"			: "Darkvision",
+					"value3"			: "Darkvision (total)"
+				}
 			}
 		},
 		
