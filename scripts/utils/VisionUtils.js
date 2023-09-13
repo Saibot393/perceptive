@@ -15,7 +15,8 @@ const cLightLevel = {
 const cVisionLevel = {
 					 Normal : 0,
 					 LowLight : 1,
-					 Dark : 2
+					 Dark : 2,
+					 TotalDark : 3
 					 };
 
 class VisionUtils {
@@ -37,9 +38,11 @@ class VisionUtils {
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
+	static VisionLevel(pToken) {} //returns the Vision level of pToken (special calc for Pf2e)
+	
 	static LightingLevel(pPoint, pScene = null) {} //returns the lightning level at a given point in a given scene (Dark = 0, Dim = 1, Bright = 2)
 	
-	static correctedLightLevel(pLightLevel, pVisionLevel) {} //returns pLightLevel with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
+	static correctedLightLevel(pLightLevel, pVisionLevel) {} //returns pLightLevel with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2, TotalDarkvision = 3)
 	
 	static LightingPDCModifier(pLightLevel) {} //returns the PDC modifier for pLightLevel
 	
@@ -201,6 +204,30 @@ class VisionUtils {
 		});
 	}
 	
+	static VisionLevel(pToken) {
+		let vVLevel = cVisionLevel.Normal;
+		
+		if (PerceptiveUtils.isPf2e() && pToken.actor) {
+			let vsenses = pToken.actor.system.traits.senses;
+			
+			if (vsenses.find(vsense => (vsense.type == "darkvision") && (vsense.range > 0))) {
+				vVLevel = cVisionLevel.TotalDark;
+			}
+			else {
+				if (vsenses.find(vsense => (vsense.type == "lowLightVision") && (vsense.range > 0))) {
+					vVLevel = cVisionLevel.LowLight;
+				}				
+			}
+		}
+		else {
+			if (pToken.sight.visionMode == "darkvision") {
+				vVLevel = cVisionLevel.Dark;
+			}
+		}
+		
+		return vVLevel;
+	}
+	
 	static LightingLevel(pPoint, pScene = null) {
 		//start value Darkness
 		let vLightningLevel = cLightLevel.Dark;
@@ -245,14 +272,19 @@ class VisionUtils {
 		}
 		
 		switch (pVisionLevel) {
-			case cVisionLevel.LowLight:
-				if (vValue < cLightLevel.Dim) {
-					vValue = cLightLevel.Dim;
+			case cVisionLevel.LowLight: //Pf2e rules
+				if (vValue == cLightLevel.Dim) {
+					vValue = cLightLevel.Bright;
 				}
 				break;
-			case cVisionLevel.Dark:
-				if (vValue < cLightLevel.Dark) {
-					vValue = cLightLevel.Dark;
+			case cVisionLevel.Dark: //D&D rules
+				if (vValue < cLightLevel.Bright) {
+					vValue = vValue + 1;
+				}
+				break;
+			case cVisionLevel.TotalDark: //Pf2e rules
+				if (vValue < cLightLevel.Bright) {
+					vValue = cLightLevel.Bright;
 				}
 				break;
 		}

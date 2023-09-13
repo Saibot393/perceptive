@@ -16,7 +16,7 @@ class SpottingManager {
 	
 	static TokenSpottingVisible(pToken) {} //returns wether this pWall is visible though spotting
 	
-	static async updatePPvalue() {} //retruns the passive perception value of pToken
+	static async updateVisionValues() {} //retruns the passive perception value of pToken
 	
 	static lastPPvalue() {} //returns the last updated passiveperception value
 	
@@ -103,21 +103,13 @@ class SpottingManager {
 		return false;
 	}
 	
-	static async updatePPvalue() {
+	static async updateVisionValues() {
 		if (!game.user.isGM) {
 			let vTokens = PerceptiveUtils.selectedTokens();
 			
-			let vBuffer;
+			vlastPPvalue = Math.max(vTokens.map(vToken => VisionUtils.PassivPerception(vTokens[i])));
 			
-			vlastPPvalue = 0;
-			
-			for (let i = 0; i  < vTokens.length; i++) {
-				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
-				
-				if (vBuffer > vlastPPvalue) {
-					vlastPPvalue = vBuffer;
-				}
-			}
+			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vTokens[i])));
 		}
 		else {
 			vlastPPvalue = Infinity;
@@ -129,7 +121,7 @@ class SpottingManager {
 	}
 	
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
-		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= pInfos.APerceptionResult);
+		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= pInfos.APerceptionResult);
 		
 		for (let i = 0; i < pSpotters.length; i++) {		
 			for(let j = 0; j < vSpottables.length; j++) {
@@ -189,7 +181,7 @@ class SpottingManager {
 			
 			VisionUtils.PrepareSpotables();
 			
-			SpottingManager.updatePPvalue();
+			SpottingManager.updateVisionValues();
 		}
 		
 		if (game.user.isGM) {
@@ -237,7 +229,7 @@ class SpottingManager {
 		
 		VisionUtils.MaketempVisible(vSpotables);
 		
-		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult});
+		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel});
 	}
 	
 	static async onStealthRoll(pActor, pRoll) {
@@ -303,7 +295,7 @@ class SpottingManager {
 	static onCanvasReady(pCanvas) {
 		VisionUtils.PrepareSpotables();
 			
-		SpottingManager.updatePPvalue();		
+		SpottingManager.updateVisionValues();		
 	}
 }
 
