@@ -107,9 +107,9 @@ class SpottingManager {
 		if (!game.user.isGM) {
 			let vTokens = PerceptiveUtils.selectedTokens();
 			
-			vlastPPvalue = Math.max(vTokens.map(vToken => VisionUtils.PassivPerception(vTokens[i])));
+			vlastPPvalue = Math.max(vTokens.map(vToken => VisionUtils.PassivPerception(vToken)));
 			
-			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vTokens[i])));
+			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
 		}
 		else {
 			vlastPPvalue = Infinity;
