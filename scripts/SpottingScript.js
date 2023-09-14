@@ -87,11 +87,10 @@ class SpottingManager {
 		// Clear the detection filter
 		pToken.detectionFilter = undefined;
 
-
 		// Some tokens are always visible
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
-
+		
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
 			// Otherwise, test visibility against current sight polygons
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
@@ -107,7 +106,17 @@ class SpottingManager {
 		if (!game.user.isGM) {
 			let vTokens = PerceptiveUtils.selectedTokens();
 			
-			vlastPPvalue = Math.max(vTokens.map(vToken => VisionUtils.PassivPerception(vToken)));
+			let vBuffer;
+			
+			vlastPPvalue = 0;
+			
+			for (let i = 0; i < vTokens.length; i++) {
+				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
+				
+				if (vBuffer > vlastPPvalue) {
+					vlastPPvalue = vBuffer;
+				}
+			}
 			
 			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
 		}
@@ -177,8 +186,7 @@ class SpottingManager {
 	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {
-		if (pToken.isOwner && pToken.parent == canvas.scene) {
-			
+		if (pToken.isOwner && pToken.parent == canvas.scene) {	
 			VisionUtils.PrepareSpotables();
 			
 			SpottingManager.updateVisionValues();

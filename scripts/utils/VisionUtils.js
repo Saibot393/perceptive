@@ -225,6 +225,8 @@ class VisionUtils {
 			}
 		}
 		
+		//document._source.sight.visionMode
+		
 		return vVLevel;
 	}
 	

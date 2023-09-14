@@ -976,6 +976,10 @@ class PerceptiveFlags {
 	}
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {
+		if (pObject.documentName == "Wall") {
+			return 0;
+		}
+		
 		if (pVisionLevel < 0 || !game.settings.get(cModuleName, "useSpottingLightLevels")) {
 			return 0;
 		}

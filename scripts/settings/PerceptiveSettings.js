@@ -237,11 +237,12 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: true,
 	type: Array,
 	default: [0, 0],
-	onChange: pValues => { 	if (game.user.isGM) {
-								if (pValues.length == 1) {game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
-								game.settings.set(cModuleName, "useSpottingLightLevels", pValues.find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
-							}
-						 }
+	onChange: async (pValues) => { 	if (game.user.isGM) {
+										console.log(pValues);
+										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
+										await game.settings.set(cModuleName, "useSpottingLightLevels",  game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
+									}
+								 }
   }); 
   
   game.settings.register(cModuleName, "useSpottingLightLevels", {
