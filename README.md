@@ -66,6 +66,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
 - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
+- Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
 
 #### Walls/Tokens:
 - Can be spotted: to activate the spotting feature on this wall
