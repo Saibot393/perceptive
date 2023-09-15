@@ -117,8 +117,12 @@ class PerceptiveCompUtils {
 			else {
 				vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem().effects.get(pNameIDs[i]);
 				
+				if (!vBuffer) {
+					vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem().effects.find(v => v.name == pNameIDs[i]);
+				}
+				
 				if (vBuffer) {
-					vNameIDs.psuh(vBuffer.name);
+					vNameIDs.push(vBuffer);
 				}
 			}
 		}
