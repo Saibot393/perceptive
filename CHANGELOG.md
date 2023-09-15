@@ -1,3 +1,6 @@
+## v1.5.2
+- Added world setting Force invert "Ignore Roll" key to invert the key for all players and remove the client setting
+
 ## v1.5.1
 - Added client setting Invert "Ignore Roll" key to only recognise rolls WHEN they key is pressed
 
