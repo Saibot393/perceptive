@@ -57,17 +57,33 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
+- Player perspective: to allow GMs to only spot tokens players can spot
 - Passive perception formula: to set the formula used for passive perception (if not automated)
-- Perception key-word: to set the key word used to find perception rolls (if not automated)
-- Stealth key-word: to set the key word used to find stealth rolls (if not automated)
+- Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
+- Stealth key-word: to set the key word used to find stealth rolls (if not automated) (a key can be set to not autodetect rolls)
 - Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
+- Apply system stealth effect(s): to automatically apply the systems stealth effects
+- Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
+- Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
 
 #### Walls/Tokens:
 - Can be spotted: to activate the spotting feature on this wall
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
+- Stealth effects: to add additional stealth effects to this token
+- Override world stealth effects: to override the worlds stealth effects with this tokens custom stealth effects
+ 
+The following informations will be displayed in the settings (if applicable):
+ - Calculated passive perception: The passive perception of this token calculated according to the set formula
+ - Spotted by: A list of token names (or IDs) this token has been spotted by
+ - Illumination perception DC modifier: A light level based modifier added or subtracted from this tokens set perception DCs
+ - Vision level: This tokens set vision level:
+   - Basic sight: Normal behaviour
+   - Low-light vision: Can see tokens in dim-light as if they were in bright light
+   - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
+   - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
 
 ## General features:
 
@@ -86,6 +102,8 @@ The module should be compatible with all game systems and most modules on Foundr
   - Additional setting "Use Arms Reach distance": to use the "Arms Reach" distance instead of the set Interaction distance
 - [Lock & Key](https://foundryvtt.com/packages/locknkey)
   - A "Peek lock" options will be shown on the lock interaction menu of Lock & Key
+- [Vision 5e](https://foundryvtt.com/packages/vision-5e)
+  - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
 
 ### Languages:
 
