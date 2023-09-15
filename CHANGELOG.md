@@ -1,3 +1,6 @@
+## v1.5.1
+- Added client setting Invert "Ignore Roll" key to only recognise rolls WHEN they key is pressed
+
 ## v1.5.0
 - Spot Invisible improvements:
   - Added key to ignore stealth and perception checks
