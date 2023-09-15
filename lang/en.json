@@ -146,7 +146,7 @@
 			
 			"customStealthEffects" : {
 				"name"					: "Custom stealth effects",
-				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\""				
+				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\")"				
 			},
 			
 			"resetSpottedbyMovedefault" : {
@@ -281,7 +281,7 @@
 			
 			"StealthEffectsFlag" : {
 				"name"					: "Stealth effects",
-				"descrp"				: "Further stealth effects applied to this token when rolling stealth"
+				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
 			},
 			
 			"OverrideWorldSEffectsFlag" : {

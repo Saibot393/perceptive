@@ -146,7 +146,7 @@
 			
 			"customStealthEffects" : {
 				"name"					: "Eigene Verstecken Effekte",
-				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\""				
+				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\")"				
 			},
 			
 			"resetSpottedbyMovedefault" : {
@@ -281,7 +281,7 @@
 			
 			"StealthEffectsFlag" : {
 				"name"					: "Verstecken Effekte",
-				"descrp"				: "Weitere EFfkte welche auf diese Figur beim verstecken angewandt werden"
+				"descrp"				: "Weitere EFfkte welche auf diese Figur beim verstecken angewandt werden (Namen oder IDs, getrennt mit \";\")"
 			},
 			
 			"OverrideWorldSEffectsFlag" : {
