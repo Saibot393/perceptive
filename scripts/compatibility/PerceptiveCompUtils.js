@@ -9,15 +9,14 @@ const cArmReachold = "arms-reach";
 const cLocknKey = "LocknKey";
 const cWallHeight = "wall-height";
 const cDfredCE = "dfreds-convenient-effects";
+const cVision5e = "vision-5e";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
 
-const cStealthEffectName = "Invisible"; //For convenient effects
+export { cLockTypeDoor }
 
-export { cLockTypeDoor, cStealthEffectName }
-
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS

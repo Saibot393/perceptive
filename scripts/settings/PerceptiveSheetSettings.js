@@ -144,6 +144,11 @@ class PerceptiveSheetSettings {
 							
 			if (game.settings.get(cModuleName, "ActivateSpotting")) {			
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+				
+				//infos 
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
 			}
 		}
 	}

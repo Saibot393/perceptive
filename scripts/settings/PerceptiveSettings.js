@@ -1,6 +1,6 @@
 import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e} from "../compatibility/PerceptiveCompUtils.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
@@ -35,6 +35,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Settings.DFredsEffectsIntegration.descrp"),
 	scope: "world",
 	config: PerceptiveCompUtils.isactiveModule(cDfredCE),
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  }); 
+  
+  game.settings.register(cModuleName, "Vision5eIntegration", {
+	name: Translate("Settings.Vision5eIntegration.name"),
+	hint: Translate("Settings.Vision5eIntegration.descrp"),
+	scope: "world",
+	config: PerceptiveCompUtils.isactiveModule(cVision5e),
 	type: Boolean,
 	default: false
   }); 
@@ -161,6 +171,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: true,
 	requiresReload: true
   });   
+  
+  game.settings.register(cModuleName, "SimulatePlayerVision", {
+	name: Translate("Settings.SimulatePlayerVision.name"),
+	hint: Translate("Settings.SimulatePlayerVision.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });
   
   game.settings.register(cModuleName, "PassivePerceptionFormula", {
 	name: Translate("Settings.PassivePerceptionFormula.name"),

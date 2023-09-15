@@ -51,6 +51,8 @@ class SpottingManager {
 	
 	static onCanvasReady(pCanvas) {} //called when a canvas is ready
 	
+	static initializeVisionSources(pData) {} //called when new vision sources are initialized
+	
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
@@ -103,7 +105,7 @@ class SpottingManager {
 	}
 	
 	static async updateVisionValues() {
-		if (!game.user.isGM) {
+		if (!game.user.isGM || game.settings.get(cModuleName, "SimulatePlayerVision")) {
 			let vTokens = PerceptiveUtils.selectedTokens();
 			
 			let vBuffer;
@@ -122,6 +124,8 @@ class SpottingManager {
 		}
 		else {
 			vlastPPvalue = Infinity;
+			
+			vlastVisionLevel = 3;
 		}
 	}
 	
@@ -305,6 +309,12 @@ class SpottingManager {
 			
 		SpottingManager.updateVisionValues();		
 	}
+	
+	static initializeVisionSources(pData) {
+		VisionUtils.PrepareSpotables();
+		
+		SpottingManager.updateVisionValues();	
+	}
 }
 
 //Hooks
@@ -357,6 +367,8 @@ Hooks.on("ready", function() {
 		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)}); 
 		
 		Hooks.on("canvasReady", (pCanvas) => {SpottingManager.onCanvasReady(pCanvas)});
+		
+		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)})
 	}
 });
 

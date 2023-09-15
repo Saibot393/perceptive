@@ -1,6 +1,7 @@
 import {GeometricUtils} from "./GeometricUtils.js";
 import { PerceptiveUtils, cModuleName } from "./PerceptiveUtils.js";
 import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
+import { PerceptiveCompUtils, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
 
 const cTransparentalpha = 0.5;
 
@@ -207,9 +208,10 @@ class VisionUtils {
 	static VisionLevel(pToken) {
 		let vVLevel = cVisionLevel.Normal;
 		
-		if (PerceptiveUtils.isPf2e() && pToken.actor) {
+		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.traits?.senses?.length) {
 			let vsenses = pToken.actor.system.traits.senses;
 			
+			console.log(vsenses);
 			if (vsenses.find(vsense => (vsense.type == "darkvision") && (vsense.range > 0))) {
 				vVLevel = cVisionLevel.TotalDark;
 			}
@@ -220,8 +222,20 @@ class VisionUtils {
 			}
 		}
 		else {
-			if (pToken.sight.visionMode == "darkvision") {
-				vVLevel = cVisionLevel.Dark;
+			let vVisionMode;
+			if (PerceptiveCompUtils.isactiveModule(cVision5e) && game.settings.get(cModuleName, "Vision5eIntegration")) {
+				vVisionMode = pToken._source.sight.visionMode
+			}
+			else {
+				vVisionMode = pToken.sight.visionMode;
+			}
+			
+			switch (vVisionMode) {
+				case "lightAmplification":
+					vVLevel = cVisionLevel.LowLight;
+				case "darkvision":
+					vVLevel = cVisionLevel.Dark;
+					break;
 			}
 		}
 		

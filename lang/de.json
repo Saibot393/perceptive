@@ -7,7 +7,20 @@
 			"SpottingSettings"			: "Unsichtbares Aufdecken Einstellungen",
 			"ClientSettings"			: "Spieler Einstellungen",
 			"PeekLock"					: "Durchschaue Schloss",
-			"Basic"						: "Basis"
+			"Basic"						: "Basis",
+			"SpottingInfos"	: {
+				"Title"					: "Aufdecken Infos",
+				"PP"					: "Berechnete passive Wahrnehmung: {pValue}",
+				"Spottedby"				: "Aufgedeckt von: {pNames}",
+				"LightModifier"			: "Wahrnehmungs DC Veränderung durch Lichtstufe: {pValue}",
+				"VisionLevel" : {
+					"name"				: "Sicht Stufe: ",
+					"value0"			: "Normale Sicht",
+					"value1"			: "Gedimmtes-Licht Sicht",
+					"value2"			: "Dunkelsicht",
+					"value3"			: "Dunkelsicht (Total)"
+				}
+			}
 		},
 		
 		"Settings" : {
@@ -19,6 +32,16 @@
 			"UseArmsreachDistance" : {
 				"name"					: "Nutze Arms Reach Distanz",
 				"descrp"				: "Nutze die Arms Reach distance für die maximale Interaktionsdistanz"
+			},
+			
+			"DFredsEffectsIntegration" : {
+				"name"					: "DFreds Convenient Effects Integration",
+				"descrp"				: "Nutze DFreds convenient effects"
+			},
+			
+			"Vision5eIntegration" : {
+				"name"					: "Vision 5e Integration",
+				"descrp"				: "Anpassung an die Vision 5e Regeln"
 			},
 			
 			"Peekablebydefault" : {
@@ -86,6 +109,11 @@
 				"descrp"				: "Ob die Aufdecken Funktionalität aktiviert werden soll (ausstellen um Leistung zu verbessern)"
 			},
 			
+			"SimulatePlayerVision" : {
+				"name"					: "Spieler Sicht",
+				"descrp"				: "Ob SLs den gleichen Aufdeck-Regeln unterliegen wie Spieler (nur bezüglich Figuren)"
+			},
+			
 			"PassivePerceptionFormula" : {
 				"name"					: "Passive-Wahrnehmung Formel",
 				"descrp"				: "Passive-Wahrnehmung Formel des Systems (z.B. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", hilfe can auf der Git Hub Seite des Moduls gefunden werden)"
@@ -111,9 +139,24 @@
 				}
 			},
 			
+			"applySystemStealthEffect" : {
+				"name"					: "Nutze System Verstecken Effekt",
+				"descrp"				: "Ob Systemabhängige Versteckens Effekte bei Versteckenwürfen angewandt werden sollen"				
+			},
+			
+			"customStealthEffects" : {
+				"name"					: "Eigene Verstecken Effekte",
+				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\""				
+			},
+			
 			"resetSpottedbyMovedefault" : {
 				"name"					: "Setze Entdeckt bei Figurbewegung standardmäßig zurück",
 				"descrp"				: "Ob die aktiven Beobachter einer Figur bei ihrer Bewegung zurück gesetzt wird"
+			}, 
+			
+			"IlluminationPDCModifier" : {
+				"name"					: "Beleuchtung Wahrnehmungs SG Einfluss",
+				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Schwacheslicht,Helleslicht , \"0,0\" für keinen Einfluss)"
 			}, 
 			
 			"showPerceptiveWalls" : {
@@ -152,6 +195,11 @@
 			
 			"ToggleTokenFollowing" : {
 				"name" 					: "Folge Figuren umschalten"
+			},
+			
+			"IgnoreRoll" : {
+				"name" 					: "Wurf Ignorieren",
+				"descrp"				: "Wird diese Taste während eines Wurfs gehalten, wird dieser von Perceptive nicht als Versteck- oder Wahrnehmungs-Wurf registriert."
 			}
 		},
 		
@@ -229,6 +277,16 @@
 			"resetSpottedbyMoveFlag" : {
 				"name"					: "Setze Entdeckt bei Figurbewegung zurück",
 				"descrp"				: "Ob die aktiven Beobachter dieser Figur bei ihrer Bewegung zurück gesetzt wird"
+			},
+			
+			"StealthEffectsFlag" : {
+				"name"					: "Verstecken Effekte",
+				"descrp"				: "Weitere EFfkte welche auf diese Figur beim verstecken angewandt werden"
+			},
+			
+			"OverrideWorldSEffectsFlag" : {
+				"name"					: "Welt Verstecken Effekte überschreiben",
+				"descrp"				: "Ob die Verstecken Effekte dieser Figur die Welt Effekte überschreiben"
 			}
 		}
 	}

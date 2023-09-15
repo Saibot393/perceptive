@@ -1,6 +1,9 @@
 import { PerceptiveUtils, cModuleName } from "../utils/PerceptiveUtils.js";
 import { PerceptiveFlags } from "./PerceptiveFlags.js";
-import { PerceptiveCompUtils, cDfredCE, cStealthEffectName} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cDfredCE, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
+
+const cStealthEffectName = "Invisible"; //standard effect
+const cadvancedStealthEffectName = "Inaudible"; //necessry for some vision modules
 
 const cStealthPf2eEffectID = "Compendium.pf2e.conditionitems.Item.VRSef5y1LmL2Hkjf"; //Mounted effects of Pf2e system
 
@@ -34,6 +37,10 @@ class EffectManager {
 					
 					if (game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
 						vEffectNames.push(cStealthEffectName);
+						
+						if (PerceptiveCompUtils.isactiveModule(cVision5e) && game.settings.get(cModuleName, "Vision5eIntegration")) {
+							vEffectNames.push(cadvancedStealthEffectName);
+						}
 					}
 				}
 			}
