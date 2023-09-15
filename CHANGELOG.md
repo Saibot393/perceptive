@@ -16,6 +16,8 @@
       - Low-light vision: Can see tokens in dim-light as if they were in bright light
       - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
       - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
+  - Added DFreds Convenient Effects integration:
+    - Allow stealth effects to be applied
   - Added Vision 5e integration:
     - Adds the world setting Vision 5e Integration to add additional system stealth effects and correctly register the set token vision level
     
