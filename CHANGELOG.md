@@ -1,3 +1,6 @@
+## v1.5.3
+-Bug fix regarding DFreds CE
+
 ## v1.5.2
 - Added world setting Force invert "Ignore Roll" key to invert the key for all players and remove the client setting
 
