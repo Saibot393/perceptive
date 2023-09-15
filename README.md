@@ -84,6 +84,9 @@ The following informations will be displayed in the settings (if applicable):
    - Low-light vision: Can see tokens in dim-light as if they were in bright light
    - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
    - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
+  
+#### Client
+- Invert "Ignore Roll" key to only recognise rolls WHEN they key is pressed
 
 ## General features:
 
