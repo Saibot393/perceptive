@@ -310,6 +310,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 3
   });   
   
+  game.settings.register(cModuleName, "InvertIgnoreRollKey", {
+	name: Translate("Settings.InvertIgnoreRollKey.name"),
+	hint: Translate("Settings.InvertIgnoreRollKey.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  });  
+  
   //Keys
   game.keybindings.register(cModuleName, "PeekLock", {
 	name: Translate("Keys.PeekLock.name"),

@@ -177,7 +177,12 @@
 			"SpeedDoorMovefactor" : {
 				"name" 					: "Fast door move factor",
 				"descrp" 				: "Speed factor when moving doors with alt+mouse-wheel"
-			}		
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "Invert \"Ignore Roll\" key",
+				"descrp" 				: "If rolls should only be recognised WHEN the set key is pressed"
+			}				
 		},
 		
 		"Keys" : {
@@ -199,7 +204,7 @@
 			
 			"IgnoreRoll" : {
 				"name" 					: "Ignore Roll",
-				"descrp"				: "Hold this key to prevent Perceptive to recognise it for the purpose of Stealth or Perception Rolls."
+				"descrp"				: "Hold this key to prevent Perceptive to recognise it for the purpose of Stealth or Perception Rolls. (can be inverted)"
 			}
 		},
 		

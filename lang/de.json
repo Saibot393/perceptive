@@ -177,6 +177,11 @@
 			"SpeedDoorMovefactor" : {
 				"name" 					: "Schnell-Türbewegungs-Faktor",
 				"descrp" 				: "Geschwindigkeits Faktor wenn Türen mit alt+Mausras bewegt werden"
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "Invertiere \"Wurf Ignorieren\" Taste",
+				"descrp" 				: "Ob Würfe nur erkannt werden sollen WENN die Taste gedrückt wird"
 			}
 		},
 		
@@ -199,7 +204,7 @@
 			
 			"IgnoreRoll" : {
 				"name" 					: "Wurf Ignorieren",
-				"descrp"				: "Wird diese Taste während eines Wurfs gehalten, wird dieser von Perceptive nicht als Versteck- oder Wahrnehmungs-Wurf registriert."
+				"descrp"				: "Wird diese Taste während eines Wurfs gehalten, wird dieser von Perceptive nicht als Versteck- oder Wahrnehmungs-Wurf registriert. (kann invertiert werden)"
 			}
 		},
 		
