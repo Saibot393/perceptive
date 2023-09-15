@@ -72,8 +72,8 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
-- Stealth effects: to add additional stealth effects to this token
-- Override world stealth effects: to override the worlds stealth effects with this tokens custom stealth effects
+- Stealth effects[Tokens only]: to add additional stealth effects to this token
+- Override world stealth effects[Tokens only]: to override the worlds stealth effects with this tokens custom stealth effects
  
 The following informations will be displayed in the settings (if applicable):
  - Calculated passive perception: The passive perception of this token calculated according to the set formula
@@ -102,6 +102,8 @@ The module should be compatible with all game systems and most modules on Foundr
   - Additional setting "Use Arms Reach distance": to use the "Arms Reach" distance instead of the set Interaction distance
 - [Lock & Key](https://foundryvtt.com/packages/locknkey)
   - A "Peek lock" options will be shown on the lock interaction menu of Lock & Key
+- [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
+  - Additional setting "DFreds Convenient Effects Integration" to enable stealth effects
 - [Vision 5e](https://foundryvtt.com/packages/vision-5e)
   - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
 
