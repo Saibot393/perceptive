@@ -1,3 +1,24 @@
+## v1.5.0
+- Spot Invisible improvements:
+  - Added key to ignore stealth and perception checks
+  - Added world setting Player perspective to allow GMs to only spot tokens players can spot
+  - Added world setting Illumination perception DC modifiers to add a perception DC modifier based on the light level of a token
+  - Added world setting Apply system stealth effect(s) to automatically apply the systems stealth effects
+  - Added world setting Custom stealth effects to automatically apply custom stealth effects
+  - Added token setting Stealth effects to add additional stealth effects to this token
+  - Added token setting Override world stealth effects to override the worlds stealth effects with this tokens custom stealth effects
+  - Added spotting info to spotable objects setting sheet, containing (if applicable):
+    - Calculated passive perception: The passive perception of this token calculated according to the set formula
+    - Spotted by: A list of token names (or IDs) this token has been spotted by
+    - Illumination perception DC modifier: A light level based modifier added or subtracted from this tokens set perception DCs
+    - Vision level: This tokens set vision level:
+      - Basic sight: Normal behaviour
+      - Low-light vision: Can see tokens in dim-light as if they were in bright light
+      - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
+      - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
+  - Added Vision 5e integration:
+    - Adds the world setting Vision 5e Integration to add additional system stealth effects and correctly register the set token vision level
+    
 ## v1.4.2
 - Fixed bug with arms reach integration
 
