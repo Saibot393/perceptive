@@ -159,6 +159,11 @@
 				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Dim-light,Bright-light , \"0,0\" for no modifiers)"
 			}, 
 			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: "Force invert \"Ignore Roll\" key",
+				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"

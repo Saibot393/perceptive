@@ -264,6 +264,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 								 }
   }); 
   
+  game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
+	name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
+	hint: Translate("Settings.ForceInvertIgnoreRollKey.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });    
+  
   game.settings.register(cModuleName, "useSpottingLightLevels", {
 	scope: "world",
 	config: false,
@@ -314,7 +323,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.InvertIgnoreRollKey.name"),
 	hint: Translate("Settings.InvertIgnoreRollKey.descrp"),
 	scope: "client",
-	config: true,
+	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"),
 	type: Boolean,
 	default: false
   });  

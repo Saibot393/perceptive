@@ -34,6 +34,8 @@ class SpottingManager {
 	
 	static TestSpottedHovered() {} //test if one of the sellected tokens can spot the hovered token
 	
+	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
+	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
 	
@@ -188,6 +190,16 @@ class SpottingManager {
 		console.log(PerceptiveFlags.canbeSpottedwith(PerceptiveUtils.hoveredToken(), PerceptiveUtils.selectedTokens(), vlastVisionLevel, Math.max(PerceptiveUtils.selectedTokens().map(vToken => VisionUtils.PassivPerception(vToken)))));
 	}
 	
+	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {
+		if (game.user.id == pPlayerID) {
+			let vSpotables = VisionUtils.spotablesinVision();
+			
+			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
+			
+			VisionUtils.MaketempVisible(vSpotables);
+		}
+	}
+	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {
 		if (pToken.isOwner && pToken.parent == canvas.scene) {	
@@ -218,7 +230,7 @@ class SpottingManager {
 				}
 			}
 			
-			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ game.settings.get(cModuleName, "InvertIgnoreRollKey")) {
+			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
 				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
 					SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
 				}
@@ -378,3 +390,5 @@ export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} =
 export function DoorVisibleRequest({pDoorID, pSceneID} = {}) {return SpottingManager.DoorVisibleRequest(pDoorID, pSceneID)};
 
 export function TestSpottedHovered() {return SpottingManager.TestSpottedHovered()};
+
+export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs)};

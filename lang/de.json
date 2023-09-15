@@ -159,6 +159,11 @@
 				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Schwacheslicht,Helleslicht , \"0,0\" für keinen Einfluss)"
 			}, 
 			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: "Force invert \"Ignore Roll\" key",
+				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
 				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
