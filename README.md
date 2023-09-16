@@ -66,6 +66,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
 - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
+- GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
 - Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
 
 #### Walls/Tokens:
@@ -87,7 +88,9 @@ The following informations will be displayed in the settings (if applicable):
    - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
   
 #### Client
-- Invert "Ignore Roll" key to only recognise rolls WHEN they key is pressed
+- Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
+- Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
+- Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
 
 ## General features:
 
