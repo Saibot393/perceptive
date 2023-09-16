@@ -276,11 +276,11 @@ class SpottingManager {
 																				pDoors : pObjectIDs.Walls?.length,
 																			   });
 																			   
-		let vTokenNames = PerceptiveUtils.TokenNamesarrayfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
+		let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
 		
-		if (vTokenNames.length > 0) {
-			for (let i = 0; i < vTokenNames.length; i++) {
-				vContent = vContent + "•" + vTokenNames[i] + "<br>";
+		if (vTokens.length > 0) {
+			for (let i = 0; i < vTokens.length; i++) {
+				vContent = vContent + `•<img src="${vTokens[i].texture.src}" style = "height: 1em;">` + vTokens[i].name + "<br>";
 			}
 		}
 		else {
