@@ -280,7 +280,11 @@ class SpottingManager {
 		
 		if (vTokens.length > 0) {
 			for (let i = 0; i < vTokens.length; i++) {
-				vContent = vContent + `•<input type="checkbox" id=${vTokens[i].id} checked=true>` + vTokens[i].name + `<img src="${vTokens[i].texture.src}" style = "height: 1em;">` + "<br>";
+			vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
+									<input type="checkbox" id=${vTokens[i].id} checked> 
+									<p>${vTokens[i].name}</p> 
+									<img src="${vTokens[i].texture.src}" style = "height: 2em;"></div> 
+								  <br>`;
 			}
 		}
 		else {
@@ -292,13 +296,7 @@ class SpottingManager {
 		Dialog.confirm({
 			title: Translate("Titles.SpottingConfirm.name"),
 			content: vContent,
-			yes: (pHTML) => {let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).checked);
-			console.log(pObjectIDs.Tokens[0]);
-							console.log(pHTML.find(`input[id=${pObjectIDs.Tokens[0]}]`).value);
-							console.log(pHTML.find(`input[id=${pObjectIDs.Tokens[0]}]`).checked);
-							console.log(pHTML.find(`input[id=${pObjectIDs.Tokens[0]}]`).val());
-							console.log(pHTML.find(`input[id=${pObjectIDs.Tokens[0]}].checked`).id);
-							console.log(pHTML.find(`input[id=${pObjectIDs.Tokens[0]}]`).id);
+			yes: (pHTML) => {let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
 							SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(vCheckedTokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
 							},
 			no: () => {},
