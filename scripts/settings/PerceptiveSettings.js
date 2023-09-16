@@ -326,6 +326,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"),
 	type: Boolean,
 	default: false
+  }); 
+
+  game.settings.register(cModuleName, "IlluminationIconPosition", {
+	name: Translate("Settings.IlluminationIconPosition.name"),
+	hint: Translate("Settings.IlluminationIconPosition.descrp"),
+	scope: "client",
+	config: true,
+	type: String,
+	choices: {
+		"none": Translate("Settings.IlluminationIconPosition.options.none"),
+		"left": Translate("Settings.IlluminationIconPosition.options.left"),
+		"right": Translate("Settings.IlluminationIconPosition.options.right")
+	},
+	default: "none"
   });  
   
   //Keys

@@ -19,6 +19,12 @@
 					"value1"			: "Low-light vision",
 					"value2"			: "Darkvision",
 					"value3"			: "Darkvision (total)"
+				},
+				"LightLevel" : {
+					"name"				: "Illumination level:",
+					"value0"		    : "Dark",
+					"value1"			: "Dim",
+					"value2"			: "Bright"
 				}
 			}
 		},

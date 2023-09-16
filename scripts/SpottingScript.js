@@ -1,10 +1,14 @@
-import {PerceptiveUtils, cModuleName} from "./utils/PerceptiveUtils.js";
-import {VisionUtils} from "./utils/VisionUtils.js";
+import {PerceptiveUtils, cModuleName, Translate} from "./utils/PerceptiveUtils.js";
+import {VisionUtils, cLightLevel} from "./utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "./utils/PerceptiveSystemUtils.js";
 import { GeometricUtils } from "./utils/GeometricUtils.js";
 import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
 import {EffectManager } from "./helpers/EffectManager.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+
+const cIconDark = "fa-regular fa-circle";
+const cIconDim = "fa-solid fa-circle-half-stroke";
+const cIconBright = "fa-solid fa-circle";
 
 var vlastPPvalue = 0;
 
@@ -35,6 +39,9 @@ class SpottingManager {
 	static TestSpottedHovered() {} //test if one of the sellected tokens can spot the hovered token
 	
 	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
+	
+	//ui
+	static async addIlluminationIcon(pHUD, pHTML, pToken) {} //adds a illumination state icon to the HUd of pToken
 	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
@@ -198,6 +205,37 @@ class SpottingManager {
 			
 			VisionUtils.MaketempVisible(vSpotables);
 		}
+	}
+	
+	//ui
+	static async addIlluminationIcon(pHUD, pHTML, pToken) {
+		if (game.settings.get(cModuleName, "ActivateSpotting") && PerceptiveFlags.canbeSpotted(pToken)) {
+			let vButtonPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
+			
+			if (vButtonPosition != "none") {	
+				let vIlluminationIcon;
+				
+				switch (PerceptiveFlags.LightLevel(pToken)) {
+					case cLightLevel.Dark:
+						vIlluminationIcon = cIconDark;
+						break;
+					case cLightLevel.Dim:
+						vIlluminationIcon = cIconDim;
+						break;
+					case cLightLevel.Bright:
+						vIlluminationIcon = cIconBright;
+						break;
+				}
+				
+				let vButtonHTML = `<div class="control-icon" data-action"${cModuleName}-Illumination" title="${Translate("Titles.SpottingInfos.LightLevel.name") + " " + Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))}">
+										<i class="${vIlluminationIcon}"></i>
+								  </div>`;
+				
+				pHTML.find("div.col."+vButtonPosition).append(vButtonHTML);
+				
+				//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
+			}
+		}		
 	}
 	
 	//ons
@@ -380,7 +418,9 @@ Hooks.on("ready", function() {
 		
 		Hooks.on("canvasReady", (pCanvas) => {SpottingManager.onCanvasReady(pCanvas)});
 		
-		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)})
+		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)});
+		
+		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addIlluminationIcon(...args));
 	}
 });
 

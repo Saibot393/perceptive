@@ -19,6 +19,8 @@ const cVisionLevel = {
 					 Dark : 2,
 					 TotalDark : 3
 					 };
+					 
+export {cLightLevel, cVisionLevel};
 
 class VisionUtils {
 	//DECLARATIONS

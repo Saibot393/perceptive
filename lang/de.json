@@ -19,6 +19,12 @@
 					"value1"			: "Gedimmtes-Licht Sicht",
 					"value2"			: "Dunkelsicht",
 					"value3"			: "Dunkelsicht (Total)"
+				},
+				"LightLevel" : {
+					"name"				: "Beleuchtungs Stufe:",
+					"value0"		    : "Dunkel",
+					"value1"			: "Düster",
+					"value2"			: "Hell"
 				}
 			}
 		},
