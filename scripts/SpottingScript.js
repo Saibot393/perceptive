@@ -56,6 +56,8 @@ class SpottingManager {
 	
 	static async onPerceptionRoll(pActor, pRoll) {} //called when a perception roll is rolled
 	
+	static onNewlyVisible(pObjects) {} //called when a new object is revealed
+	
 	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
 	
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {} //called when a wall is updates
@@ -161,20 +163,17 @@ class SpottingManager {
 	}
 	
 	static async RequestSpotObjects(pObjects, pSpotters, pInfos) {
-		console.log("check1");
 		if (game.user.isGM) {
 			await SpottingManager.SpotObjectsGM(pObjects, pSpotters, pInfos);
 		}
 		else {
 			if (!game.paused) {
-				console.log(SpotObjectsRequest);
 				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))}, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
 			}
 		}	
 	}
 	
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
-		console.log("check2");
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "GMSpotconfirmDialog")) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
@@ -218,6 +217,8 @@ class SpottingManager {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
+			
+			SpottingManager.onNewlyVisible(vSpotables);
 			
 			VisionUtils.MaketempVisible(vSpotables);
 		}
@@ -360,6 +361,16 @@ class SpottingManager {
 		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 	
+	static onNewlyVisible(pObjects) {
+		if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
+			for (let i = 0; i < pObjects.length; i++) {
+				if (pObjects[i].object?.center) {
+					canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
+				}
+			}
+		}
+	}
+	
 	static async onStealthRoll(pActor, pRoll) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
 		
@@ -440,7 +451,10 @@ Hooks.on("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.DControlSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
+			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.DControlSpottingVisible(this)){
+																												return true;
+																											} 
+																											return vWrapped(args)}, "MIXED");
 		}
 		else {
 			const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
@@ -458,7 +472,10 @@ Hooks.on("ready", function() {
 		
 		//allow tokens to be spotted
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.TokenSpottingVisible(this)){return true} return vWrapped(args)}, "MIXED");
+			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.TokenSpottingVisible(this)){
+																																return true;
+																														  } 
+																														  return vWrapped(args)}, "MIXED");
 		}
 		else {
 			const vOldTokenCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");

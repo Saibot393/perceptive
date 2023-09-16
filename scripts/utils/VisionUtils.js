@@ -236,10 +236,12 @@ class VisionUtils {
 				case "lightAmplification":
 					vVLevel = cVisionLevel.LowLight;
 				case "darkvision":
+					vVLevel = cVisionLevel.Dark;
+					break;
 				case "blindsight":
 				case "truesight":
 				case "devilsSight":
-					vVLevel = cVisionLevel.Dark;
+					vVLevel = cVisionLevel.TotalDark;
 					break;
 			}
 		}

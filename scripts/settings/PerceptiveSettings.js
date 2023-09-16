@@ -348,6 +348,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		"right": Translate("Settings.IlluminationIconPosition.options.right")
 	},
 	default: "none"
+  }); 
+
+  game.settings.register(cModuleName, "SpottingPingDuration", {
+	name: Translate("Settings.SpottingPingDuration.name"),
+	hint: Translate("Settings.SpottingPingDuration.descrp"),
+	scope: "client",
+	config: true,
+	type: Number,
+	range: {
+		min: 0,
+		max: 10,
+		step: 0.1
+	},
+	default: 0
   });  
   
   //Keys
