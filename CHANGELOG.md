@@ -1,5 +1,13 @@
+## v1.6.0
+- The "spotted by" list should now correctly reset when a new stealth check is rolled
+- Added key Remove selected tokens stealth to reset the stealh values of the selected tokens
+- Added world setting GM confirm Spotting to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
+- Added client setting Position of illumination indicator to show a indicator for the current illumination level in the token HUD
+- Added client setting Spotting ping duration to ping new objects that are spotted with an active roll for a certain duration
+- Added the vision modes "blindsight", "truesight" and "devilssight" as "Darikvsion (Total)" Vision levels 
+
 ## v1.5.3
--Bug fix regarding DFreds CE
+- Bug fix regarding DFreds CE
 
 ## v1.5.2
 - Added world setting Force invert "Ignore Roll" key to invert the key for all players and remove the client setting
