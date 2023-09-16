@@ -171,6 +171,8 @@ class PerceptiveFlags {
 	
 	static OverrideWorldSEffects(pToken) {} //returns if this pTokens effects override the worlds effect
 	
+	static resetStealth(pToken) {} //resets the stealth related flags of pToken
+	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
 	
@@ -999,6 +1001,10 @@ class PerceptiveFlags {
 	
 	static OverrideWorldSEffects(pToken) {
 		return this.#OverrideWorldSEffectsFlag(pToken);
+	}
+	
+	static resetStealth(pToken) {
+		PerceptiveFlags.clearSpottedby(pToken);
 	}
 	
 	//effects

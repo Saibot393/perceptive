@@ -4,7 +4,7 @@ import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e} from
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
-import {TestSpottedHovered} from "../SpottingScript.js";
+import {TestSpottedHovered, resetStealthDataSelected} from "../SpottingScript.js";
 
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
@@ -384,6 +384,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
         key: "AltLeft"
       }
     ],
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  game.keybindings.register(cModuleName, "resetStealthSelected", {
+	name: Translate("Keys.resetStealthSelected.name"),
+	hint: Translate("Keys.resetStealthSelected.descrp"),
+	onDown: () => { resetStealthDataSelected(); },
 	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });

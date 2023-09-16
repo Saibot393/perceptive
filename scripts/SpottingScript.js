@@ -40,8 +40,14 @@ class SpottingManager {
 	
 	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
 	
+	static async resetStealthData(pToken) {} //resets the stealth data of pToken, including removing effects
+	
+	static resetStealthDataSelected() {} //resets the stealth data of selected tokens (if owned)
+	
 	//ui
 	static async addIlluminationIcon(pHUD, pHTML, pToken) {} //adds a illumination state icon to the HUd of pToken
+	
+	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //opens a spotting dialoge for the GM to accept spotting of certain spottables
 	
 	//ons
 	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
@@ -207,6 +213,20 @@ class SpottingManager {
 		}
 	}
 	
+	static async resetStealthData(pToken) {
+		await EffectManager.removeStealthEffects(pToken);
+		
+		PerceptiveFlags.resetStealth(pToken);
+	}
+	
+	static resetStealthDataSelected() {
+		let vTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.isOwner);
+		
+		for (let i = 0; i < vTokens.length; i++) {
+			SpottingManager.resetStealthData(vTokens[i]);
+		}
+	}
+	
 	//ui
 	static async addIlluminationIcon(pHUD, pHTML, pToken) {
 		if (game.settings.get(cModuleName, "ActivateSpotting") && PerceptiveFlags.canbeSpotted(pToken)) {
@@ -236,6 +256,13 @@ class SpottingManager {
 				//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
 			}
 		}		
+	}
+	
+	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
+		let vDialog = new Dialog({
+			title: Translate("Titles.Lockuse"),
+			buttons: vButtons
+		}).render(true);		
 	}
 	
 	//ons
@@ -291,7 +318,7 @@ class SpottingManager {
 		
 		VisionUtils.MaketempVisible(vSpotables);
 		
-		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel});
+		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 	
 	static async onStealthRoll(pActor, pRoll) {
@@ -319,8 +346,10 @@ class SpottingManager {
 				PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
 			}
 		}	
-
+		
 		for (let i = 0; i < vRelevantTokens.length; i++) {
+			PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			
 			EffectManager.applyStealthEffects(vRelevantTokens[i]);
 		}
 	}
@@ -432,3 +461,5 @@ export function DoorVisibleRequest({pDoorID, pSceneID} = {}) {return SpottingMan
 export function TestSpottedHovered() {return SpottingManager.TestSpottedHovered()};
 
 export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs)};
+
+export function resetStealthDataSelected() {SpottingManager.resetStealthDataSelected()};
