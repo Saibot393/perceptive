@@ -278,21 +278,21 @@ class SpottingManager {
 																			   });
 																			   
 		let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
-		
+
 		if (vTokens.length > 0) {
 			for (let i = 0; i < vTokens.length; i++) {
-			vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
-									<input type="checkbox" id=${vTokens[i].id} checked> 
-									<p>${vTokens[i].name}</p> 
-									<img src="${vTokens[i].texture.src}" style = "height: 2em;"></div> 
-								  <br>`;
+				vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
+										<input type="checkbox" id=${vTokens[i].id} checked> 
+										<p>${vTokens[i].name}</p> 
+										<img src="${vTokens[i].texture.src}" style = "height: 2em;">
+										</div>`;
 			}
 		}
 		else {
-			vContent = vContent + "- <br>";
+			vContent = vContent;// + "- <br>";
 		}
 		
-		vContent = vContent + "<br>"
+		//vContent = vContent + "<br>"
 		
 		Dialog.confirm({
 			title: Translate("Titles.SpottingConfirm.name"),
