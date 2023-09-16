@@ -26,6 +26,10 @@
 					"value1"			: "Düster",
 					"value2"			: "Hell"
 				}
+			},
+			"SpottingConfirm" : {
+				"name"				: "Aufdecken bestätigen",
+				"content"			: "Spieler <b>{pPlayer}</b> hat eine <b>{pResult}</b> bei einem Wahrnehmungswurf gewürfelt, was <b>{pSpotters}</b> in Scene <b>{pScene}</b> erlaubt <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken: <br>"
 			}
 		},
 		
@@ -165,6 +169,11 @@
 				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Schwacheslicht,Helleslicht , \"0,0\" für keinen Einfluss)"
 			}, 
 			
+			"GMSpotconfirmDialog" : {
+				"name"					: "SL Aufdecken bestätigen",
+				"descrp"				: "Ob bei Wahrnehmungswürfen ein Dialog angezeigt werden soll in welchem die SL den Wurf bestätigen muss"
+			}, 
+			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
 				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
@@ -188,6 +197,21 @@
 			"SpeedDoorMovefactor" : {
 				"name" 					: "Schnell-Türbewegungs-Faktor",
 				"descrp" 				: "Geschwindigkeits Faktor wenn Türen mit alt+Mausras bewegt werden"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "Positions des Beleuchtungsindikators",
+				"descrp" 				: "Wo im Figur HUD der Beleuchtungsindikator angezeigt wird",
+				"options" : {
+					"none"				: "garnicht",
+					"left"				: "links",
+					"right"				: "rechts"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "Aufdecken Ping Dauer",
+				"descrp" 				: "Wie lange Objekte welche durch einen Wahrnehmungswurf aufgedeckt werden gepingt werden sollen (in Sekunden, 0 um die Pings auszuschalten)"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -216,6 +240,11 @@
 			"IgnoreRoll" : {
 				"name" 					: "Wurf Ignorieren",
 				"descrp"				: "Wird diese Taste während eines Wurfs gehalten, wird dieser von Perceptive nicht als Versteck- oder Wahrnehmungs-Wurf registriert. (kann invertiert werden)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "Tarnung der ausgewählten Figuren entfernen",
+				"descrp"				: "Entfernt die Tarnung der ausgewählten Figuren"
 			}
 		},
 		

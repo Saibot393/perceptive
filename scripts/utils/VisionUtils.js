@@ -117,11 +117,11 @@ class VisionUtils {
 				vTokens[i].detectionFilter = undefined;
 
 				// Some tokens are always visible
-				if ( !canvas.effects.visibility.tokenVision ) return true;
-				if ( vTokens[i].controlled ) return true;
+				//if ( !canvas.effects.visibility.tokenVision ) return true;
+				//if ( vTokens[i].controlled ) return true;
 				
 				// Otherwise, test visibility against current sight polygons
-				if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
+				//if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
 				const tolerance = Math.min(vTokens[i].w, vTokens[i].h) / 4;
 				vinVision = VisionUtils.simpletestVisibility(vTokens[i].center, {tolerance, object: vTokens[i]});
 			}

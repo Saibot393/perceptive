@@ -169,6 +169,11 @@
 				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Dim-light,Bright-light , \"0,0\" for no modifiers)"
 			}, 
 			
+			"GMSpotconfirmDialog" : {
+				"name"					: "GM confirm Spotting",
+				"descrp"				: "If rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed"
+			}, 
+			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
 				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
@@ -192,6 +197,21 @@
 			"SpeedDoorMovefactor" : {
 				"name" 					: "Fast door move factor",
 				"descrp" 				: "Speed factor when moving doors with alt+mouse-wheel"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "Position of illumination indicator",
+				"descrp" 				: "Where on the token HUD the illumination indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "Spotting ping duration",
+				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -220,6 +240,11 @@
 			"IgnoreRoll" : {
 				"name" 					: "Ignore Roll",
 				"descrp"				: "Hold this key to prevent Perceptive to recognise it for the purpose of Stealth or Perception Rolls. (can be inverted)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "Remove selected tokens stealth",
+				"descrp"				: "Removes the stealth related data/effects from selected tokens"
 			}
 		},
 		

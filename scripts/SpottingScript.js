@@ -356,6 +356,8 @@ class SpottingManager {
 		
 		vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
 		
+		vSpotables = vSpotables.filter(vObject => !vObject?.object?.visible);
+		
 		//VisionUtils.MaketempVisible(vSpotables);
 		
 		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
