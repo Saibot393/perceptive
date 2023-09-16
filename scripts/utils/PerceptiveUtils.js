@@ -35,7 +35,9 @@ class PerceptiveUtils {
 	
 	static SelectedandPrimary() {} //returns all selected tokens and the primary character (if not allready included)
 	
-	static TokenNamesfromIDs(pIDs, pScene = null) {} //returns an array matching pIDs Tokens
+	static TokenNamesfromIDs(pIDs, pScene = null) {} //returns a string matching pIDs Tokens
+	
+	static TokenNamesarrayfromIDs(pIDs, pScene = null) {} //returns an array matching pIDs Tokens
 	
 	//Token Controls
 	static selectedTokens() {} //get array of all selected tokens
@@ -247,6 +249,10 @@ class PerceptiveUtils {
 		
 		return vNames;
 	} 
+	
+	static TokenNamesarrayfromIDs(pIDs, pScene = null) {
+		return pIDs.map(vID => PerceptiveUtils.TokenfromID(vID, pScene).name).filter(vName => vName.length > 0)
+	}
 	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {

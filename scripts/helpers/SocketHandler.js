@@ -4,6 +4,7 @@ import { SpotObjectsRequest, DoorVisibleRequest, PlayerMakeTempVisible } from ".
 
 //execute functions with pData depending on pFunction
 function organiseSocketEvents({pFunction, pData} = {}) {
+	console.log(pFunction);
 	switch(pFunction) {
 		case "DoorMoveRequest":
 			DoorMoveRequest(pData);

@@ -1,4 +1,4 @@
-import {PerceptiveUtils, cModuleName, Translate} from "./utils/PerceptiveUtils.js";
+import {PerceptiveUtils, cModuleName, Translate, TranslateandReplace} from "./utils/PerceptiveUtils.js";
 import {VisionUtils, cLightLevel} from "./utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "./utils/PerceptiveSystemUtils.js";
 import { GeometricUtils } from "./utils/GeometricUtils.js";
@@ -151,6 +151,8 @@ class SpottingManager {
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
 		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= pInfos.APerceptionResult);
 		
+		game.socket.emit("module." + cModuleName, {pFunction : "PlayerMakeTempVisible", pData : {pPlayerID : pInfos.sendingPlayer, pObjectIDs : vSpottables.map(vObject => vObject.id)}})
+		
 		for (let i = 0; i < pSpotters.length; i++) {		
 			for(let j = 0; j < vSpottables.length; j++) {
 				await PerceptiveFlags.addSpottedby(vSpottables[j], pSpotters[i]);
@@ -159,19 +161,27 @@ class SpottingManager {
 	}
 	
 	static async RequestSpotObjects(pObjects, pSpotters, pInfos) {
+		console.log("check1");
 		if (game.user.isGM) {
 			await SpottingManager.SpotObjectsGM(pObjects, pSpotters, pInfos);
 		}
 		else {
 			if (!game.paused) {
+				console.log(SpotObjectsRequest);
 				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))}, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
 			}
 		}	
 	}
 	
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
+		console.log("check2");
 		if (game.user.isGM) {
-			await SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
+			if (game.settings.get(cModuleName, "GMSpotconfirmDialog")) {
+				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
+			}
+			else {
+				await SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
+			}
 		}
 	}
 	
@@ -259,10 +269,33 @@ class SpottingManager {
 	}
 	
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
-		let vDialog = new Dialog({
-			title: Translate("Titles.Lockuse"),
-			buttons: vButtons
-		}).render(true);		
+		let vContent =  TranslateandReplace("Titles.SpottingConfirm.content", {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
+																				pResult : pInfos.APerceptionResult,
+																				pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
+																				pScene : game.scenes.get(pSceneID)?.name,
+																				pDoors : pObjectIDs.Walls?.length,
+																			   });
+																			   
+		let vTokenNames = PerceptiveUtils.TokenNamesarrayfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
+		
+		if (vTokenNames.length > 0) {
+			for (let i = 0; i < vTokenNames.length; i++) {
+				vContent = vContent + "•" + vTokenNames[i] + "<br>";
+			}
+		}
+		else {
+			vContent = vContent + "- <br>";
+		}
+		
+		vContent = vContent + "<br>"
+		
+		Dialog.confirm({
+			title: Translate("Titles.SpottingConfirm.name"),
+			content: vContent,
+			yes: () => {SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)},
+			no: () => {},
+			defaultYes: false
+		});		
 	}
 	
 	//ons
@@ -316,7 +349,7 @@ class SpottingManager {
 		
 		vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
 		
-		VisionUtils.MaketempVisible(vSpotables);
+		//VisionUtils.MaketempVisible(vSpotables);
 		
 		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}

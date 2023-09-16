@@ -26,6 +26,10 @@
 					"value1"			: "Dim",
 					"value2"			: "Bright"
 				}
+			},
+			"SpottingConfirm" : {
+				"name"				: "Confirm Spotting",
+				"content"			: "Player <b>{pPlayer}</b> has rolled a <b>{pResult}</b> on a perception roll which allows <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens: <br>"
 			}
 		},
 		

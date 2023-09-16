@@ -257,12 +257,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Array,
 	default: [0, 0],
 	onChange: async (pValues) => { 	if (game.user.isGM) {
-										console.log(pValues);
 										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
 										await game.settings.set(cModuleName, "useSpottingLightLevels",  game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
 									}
 								 }
   }); 
+  
+  game.settings.register(cModuleName, "GMSpotconfirmDialog", {
+	name: Translate("Settings.GMSpotconfirmDialog.name"),
+	hint: Translate("Settings.GMSpotconfirmDialog.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });    
   
   game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
 	name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
