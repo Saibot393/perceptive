@@ -87,6 +87,10 @@ The following informations will be displayed in the settings (if applicable):
    - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
    - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
   
+#### Scene:
+ - Bright illumination limit: to set the value below which the scene darkness is considered bright
+ - Dim illumination limit: to set the value below which the scene darkness is considered dim
+  
 #### Client
 - Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
 - Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
