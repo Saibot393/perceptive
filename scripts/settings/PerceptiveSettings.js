@@ -231,6 +231,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });   
   
+  game.settings.register(cModuleName, "usePerceptiveStealthEffect", {
+	name: Translate("Settings.usePerceptiveStealthEffect.name"),
+	hint: Translate("Settings.usePerceptiveStealthEffect.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   game.settings.register(cModuleName, "customStealthEffects", {
 	name: Translate("Settings.customStealthEffects.name"),
 	hint: Translate("Settings.customStealthEffects.descrp"),

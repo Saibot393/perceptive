@@ -10,6 +10,9 @@ const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
 const cIconBright = "fa-solid fa-circle";
 
+const cStealthIcon = "fa-solid fa-user-ninja";
+const cnotStealthIcon = "fa-solid fa-user";
+
 //bunch of variables for the sake of performance/simplicity
 var vlastPPvalue = 0;
 var vlastVisionLevel = 0;
@@ -42,7 +45,7 @@ class SpottingManager {
 	static resetStealthDataSelected() {} //resets the stealth data of selected tokens (if owned)
 
 	//ui
-	static async addIlluminationIcon(pHUD, pHTML, pToken) {} //adds a illumination state icon to the HUd of pToken
+	static async addPerceptiveHUD(pHUD, pHTML, pToken) {} //adds a illumination state icon to the HUd of pToken
 
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //opens a spotting dialoge for the GM to accept spotting of certain spottables
 
@@ -258,7 +261,8 @@ class SpottingManager {
 	}
 
 	//ui
-	static async addIlluminationIcon(pHUD, pHTML, pToken) {
+	static async addPerceptiveHUD(pHUD, pHTML, pToken) {
+		//Illumination Indicator
 		let vButtonPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
 
 		if (vButtonPosition != "none") {
@@ -278,13 +282,25 @@ class SpottingManager {
 
 			await PerceptiveFlags.CheckLightLevel(PerceptiveUtils.TokenfromID(pToken._id)); //the given pToken is a bit of a dud, better recheck the real token
 
-			let vButtonHTML = `<div class="control-icon" data-action"${cModuleName}-Illumination" title="${Translate("Titles.SpottingInfos.LightLevel.name") + " " + Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))}">
+			let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-Illumination" title="${Translate("Titles.SpottingInfos.LightLevel.name") + " " + Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))}">
 									<i class="${vIlluminationIcon}"></i>
 							  </div>`;
 
 			pHTML.find("div.col."+vButtonPosition).append(vButtonHTML);
 
 			//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
+		}
+		
+		//Perceptive hidden "Effect"
+		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
+			if (PerceptiveFlags.isPerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))) {
+				pHTML.find(`div[class="status-effects"]`).append(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`);
+			}
+			else {
+				pHTML.find(`div[class="status-effects"]`).append(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`);
+			}
+			
+			pHTML.find(`i[data-action="${cModuleName}-Stealth"]`).click((pEvent) => {PerceptiveFlags.togglePerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))});
 		}
 	}
 
@@ -507,6 +523,7 @@ Hooks.on("ready", function() {
 																												
 																												return true;
 																											}
+																											
 																											return vWrapped(args)}, "MIXED");
 		}
 		else {
@@ -541,6 +558,12 @@ Hooks.on("ready", function() {
 																																
 																																return true;
 																															}
+																															else {
+																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && !this.isOwner) {
+																																	return false;
+																																}
+																															}
+					
 																															return vWrapped(args)}, "MIXED");
 		}
 		else {
@@ -555,6 +578,11 @@ Hooks.on("ready", function() {
 					}
 					
 					return true;
+				}
+				else {
+					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && !this.isOwner) {
+						return false;
+					}
 				}
 
 				let vTokenCallBuffer = vOldTokenCall.bind(this);
@@ -581,7 +609,7 @@ Hooks.on("ready", function() {
 
 		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)});
 
-		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addIlluminationIcon(...args)); 
+		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args)); 
 	}
 });
 

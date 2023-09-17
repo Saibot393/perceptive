@@ -45,10 +45,11 @@ const cStealthEffectsF = "StealthEffectsFlag"; //Flag to to store custom stealth
 const cOverrideWorldSEffectsF = "OverrideWorldSEffectsFlag"; //Flag to override the world stealth effects
 const cSceneBrightEndF = "SceneBrightEndFlag"; //flag that stores the scene darkness value after which a scene is no longer bright
 const cSceneDimEndF = "SceneDimEndFlag"; //flag that stores the scene darkness value after which a scene is no longer dim
+const cPerceptiveStealthingF = "PerceptiveStealthingFlag"; //Flag that stores if this token is perceptive stealthing
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -178,6 +179,10 @@ class PerceptiveFlags {
 	static SceneBrightEnd(pScene) {} //returns the Bright end value of pScene
 	
 	static SceneDimEnd(pScene) {} //returns the Bright end value of pScene
+	
+	static isPerceptiveStealthing(pToken) {} //returns of this token is perceptive stealthing
+	
+	static togglePerceptiveStealthing(pToken) {} //returns of this token is perceptive stealthing
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
@@ -549,6 +554,19 @@ class PerceptiveFlags {
 		return 0.75; //default if anything fails
 	}
 	
+	static #PerceptiveStealthingFlag (pObject) { 
+	//returns content of PerceptiveStealthingFlag of object (boolean)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPerceptiveStealthingF)) {
+				return vFlag.PerceptiveStealthingFlag;
+			}
+		}
+		
+		return false; //default if anything fails
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -675,6 +693,16 @@ class PerceptiveFlags {
 			return true;
 		}
 		return false;					
+	}
+	
+	static async #setPerceptiveStealthing (pToken, pContent) {
+		//sets content of PerceptiveStealthingFlag (must be boolean)
+		if (pToken) {
+			await pToken.setFlag(cModuleName, cPerceptiveStealthingF, Boolean(pContent)); 
+			
+			return true;
+		}
+		return false;
 	}
 	
 	//basics
@@ -1052,6 +1080,14 @@ class PerceptiveFlags {
 	
 	static SceneDimEnd(pScene) {
 		return this.#SceneDimEndFlag(pScene);
+	}
+	
+	static isPerceptiveStealthing(pToken) {
+		return this.#PerceptiveStealthingFlag(pToken);
+	}
+	
+	static togglePerceptiveStealthing(pToken) {
+		this.#setPerceptiveStealthing(pToken, !this.#PerceptiveStealthingFlag(pToken));
 	}
 	
 	//effects
