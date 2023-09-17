@@ -14,6 +14,8 @@ var vlastPPvalue = 0;
 
 var vlastVisionLevel = 0;
 
+var vPingIgnoreVisionCycles = 2;
+
 class SpottingManager {
 	//DECLARATIONS
 	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
@@ -50,13 +52,15 @@ class SpottingManager {
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //opens a spotting dialoge for the GM to accept spotting of certain spottables
 
 	//ons
-	static onTokenupdate(pToken, pchanges, pInfos) {};//called when a token is updated
+	static onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
+	
+	static onTokenpreupdate(pToken, pchanges, pInfos) {}//called pre update token
 
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chat message is send
 
 	static async onPerceptionRoll(pActor, pRoll) {} //called when a perception roll is rolled
 
-	static onNewlyVisible(pObjects) {} //called when a new object is revealed
+	static onNewlyVisible(pObjects, pPassivSpot = false) {} //called when a new object is revealed
 
 	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
 
@@ -326,6 +330,13 @@ class SpottingManager {
 			}
 		}
 	}
+	
+	static onTokenpreupdate(pToken, pchanges, pInfos) {
+		if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
+			if (pToken.isOwner) {
+			}
+		}
+	}
 
 	static async onChatMessage(pMessage, pInfos, pSenderID) {
 		if (game.userId == pSenderID) {
@@ -368,11 +379,13 @@ class SpottingManager {
 		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 
-	static onNewlyVisible(pObjects) {
-		if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
-			for (let i = 0; i < pObjects.length; i++) {
-				if (pObjects[i].object?.center) {
-					canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
+	static onNewlyVisible(pObjects, pPassivSpot = false) {
+		if (vPingIgnoreVisionCycles <= 0) {
+			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
+				for (let i = 0; i < pObjects.length; i++) {
+					if (pObjects[i].object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
+						canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
+					}
 				}
 			}
 		}
@@ -423,10 +436,14 @@ class SpottingManager {
 	}
 
 	static onrefreshToken(pToken, pInfos) {
+		if (pToken.isOwner) {
+			vPingIgnoreVisionCycles = vPingIgnoreVisionCycles - 1;
+		}
+		
 		if (PerceptiveFlags.canbeSpotted(pToken.document)) {
 			VisionUtils.PreapreSpotableToken(pToken);
 
-			if (pToken.isOwner) {
+			if (pToken.isOwner) {	
 				if (game.settings.get(cModuleName, "useSpottingLightLevels") && !pToken.isPreview) {
 					PerceptiveFlags.CheckLightLevel(pToken.document, true);
 				}
@@ -450,6 +467,8 @@ class SpottingManager {
 		VisionUtils.PrepareSpotables();
 
 		SpottingManager.updateVisionValues();
+		
+		vPingIgnoreVisionCycles = 2;
 	}
 }
 
@@ -479,16 +498,29 @@ Hooks.on("ready", function() {
 
 		//allow tokens to be spotted
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.TokenSpottingVisible(this)){
+			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {
+																															let vPrevVisible = this.visible;
+																															
+																															if (SpottingManager.TokenSpottingVisible(this)){																															
+																																if (!vPrevVisible) {
+																																	SpottingManager.onNewlyVisible([this.document], true);
+																																}
+																																
 																																return true;
-																														  }
-																														  return vWrapped(args)}, "MIXED");
+																															}
+																															return vWrapped(args)}, "MIXED");
 		}
 		else {
 			const vOldTokenCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");
 
 			CONFIG.Token.objectClass.prototype.__defineGetter__("isVisible", function () {
+				let vPrevVisible = this.visible;
+
 				if (SpottingManager.TokenSpottingVisible(this)) {
+					if (!vPrevVisible) {
+						SpottingManager.onNewlyVisible([this.document], true);
+					}
+					
 					return true;
 				}
 
@@ -499,6 +531,8 @@ Hooks.on("ready", function() {
 		}
 
 		Hooks.on("updateToken", (...args) => {SpottingManager.onTokenupdate(...args)});
+		
+		Hooks.on("preUpdateToken", (...args) => {SpottingManager.onTokenpreupdate(...args)});
 
 		Hooks.on("createChatMessage", (pMessage, pInfos, pSenderID) => {SpottingManager.onChatMessage(pMessage, pInfos, pSenderID)});
 
