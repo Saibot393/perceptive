@@ -1,3 +1,6 @@
+## v1.7.0 (unreleased)
+- Added ping for passively spotted object
+
 ## v1.6.2
 - Improved some UI in the wall sheet settings
 - Spot Invisible improvements:
