@@ -10,10 +10,9 @@ const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
 const cIconBright = "fa-solid fa-circle";
 
+//bunch of variables for the sake of performance/simplicity
 var vlastPPvalue = 0;
-
 var vlastVisionLevel = 0;
-
 var vPingIgnoreVisionCycles = 2;
 
 class SpottingManager {
@@ -32,17 +31,13 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //handles a request for pSpotterIDs to spot pObjectIDs in pSceneID
 
-	static async MakeDoorVisibleGM(pDoor) {} //makes pDoor visible to all
-
-	static RequestDoorVisible(pDoor) {} //starts a request to make pDoor visible
-
-	static DoorVisibleRequest(pDoor) {} //handels a request to make pDoor visible
-
-	static TestSpottedHovered() {} //test if one of the sellected tokens can spot the hovered token
-
 	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
 
-	static async resetStealthData(pToken) {} //resets the stealth data of pToken, including removing effects
+	static async resetStealthData(pObjects) {} //resets the stealth data of pObject, including removing effects
+	
+	static RequestresetStealth(pObjects, pInfos) {} //starts a request to reset stealth of pObject
+	
+	static resetStealthRequest(pObjectID, pSceneID, pInfos) {} //answers a request to reset stealth
 
 	static resetStealthDataSelected() {} //resets the stealth data of selected tokens (if owned)
 
@@ -195,34 +190,6 @@ class SpottingManager {
 		}
 	}
 
-	static async MakeDoorVisibleGM(pDoor) {
-		if (pDoor && pDoor.door == 2) {
-			//is secret door
-			pDoor.update({door : 1});
-		}
-	}
-
-	static RequestDoorVisible(pDoor) {
-		if (game.user.isGM) {
-			SpottingManager.MakeDoorVisibleGM(pDoor);
-		}
-		else {
-			if (!game.paused) {
-				game.socket.emit("module." + cModuleName, {pFunction : "DoorVisibleRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id}});
-			}
-		}
-	}
-
-	static DoorVisibleRequest(pDoorID, pSceneID) {
-		if (game.user.isGM) {
-			SpottingManager.MakeDoorVisibleGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)));
-		}
-	}
-
-	static TestSpottedHovered() {
-		console.log(PerceptiveFlags.canbeSpottedwith(PerceptiveUtils.hoveredToken(), PerceptiveUtils.selectedTokens(), vlastVisionLevel, Math.max(PerceptiveUtils.selectedTokens().map(vToken => VisionUtils.PassivPerception(vToken)))));
-	}
-
 	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {
 		if (game.user.id == pPlayerID) {
 			let vSpotables = VisionUtils.spotablesinVision();
@@ -235,18 +202,59 @@ class SpottingManager {
 		}
 	}
 
-	static async resetStealthData(pToken) {
-		await EffectManager.removeStealthEffects(pToken);
+	static async resetStealthData(pObjects) {
+		for (let i = 0; i < pObjects.length; i++) {
+			if (pObjects[i]) {
+				switch (pObjects[i].documentName) {
+						case "Token":
+							await EffectManager.removeStealthEffects(pObjects[i]);
+							break;
+						case "Wall":
+							if (pObjects[i].door == 2) {
+								//is secret door
+								pObjects[i].update({door : 1});
+							}
+							break;			
+				}
 
-		PerceptiveFlags.resetStealth(pToken);
+				PerceptiveFlags.resetStealth(pObjects[i]);
+			}
+		}
+	}
+	
+	static RequestresetStealth(pObjects, pInfos) {
+		if (game.user.isGM) {
+			SpottingManager.resetStealthData(pObjects);
+		}
+		else {
+			let vObjectIDs = {};
+			
+			vObjectIDs.Tokens = pObjects.filter(vObject => vObject.documentName == "Token").map(vToken => vToken.id);
+			
+			vObjectIDs.Walls = pObjects.filter(vObject => vObject.documentName == "Wall").map(vWall => vWall.id);
+			
+			game.socket.emit("module." + cModuleName, {pFunction : "resetStealthRequest", pData : {pObjectIDs : vObjectIDs, pSceneID : canvas.scene.id, pInfos : pInfos}});
+		}
+	}
+	
+	static resetStealthRequest(pObjectIDs, pSceneID, pInfos) {
+		if (game.user.isGM) {
+			if ((pInfos.Spotted && game.settings.get(cModuleName, "MakeSpottedTokensVisible")) || (pInfos.DoorClicked)) {
+				let vObjects = [];
+				
+				vObjects = vObjects.concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID)));
+				
+				vObjects = vObjects.concat(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)));
+				
+				SpottingManager.resetStealthData(vObjects);
+			}
+		}
 	}
 
 	static resetStealthDataSelected() {
 		let vTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.isOwner);
 
-		for (let i = 0; i < vTokens.length; i++) {
-			SpottingManager.resetStealthData(vTokens[i]);
-		}
+		SpottingManager.resetStealthData(vTokens);
 	}
 
 	//ui
@@ -385,11 +393,15 @@ class SpottingManager {
 		if (vPingIgnoreVisionCycles <= 0) {
 			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
 				for (let i = 0; i < pObjects.length; i++) {
-					if (pObjects[i].object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
+					if (pObjects[i]?.object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
 						canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
 					}
 				}
 			}
+		}
+		
+		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
+			SpottingManager.RequestresetStealth(pObjects, {Spotted : true});
 		}
 	}
 
@@ -420,7 +432,7 @@ class SpottingManager {
 		}
 
 		for (let i = 0; i < vRelevantTokens.length; i++) {
-			PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
 
 			EffectManager.applyStealthEffects(vRelevantTokens[i]);
 		}
@@ -455,7 +467,7 @@ class SpottingManager {
 
 	static onDoorLClick(pWall, pKeyInfo) {
 		if (!game.user.isGM) {
-			SpottingManager.RequestDoorVisible(pWall);
+			SpottingManager.RequestresetStealth([pWall], {DoorClicked : true});
 		}
 	}
 
@@ -570,9 +582,7 @@ Hooks.on("ready", function() {
 //socket exports
 export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} = {}) {return SpottingManager.SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos)};
 
-export function DoorVisibleRequest({pDoorID, pSceneID} = {}) {return SpottingManager.DoorVisibleRequest(pDoorID, pSceneID)};
-
-export function TestSpottedHovered() {return SpottingManager.TestSpottedHovered()};
+export function resetStealthRequest({pObjectIDs, pSceneID, pInfos} = {}) {return SpottingManager.resetStealthRequest(pObjectIDs, pSceneID, pInfos)};
 
 export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs)};
 

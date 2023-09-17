@@ -173,7 +173,7 @@ class PerceptiveFlags {
 	
 	static OverrideWorldSEffects(pToken) {} //returns if this pTokens effects override the worlds effect
 	
-	static resetStealth(pToken) {} //resets the stealth related flags of pToken
+	static async resetStealth(pToken) {} //resets the stealth related flags of pToken
 	
 	static SceneBrightEnd(pScene) {} //returns the Bright end value of pScene
 	
@@ -1040,8 +1040,10 @@ class PerceptiveFlags {
 		return this.#OverrideWorldSEffectsFlag(pToken);
 	}
 	
-	static resetStealth(pToken) {
-		PerceptiveFlags.clearSpottedby(pToken);
+	static async resetStealth(pToken) {
+		await PerceptiveFlags.clearSpottedby(pToken);
+		
+		await PerceptiveFlags.#setPPDC(pToken, -1);
 	}
 	
 	static SceneBrightEnd(pScene) {

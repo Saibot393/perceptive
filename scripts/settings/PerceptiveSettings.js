@@ -4,7 +4,7 @@ import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e} from
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
-import {TestSpottedHovered, resetStealthDataSelected} from "../SpottingScript.js";
+import {resetStealthDataSelected} from "../SpottingScript.js";
 
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
@@ -266,6 +266,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
 	name: Translate("Settings.GMSpotconfirmDialog.name"),
 	hint: Translate("Settings.GMSpotconfirmDialog.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });  
+
+  game.settings.register(cModuleName, "MakeSpottedTokensVisible", {
+	name: Translate("Settings.MakeSpottedTokensVisible.name"),
+	hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
 	scope: "world",
 	config: true,
 	type: Boolean,

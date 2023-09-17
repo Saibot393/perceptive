@@ -1,6 +1,6 @@
 import { DoorMoveRequest } from "../DoorMovingScript.js";
 import { PeekDoorRequest } from "../PeekingScript.js";
-import { SpotObjectsRequest, DoorVisibleRequest, PlayerMakeTempVisible } from "../SpottingScript.js";
+import { SpotObjectsRequest, resetStealthRequest, PlayerMakeTempVisible } from "../SpottingScript.js";
 
 //execute functions with pData depending on pFunction
 function organiseSocketEvents({pFunction, pData} = {}) {
@@ -14,8 +14,8 @@ function organiseSocketEvents({pFunction, pData} = {}) {
 		case "SpotObjectsRequest":
 			SpotObjectsRequest(pData);
 			break;
-		case "DoorVisibleRequest":
-			DoorVisibleRequest(pData);
+		case "resetStealthRequest":
+			resetStealthRequest(pData);
 			break;
 		case "PlayerMakeTempVisible":
 			PlayerMakeTempVisible(pData);
