@@ -69,7 +69,7 @@ class SpottingManager {
 
 	static onCanvasReady(pCanvas) {} //called when a canvas is ready
 
-	static initializeVisionSources(pData) {} //called when new vision sources are initialized
+	static async initializeVisionSources(pData) {} //called when new vision sources are initialized
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
@@ -477,10 +477,16 @@ class SpottingManager {
 		SpottingManager.updateVisionValues();
 	}
 
-	static initializeVisionSources(pData) {
+	static async initializeVisionSources(pData) {
 		VisionUtils.PrepareSpotables();
 
-		SpottingManager.updateVisionValues();
+		await SpottingManager.updateVisionValues();
+		
+		let vSpottables = VisionUtils.spotablesinVision();
+		
+		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue()));
+		
+		VisionUtils.MaketempVisible(vSpottables);
 		
 		vPingIgnoreVisionCycles = 2;
 	}
