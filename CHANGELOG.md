@@ -2,6 +2,7 @@
 - A few general improvements
 - Added ping for passively spotted object
 - Added world setting Reveal spotted tokens to make spotted tokens visible
+- Spottables tokens and door controls should now be correctly calculated the moment a token is selected or a scene is loaded
 
 ## v1.6.2
 - Improved some UI in the wall sheet settings
