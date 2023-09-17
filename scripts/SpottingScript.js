@@ -559,7 +559,7 @@ Hooks.on("ready", function() {
 																																return true;
 																															}
 																															else {
-																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && !this.isOwner) {
+																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) {
 																																	return false;
 																																}
 																															}
@@ -580,7 +580,7 @@ Hooks.on("ready", function() {
 					return true;
 				}
 				else {
-					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && !this.isOwner) {
+					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) {
 						return false;
 					}
 				}
