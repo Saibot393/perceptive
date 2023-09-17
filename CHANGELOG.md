@@ -1,3 +1,7 @@
+## v1.6.1
+- Fixed a bug where tokens spotted by the GM only appear after moving the spotting token
+- The illumination indicator will now be displayed for all tokens, even non spottables
+
 ## v1.6.0
 - Spot Invisible improvements:
   - The "spotted by" list should now correctly reset when a new stealth check is rolled
