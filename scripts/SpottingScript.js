@@ -67,6 +67,8 @@ class SpottingManager {
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {} //called when a wall is updates
 
 	static onrefreshToken(pToken, pInfos) {} //called when a token is refreshed
+	
+	static onsightRefresh() {} //called when sight is refreshed
 
 	static onDoorLClick(pWall, pKeyInfo) {} //called when a door control is left clicked
 
@@ -435,11 +437,7 @@ class SpottingManager {
 		}
 	}
 
-	static onrefreshToken(pToken, pInfos) {
-		if (pToken.isOwner) {
-			vPingIgnoreVisionCycles = vPingIgnoreVisionCycles - 1;
-		}
-		
+	static onrefreshToken(pToken, pInfos) {	
 		if (PerceptiveFlags.canbeSpotted(pToken.document)) {
 			VisionUtils.PreapreSpotableToken(pToken);
 
@@ -449,6 +447,10 @@ class SpottingManager {
 				}
 			}
 		}
+	}
+	
+	static onsightRefresh() {
+		vPingIgnoreVisionCycles = vPingIgnoreVisionCycles - 1;
 	}
 
 	static onDoorLClick(pWall, pKeyInfo) {
@@ -552,14 +554,16 @@ Hooks.on("ready", function() {
 		Hooks.on("updateWall", (pWall, pChanges, pInfos, pSender) => {SpottingManager.onWallUpdate(pWall, pChanges, pInfos, pSender)});
 
 		Hooks.on("refreshToken", (pToken, pInfos) => {SpottingManager.onrefreshToken(pToken, pInfos)});
-
+		
+		Hooks.on("sightRefresh", (pToken, pInfos) => {SpottingManager.onsightRefresh()});
+		
 		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)});
 
 		Hooks.on("canvasReady", (pCanvas) => {SpottingManager.onCanvasReady(pCanvas)});
 
 		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)});
 
-		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addIlluminationIcon(...args));
+		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addIlluminationIcon(...args)); 
 	}
 });
 
