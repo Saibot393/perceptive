@@ -163,7 +163,7 @@ class PerceptiveFlags {
 	
 	static LightLevel(pObject) {} //returns the last calculated light level of pObject
 	
-	static CheckLightLevel(pObject, pUsePosition = false) {} //updates the light level calculation of pObject
+	static async CheckLightLevel(pObject, pUsePosition = false) {} //updates the light level calculation of pObject
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {} //returns the current light level modifier of pObject
 	
@@ -966,14 +966,19 @@ class PerceptiveFlags {
 		return this.#LightLevelFlag(pObject);
 	}
 	
-	static CheckLightLevel(pObject, pUsePosition = false) {
+	static async CheckLightLevel(pObject, pUsePosition = false) {
 		if (pUsePosition) {
 			//console.log(GeometricUtils.CenterPositionXY(pObject.object));
 			//console.log(pObject);
-			this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.CenterPositionXY(pObject.object), pObject.parent));
+			await this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.CenterPositionXY(pObject.object), pObject.parent));
 		}
 		else {
-			this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+			if (pObject.center) {
+				await this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+			}
+			else {
+				await this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.insceneCenter(pObject), pObject.parent));
+			}
 		}
 	}
 	

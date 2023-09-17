@@ -69,6 +69,8 @@ class GeometricUtils {
 	
 	static insceneSize(pToken) {} // returns the scene size of pTokens scene
 	
+	static insceneCenter(pToken) {} //returns the in scene center of pToken
+	
 	//sort
 	static sortbymaxdim(pTokens) {} //sorts pTokens array by their largest dimensions, returns sorted array and array with their values
 	
@@ -257,6 +259,12 @@ class GeometricUtils {
 	
 	static insceneSize(pToken) {
 		return FCore.sceneof(pToken).dimensions.size;
+	}
+	
+	static insceneCenter(pToken) {
+		let vCenter = {x: pToken.x + GeometricUtils.insceneWidth(pToken)/2, y: pToken.y + GeometricUtils.insceneHeight(pToken)/2};
+		
+		return vCenter;
 	}
 	
 	//sort
