@@ -477,7 +477,14 @@ Hooks.on("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (SpottingManager.DControlSpottingVisible(this)){
+			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {
+																											let vPrevVisible = this.visible;
+																											
+																											if (SpottingManager.DControlSpottingVisible(this)){
+																												if (!vPrevVisible) {
+																													SpottingManager.onNewlyVisible([this.document], true);
+																												}
+																												
 																												return true;
 																											}
 																											return vWrapped(args)}, "MIXED");
@@ -486,7 +493,13 @@ Hooks.on("ready", function() {
 			const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
 
 			DoorControl.prototype.__defineGetter__("isVisible", function () {
+				let vPrevVisible = this.visible;
+				
 				if (SpottingManager.DControlSpottingVisible(this)) {
+					if (!vPrevVisible) {
+						SpottingManager.onNewlyVisible([this.document], true);
+					}
+																																
 					return true;
 				}
 
