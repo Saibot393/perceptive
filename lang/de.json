@@ -332,6 +332,16 @@
 			"OverrideWorldSEffectsFlag" : {
 				"name"					: "Welt Verstecken Effekte überschreiben",
 				"descrp"				: "Ob die Verstecken Effekte dieser Figur die Welt Effekte überschreiben"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "Helles Dunkelheits Limit",
+				"descrp"				: "Eine Scenen Dunkelheit unter diesem Wert wird als Hell gewertet"
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "Düsteres Dunkelheits Limit",
+				"descrp"				: "Eine Scenen Dunkelheit unter diesem Wert wird als Düster gewertet"
 			}
 		}
 	}

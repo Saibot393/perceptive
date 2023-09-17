@@ -43,10 +43,12 @@ const cresetSpottedbyMoveF = "resetSpottedbyMoveFlag"; //Flag to reset the spoot
 const cLightLevelF = "LightLevelFlag"; //stores the current light level of an object
 const cStealthEffectsF = "StealthEffectsFlag"; //Flag to to store custom stealth effects of this token
 const cOverrideWorldSEffectsF = "OverrideWorldSEffectsFlag"; //Flag to override the world stealth effects
+const cSceneBrightEndF = "SceneBrightEndFlag"; //flag that stores the scene darkness value after which a scene is no longer bright
+const cSceneDimEndF = "SceneDimEndFlag"; //flag that stores the scene darkness value after which a scene is no longer dim
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -172,6 +174,10 @@ class PerceptiveFlags {
 	static OverrideWorldSEffects(pToken) {} //returns if this pTokens effects override the worlds effect
 	
 	static resetStealth(pToken) {} //resets the stealth related flags of pToken
+	
+	static SceneBrightEnd(pScene) {} //returns the Bright end value of pScene
+	
+	static SceneDimEnd(pScene) {} //returns the Bright end value of pScene
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
@@ -517,6 +523,32 @@ class PerceptiveFlags {
 		return false; //default if anything fails
 	}
 	
+	static #SceneBrightEndFlag (pObject) { 
+	//returns content of SceneBrightEndFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cSceneBrightEndF)) {
+				return vFlag.SceneBrightEndFlag;
+			}
+		}
+		
+		return 0.25; //default if anything fails
+	}
+	
+	static #SceneDimEndFlag (pObject) { 
+	//returns content of SceneDimEndFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cSceneDimEndF)) {
+				return vFlag.SceneDimEndFlag;
+			}
+		}
+		
+		return 0.75; //default if anything fails
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -528,7 +560,7 @@ class PerceptiveFlags {
 		}
 		
 		return game.settings.get(cModuleName, "resetSpottedbyMovedefault"); //default if anything fails
-	}
+	}	
 	
 	static async #setLockPeekingWallIDs (pWall, pContent) {
 	//sets content of LockPeekingWallIDsFlag (must be array of id)
@@ -1010,6 +1042,14 @@ class PerceptiveFlags {
 	
 	static resetStealth(pToken) {
 		PerceptiveFlags.clearSpottedby(pToken);
+	}
+	
+	static SceneBrightEnd(pScene) {
+		return this.#SceneBrightEndFlag(pScene);
+	}
+	
+	static SceneDimEnd(pScene) {
+		return this.#SceneDimEndFlag(pScene);
 	}
 	
 	//effects

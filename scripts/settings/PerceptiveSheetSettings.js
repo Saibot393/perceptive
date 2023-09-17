@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
@@ -14,6 +14,8 @@ class PerceptiveSheetSettings {
 	static WallSheetSettings(pApp, pHTML, pData) {} //add settinsg to wall sheet
 	
 	static async TokenSheetSettings(pApp, pHTML, pData) {} //add settinsg to token sheet
+	
+	static SceneSheetSettings(pApp, pHTML, pData) {} //add settinsg to scene sheet 
 	
 	//standard settings
 	static AddSpottableSettings(pApp, pHTML, pData, pto) {} //adds the Spottable settings to pApp
@@ -71,8 +73,8 @@ class PerceptiveSheetSettings {
 			//lock peeking size
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
 														vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
-														vtype : "number", 
-														//vrange : cSwingSpeedRange,
+														vtype : "range", 
+														vrange : [0,1],
 														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
 														vstep : 0.01,
 														vflagname : cLockPeekSizeF
@@ -81,8 +83,8 @@ class PerceptiveSheetSettings {
 			//lock peeking position
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekPositionF +".name"), 
 														vhint : Translate("SheetSettings."+ cLockPeekPositionF +".descrp"), 
-														vtype : "number", 
-														//vrange : [0,1],
+														vtype : "range", 
+														vrange : [0,1],
 														vvalue : PerceptiveFlags.LockPeekingPosition(pApp.document), 
 														vstep : 0.01,
 														vflagname : cLockPeekPositionF
@@ -212,6 +214,32 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${Translate("Titles.SpottingInfos.VisionLevel.name") + Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))}</p>`);
 			}			
 		}
+	}
+	
+	static SceneSheetSettings(pApp, pHTML, pData) {
+			//create title (under which all settings are placed)
+			let vTittleHTML = `<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`;
+			pHTML.find('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
+			
+			//scene bright end
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneBrightEndF +".name"), 
+														vhint : Translate("SheetSettings."+ cSceneBrightEndF +".descrp"), 
+														vtype : "range", 
+														vrange : [0, 1],
+														vstep : 0.01,
+														vvalue : PerceptiveFlags.SceneBrightEnd(pApp.document), 
+														vflagname : cSceneBrightEndF
+														}, `fieldset[data-group="${cModuleName}"]`);
+														
+			//scene dim end
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneDimEndF +".name"), 
+														vhint : Translate("SheetSettings."+ cSceneDimEndF +".descrp"), 
+														vtype : "range", 
+														vrange : [0, 1],
+														vstep : 0.01,
+														vvalue : PerceptiveFlags.SceneDimEnd(pApp.document), 
+														vflagname : cSceneDimEndF
+														}, `fieldset[data-group="${cModuleName}"]`);
 	}
 	
 	//standard settings
@@ -362,7 +390,8 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `</select>`;
 				break;
 			case "range":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}">`;
+				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}">
+										<span class="${vtype}-value">${vvalue}</span>`;
 				break;
 			case "numberpart":
 			case "numberinterval":
@@ -405,8 +434,10 @@ class PerceptiveSheetSettings {
 
 Hooks.once("ready", () => {
 	if (game.user.isGM) {
-		Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML, vData)); //for walls
+		Hooks.on("renderWallConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.WallSheetSettings(pApp, pHTML, pData)); //for walls
 		
-		Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
+		Hooks.on("renderTokenConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.TokenSheetSettings(pApp, pHTML, pData)); //for tokens
+		
+		Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML, pData)); //for scenes 
 	}
 });

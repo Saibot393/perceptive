@@ -332,6 +332,16 @@
 			"OverrideWorldSEffectsFlag" : {
 				"name"					: "Override world stealth effects",
 				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "Bright darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered bright for this scene"
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "Dim darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered dim for this scene"
 			}
 		}
 	}
