@@ -1,5 +1,7 @@
 ## v1.7.0 (unreleased)
+- A few general improvements
 - Added ping for passively spotted object
+- Added world setting Reveal spotted tokens to make spotted tokens visible
 
 ## v1.6.2
 - Improved some UI in the wall sheet settings
