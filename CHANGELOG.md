@@ -1,3 +1,9 @@
+## v1.6.2
+- Improved some UI in the wall sheet settings
+- Spot Invisible improvements:
+  - Added scene setting Bright illumination limit to set the value below which the scene darkness is considered bright
+  - Added scene setting Dim illumination limit to set the value below which the scene darkness is considered dim
+
 ## v1.6.1
 - Fixed a bug where tokens spotted by the GM only appear after moving the spotting token
 - The illumination indicator will now be displayed for all tokens, even non spottables
