@@ -184,6 +184,7 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
+			console.log(pObjectIDs);
 			if (game.settings.get(cModuleName, "GMSpotconfirmDialog")) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
@@ -405,10 +406,16 @@ class SpottingManager {
 		let vSpotables = VisionUtils.spotablesinVision();
 
 		let vPerceptionResult = pRoll.total;
+		
+		console.log(vSpotables);
 
 		vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
+		
+		console.log(vSpotables);
 
-		vSpotables = vSpotables.filter(vObject => !vObject?.object?.visible);
+		vSpotables = vSpotables.filter(vObject => (!vObject?.object?.visible || !vObject?.object?.doorControl?.visible));
+		
+		console.log(vSpotables);
 
 		//VisionUtils.MaketempVisible(vSpotables);
 

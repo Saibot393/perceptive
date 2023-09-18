@@ -199,6 +199,7 @@ class PerceptiveSheetSettings {
 					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
 														vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
 														vtype : "text", 
+														vwide : true,
 														vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
 														vflagname : cStealthEffectsF
 														}, `div[data-tab="${cModuleName}"]`);			
