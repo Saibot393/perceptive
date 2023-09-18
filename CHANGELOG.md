@@ -1,4 +1,4 @@
-## v1.7.0 (unreleased)
+## v1.7.0
 - Spot Invisible improvements:
   - A few general improvements
   - Added ping for passively spotted object
