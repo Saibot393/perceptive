@@ -57,6 +57,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
+- Atomate token Can be spotted: to automatically manage the Can be spotted token settin
 - Player perspective: to allow GMs to only spot tokens players can spot
 - Passive perception formula: to set the formula used for passive perception (if not automated)
 - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
@@ -97,6 +98,7 @@ The following informations will be displayed in the settings (if applicable):
 - Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
 - Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
 - Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
+- Stealthed token transparency: to change the transparency of spotted tokens
 
 ## General features:
 
@@ -119,6 +121,8 @@ The module should be compatible with all game systems and most modules on Foundr
   - Additional setting "DFreds Convenient Effects Integration" to enable stealth effects
 - [Vision 5e](https://foundryvtt.com/packages/vision-5e)
   - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
+ - [Stealthy](https://foundryvtt.com/packages/stealthy)
+  - Addtional setting "Stealthy integration" to synch the stealth DCs between Stealthy and Perceptive
 
 ### Languages:
 
