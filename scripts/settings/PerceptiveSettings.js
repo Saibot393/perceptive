@@ -382,6 +382,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 0
   });  
   
+  game.settings.register(cModuleName, "SpottedTokenTransparency", {
+	name: Translate("Settings.SpottedTokenTransparency.name"),
+	hint: Translate("Settings.SpottedTokenTransparency.descrp"),
+	scope: "client",
+	config: true,
+	type: Number,
+	range: {
+		min: 0,
+		max: 1,
+		step: 0.05
+	},
+	default: 0.5
+  });  
+  
   //Keys
   game.keybindings.register(cModuleName, "PeekLock", {
 	name: Translate("Keys.PeekLock.name"),

@@ -3,7 +3,7 @@ import { PerceptiveUtils, cModuleName } from "./PerceptiveUtils.js";
 import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
 
-const cTransparentalpha = 0.5;
+//const cTransparentalpha = 0.5;
 
 const cDimInterval = [1/4, 3/4]; //Scene darkness values between which the scene is dim (lower is bright, higher is dark)
 
@@ -160,7 +160,7 @@ class VisionUtils {
 			
 			if ((pObjects[i].documentName == "Token") && !pObjects[i].object?.visible) {
 				pObjects[i].object.visible = true;
-				pObjects[i].object.mesh.alpha = cTransparentalpha;
+				pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 			}
 		}		
 	}
@@ -188,8 +188,8 @@ class VisionUtils {
 	}
 	
 	static async PreapreSpotableToken(pToken) {
-		if ((pToken.mesh.alpha < cTransparentalpha) || PerceptiveFlags.isPerceptiveStealthing(pToken.document)) {
-			pToken.mesh.alpha = cTransparentalpha;
+		if ((pToken.mesh.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) || PerceptiveFlags.isPerceptiveStealthing(pToken.document)) {
+			pToken.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 		}
 	}
 	
