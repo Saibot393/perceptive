@@ -1,12 +1,16 @@
 ## v1.7.0 (unreleased)
-- A few general improvements
-- Added ping for passively spotted object
-- Added world setting Reveal spotted tokens to make spotted tokens visible
-- Spottables tokens and door controls should now be correctly calculated the moment a token is selected or a scene is loaded
-- Added [EXPERIMENTAL!] custom stealth "effect" that is not directly affected by any vision calculation other than perceptive
-  - This is not an effect in the conventional sense and only imitates the way an effects works
-  - The ui is unfinished/buggy and may not always work correctly
-  - There may be bugs where tokens remain invisible
+- Spot Invisible improvements:
+  - A few general improvements
+  - Added ping for passively spotted object
+  - Added world setting Reveal spotted tokens to make spotted tokens visible
+  - Spottables tokens and door controls should now be correctly calculated the moment a token is selected or a scene is loaded
+  - Added [EXPERIMENTAL!] custom stealth "effect" that is not directly affected by any vision calculation other than perceptive
+    - Added world setting [EXPERIMENTAL!] Use Perceptive stealth to activate this feature
+    - Added custom "effect" to the effect panel
+    - Added token setting Is Perceptive stealthing to enable or disable the Perceptive stealth effect
+    - This is not an effect in the conventional sense and only imitates the way an effects works
+    - The ui is unfinished/buggy and may not always work correctly
+    - There may be bugs where tokens remain invisible
 
 ## v1.6.2
 - Improved some UI in the wall sheet settings
