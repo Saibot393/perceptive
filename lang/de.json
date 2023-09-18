@@ -56,6 +56,11 @@
 				"descrp"				: "Anpassung an die Vision 5e Regeln"
 			},
 			
+			"StealthyIntegration" : {
+				"name"					: "Stealthy Integration",
+				"descrp"				: "Versteck SGs wercen zwischen Perceptive und Stealthy synchronisiert"
+			},
+			
 			"Peekablebydefault" : {
 				"name" 					: "Schlösser standardmäßig durchschaubar",
 				"descrp" 				: "Ob Schlösser standardmäßig durchschaut werden können"
@@ -119,6 +124,11 @@
 			"ActivateSpotting" : {
 				"name"					: "Aktiviere Aufdecken Funktionalität",
 				"descrp"				: "Ob die Aufdecken Funktionalität aktiviert werden soll (ausstellen um Leistung zu verbessern)"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "Automatisiere Figure Kann aufgedeckt werden",
+				"descrp"				: "Die Kann aufgedeckt werden Einstellung von Figuren wird automatisch umgestellt wenn eine Verstecken Änderung erkannt wird"
 			},
 			
 			"SimulatePlayerVision" : {
@@ -229,6 +239,11 @@
 			"InvertIgnoreRollKey" : {
 				"name" 					: "Invertiere \"Wurf Ignorieren\" Taste",
 				"descrp" 				: "Ob Würfe nur erkannt werden sollen WENN die Taste gedrückt wird"
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "Versteckte Figur Transparenz",
+				"descrp" 				: "Die Transparenz von versteckten Figuren"
 			}
 		},
 		

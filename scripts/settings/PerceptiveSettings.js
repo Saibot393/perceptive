@@ -1,6 +1,6 @@
 import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy} from "../compatibility/PerceptiveCompUtils.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
@@ -45,6 +45,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Settings.Vision5eIntegration.descrp"),
 	scope: "world",
 	config: PerceptiveCompUtils.isactiveModule(cVision5e),
+	type: Boolean,
+	default: false
+  }); 
+  
+  game.settings.register(cModuleName, "StealthyIntegration", {
+	name: Translate("Settings.StealthyIntegration.name"),
+	hint: Translate("Settings.StealthyIntegration.descrp"),
+	scope: "world",
+	config: PerceptiveCompUtils.isactiveModule(cStealthy),
 	type: Boolean,
 	default: false
   }); 
@@ -171,6 +180,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: true,
 	requiresReload: true
   });   
+  
+  game.settings.register(cModuleName, "AutomateTokenSpottable", {
+	name: Translate("Settings.AutomateTokenSpottable.name"),
+	hint: Translate("Settings.AutomateTokenSpottable.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
   
   game.settings.register(cModuleName, "SimulatePlayerVision", {
 	name: Translate("Settings.SimulatePlayerVision.name"),

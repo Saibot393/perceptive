@@ -52,8 +52,13 @@
 			},
 			
 			"Vision5eIntegration" : {
-				"name"					: "Vision 5e Integration",
+				"name"					: "Vision 5e integration",
 				"descrp"				: "Adapt to Vision 5e rules"
+			},
+			
+			"StealthyIntegration" : {
+				"name"					: "Stealthy integration",
+				"descrp"				: "Stealth DCs will be synced between Perceptive and Stealthy"
 			},
 			
 			"Peekablebydefault" : {
@@ -119,6 +124,11 @@
 			"ActivateSpotting" : {
 				"name"					: "Activate Spot Invisible feature",
 				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "Atomate token Can be spotted",
+				"descrp"				: "The Can be spotted setting of Tokens will be automatically changed when a stealth change is detected"
 			},
 			
 			"SimulatePlayerVision" : {
@@ -229,7 +239,12 @@
 			"InvertIgnoreRollKey" : {
 				"name" 					: "Invert \"Ignore Roll\" key",
 				"descrp" 				: "If rolls should only be recognised WHEN the set key is pressed"
-			}				
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "Stealthed token transparency",
+				"descrp" 				: "The transparency of stealthed tokens"
+			}			
 		},
 		
 		"Keys" : {

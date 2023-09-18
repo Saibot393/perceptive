@@ -447,6 +447,8 @@ class SpottingManager {
 		
 		for (let i = 0; i < vRelevantTokens.length; i++) {
 			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			
+			await PerceptiveFlags.MakeSpottable(vRelevantTokens[i]);
 
 			EffectManager.applyStealthEffects(vRelevantTokens[i]);
 		}

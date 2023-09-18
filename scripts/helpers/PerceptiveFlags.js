@@ -136,6 +136,8 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
 	
+	static async MakeSpottable(pObject) {} //makes pObject spottable
+	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
@@ -714,6 +716,16 @@ class PerceptiveFlags {
 		return false;
 	}
 	
+	static async #setcanbeSpotted (pObject, pContent) {
+		//sets content of canbeSpottedFlag (Boolean)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, ccanbeSpottedF, Boolean(pContent)); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
 	//basics
 	static isPerceptiveWall(pWall) {
 		return Boolean(this.#isPerceptiveWallFlag(pWall));
@@ -953,6 +965,10 @@ class PerceptiveFlags {
 		return PerceptiveFlags.#canbeSpottedFlag(pObject);
 	}
 	
+	static async MakeSpottable(pObject) {
+		this.#setcanbeSpotted(pObject, true);
+	}
+	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {
 		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
@@ -1081,6 +1097,10 @@ class PerceptiveFlags {
 		await PerceptiveFlags.clearSpottedby(pToken);
 		
 		await PerceptiveFlags.#setPPDC(pToken, -1);
+		
+		if (game.settings.get(cModuleName, "AutomateTokenSpottable")) {
+			await this.#setcanbeSpotted(pToken, false);
+		}
 	}
 	
 	static SceneBrightEnd(pScene) {
@@ -1096,11 +1116,15 @@ class PerceptiveFlags {
 	}
 	
 	static async togglePerceptiveStealthing(pToken) {
-		await this.#setPerceptiveStealthing(pToken, !this.#PerceptiveStealthingFlag(pToken));
+		await PerceptiveFlags.setPerceptiveStealthing(pToken, !this.#PerceptiveStealthingFlag(pToken));
 	}
 	
 	static async setPerceptiveStealthing(pToken, pStealthing) {
 		await this.#setPerceptiveStealthing(pToken, pStealthing);
+		
+		if (game.settings.get(cModuleName, "AutomateTokenSpottable")) {
+			await this.#setcanbeSpotted(pToken, pStealthing);
+		}
 	}
 	
 	//effects
