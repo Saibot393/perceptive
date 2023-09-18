@@ -63,10 +63,12 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Stealth key-word: to set the key word used to find stealth rolls (if not automated) (a key can be set to not autodetect rolls)
 - Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
 - Apply system stealth effect(s): to automatically apply the systems stealth effects
+- [EXPERIMENTAL!] Use Perceptive stealth: to activate this feature
 - Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
 - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
 - GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
+- Reveal spotted tokens: to make spotted tokens visible
 - Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
 
 #### Walls/Tokens:
