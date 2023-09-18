@@ -1,4 +1,8 @@
-## v1.7.0 (unreleased)
+## v1.7.1
+- Small ui improvement
+- Fixed bug that prevented hidden doors from being actively spotted
+
+## v1.7.0
 - Spot Invisible improvements:
   - A few general improvements
   - Added ping for passively spotted object
