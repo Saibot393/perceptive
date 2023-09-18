@@ -121,7 +121,7 @@ The module should be compatible with all game systems and most modules on Foundr
   - Additional setting "DFreds Convenient Effects Integration" to enable stealth effects
 - [Vision 5e](https://foundryvtt.com/packages/vision-5e)
   - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
- - [Stealthy](https://foundryvtt.com/packages/stealthy)
+- [Stealthy](https://foundryvtt.com/packages/stealthy)
   - Addtional setting "Stealthy integration" to synch the stealth DCs between Stealthy and Perceptive
 
 ### Languages:
