@@ -12,7 +12,7 @@ class EffectManager {
 	//DECLARATIONS
 	static applyStealthEffects(pHider) {} //gives the rider all pEffects
 	
-	static async removeStealthEffects(pHider) {} //remove all effects flaged as Rideable effect
+	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as Rideable effect
 	
 	//IMPLEMENTATION
 	static async applyStealthEffects(pHider) {
@@ -21,7 +21,7 @@ class EffectManager {
 		let vEffectNames = [];
 		
 		if (PerceptiveUtils.isPf2e() || (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration"))) {	
-			await EffectManager.removeStealthEffects(pHider);
+			await EffectManager.removeStealthEffects(pHider, true);
 		
 			vEffectNames = PerceptiveFlags.StealthEffects(pHider);
 			
@@ -62,15 +62,23 @@ class EffectManager {
 				PerceptiveCompUtils.AddDfredEffect(vEffectDocuments, pHider);
 			}
 		}
+		
+		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
+			PerceptiveFlags.setPerceptiveStealthing(pHider, true);
+		}
 	}
 	
-	static async removeStealthEffects(pHider) {
+	static async removeStealthEffects(pHider, pApplyReset = false) {
 		if (PerceptiveUtils.isPf2e()) {
 			await pHider.actor.deleteEmbeddedDocuments("Item", pHider.actor.itemTypes.effect.concat(pHider.actor.itemTypes.condition).filter(vElement => PerceptiveFlags.isPerceptiveEffect(vElement)).map(vElement => vElement.id));
 		}
 		
 		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
 			await PerceptiveCompUtils.RemovePerceptiveDfredEffect(pHider.actor.effects.map(vElement => vElement), pHider);
+		}
+		
+		if (!pApplyReset) {
+			await PerceptiveFlags.setPerceptiveStealthing(pHider, false);
 		}
 	}
 }

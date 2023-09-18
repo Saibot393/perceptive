@@ -173,7 +173,7 @@ class PerceptiveSheetSettings {
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);	
 				
-				if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
+				if (game.settings.get(cModuleName, "usePerceptiveStealthEffect") || PerceptiveFlags.isPerceptiveStealthing(pApp.document)) {
 					//if this token is perceptive stealthing
 					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPerceptiveStealthingF +".name"), 
 														vhint : Translate("SheetSettings."+ cPerceptiveStealthingF +".descrp"), 

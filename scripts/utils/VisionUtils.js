@@ -188,7 +188,7 @@ class VisionUtils {
 	}
 	
 	static async PreapreSpotableToken(pToken) {
-		if (pToken.mesh.alpha < cTransparentalpha) {
+		if ((pToken.mesh.alpha < cTransparentalpha) || PerceptiveFlags.isPerceptiveStealthing(pToken.document)) {
 			pToken.mesh.alpha = cTransparentalpha;
 		}
 	}

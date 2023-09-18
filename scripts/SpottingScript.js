@@ -232,9 +232,9 @@ class SpottingManager {
 		else {
 			let vObjectIDs = {};
 			
-			vObjectIDs.Tokens = pObjects.filter(vObject => vObject.documentName == "Token").map(vToken => vToken.id);
+			vObjectIDs.Tokens = pObjects.filter(vObject => vObject?.documentName == "Token").map(vToken => vToken.id);
 			
-			vObjectIDs.Walls = pObjects.filter(vObject => vObject.documentName == "Wall").map(vWall => vWall.id);
+			vObjectIDs.Walls = pObjects.filter(vObject => vObject?.documentName == "Wall").map(vWall => vWall.id);
 			
 			game.socket.emit("module." + cModuleName, {pFunction : "resetStealthRequest", pData : {pObjectIDs : vObjectIDs, pSceneID : canvas.scene.id, pInfos : pInfos}});
 		}
@@ -317,9 +317,9 @@ class SpottingManager {
 		if (vTokens.length > 0) {
 			for (let i = 0; i < vTokens.length; i++) {
 				vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
-										<input type="checkbox" id=${vTokens[i].id} checked>
-										<p>${vTokens[i].name}</p>
-										<img src="${vTokens[i].texture.src}" style = "height: 2em;">
+											<input type="checkbox" id=${vTokens[i].id} checked>
+											<p>${vTokens[i].name}</p>
+											<img src="${vTokens[i].texture.src}" style = "height: 2em;">
 										</div>`;
 			}
 		}
@@ -353,6 +353,16 @@ class SpottingManager {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
 					PerceptiveFlags.clearSpottedby(pToken);
 				}
+			}
+		}
+		
+		if (pInfos.PerceptiveVisionupdate && pToken.parent == canvas.scene) {
+			VisionUtils.PreapreSpotableToken(pToken.object);
+			
+			let vControlledTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.sight.enabled);
+			
+			for (let i = 0; i < vControlledTokens.length; i++) {
+				vControlledTokens[i].object.updateVisionSource();
 			}
 		}
 	}
@@ -427,6 +437,12 @@ class SpottingManager {
 		let vNewDCs = {};
 
 		let vStealthResult = pRoll.total;
+		
+		for (let i = 0; i < vRelevantTokens.length; i++) {
+			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+
+			EffectManager.applyStealthEffects(vRelevantTokens[i]);
+		}
 
 		if (game.settings.get(cModuleName, "AutoStealthDCbehaviour") != "off") {
 			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
@@ -445,12 +461,6 @@ class SpottingManager {
 			for (let i = 0; i < vRelevantTokens.length; i++) {
 				PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
 			}
-		}
-
-		for (let i = 0; i < vRelevantTokens.length; i++) {
-			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
-
-			EffectManager.applyStealthEffects(vRelevantTokens[i]);
 		}
 	}
 
@@ -559,7 +569,7 @@ Hooks.on("ready", function() {
 																																return true;
 																															}
 																															else {
-																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) {
+																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length))) {
 																																	return false;
 																																}
 																															}
@@ -580,7 +590,7 @@ Hooks.on("ready", function() {
 					return true;
 				}
 				else {
-					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) {
+					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length))) {
 						return false;
 					}
 				}

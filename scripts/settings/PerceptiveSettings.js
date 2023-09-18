@@ -235,7 +235,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.usePerceptiveStealthEffect.name"),
 	hint: Translate("Settings.usePerceptiveStealthEffect.descrp"),
 	scope: "world",
-	config: true,
+	config: !PerceptiveUtils.isPf2e(),
 	type: Boolean,
 	default: false
   }); 

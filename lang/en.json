@@ -30,7 +30,9 @@
 			"SpottingConfirm" : {
 				"name"				: "Confirm Spotting",
 				"content"			: "Player <b>{pPlayer}</b> has rolled a <b>{pResult}</b> on a perception roll which allows <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens: <br>"
-			}
+			},
+			"StartStealthing"			: "Start stealthing",
+			"StopStealthing"			: "Stop stealthing"
 		},
 		
 		"Settings" : {
@@ -154,6 +156,11 @@
 				"descrp"				: "If system dependent stealth effects should be applied when stealth is rolled"				
 			},
 			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "[EXPERIMENTAL] Use Perceptive stealth",
+				"descrp"				: "If perceptives own stealth \"effect\" should be used"				
+			},
+			
 			"customStealthEffects" : {
 				"name"					: "Custom stealth effects",
 				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\")"				
@@ -172,6 +179,11 @@
 			"GMSpotconfirmDialog" : {
 				"name"					: "GM confirm Spotting",
 				"descrp"				: "If rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed"
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Make spotted tokens visible",
+				"descrp"				: "If actively or passively spotted tokens should be made visible"
 			}, 
 			
 			"ForceInvertIgnoreRollKey" : {
@@ -302,6 +314,11 @@
 			"DoorSlideSpeedFlag" : {
 				"name" 					: "Slide speed",
 				"descrp"				: "The slide speed of the door in  parts of door size (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "Is Perceptive stealthing",
+				"descrp"				: "If this token has the Perceptive stealth \"effect\""
 			},
 			
 			"canbeSpottedFlag" : {

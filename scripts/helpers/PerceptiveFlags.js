@@ -182,7 +182,9 @@ class PerceptiveFlags {
 	
 	static isPerceptiveStealthing(pToken) {} //returns of this token is perceptive stealthing
 	
-	static togglePerceptiveStealthing(pToken) {} //returns of this token is perceptive stealthing
+	static async togglePerceptiveStealthing(pToken) {} //returns of this token is perceptive stealthing
+	
+	static async setPerceptiveStealthing(pToken, pStealthing) {} //sets the perceptive stealthing of pToken
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
@@ -698,7 +700,14 @@ class PerceptiveFlags {
 	static async #setPerceptiveStealthing (pToken, pContent) {
 		//sets content of PerceptiveStealthingFlag (must be boolean)
 		if (pToken) {
-			await pToken.setFlag(cModuleName, cPerceptiveStealthingF, Boolean(pContent)); 
+			await pToken.update({
+				flags: {
+					[cModuleName]: {
+						[cPerceptiveStealthingF]: Boolean(pContent)
+					}
+				}
+			}, {PerceptiveVisionupdate : true});
+			//await pToken.setFlag(cModuleName, cPerceptiveStealthingF, Boolean(pContent), {PerceptiveVisionupdate : true}); 
 			
 			return true;
 		}
@@ -1086,8 +1095,12 @@ class PerceptiveFlags {
 		return this.#PerceptiveStealthingFlag(pToken);
 	}
 	
-	static togglePerceptiveStealthing(pToken) {
-		this.#setPerceptiveStealthing(pToken, !this.#PerceptiveStealthingFlag(pToken));
+	static async togglePerceptiveStealthing(pToken) {
+		await this.#setPerceptiveStealthing(pToken, !this.#PerceptiveStealthingFlag(pToken));
+	}
+	
+	static async setPerceptiveStealthing(pToken, pStealthing) {
+		await this.#setPerceptiveStealthing(pToken, pStealthing);
 	}
 	
 	//effects

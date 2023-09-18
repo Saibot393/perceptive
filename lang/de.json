@@ -30,7 +30,9 @@
 			"SpottingConfirm" : {
 				"name"				: "Aufdecken bestätigen",
 				"content"			: "Spieler <b>{pPlayer}</b> hat eine <b>{pResult}</b> bei einem Wahrnehmungswurf gewürfelt, was <b>{pSpotters}</b> in Scene <b>{pScene}</b> erlaubt <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken: <br>"
-			}
+			},
+			"StartStealthing"			: "Verstecken",
+			"StopStealthing"			: "Aufdecken"
 		},
 		
 		"Settings" : {
@@ -154,6 +156,11 @@
 				"descrp"				: "Ob Systemabhängige Versteckens Effekte bei Versteckenwürfen angewandt werden sollen"				
 			},
 			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "[EXPERIMENTAL] Nutze Perceptive verstecken",
+				"descrp"				: "Ob Perceptives eigener Verstecken \"Effekt\" genutzt werden soll"				
+			},
+			
 			"customStealthEffects" : {
 				"name"					: "Eigene Verstecken Effekte",
 				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\")"				
@@ -172,6 +179,11 @@
 			"GMSpotconfirmDialog" : {
 				"name"					: "SL Aufdecken bestätigen",
 				"descrp"				: "Ob bei Wahrnehmungswürfen ein Dialog angezeigt werden soll in welchem die SL den Wurf bestätigen muss"
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Aufgedeckte Figuren sichtbar machen",
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren sichtbar gemacht werden sollen"
 			}, 
 			
 			"ForceInvertIgnoreRollKey" : {
@@ -302,6 +314,11 @@
 			"DoorSlideSpeedFlag" : {
 				"name" 					: "Schiebe-Geschwindigkeit",
 				"descrp"				: "Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "Ist Perceptive versteckt",
+				"descrp"				: "Ob diese Figur den Perceptive versteckt \"Effekt\" besitzt"
 			},
 			
 			"canbeSpottedFlag" : {
