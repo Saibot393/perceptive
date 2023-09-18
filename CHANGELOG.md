@@ -1,3 +1,9 @@
+## v1.7.2
+- Added world setting Atomate token Can be spotted to automatically manage the Can be spotted token setting
+- Added client setting Stealthed token transparency to change the transparency of spotted tokens
+- Added integration with Stealthy
+  - Added world setting Stealthy integration to synch the stealth DCs between Stealthy and Perceptive
+
 ## v1.7.1
 - Small ui improvement
 - Fixed bug that prevented hidden doors from being actively spotted
