@@ -57,7 +57,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
-- Atomate token Can be spotted: to automatically manage the Can be spotted token settin
+- Automate token Can be spotted: to automatically manage the Can be spotted token setting
 - Player perspective: to allow GMs to only spot tokens players can spot
 - Passive perception formula: to set the formula used for passive perception (if not automated)
 - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
