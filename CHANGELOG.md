@@ -1,3 +1,6 @@
+## v1.7.3
+- Added Chinese translation (thanks to Thousand (_thousand @Discord))
+
 ## v1.7.2
 - Added world setting Atomate token Can be spotted to automatically manage the Can be spotted token setting
 - Added client setting Stealthed token transparency to change the transparency of spotted tokens
