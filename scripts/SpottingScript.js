@@ -184,7 +184,6 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			console.log(pObjectIDs);
 			if (game.settings.get(cModuleName, "GMSpotconfirmDialog")) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
@@ -439,6 +438,8 @@ class SpottingManager {
 		
 		let vResultBuffer;
 		
+		let vDC;
+		
 		for (let i = 0; i < vSpotables.length; i++) {
 			vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
 			
@@ -459,7 +460,7 @@ class SpottingManager {
 
 		//VisionUtils.MaketempVisible(vSpotables);
 
-		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : Math.max(vPerceptionResult, vSecondResult), SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
+		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : vPerceptionResult, SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
@@ -563,7 +564,7 @@ class SpottingManager {
 		
 		VisionUtils.MaketempVisible(vSpottables);
 		
-		vPingIgnoreVisionCycles = 2;
+		vPingIgnoreVisionCycles = 1;
 	}
 }
 

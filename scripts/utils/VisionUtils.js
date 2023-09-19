@@ -217,7 +217,6 @@ class VisionUtils {
 		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.traits?.senses?.length) {
 			let vsenses = pToken.actor.system.traits.senses;
 			
-			console.log(vsenses);
 			if (vsenses.find(vsense => (vsense.type == "darkvision") && (vsense.range > 0))) {
 				vVLevel = cVisionLevel.TotalDark;
 			}
@@ -256,7 +255,6 @@ class VisionUtils {
 	}
 	
 	static LightingLevel(pPoint, pScene = null) {
-		console.log("here");
 		//start value Darkness
 		let vLightningLevel = cLightLevel.Dark;
 		

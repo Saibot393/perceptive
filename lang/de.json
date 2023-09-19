@@ -28,8 +28,9 @@
 				}
 			},
 			"SpottingConfirm" : {
-				"name"				: "Aufdecken bestätigen",
-				"content"			: "Spieler <b>{pPlayer}</b> hat eine <b>{pResult}</b> bei einem Wahrnehmungswurf gewürfelt, was <b>{pSpotters}</b> in Scene <b>{pScene}</b> erlaubt <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken: <br>"
+				"name"					: "Aufdecken bestätigen",
+				"content"				: "Spieler <b>{pPlayer}</b> hat eine <b>{pResult}</b> bei einem Wahrnehmungswurf gewürfelt, was <b>{pSpotters}</b> in Scene <b>{pScene}</b> erlaubt <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken: <br>",
+				"Behaviour"				: "mit einem <b>{pBehaviour}</b> Wurf und Resultat <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "Verstecken",
 			"StopStealthing"			: "Aufdecken"
@@ -185,6 +186,16 @@
 				"name"					: "Beleuchtung Wahrnehmungs SG Einfluss",
 				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Schwacheslicht,Helleslicht , \"0,0\" für keinen Einfluss)"
 			}, 
+			
+			"UseIlluminationPDCModifierforAP" : {
+				"name"					: "Nutze Beleuchtung Wahrnehmungs SG Einfluss für actike Wahrnehmung",
+				"descrp"				: "Ob aktive Wahrnehmungswürfe Beleuchtungs SG Einfluss benutzen sollen"
+			},
+			
+			"IlluminationAPDCBehaviour" : {
+				"name"					: "Beleuchtung Wahrnehmungs Verhalten",
+				"descrp"				: "Einfluss der Beleuchtung auf Wahrnehmungswürfe (Schwacheslicht,Helleslicht , \"=,=\" für keinen Einfluss, valide Wörter: advantage, adv, +, normal, =, disadvantage, disadv, -)"
+			},
 			
 			"GMSpotconfirmDialog" : {
 				"name"					: "SL Aufdecken bestätigen",

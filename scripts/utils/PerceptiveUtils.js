@@ -12,15 +12,11 @@ const cDelimiter = ";";
 const RollbehaviourKeywords = {
 	advantage : 1,
 	adv : 1,
-	AV : 1,
 	"+" : 1,
 	normal : 0,
-	norm : 0,
-	NM : 0,
 	"=" : 0,
 	disadvantage : -1,
 	disadv : -1,
-	DA : -1,
 	"-" : -1
 }
 

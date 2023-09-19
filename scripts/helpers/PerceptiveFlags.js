@@ -1010,7 +1010,12 @@ class PerceptiveFlags {
 	}
 	
 	static getAPDCModified(pObject, pVisionMode = 0) {
-		return PerceptiveFlags.getAPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
+		if (game.settings.get(cModuleName, "UseIlluminationPDCModifierforAP")) {
+			return PerceptiveFlags.getAPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
+		}
+		else {
+			return PerceptiveFlags.getAPDC(pObject);
+		}
 	}
 	
 	static isSpottedby(pObject, pToken) {

@@ -1,4 +1,4 @@
-import { cModuleName, Translate} from "../utils/PerceptiveUtils.js";
+import { cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy} from "../compatibility/PerceptiveCompUtils.js";
 
@@ -290,15 +290,25 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 								 }
   }); 
   
+  game.settings.register(cModuleName, "UseIlluminationPDCModifierforAP", {
+	name: Translate("Settings.UseIlluminationPDCModifierforAP.name"),
+	hint: Translate("Settings.UseIlluminationPDCModifierforAP.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: true
+  }); 
+  
   game.settings.register(cModuleName, "IlluminationAPDCBehaviour", {
 	name: Translate("Settings.IlluminationAPDCBehaviour.name"),
 	hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
 	scope: "world",
 	config: true,
 	type: Array,
-	default: ["normal", "normal"],
+	default: ["=", "="],
 	onChange: async (pValues) => { 	if (game.user.isGM) {
 										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", pValues[0].split(",").map(vValue => vValue))}; //prepare data
+										await game.settings.set(cModuleName, "useLightAdvantageSystem",  game.settings.get(cModuleName, "IlluminationAPDCBehaviour").find(vValue => (PerceptiveUtils.Rollbehaviour(vValue) != 0) && !(isNaN(PerceptiveUtils.Rollbehaviour(vValue))))) //auto detect if feature is active
 									}
 								 }
   }); 
@@ -330,7 +340,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });    
   
+  //some unexposed settings for automation
   game.settings.register(cModuleName, "useSpottingLightLevels", {
+	scope: "world",
+	config: false,
+	type: Boolean,
+	default: false
+  }); 
+   
+  game.settings.register(cModuleName, "useLightAdvantageSystem", {
 	scope: "world",
 	config: false,
 	type: Boolean,

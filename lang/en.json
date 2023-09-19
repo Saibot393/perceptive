@@ -187,6 +187,16 @@
 				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Dim-light,Bright-light , \"0,0\" for no modifiers)"
 			}, 
 			
+			"UseIlluminationPDCModifierforAP" : {
+				"name"					: "Use Illumination perception DC modifiers for active perception",
+				"descrp"				: "If active perception rolls should use the Illumination DC modifier for spotting"
+			},
+			
+			"IlluminationAPDCBehaviour" : {
+				"name"					: "Illumination perception behaviour",
+				"descrp"				: "Behaviour of perception rolls for different Light levels (Dim-light,Bright-light , \"=,=\" for default behaviour, valid key words: advantage, adv, +, normal, =, disadvantage, disadv, -)"
+			},
+			
 			"GMSpotconfirmDialog" : {
 				"name"					: "GM confirm Spotting",
 				"descrp"				: "If rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed"
