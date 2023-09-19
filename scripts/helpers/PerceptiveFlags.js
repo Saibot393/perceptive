@@ -172,6 +172,8 @@ class PerceptiveFlags {
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {} //returns the current light level modifier of pObject
 	
+	static getAPRollBehaviour(pObject, pVisionLevel = 0) {} //returns the current APRoll behaviour of pObject
+	
 	static StealthEffects(pToken, pRaw = false) {} //returns the stealth effects of pToken
 	
 	static OverrideWorldSEffects(pToken) {} //returns if this pTokens effects override the worlds effect
@@ -1078,6 +1080,14 @@ class PerceptiveFlags {
 		else {
 			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel));
 		}
+	}
+	
+	static getAPRollBehaviour(pObject, pVisionLevel = 0) {
+		if (pObject.documentName == "Wall") {
+			return "=";
+		}
+		
+		return VisionUtils.LightingAPDCBehaviour(VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel));
 	}
 	
 	static StealthEffects(pToken, pRaw = false) {

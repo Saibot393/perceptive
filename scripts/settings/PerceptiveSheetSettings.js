@@ -223,6 +223,8 @@ class PerceptiveSheetSettings {
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`);
 				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pValue :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
+				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${Translate("Titles.SpottingInfos.VisionLevel.name") + Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))}</p>`);
 			}			
 		}

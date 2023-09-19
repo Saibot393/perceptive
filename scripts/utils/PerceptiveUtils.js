@@ -9,7 +9,7 @@ const cPf2ConditionType = "condition"; //the item type of Pf2e conditions
 
 const cDelimiter = ";";
 
-const RollrepeatLevelKeywords = {
+const RollbehaviourKeywords = {
 	advantage : 1,
 	adv : 1,
 	AV : 1,
@@ -64,9 +64,11 @@ class PerceptiveUtils {
 	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
 	
 	//rolls
-	static RollrepeatLevel(pKeyword) {} //returns the Rollrepeat level associated with pKeyword (-1:disadvantage, 0:normal, 1:advantage)
+	static Rollbehaviour(pKeyword) {} //returns the Rollrepeat level associated with pKeyword (-1:disadvantage, 0:normal, 1:advantage)
 	
-	static RollrepeatLevelKeywordsList(pSingleString = false) {} //returns a list of valid keywords
+	static RollbehaviourKeywordsList(pSingleString = false) {} //returns a list of valid keywords
+	
+	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {} //applies roll behaviour(adv., normal, disadv.) to pRoll1 and pRoll2
 	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
@@ -233,17 +235,17 @@ class PerceptiveUtils {
 	}
 	
 	//rolls
-	static RollrepeatLevel(pKeyword) {
-		if (PerceptiveUtils.includes(pKeyword)) {
-			return RollrepeatLevelKeywords[pKeyword];
+	static Rollbehaviour(pKeyword) {
+		if (PerceptiveUtils.RollbehaviourKeywordsList(pKeyword)) {
+			return RollbehaviourKeywords[pKeyword];
 		}
 		else {
-			return 0;
+			return Number(pKeyword);
 		}
 	}
 	
-	static RollrepeatLevelKeywordsList(pSingleString = false) {
-		let vWords = Object.keys(RollrepeatLevelKeywords);
+	static RollbehaviourKeywordsList(pSingleString = false) {
+		let vWords = Object.keys(RollbehaviourKeywords);
 		
 		if (pSingleString) {
 			let vString = "";
@@ -260,6 +262,22 @@ class PerceptiveUtils {
 		}
 		else {
 			return vWords;
+		}
+	}
+	
+	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {
+		let vNumericalBehaviour = PerceptiveUtils.Rollbehaviour(pBehaviour);
+		
+		switch (vNumericalBehaviour) {
+			case -1:
+				return Math.min(pRoll1, pRoll2);
+				break;
+			case 1:
+				return Math.max(pRoll1, pRoll2);
+				break;
+			case 0:
+			default:
+				return pRoll1;
 		}
 	}
 	

@@ -51,6 +51,10 @@ class VisionUtils {
 	
 	static LightingPDCModifierToken(pToken, pVisionLevel = 0) {} //returns PDC modifier of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)
 	
+	static LightingAPDCBehaviour(pLightLevel, pVisionLevel = 0) {} //returns the APDC behaviour for pLightLevel (-1:disadvantage, 0:normal, 1:advantage)
+	
+	static LightingAPDCBehaviourObject(pToken, pVisionLevel = 0) {} //returns APDC behaviour of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)	
+	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
 		let vSpotables = [];
@@ -334,6 +338,16 @@ class VisionUtils {
 			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(VisionUtils.LightingLevel(pToken, pToken.parent), pVisionLevel));
 		}
 	}
+	
+	static LightingAPDCBehaviour(pLightLevel, pVisionLevel = 0) {
+		let vBehaviour = game.settings.get(cModuleName, "IlluminationAPDCBehaviour")[Math.max(0, VisionUtils.correctedLightLevel(pLightLevel, pVisionLevel)-1)];
+		
+		return vBehaviour;		
+	}
+	
+	static LightingAPDCBehaviourToken(pToken, pVisionLevel = 0) {
+		return VisionUtils.LightingAPDCBehaviour(VisionUtils.correctedLightLevel(VisionUtils.LightingLevel(pToken, pToken.parent), pVisionLevel));
+	}	
 }
 
 export { VisionUtils }

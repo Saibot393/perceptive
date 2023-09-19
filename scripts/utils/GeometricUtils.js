@@ -69,7 +69,7 @@ class GeometricUtils {
 	
 	static insceneSize(pToken) {} // returns the scene size of pTokens scene
 	
-	static insceneCenter(pToken) {} //returns the in scene center of pToken
+	static insceneCenter(pObject) {} //returns the in scene center of pToken
 	
 	//sort
 	static sortbymaxdim(pTokens) {} //sorts pTokens array by their largest dimensions, returns sorted array and array with their values
@@ -261,10 +261,18 @@ class GeometricUtils {
 		return FCore.sceneof(pToken).dimensions.size;
 	}
 	
-	static insceneCenter(pToken) {
-		let vCenter = {x: pToken.x + GeometricUtils.insceneWidth(pToken)/2, y: pToken.y + GeometricUtils.insceneHeight(pToken)/2};
+	static insceneCenter(pObject) {
+		if (pObject.documentName == "Token") {
+			let vCenter = {x: pObject.x + GeometricUtils.insceneWidth(pObject)/2, y: pObject.y + GeometricUtils.insceneHeight(pObject)/2};
+			
+			return vCenter;
+		}
 		
-		return vCenter;
+		if (pObject.documentName == "Wall") {
+			let vCenter = {x: (pObject.c[0] + pObjectc[2])/2, y: (pObject.c[1] + pObjectc[3])/2};
+			
+			return vCenter;			
+		}
 	}
 	
 	//sort

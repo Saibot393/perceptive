@@ -34,7 +34,7 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //handles a request for pSpotterIDs to spot pObjectIDs in pSceneID
 
-	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
 
 	static async resetStealthData(pObjects) {} //resets the stealth data of pObject, including removing effects
 	
@@ -155,7 +155,7 @@ class SpottingManager {
 	}
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
-		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= pInfos.APerceptionResult);
+		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= Math.max(pInfos.APerceptionResult, pInfos.SecondResult));
 
 		if (pInfos.sendingPlayer == game.user.id) {
 			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id));
@@ -194,13 +194,13 @@ class SpottingManager {
 		}
 	}
 
-	static PlayerMakeTempVisible(pPlayerID, pObjectIDs) {
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs) {
 		if (game.user.id == pPlayerID) {
 			let vSpotables = VisionUtils.spotablesinVision();
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 
-			SpottingManager.onNewlyVisible(vSpotables);
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => !vObject.object.visible || !vObject?.object?.doorControl?.visible));
 
 			VisionUtils.MaketempVisible(vSpotables);
 		}
@@ -321,11 +321,12 @@ class SpottingManager {
 											<input type="checkbox" id=${vTokens[i].id} checked>
 											<p>${vTokens[i].name}</p>
 											<img src="${vTokens[i].texture.src}" style = "height: 2em;">
+											<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)})}</p>
 										</div>`;
 			}
 		}
 		else {
-			vContent = vContent;// + "- <br>";
+			vContent = vContent + "-";// + "- <br>";
 		}
 
 		//vContent = vContent + "<br>"
@@ -360,7 +361,7 @@ class SpottingManager {
 				}
 			}
 			
-			if (vxyChange || vrotChange) {
+			if (vxyChange || vrotChange && game.settings.get(cModuleName, "useSpottingLightLevels")) {
 				//recheck illumination level of spotables if a token with light moves
 				if ((pToken.light.dim > 0) || (pToken.light.bright > 0)) {
 					let vSpottable = pToken.parent.tokens.filter(vToken => PerceptiveFlags.canbeSpotted(vToken));
@@ -422,19 +423,43 @@ class SpottingManager {
 
 		let vPerceptionResult = pRoll.total;
 		
-		console.log(vSpotables);
-
-		vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
+		//second roll for adv/disadv
+		let vSecondRoll = new Roll(pRoll.formula);
 		
-		console.log(vSpotables);
-
-		vSpotables = vSpotables.filter(vObject => (!vObject?.object?.visible || !vObject?.object?.doorControl?.visible));
+		await vSecondRoll.evaluate();
 		
-		console.log(vSpotables);
+		let vSecondResult = vSecondRoll.total;
+		
+		//prepare data
+		let vSpotted = [];
+		
+		let vRollBehaviours = [];
+		
+		let vCurrentRollbehaviour;
+		
+		let vResultBuffer;
+		
+		for (let i = 0; i < vSpotables.length; i++) {
+			vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
+			
+			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
+			
+			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vlastVisionLevel) <= vResultBuffer) {
+				vSpotted.push(vSpotables[i]);
+				
+				if (vSpotables[i].documentName == "Token"){
+					vRollBehaviours.push(vCurrentRollbehaviour);
+				}
+			}
+		}
+
+		//vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
+
+		//vSpotables = vSpotables.filter(vObject => (!vObject?.object?.visible || !vObject?.object?.doorControl?.visible));
 
 		//VisionUtils.MaketempVisible(vSpotables);
 
-		await SpottingManager.RequestSpotObjects(vSpotables, vRelevantTokens, {APerceptionResult : vPerceptionResult, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
+		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : Math.max(vPerceptionResult, vSecondResult), SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
