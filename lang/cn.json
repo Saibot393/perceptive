@@ -1,0 +1,380 @@
+{
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"				: "Perceptive",
+			"LockPeekSettings"			: "钥匙孔窥视设定",
+			"DoorMoveSettings"			: "开门设定",
+			"SpottingSettings"			: "察觉隐形设定",
+			"ClientSettings"			: "客户端设定",
+			"PeekLock"					: "窥视钥匙孔",
+			"Basic"						: "基础",
+			"SpottingInfos"	: {
+				"Title"					: "窥视资料",
+				"PP"					: "计算被动察觉: {pValue}",
+				"Spottedby"				: "被: {pNames}发现",
+				"LightModifier"			: "照明察觉DC修正值: {pValue}",
+				"VisionLevel" : {
+					"name"				: "视觉等级: ",
+					"value0"			: "基础视野",
+					"value1"			: "弱光视野",
+					"value2"			: "黑暗视野",
+					"value3"			: "黑暗视野（完全）"
+				},
+				"LightLevel" : {
+					"name"				: "照明等级:",
+					"value0"		    : "黑暗",
+					"value1"			: "弱光",
+					"value2"			: "明亮"
+				}
+			},
+			"SpottingConfirm" : {
+				"name"				: "确定发现",
+				"content"			: "玩家 <b>{pPlayer}</b> 在察觉鉴定上得到了 <b>{pResult}</b> 让 <b>{pSpotters}</b> 在场景 <b>{pScene}</b> 发现了 <b>{pDoors}</b> 扇密门和: <br>个隐形指示物"
+			},
+			"StartStealthing"			: "开始隐蔽",
+			"StopStealthing"			: "停止隐蔽"
+		},
+		
+		"Settings" : {
+			"InteractionDistance" : {
+				"name"					: "最大交互距离",
+				"descrp"				: "玩家与物件交互的最大距离（-1为无限）"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Arms Reach distance",
+				"descrp"				: "用 Arms Reach distance 来计算最大交互距离"
+			},
+			
+			"DFredsEffectsIntegration" : {
+				"name"					: "DFreds Convenient Effects ",
+				"descrp"				: "用 DFreds convenient effects"
+			},
+			
+			"Vision5eIntegration" : {
+				"name"					: "Vision 5e integration",
+				"descrp"				: "使用5E视觉模组规则"
+			},
+			
+			"StealthyIntegration" : {
+				"name"					: "Stealthy integration",
+				"descrp"				: "使用Stealthy模组规则，stealth DC会在Perceptive和Stealthy模组之间同步"
+			},
+			
+			"Peekablebydefault" : {
+				"name" 					: "默认锁孔可被窥视",
+				"descrp" 				: "默认锁孔是否可以被窥视"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "锁孔的基本大小",
+				"descrp" 				: "窥视锁孔时使用的标准间隙尺寸，相对于门的尺寸（0-1）"
+			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "窥视锁孔时的锁孔标准位置",
+				"descrp" 				: "窥视锁时使用的标准间隙位置，相对于门的尺寸（0-1）"
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "当指示物移动时停止窥视",
+				"descrp" 				: "指示物移动后，即使仍在交互距离内，也会立即停止锁定窥视"
+			}, 
+			
+			"DoorstandardMove" : {
+				"name" 					: "开门的基本模式",
+				"descrp" 				: "开门的基本模式",
+				"options" : {
+					"none"				: "原版 (直接打开)",
+					"swing"				: "摆门",
+					"slide"				: "滑动门"
+				}
+			}, 
+			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "禁止原版的开门模式",
+				"descrp" 				: "设定是否让摆门和滑动门模式的门依然可以用左键一键打开"
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "门铰链标准位置",
+				"descrp" 				: "设定门铰链的标准位置在哪",
+				"options" : {
+					"0"				: "左边",
+					"1"				: "右边",
+					"2"				: "中间"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "标准摆门速度",
+				"descrp" 				: "门的标准摆动速度，以度数为单位°"
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "标准的摆门可开门角度",
+				"descrp" 				: "门可以摆动的范围，以度数为单位° ({min}:{max} 留空为无限制)"
+			}, 			
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "标准的滑动门速度",
+				"descrp" 				: "门的标准滑动速度，相对于门的尺寸 (0-1)"
+			},
+			
+			"ActivateSpotting" : {
+				"name"					: "启用主动察觉隐形物体功能",
+				"descrp"				: "是否启用主动察觉功能（关闭能加强性能）"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "自动化发现指示物",
+				"descrp"				: "当隐形状态改变后可以被发现的指示物设定会自动被改变"
+			},
+			
+			"SimulatePlayerVision" : {
+				"name"					: "玩家视角",
+				"descrp"				: "决定GM是否使用与玩家一样的指示物察觉算式 (只适用于指示物)"
+			},
+			
+			"PassivePerceptionFormula" : {
+				"name"					: "被动察觉算式",
+				"descrp"				: "系统的被动察觉算式 (e.g. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", help can be found on the Github page of this module)"
+			},
+
+			"PerceptionKeyWord" : {
+				"name"					: "察觉关键词",
+				"descrp"				: "用来识别察觉鉴定的关键词 (a string present in the flavour text of perception rolls)"
+			}, 
+			
+			"StealthKeyWord" : {
+				"name"					: "隐蔽关键词",
+				"descrp"				: "用来识别隐蔽鉴定的关键词 (a string present in the flavour text of stealth rolls)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "自动隐蔽行为",
+				"descrp"				: "当进行隐蔽鉴定时应该发生什么",
+				"options" : {
+					"off"				: "什么都不发生",
+					"both"				: "设定主动和被动察觉DC",
+					"activeonly"		: "只设定主动察觉DC"
+				}
+			},
+			
+			"applySystemStealthEffect" : {
+				"name"					: "应用系统隐蔽效果",
+				"descrp"				: "当隐蔽鉴定后系统隐蔽效果应不应该应用"				
+			},
+			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "[试用性] 使用Perceptive模组的隐蔽",
+				"descrp"				: "是否使用Perceptive模组自己的隐蔽\"效果\""				
+			},
+			
+			"customStealthEffects" : {
+				"name"					: "自制隐蔽效果",
+				"descrp"				: "当指示物进行隐蔽鉴定时的额外效果 (Names or IDs, seperated with \";\")"				
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "当指示物移动重置被发现效果",
+				"descrp"				: "当主动察觉者移动是否重置一个隐蔽的指示物"
+			}, 
+			
+			"IlluminationPDCModifier" : {
+				"name"					: "照明察觉DC修正值",
+				"descrp"				: "适用于不同光照等级的察觉 DC 修正值 (Dim-light,Bright-light , \"0,0\" for no modifiers)"
+			}, 
+			
+			"GMSpotconfirmDialog" : {
+				"name"					: "GM确定发现",
+				"descrp"				: "是否在进行察觉鉴定后为GM创建一个对话框，让GM在对话框中对发现的情况进行确认。"
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "让被发现的指示物可见",
+				"descrp"				: "If actively or passively spotted tokens should be made visible"
+			}, 
+			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: "Force invert \"Ignore Roll\" key",
+				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Show Perceptive walls [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "跟随指示物",
+				"descrp" 				: "是否让画面跟随选择的指示物移动"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "移动门的控制Move door controls",
+				"descrp" 				: "是否让门的控制与墙一起移动"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "门的开门速度",
+				"descrp" 				: "Speed factor when moving doors with alt+mouse-wheel"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "照明指示点的位置",
+				"descrp" 				: "决定照明指示点应该在指示物HUD的哪里",
+				"options" : {
+					"none"				: "不存在",
+					"left"				: "左边",
+					"right"				: "右边"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "Spotting ping duration",
+				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "Invert \"Ignore Roll\" key",
+				"descrp" 				: "If rolls should only be recognised WHEN the set key is pressed"
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "隐蔽指示物的透明度",
+				"descrp" 				: "隐蔽指示物的透明度"
+			}			
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "窥视钥匙孔"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "把门推到左边"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "把门推到右边"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "启用跟随指示物"
+			},
+			
+			"IgnoreRoll" : {
+				"name" 					: "无视鉴定",
+				"descrp"				: "长按这个按键来阻止Perceptive把这个鉴定应用于隐蔽或者察觉鉴定里 (can be inverted)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "移除选择指示物的隐蔽",
+				"descrp"				: "移除选择指示物的隐蔽效果和信息"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "可以被窥视",
+				"descrp"				: "钥匙孔是否可以被玩家窥视"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "钥匙孔大小",
+				"descrp"				: "钥匙孔的大小，相对于门的尺寸 (0-1)"
+			},
+			
+			"LockPeekPositionFlag" : {
+				"name" 					: "钥匙孔位置",
+				"descrp"				: "钥匙孔的位置，相对于门的尺寸 (0-1)"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "门的打开模式",
+				"descrp"				: "决定门的打开模式",
+				"options" : {
+					"none"				: "原版 (normal door)",
+					"swing"				: "摆门",
+					"slide"				: "滑动门"
+				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "禁止原版开门模式",
+				"descrp"				: "决定是否让这扇门可以直接通过左键打开 (only moving doors)"
+			},
+			
+			"DoorHingePositionFlag" : {
+				"name" 					: "门铰链位置",
+				"descrp"				: "门铰链的所在位置",
+				"options" : {
+					"0"				: "左边",
+					"1"				: "右边",
+					"2"				: "中间"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "开门速度",
+				"descrp"				: "以角度为单位°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "可开门的角度",
+				"descrp"				: "可开门的角度，以角度为单位° (min-max)"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "滑动门速度",
+				"descrp"				: "滑动门开门的速度，相对于门的尺寸 (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "是否Perceptive隐蔽",
+				"descrp"				: "决定是否拥有Perceptive模组的隐蔽效果\"effect\""
+			},
+			
+			"canbeSpottedFlag" : {
+				"name" 					: "是否可被发现",
+				"descrp"				: "决定这扇门是否可以被察觉 (被动和主动)"
+			},
+			
+			"PPDCFlag" : {
+				"name" 					: "被动察觉 DC",
+				"descrp"				: "DC to be spotted with passive perception (-1 则为不可能)"
+			},
+			
+			"APDCFlag" : {
+				"name" 					: "主动察觉 DC",
+				"descrp"				: "DC to be spotted with ative perception (-1 则为不可能, 留空则和被动一样数值)"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "在指示物行动后重置被发现状态",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
+			},
+			
+			"StealthEffectsFlag" : {
+				"name"					: "隐蔽效果",
+				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
+			},
+			
+			"OverrideWorldSEffectsFlag" : {
+				"name"					: "覆盖世界隐蔽效果",
+				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "Bright darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered bright for this scene"
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "Dim darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered dim for this scene"
+			}
+		}
+	}
+}
