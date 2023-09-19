@@ -68,6 +68,8 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
 - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
+- Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
+- Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
 - GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
 - Reveal spotted tokens: to make spotted tokens visible to everyone
 - Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
