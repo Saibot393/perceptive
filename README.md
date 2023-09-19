@@ -126,7 +126,7 @@ The module should be compatible with all game systems and most modules on Foundr
 
 ### Languages:
 
-The module contains an English, a German and a Chinese (thanks to Thousand (_thousand @Discord)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
+The module contains an English, a German and a Chinese (thanks to Thousand (_thousand@Discord)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
 
 ---
 
