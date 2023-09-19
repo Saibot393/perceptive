@@ -252,6 +252,7 @@ class VisionUtils {
 	}
 	
 	static LightingLevel(pPoint, pScene = null) {
+		console.log("here");
 		//start value Darkness
 		let vLightningLevel = cLightLevel.Dark;
 		

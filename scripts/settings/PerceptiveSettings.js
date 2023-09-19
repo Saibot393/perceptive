@@ -290,6 +290,19 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 								 }
   }); 
   
+  game.settings.register(cModuleName, "IlluminationAPDCBehaviour", {
+	name: Translate("Settings.IlluminationAPDCBehaviour.name"),
+	hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
+	scope: "world",
+	config: true,
+	type: Array,
+	default: ["normal", "normal"],
+	onChange: async (pValues) => { 	if (game.user.isGM) {
+										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", pValues[0].split(",").map(vValue => vValue))}; //prepare data
+									}
+								 }
+  }); 
+  
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
 	name: Translate("Settings.GMSpotconfirmDialog.name"),
 	hint: Translate("Settings.GMSpotconfirmDialog.descrp"),

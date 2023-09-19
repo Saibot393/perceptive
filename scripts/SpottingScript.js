@@ -350,9 +350,24 @@ class SpottingManager {
 		}
 
 		if (game.user.isGM) {
-			if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
+			let vxyChange = pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y");
+			
+			let vrotChange = pchanges.hasOwnProperty("rotation");
+			
+			if (vxyChange) {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
 					PerceptiveFlags.clearSpottedby(pToken);
+				}
+			}
+			
+			if (vxyChange || vrotChange) {
+				//recheck illumination level of spotables if a token with light moves
+				if ((pToken.light.dim > 0) || (pToken.light.bright > 0)) {
+					let vSpottable = pToken.parent.tokens.filter(vToken => PerceptiveFlags.canbeSpotted(vToken));
+					
+					for (let i = 0; i < vSpottable.length; i++) {
+						PerceptiveFlags.CheckLightLevel(vSpottable[i]);
+					}
 				}
 			}
 		}

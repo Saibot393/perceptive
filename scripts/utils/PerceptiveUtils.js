@@ -9,6 +9,21 @@ const cPf2ConditionType = "condition"; //the item type of Pf2e conditions
 
 const cDelimiter = ";";
 
+const RollrepeatLevelKeywords = {
+	advantage : 1,
+	adv : 1,
+	AV : 1,
+	"+" : 1,
+	normal : 0,
+	norm : 0,
+	NM : 0,
+	"=" : 0,
+	disadvantage : -1,
+	disadv : -1,
+	DA : -1,
+	"-" : -1
+}
+
 //a few support functions
 class PerceptiveUtils {
 	//DECLARATIONS
@@ -47,6 +62,11 @@ class PerceptiveUtils {
 	static hoveredToken() {} //get first hovered token
 	
 	static PrimaryCharacter() {} //returns the first selected token document if available or the default character document
+	
+	//rolls
+	static RollrepeatLevel(pKeyword) {} //returns the Rollrepeat level associated with pKeyword (-1:disadvantage, 0:normal, 1:advantage)
+	
+	static RollrepeatLevelKeywordsList(pSingleString = false) {} //returns a list of valid keywords
 	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
@@ -171,17 +191,6 @@ class PerceptiveUtils {
 		}
 	}
 	
-	static PrimaryCharacter() {
-		let vCharacter = LnKutils.selectedTokens()[0];
-		
-		if ((!vCharacter || !vCharacter.isOwner) && game.user.character) {
-			//select a token representing the standard character of the player
-			vCharacter = canvas.scene.tokens.find(vToken => vToken.actor.id == game.user.character.id);
-		}
-		
-		return vCharacter;
-	}
-	
 	static hoveredWall() {
 		if (canvas.walls.hover) {
 			return canvas.walls.hover.document;
@@ -221,6 +230,37 @@ class PerceptiveUtils {
 		}
 		
 		return vSelected;
+	}
+	
+	//rolls
+	static RollrepeatLevel(pKeyword) {
+		if (PerceptiveUtils.includes(pKeyword)) {
+			return RollrepeatLevelKeywords[pKeyword];
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	static RollrepeatLevelKeywordsList(pSingleString = false) {
+		let vWords = Object.keys(RollrepeatLevelKeywords);
+		
+		if (pSingleString) {
+			let vString = "";
+			
+			for (let i = 0; i < vWords.length; i++) {
+				vString = vString + vWords[i];
+				
+				if (i < vWords.length - 1) {
+					vString = vString + ", ";
+				}
+			}
+			
+			return vString;
+		}
+		else {
+			return vWords;
+		}
 	}
 	
 	static TokenNamesfromIDs(pIDs, pScene = null) {
