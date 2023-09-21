@@ -1,3 +1,6 @@
+## v1.7.5
+- Fixed compatibility issue with Levels thanks to help from [theripper93](https://github.com/theripper93)
+
 ## v1.7.4
 - Added world setting Use Illumination perception DC modifiers for active perception to enable the set modifiers ofr perception rolls
 - Added world setting Illumination perception behaviour to set advantage or disadvantage for active perception rolls dependent on illumination
