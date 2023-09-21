@@ -89,7 +89,7 @@ Hooks.once("init", () => {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
-		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if (IgnoreWall(pwall.document, options.source.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
+		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && IgnoreWall(pwall.document, options?.source?.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
 	}
 	
 	//compatibility exports
