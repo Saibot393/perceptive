@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -86,6 +86,10 @@ Hooks.once("init", () => {
 		Hooks.on("updateToken", (pToken, pchanges, pInfos) => {PerceptiveCompatibility.onTokenupdate(pToken, pchanges, pInfos)});
 		
 		Hooks.on("updateActiveEffect", (pEffect, pchanges, pInfos) => {PerceptiveCompatibility.onEffectupdate(pEffect, pchanges, pInfos)});
+	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
+		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if (IgnoreWall(pwall.document, options.source.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
 	}
 	
 	//compatibility exports
