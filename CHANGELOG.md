@@ -1,3 +1,8 @@
+## v1.7.4
+- Added world setting Use Illumination perception DC modifiers for active perception to enable the set modifiers ofr perception rolls
+- Added world setting Illumination perception behaviour to set advantage or disadvantage for active perception rolls dependent on illumination
+- Improved confirm spotting ui to include used roll behaviour per token
+
 ## v1.7.3
 - Added Chinese translation (thanks to Thousand (_thousand @Discord))
 
