@@ -1,3 +1,6 @@
+## v1.8.2
+- Fixed a bug that could occur when "init" is called twice
+
 ## v1.8.1
 - Fixed compatibility issue with Stealthy
 
