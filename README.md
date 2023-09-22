@@ -65,6 +65,8 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
 - Apply system stealth effect(s): to automatically apply the systems stealth effects
 - [EXPERIMENTAL!] Use Perceptive stealth: to activate this feature
+- Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
+- Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa 
 - Custom stealth effects: to automatically apply custom stealth effects
 - Reset spotted on token movement by default: to reset the spotters of moving tokens
 - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
@@ -100,6 +102,7 @@ The following informations will be displayed in the settings (if applicable):
 - Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
 - Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
 - Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
+- Show perception results: to show the result of own perception rolls in the chat
 - Stealthed token transparency: to change the transparency of spotted tokens
 
 ## General features:
