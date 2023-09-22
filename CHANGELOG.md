@@ -1,3 +1,8 @@
+## v1.8.0
+- Added world setting Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
+- Added world setting Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa
+- Added client setting Show perception results to show the result of own perception rolls in the chat
+
 ## v1.7.5
 - Fixed compatibility issue with Levels thanks to help from [theripper93](https://github.com/theripper93) (requires Levels v.4.2.2 or higher)
 
