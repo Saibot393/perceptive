@@ -1,3 +1,6 @@
+## v1.8.1
+- Fixed compatibility issue with Stealthy
+
 ## v1.8.0
 - Added world setting Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
 - Added world setting Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa
