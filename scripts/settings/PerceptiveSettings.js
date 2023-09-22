@@ -258,9 +258,9 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
-  game.settings.register(cModuleName, "PerceptiveStealthEffectFriendliesvisible", {
-	name: Translate("Settings.PerceptiveStealthEffectFriendliesvisible.name"),
-	hint: Translate("Settings.PerceptiveStealthEffectFriendliesvisible.descrp"),
+  game.settings.register(cModuleName, "PerceptiveStealthFriendliesvisible", {
+	name: Translate("Settings.PerceptiveStealthFriendliesvisible.name"),
+	hint: Translate("Settings.PerceptiveStealthFriendliesvisible.descrp"),
 	scope: "world",
 	config: !PerceptiveUtils.isPf2e(),
 	type: Boolean,
@@ -271,7 +271,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.syncEffectswithPerceptiveStealth.name"),
 	hint: Translate("Settings.syncEffectswithPerceptiveStealth.descrp"),
 	scope: "world",
-	config: !PerceptiveUtils.isPf2e(),
+	config: game.settings.get(cModuleName, "DFredsEffectsIntegration"),
 	type: Boolean,
 	default: false
   });   

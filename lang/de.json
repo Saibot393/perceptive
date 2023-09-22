@@ -36,6 +36,13 @@
 			"StopStealthing"			: "Aufdecken"
 		},
 		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "Du hast es geschafft <b>{pDoors}</b> geheime Türen and folgende Figuren aufzudecken:",
+				"unknown"				: "???"
+			}
+		},
+		
 		"Settings" : {
 			"InteractionDistance" : {
 				"name"					: "Maximale Interaktionsdistanz",
@@ -172,6 +179,16 @@
 				"descrp"				: "Ob Perceptives eigener Verstecken \"Effekt\" genutzt werden soll"				
 			},
 			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "Perceptive versteckte Verbündete sichtbar",
+				"descrp"				: "Verbündete Figuren sind sichtbar, selbst wenn sie durch Perceptive versteckt sind"				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Synchronisiere Perceptive versteckens Entfernung",
+				"descrp"				: "Wird der Perceptive verstecken effekt entfernt werden auch alle anderen Verstecken Effekte entfernt und anders herum"				
+			},
+			
 			"customStealthEffects" : {
 				"name"					: "Eigene Verstecken Effekte",
 				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\")"				
@@ -245,6 +262,11 @@
 			"SpottingPingDuration" : {
 				"name" 					: "Aufdecken Ping Dauer",
 				"descrp" 				: "Wie lange Objekte welche durch einen Wahrnehmungswurf aufgedeckt werden gepingt werden sollen (in Sekunden, 0 um die Pings auszuschalten)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "Zeihe Wahrnehmungs Resultat",
+				"descrp" 				: "Ob das Resultat von eigenen Wahrnehmungswürfen im Chat angezeigt werden soll"
 			},
 
 			"InvertIgnoreRollKey" : {

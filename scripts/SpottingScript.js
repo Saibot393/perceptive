@@ -683,7 +683,7 @@ Hooks.on("ready", function() {
 																															}
 																															else {
 																																if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) { //long long man
+																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 																																		return false;
 																																	}
 																																}
@@ -706,7 +706,7 @@ Hooks.on("ready", function() {
 				}
 				else {
 					if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) {
+						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
 							return false;
 						}
 					}

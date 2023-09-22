@@ -36,6 +36,13 @@
 			"StopStealthing"			: "停止隐蔽"
 		},
 		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "You were able to spot <b>{pDoors}</b> secret doors and these hidden tokens:",
+				"unknown"				: "???"
+			}
+		},
+		
 		"Settings" : {
 			"InteractionDistance" : {
 				"name"					: "最大交互距离",
@@ -172,6 +179,16 @@
 				"descrp"				: "是否使用Perceptive模组自己的隐蔽\"效果\""				
 			},
 			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "Perceptive stealthing friendlies visible",
+				"descrp"				: "Friendly tokens will be visible to other friendly tokens, even if they are perceptive stealthing"				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Sync perceptive stealth removel",
+				"descrp"				: "Removing perceptive stealth from a token will remove the set stealthing effects and vice versa"				
+			},
+			
 			"customStealthEffects" : {
 				"name"					: "自制隐蔽效果",
 				"descrp"				: "当指示物进行隐蔽鉴定时的额外效果 (Names or IDs, seperated with \";\")"				
@@ -245,6 +262,11 @@
 			"SpottingPingDuration" : {
 				"name" 					: "Spotting ping duration",
 				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "Show perception results",
+				"descrp" 				: "If the result of own perception rolls should be shown in the chat"
 			},
 
 			"InvertIgnoreRollKey" : {

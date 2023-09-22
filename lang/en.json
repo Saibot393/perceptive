@@ -179,6 +179,16 @@
 				"descrp"				: "If perceptives own stealth \"effect\" should be used"				
 			},
 			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "Perceptive stealthing friendlies visible",
+				"descrp"				: "Friendly tokens will be visible to other friendly tokens, even if they are perceptive stealthing"				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Sync Perceptive stealth removel",
+				"descrp"				: "Removing perceptive stealth from a token will remove the set stealthing effects and vice versa"				
+			},
+			
 			"customStealthEffects" : {
 				"name"					: "Custom stealth effects",
 				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\")"				
@@ -252,6 +262,11 @@
 			"SpottingPingDuration" : {
 				"name" 					: "Spotting ping duration",
 				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "Show perception results",
+				"descrp" 				: "If the result of own perception rolls should be shown in the chat"
 			},
 
 			"InvertIgnoreRollKey" : {
