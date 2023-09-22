@@ -171,7 +171,7 @@ class PeekingManager {
 }
 
 //Hooks
-Hooks.on("init", function() {
+Hooks.once("init", function() {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pwall, pbounds) {if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)){return false} return pWrapped(pwall, pbounds)}, "MIXED");
 	}

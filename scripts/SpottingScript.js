@@ -632,7 +632,7 @@ class SpottingManager {
 }
 
 //Hooks
-Hooks.on("ready", function() {
+Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
