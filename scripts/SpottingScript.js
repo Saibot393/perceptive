@@ -60,6 +60,8 @@ class SpottingManager {
 	static async onPerceptionRoll(pActor, pRoll) {} //called when a perception roll is rolled
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {} //called when a new object is revealed
+	
+	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 
 	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
 
@@ -302,7 +304,18 @@ class SpottingManager {
 				pHTML.find(`div[class="status-effects"]`).append(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`);
 			}
 			
-			pHTML.find(`i[data-action="${cModuleName}-Stealth"]`).click((pEvent) => {PerceptiveFlags.togglePerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))});
+			pHTML.find(`i[data-action="${cModuleName}-Stealth"]`).click(async (pEvent) => {	let vToken = PerceptiveUtils.TokenfromID(pToken._id);
+																							await PerceptiveFlags.togglePerceptiveStealthing(vToken);
+																							
+																							if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+																								if (PerceptiveFlags.isPerceptiveStealthing(vToken)) {
+																									//EffectManager.applyStealthEffects(vToken);
+																								}
+																								else {
+																									EffectManager.removeStealthEffects(vToken);
+																								}
+																							}
+																							});
 		}
 	}
 
@@ -479,6 +492,24 @@ class SpottingManager {
 		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
 			SpottingManager.RequestresetStealth(pObjects, {Spotted : true});
 		}
+		
+		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pPassivSpot)
+	}
+	
+	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
+		console.log(pEffect, pInfos, pUserID, pActor);
+		if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+			console.log(game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth"));
+			let vActiveScenes = game.scenes.filter(vScene => vScene.active);
+			
+			for (let i = 0; i < vActiveScenes.length; i++) {
+				let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+				
+				for (let j = 0; j < vrelevantTokens.length; j++) {
+					PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
+				}
+			}			
+		}
 	}
 
 	static async onStealthRoll(pActor, pRoll) {
@@ -621,8 +652,10 @@ Hooks.on("ready", function() {
 																																return true;
 																															}
 																															else {
-																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) { //long long man
-																																	return false;
+																																if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
+																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) { //long long man
+																																		return false;
+																																	}
 																																}
 																															}
 					
@@ -642,8 +675,10 @@ Hooks.on("ready", function() {
 					return true;
 				}
 				else {
-					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) {
-						return false;
+					if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
+						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) {
+							return false;
+						}
 					}
 				}
 
@@ -671,7 +706,9 @@ Hooks.on("ready", function() {
 
 		Hooks.on("initializeVisionSources", (...args) => {SpottingManager.initializeVisionSources(args)});
 
-		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args)); 
+		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args));
+
+		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor))
 	}
 });
 

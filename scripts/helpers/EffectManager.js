@@ -83,4 +83,8 @@ class EffectManager {
 	}
 }
 
+Hooks.on("deleteActiveEffect", (pEffect, pInfos, pUserID) => {if (PerceptiveCompUtils.isPercpetiveEffect(pEffect)) {Hooks.call(cModuleName + ".PerceptiveEffectdeletion", pEffect, pInfos, pUserID, pEffect.parent)}});
+
+Hooks.on("deleteItem", (pEffect, pInfos, pUserID) => {if (PerceptiveUtils.isPf2e() && PerceptiveFlags.isPerceptiveEffect(pEffect)) {Hooks.call(cModuleName + ".PerceptiveEffectdeletion", pEffect, pInfos, pUserID, pEffect.parent)}});
+
 export { EffectManager }

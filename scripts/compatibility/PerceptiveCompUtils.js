@@ -37,6 +37,8 @@ class PerceptiveCompUtils {
 	
 	static FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
+	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
+	
 	//IMPLEMENTATIONS
 	//basic
 	static isactiveModule(pModule) {
@@ -131,6 +133,10 @@ class PerceptiveCompUtils {
 		
 		return vNameIDs;
 	}
+	
+	static isPercpetiveEffect(pEffect) {
+		return pEffect.origin == cModuleName;
+	} 
 }
 
 export { PerceptiveCompUtils };
