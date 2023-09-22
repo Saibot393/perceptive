@@ -422,11 +422,11 @@ class SpottingManager {
 
 			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
 				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-					SpottingManager.onPerceptionRoll(vActorID, pMessage.roll);
+					SpottingManager.onPerceptionRoll(vActorID, pMessage.rolls[0]);
 				}
 
 				if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
-					SpottingManager.onStealthRoll(vActorID, pMessage.roll);
+					SpottingManager.onStealthRoll(vActorID, pMessage.rolls[0]);
 				}
 			}
 		}

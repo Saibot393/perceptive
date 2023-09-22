@@ -86,6 +86,10 @@ Hooks.once("init", () => {
 		Hooks.on("updateToken", (pToken, pchanges, pInfos) => {PerceptiveCompatibility.onTokenupdate(pToken, pchanges, pInfos)});
 		
 		Hooks.on("updateActiveEffect", (pEffect, pchanges, pInfos) => {PerceptiveCompatibility.onEffectupdate(pEffect, pchanges, pInfos)});
+		
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.ignore_conflicts(cModuleName, cStealthy, "DoorControl.prototype.isVisible");
+		}
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {

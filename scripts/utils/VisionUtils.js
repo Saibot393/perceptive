@@ -94,7 +94,7 @@ class VisionUtils {
 				
 				// Test each point for visibility
 				vinVision = points.some(p => {
-				  return canvas.effects.visibility.testVisibility(p) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
+				  return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
 				});				
 			}
 			
@@ -207,7 +207,7 @@ class VisionUtils {
 		const points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
 
 		return points.some(p => {
-			return canvas.effects.visibility.testVisibility(p);
+			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
 		});
 	}
 	
