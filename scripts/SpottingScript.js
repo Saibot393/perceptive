@@ -16,6 +16,7 @@ const cnotStealthIcon = "fa-solid fa-user";
 //bunch of variables for the sake of performance/simplicity
 var vlastPPvalue = 0;
 var vlastVisionLevel = 0;
+var vlastDisposition = 0;
 var vPingIgnoreVisionCycles = 2;
 
 class SpottingManager {
@@ -142,6 +143,7 @@ class SpottingManager {
 			}
 
 			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
+			vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
 		}
 		else {
 			vlastPPvalue = Infinity;
@@ -619,7 +621,7 @@ Hooks.on("ready", function() {
 																																return true;
 																															}
 																															else {
-																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length))) {
+																																if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) { //long long man
 																																	return false;
 																																}
 																															}
@@ -640,7 +642,7 @@ Hooks.on("ready", function() {
 					return true;
 				}
 				else {
-					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length))) {
+					if (PerceptiveFlags.isPerceptiveStealthing(this.document) && (!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthEffectFriendliesvisible"))) {
 						return false;
 					}
 				}
