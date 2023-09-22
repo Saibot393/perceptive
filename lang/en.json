@@ -36,6 +36,13 @@
 			"StopStealthing"			: "Stop stealthing"
 		},
 		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "You were able to spot <b>{pDoors}</b> secret doors and these hidden tokens:",
+				"unknown"				: "???"
+			}
+		},
+		
 		"Settings" : {
 			"InteractionDistance" : {
 				"name"					: "Maximum interaction distance",

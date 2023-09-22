@@ -19,6 +19,8 @@ var vlastVisionLevel = 0;
 var vlastDisposition = 0;
 var vPingIgnoreVisionCycles = 2;
 
+const cVisibleNameModes = [30, 50];
+
 class SpottingManager {
 	//DECLARATIONS
 	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
@@ -479,6 +481,9 @@ class SpottingManager {
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
+		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
+		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
+		
 		if (vPingIgnoreVisionCycles <= 0) {
 			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
 				for (let i = 0; i < pObjects.length; i++) {
@@ -493,19 +498,44 @@ class SpottingManager {
 			SpottingManager.RequestresetStealth(pObjects, {Spotted : true});
 		}
 		
+		if (!pPassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
+			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
+			
+			if (vTokens.length > 0) {
+			for (let i = 0; i < vTokens.length; i++) {
+				vContent = vContent + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
+				
+				if (vTokens[i].isOwner || (cVisibleNameModes.includes(vTokens[i].displayName))) {
+					vContent = vContent + 	`<p>${vTokens[i].name}</p>`;
+				}	
+				else {
+					vContent = vContent + 	`<p>${Translate("ChatMessage.SpottingReport.unknown")}</p>`;
+				}
+											
+				vContent = vContent	+   	`<img src="${vTokens[i].texture.src}" style = "height: 2em;">
+										 </div>`;
+			}
+			}
+			else {
+				vContent = vContent + "-";// + "- <br>";
+			}
+		
+			ChatMessage.create({user: game.user.id, 
+								content : vContent,
+								whisper : [game.user.id]});
+		}
+		
 		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pPassivSpot)
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
-		console.log(pEffect, pInfos, pUserID, pActor);
 		if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
-			console.log(game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth"));
 			let vActiveScenes = game.scenes.filter(vScene => vScene.active);
 			
 			for (let i = 0; i < vActiveScenes.length; i++) {
 				let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
 				
-				for (let j = 0; j < vrelevantTokens.length; j++) {
+				for (let j = 0; j < vrelevantTokens.length; j++) {				
 					PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
 				}
 			}			
