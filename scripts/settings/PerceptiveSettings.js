@@ -12,6 +12,16 @@ import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
   //general
+  game.settings.register(cModuleName, "SplitInteractionRanges", {
+	name: Translate("Settings.SplitInteractionRanges.name"),
+	hint: Translate("Settings.SplitInteractionRanges.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  }); 
+  
   game.settings.register(cModuleName, "InteractionDistance", {
 	name: Translate("Settings.InteractionDistance.name"),
 	hint: Translate("Settings.InteractionDistance.descrp"),
@@ -19,7 +29,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: true,
 	type: Number,
 	default: 10
-  });   
+  });  
   
   game.settings.register(cModuleName, "UseArmsreachDistance", {
 	name: Translate("Settings.UseArmsreachDistance.name"),
@@ -105,6 +115,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });
   
+  game.settings.register(cModuleName, "PeekingDistance", {
+	name: Translate("Settings.PeekingDistance.name"),
+	hint: Translate("Settings.PeekingDistance.descrp"),
+	scope: "world",
+	config: game.settings.get(cModuleName, "SplitInteractionRanges"),
+	type: Number,
+	default: 10
+  });
+  
   //door moving
   game.settings.register(cModuleName, "DoorstandardMove", {
 	name: Translate("Settings.DoorstandardMove.name"),
@@ -169,6 +188,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Number,
 	default: 0.05
   });    
+  
+  game.settings.register(cModuleName, "MovingDistance", {
+	name: Translate("Settings.MovingDistance.name"),
+	hint: Translate("Settings.MovingDistance.descrp"),
+	scope: "world",
+	config: game.settings.get(cModuleName, "SplitInteractionRanges"),
+	type: Number,
+	default: 10
+  });
   
   //spotting
   game.settings.register(cModuleName, "ActivateSpotting", {
@@ -340,7 +368,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.IlluminationAPDCBehaviour.name"),
 	hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
 	scope: "world",
-	config: !PerceptiveUtils.isPf2e(),
+	config: !game.settings.get(cModuleName, "UsePf2eRules"),
 	type: Array,
 	default: ["=", "="],
 	onChange: async (pValues) => { 	if (game.user.isGM) {

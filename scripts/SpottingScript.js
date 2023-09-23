@@ -400,7 +400,7 @@ class SpottingManager {
 				}
 			}
 			
-			if (game.setting.get(cModuleName, "UsePf2eRules") && game.setting.get(cModuleName, "AutoRerollAPDConMove")) {
+			if (game.settings.get(cModuleName, "UsePf2eRules") && game.settings.get(cModuleName, "AutoRerollAPDConMove")) {
 				if (vxyChange || velevationChange) {
 					let vInfos = {};
 					

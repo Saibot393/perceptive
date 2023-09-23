@@ -64,7 +64,7 @@ class DoorMovingManager {
 			}
 			else {
 				if (!game.paused) {
-					if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor))) {
+					if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor, "DoorMove"))) {
 						game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirection : pDirection, pSpeed : pSpeed}});
 					}
 				}

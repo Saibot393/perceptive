@@ -32,7 +32,7 @@ class PeekingManager {
 			await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
 			
 			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
-			vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor))
+			vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor, "LockPeek"))
 			
 			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
 			
@@ -161,7 +161,7 @@ class PeekingManager {
 		if (game.user.isGM) {
 			if (PerceptiveFlags.isLockpeeking(pToken)) {
 				if (pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y")) {
-					if (game.settings.get(cModuleName, "StopPeekonMove") || !WallUtils.isWithinRange(pToken, PerceptiveFlags.getLockpeekedWall(pToken))) {
+					if (game.settings.get(cModuleName, "StopPeekonMove") || !WallUtils.isWithinRange(pToken, PerceptiveFlags.getLockpeekedWall(pToken), "LockPeek")) {
 						PeekingManager.stopLockpeeking(pToken);
 					}
 				}

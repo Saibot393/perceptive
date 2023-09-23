@@ -31,7 +31,7 @@ class WallUtils {
 	
 	static async syncWallfromDoor(pDoor, pWall, pincludeposition = true) {} //synchs the setting of pWall to that of pDoor
 	
-	static isWithinRange(pToken, pWall, pRange = -1) {} //returns if pToken is within pRange of pWall (leave pRange at negative value to use setting range)
+	static isWithinRange(pToken, pWall, pMode = "default") {} //returns if pToken is within pRange of pWall (leave pRange at negative value to use setting range)
 	
 	//calculations
 	static cornerposition(pWallPosition) {} //returns the corners of pWallPosition
@@ -113,26 +113,38 @@ class WallUtils {
 		await pWall.update(vData, {PerceptiveChange : true});
 	}
 	
-	static isWithinRange(pToken, pWall, pRange = -1) {
-		if (pToken && pWall) {
-			let vRange = pRange;
-			
-			if (vRange < 0) {
-				if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
-					return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
-					//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
-				}
-				vRange = game.settings.get(cModuleName, "InteractionDistance");
+	static isWithinRange(pToken, pWall, pMode = "default") {
+		if (pToken && pWall) {		
+			if (game.settings.get(cModuleName, "UseArmsreachDistance") && (PerceptiveCompUtils.isactiveModule(cArmReach) || PerceptiveCompUtils.isactiveModule(cArmReachold))) {
+				return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
+				//return PerceptiveCompUtils.ARWithinDistance(pToken, pWall);
 			}
 			
-			if (vRange < 0) {
-				return true;
+			let vMode = pMode;
+			
+			if (!game.settings.get(cModuleName, "SplitInteractionRanges")) {
+				vMode = "default";
+			}
+			
+			let vRange;
+			
+			switch (vMode) {
+				case "LockPeek":
+					vRange = game.settings.get(cModuleName, "PeekingDistance");
+					break;	
+				case "DoorMove":
+					vRange = game.settings.get(cModuleName, "MovingDistance");
+					break;	
+				case "default":
+				default:
+					vRange = game.settings.get(cModuleName, "InteractionDistance");
+					break;
 			}
 			
 			let vTokenposition  = GeometricUtils.CenterPosition(pToken);
 			
 			let vWallposition  = GeometricUtils.CenterPositionWall(pWall);
-			
+	
 			return GeometricUtils.Distance(vTokenposition, vWallposition)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) <= vRange;
 		}
 		
