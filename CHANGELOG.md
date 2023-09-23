@@ -1,3 +1,6 @@
+## v1.8.4
+- Fixed bug that hid hidden doors from GMs
+
 ## v1.8.3
 - Fixed several bugs in regards to pinging of newly spotted objects and reporting the result of perception checks
 - Improved simulated player vision, hidden doors should now be correctly hidden
