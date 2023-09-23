@@ -4,7 +4,7 @@
   - The active perception DC will be calculated like this: stealth modifier + 10
   - Allows for the world setting Auto reroll sneaking stealth dc to be activated
     - The passive perception DC will be rerolled when a sneaking token moves
-    - Allows the passive perception DC 
+    - Allows the passive perception DC to be locked per token, preventing it from being rerolled
 
 ## v1.8.4
 - Fixed bug that hid hidden doors from GMs
