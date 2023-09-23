@@ -65,8 +65,7 @@ class EffectManager {
 				let vEffects = await pHider.actor.createEmbeddedDocuments("Item", vEffectDocuments);
 				
 				for (let i = 0; i < vEffects.length; i++) {
-					
-					await PerceptiveFlags.MarkasPerceptiveEffect(vEffects[i]);
+					await PerceptiveFlags.MarkasPerceptiveEffect(vEffects[i], pInfos.EffectInfos);
 				}
 			}
 			

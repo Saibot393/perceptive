@@ -49,6 +49,7 @@ const cPerceptiveStealthingF = "PerceptiveStealthingFlag"; //Flag that stores if
 const cLockAPDCF = "LockAPDCFlag"; //Flag to lock the APDC (only for Pf2e)
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
+const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
 export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockAPDCF}
 
@@ -194,9 +195,11 @@ class PerceptiveFlags {
 	static APDCLocked(pToken) {} //returns if the APDC if pToken is locked (only PF2e)
 	
 	//effects
-	static async MarkasPerceptiveEffect(pEffect) {} //marks pEffect as perceptive Effects
+	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
 	
 	static isPerceptiveEffect(pEffect) {} //returns if pEffect is perceptive effect
+	
+	static EffectInfos(pEffect) {} //returns the content of the pEffect info flag
 	
 	//support
 	static DoorMinMax(pSlide) {} //returns pSlide cut at interval [0,1]
@@ -1163,9 +1166,11 @@ class PerceptiveFlags {
 	}
 	
 	//effects
-	static async MarkasPerceptiveEffect(pEffect) {
+	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {
 		if (pEffect) {
-			pEffect.setFlag(cModuleName, cPerceptiveEffectF, true)
+			pEffect.setFlag(cModuleName, cPerceptiveEffectF, true);
+			
+			pEffect.setFlag(cModuleName, cEffectInfoF, pInfos);
 		}
 	}
 	
@@ -1177,6 +1182,16 @@ class PerceptiveFlags {
 		}
 		
 		return false;
+	}
+	
+	static EffectInfos(pEffect) {
+		let vFlag = this.#PerceptiveFlags(pEffect);
+		
+		if (vFlag.hasOwnProperty(cEffectInfoF)) {
+			return vFlag[cEffectInfoF];
+		}
+		
+		return {};
 	}
 	
 	//support

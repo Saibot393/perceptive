@@ -191,6 +191,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	requiresReload: true
   });   
   
+  game.settings.register(cModuleName, "AutoRerollAPDConMove", {
+	name: Translate("Settings.AutoRerollAPDConMove.name"),
+	hint: Translate("Settings.AutoRerollAPDConMove.descrp"),
+	scope: "world",
+	config: game.settings.get(cModuleName, "UsePf2eRules"),
+	type: Boolean,
+	default: true
+  });  
+  
   game.settings.register(cModuleName, "AutomateTokenSpottable", {
 	name: Translate("Settings.AutomateTokenSpottable.name"),
 	hint: Translate("Settings.AutomateTokenSpottable.descrp"),

@@ -37,6 +37,8 @@ class PerceptiveSystemUtils {
 	
 	static StealthDCPf2e(pActor) {} //returns the Stealth DC of pActor
 	
+	static StealthStatePf2e(pToken, pInfos = {}) {} //returns the stealth state of pToken (none, hide, sneak, both)
+	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
@@ -149,6 +151,38 @@ class PerceptiveSystemUtils {
 	
 	static StealthDCPf2e(pActor) {
 		return pActor?.system.skills.ste.dc;
+	}
+	
+	static StealthStatePf2e(pToken, pInfos = {}) {
+		let vRelevantEffects = pToken.actor.items.filter(vItem => vItem?.flags?.perceptive?.PerceptiveEffectFlag);
+		
+		let vhidden = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "hidden");
+		
+		pInfos["hideEffect"] = vhidden;
+		
+		let vundetected = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "undetected");
+		
+		pInfos["sneakEffect"] = vundetected;
+		
+		return [["none", "hide"], ["sneak", "both"]][Number(Boolean(vundetected))][Number(Boolean(vhidden))];
+		
+		/*
+		if (!vhidden && !vundetected) {
+			return "none";
+		}
+		
+		if (vhidden && !vundetected) {
+			return "hide"
+		}
+		
+		if (!vhidden && vundetected) {
+			return "sneak"
+		}
+		
+		if (vhidden && vundetected) {
+			return "both"
+		}
+		*/
 	}
 	
 	//system defaults

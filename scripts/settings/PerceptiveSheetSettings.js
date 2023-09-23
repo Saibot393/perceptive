@@ -186,13 +186,13 @@ class PerceptiveSheetSettings {
 				//standard settings
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 				
-				if (game.settings(cModuleName, "UsePf2eRules")) {
+				if (game.settings.get(cModuleName, "UsePf2eRules")) {
 					//lock APDC against move refreshes
 					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cLockAPDCF +".name"), 
 																	vhint : Translate("SheetSettings."+ cLockAPDCF +".descrp"), 
 																	vtype : "checkbox", 
-																	vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
-																	vflagname : cresetSpottedbyMoveF
+																	vvalue : PerceptiveFlags.APDCLocked(pApp.document), 
+																	vflagname : cLockAPDCF
 																	}, `div[data-tab="${cModuleName}"]`);					
 				}
 				
@@ -233,7 +233,7 @@ class PerceptiveSheetSettings {
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`);
 				
-				if (!game.settings(cModuleName, "UsePf2eRules")) {
+				if (!game.settings.get(cModuleName, "UsePf2eRules")) {
 					pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
 				}
 				

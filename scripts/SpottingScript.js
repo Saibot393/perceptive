@@ -57,7 +57,7 @@ class SpottingManager {
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //opens a spotting dialoge for the GM to accept spotting of certain spottables
 
 	//ons
-	static onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
+	static async onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
 	
 	static onTokenpreupdate(pToken, pchanges, pInfos) {}//called pre update token
 
@@ -369,7 +369,7 @@ class SpottingManager {
 	}
 
 	//ons
-	static onTokenupdate(pToken, pchanges, pInfos) {
+	static async onTokenupdate(pToken, pchanges, pInfos) {
 		if (pToken.isOwner && pToken.parent == canvas.scene) {
 			VisionUtils.PrepareSpotables();
 
@@ -380,6 +380,8 @@ class SpottingManager {
 			let vxyChange = pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y");
 			
 			let vrotChange = pchanges.hasOwnProperty("rotation");
+			
+			let velevationChange = pchanges.hasOwnProperty("elevation");
 			
 			if (vxyChange) {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
@@ -394,6 +396,28 @@ class SpottingManager {
 					
 					for (let i = 0; i < vSpottable.length; i++) {
 						PerceptiveFlags.CheckLightLevel(vSpottable[i]);
+					}
+				}
+			}
+			
+			if (game.setting.get(cModuleName, "UsePf2eRules") && game.setting.get(cModuleName, "AutoRerollAPDConMove")) {
+				if (vxyChange || velevationChange) {
+					let vInfos = {};
+					
+					let vFormula;
+					
+					if (PerceptiveSystemUtils.StealthStatePf2e(pToken, vInfos) == "sneak") {
+						if (vInfos.hasOwnProperty("sneakEffect")) {
+							vFormula = PerceptiveFlags.EffectInfos(vInfos.sneakEffect)?.RollFormula;
+							
+							if (vFormula) {
+								let vRoll = new Roll(vFormula);
+								
+								await vRoll.evaluate();
+								
+								PerceptiveFlags.setSpottingDCs(pToken, {PPDC: vRoll.total});
+							}
+						}
 					}
 				}
 			}
@@ -574,7 +598,7 @@ class SpottingManager {
 			
 			await PerceptiveFlags.MakeSpottable(vRelevantTokens[i]);
 
-			EffectManager.applyStealthEffects(vRelevantTokens[i], {Type : pType});
+			EffectManager.applyStealthEffects(vRelevantTokens[i], {Type : pType, EffectInfos : {RollFormula : pRoll.formula}});
 		}
 
 		vNewDCs.PPDC = vStealthResult;
