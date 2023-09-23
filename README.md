@@ -114,11 +114,11 @@ The following informations will be displayed in the settings (if applicable):
 ### Settings:
 
 #### World:
-- Maximum Interaction Distance: to limit the distance over which players can interact with doors
-- Show Perceptive walls [DEBUG]: to show the modules walls in the wall layer for debug purposes
 - Split interactions distances: to set different interactions distances for lock peeking and door moving
   - Allows for Lock peeking world setting Lock peeking distance to be set to limit the distance over which players can peek locks
   - Allows for Door moving world setting Door moving distance to be set to limit the distance over which players can move doors
+- Maximum Interaction Distance: to limit the distance over which players can interact with doors
+- Show Perceptive walls [DEBUG]: to show the modules walls in the wall layer for debug purposes
 
 ### Compatibility:
 
