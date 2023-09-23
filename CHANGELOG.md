@@ -1,3 +1,8 @@
+## v1.8.3
+- Fixed several bugs in regards to pinging of newly spotted objects and reporting the result of perception checks
+- Improved simulated player vision, hidden doors should now be correctly hidden
+- Perceptive wall should now be hidden the moment they are created (unless the DEBUG option is turned on)
+
 ## v1.8.2
 - Fixed a bug that could occur when "init" is called twice
 
