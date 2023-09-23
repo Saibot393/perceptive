@@ -14,9 +14,13 @@ const cStealthIcon = "fa-solid fa-user-ninja";
 const cnotStealthIcon = "fa-solid fa-user";
 
 //bunch of variables for the sake of performance/simplicity
-var vlastPPvalue = 0;
-var vlastVisionLevel = 0;
-var vlastDisposition = 0;
+var vLocalVisionData = {
+	vlastPPvalue : 0,
+	vlastVisionLevel : 0,
+	vlastDisposition : 0,
+	vSimulatePlayerVision : false
+}
+
 var vPingIgnoreVisionCycles = 2;
 
 const cVisibleNameModes = [30, 50];
@@ -83,7 +87,7 @@ class SpottingManager {
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue())) {
+		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue())) {
 			// Hide secret doors from players
 			let vWallObject = pDoorControl.wall;
 
@@ -119,7 +123,7 @@ class SpottingManager {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
 
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
 			// Otherwise, test visibility against current sight polygons
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
 			const tolerance = Math.min(pToken.w, pToken.h) / 4;
@@ -136,28 +140,32 @@ class SpottingManager {
 
 			let vBuffer;
 
-			vlastPPvalue = 0;
+			vLocalVisionData.vlastPPvalue = 0;
 
 			for (let i = 0; i < vTokens.length; i++) {
 				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
 
-				if (vBuffer > vlastPPvalue) {
-					vlastPPvalue = vBuffer;
+				if (vBuffer > vLocalVisionData.vlastPPvalue) {
+					vLocalVisionData.vlastPPvalue = vBuffer;
 				}
 			}
 
-			vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
-			vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
+			vLocalVisionData.vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
+			vLocalVisionData.vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
+			
+			if (game.user.isGM) {
+				vLocalVisionData.vSimulatePlayerVision = true;
+			}
 		}
 		else {
-			vlastPPvalue = Infinity;
+			vLocalVisionData.vlastPPvalue = Infinity;
 
-			vlastVisionLevel = 3;
+			vLocalVisionData.vlastVisionLevel = 3;
 		}
 	}
 
 	static lastPPvalue() {
-		return vlastPPvalue;
+		return vLocalVisionData.vlastPPvalue;
 	}
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
@@ -462,7 +470,7 @@ class SpottingManager {
 			
 			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
 			
-			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vlastVisionLevel) <= vResultBuffer) {
+			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel) <= vResultBuffer) {
 				vSpotted.push(vSpotables[i]);
 				
 				if (vSpotables[i].documentName == "Token"){
@@ -471,28 +479,23 @@ class SpottingManager {
 			}
 		}
 
-		//vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vlastVisionLevel) <= vPerceptionResult);
+		//vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vLocalVisionData.vlastVisionLevel) <= vPerceptionResult);
 
 		//vSpotables = vSpotables.filter(vObject => (!vObject?.object?.visible || !vObject?.object?.doorControl?.visible));
 
 		//VisionUtils.MaketempVisible(vSpotables);
 
-		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : vPerceptionResult, SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vlastVisionLevel, sendingPlayer : game.user.id});
+		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : vPerceptionResult, SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vLocalVisionData.vlastVisionLevel, sendingPlayer : game.user.id});
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
-		console.log(pObjects);
 		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
-		console.log(vPingIgnoreVisionCycles);
 		if ((vPingIgnoreVisionCycles <= 0) || (!pPassivSpot)) {
-			console.log("check1");
 			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
-				console.log("check2");
 				for (let i = 0; i < pObjects.length; i++) {
 					if (pObjects[i]?.object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
-						console.log("check3");
 						canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
 					}
 				}
@@ -628,7 +631,7 @@ class SpottingManager {
 		
 		let vSpottables = VisionUtils.spotablesinVision();
 		
-		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vlastVisionLevel, SpottingManager.lastPPvalue()));
+		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()));
 		
 		VisionUtils.MaketempVisible(vSpottables);
 		
@@ -652,7 +655,7 @@ Hooks.once("ready", function() {
 																												return true;
 																											}
 																											else {
-																												if (game.user.isGM && (this.wall.document.door == 2) && game.settings.get(cModuleName, "SimulatePlayerVision")) {
+																												if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision) {
 																													return false;
 																												}
 																											}
@@ -673,7 +676,7 @@ Hooks.once("ready", function() {
 					return true;
 				}
 				else {
-					if (game.user.isGM && (this.wall.document.door == 2) && game.settings.get(cModuleName, "SimulatePlayerVision")) {
+					if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision) {
 						return false;
 					}
 				}
@@ -698,7 +701,7 @@ Hooks.once("ready", function() {
 																															}
 																															else {
 																																if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && game.settings.get(cModuleName, "SimulatePlayerVision"))) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
+																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((this.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 																																		return false;
 																																	}
 																																}
@@ -721,7 +724,7 @@ Hooks.once("ready", function() {
 				}
 				else {
 					if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && game.settings.get(cModuleName, "SimulatePlayerVision"))) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
+						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((this.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
 							return false;
 						}
 					}
