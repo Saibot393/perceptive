@@ -57,6 +57,10 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
+- Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
+  - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
+  - Allows for the world setting Auto reroll sneaking stealth dc to be activated
+    - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
 - Automate token Can be spotted: to automatically manage the Can be spotted token setting
 - Player perspective: to allow GMs to only spot tokens players can spot
 - Passive perception formula: to set the formula used for passive perception (if not automated)
@@ -112,6 +116,9 @@ The following informations will be displayed in the settings (if applicable):
 #### World:
 - Maximum Interaction Distance: to limit the distance over which players can interact with doors
 - Show Perceptive walls [DEBUG]: to show the modules walls in the wall layer for debug purposes
+- Split interactions distances: to set different interactions distances for lock peeking and door moving
+  - Allows for Lock peeking world setting Lock peeking distance to be set to limit the distance over which players can peek locks
+  - Allows for Door moving world setting Door moving distance to be set to limit the distance over which players can move doors
 
 ### Compatibility:
 
