@@ -37,7 +37,7 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //handles a request for pSpotterIDs to spot pObjectIDs in pSceneID
 
-	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs) {} //call to let Player make the Objects temp visible
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pGMspotting = false) {} //call to let Player make the Objects temp visible
 
 	static async resetStealthData(pObjects) {} //resets the stealth data of pObject, including removing effects
 	
@@ -164,7 +164,7 @@ class SpottingManager {
 		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= Math.max(pInfos.APerceptionResult, pInfos.SecondResult));
 
 		if (pInfos.sendingPlayer == game.user.id) {
-			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id));
+			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id), true);
 		}
 		else {
 			game.socket.emit("module." + cModuleName, {pFunction : "PlayerMakeTempVisible", pData : {pPlayerID : pInfos.sendingPlayer, pObjectIDs : vSpottables.map(vObject => vObject.id)}})
@@ -199,13 +199,13 @@ class SpottingManager {
 		}
 	}
 
-	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs) {
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pGMspotting = false) {
 		if (game.user.id == pPlayerID) {
 			let vSpotables = VisionUtils.spotablesinVision();
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
-
-			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => !vObject.object.visible || !vObject?.object?.doorControl?.visible));
+			
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => (pGMspotting && game.user.isGM && !vObject?.object?.controlled) || !(vObject?.object?.visible || vObject?.object?.doorControl?.visible)));
 
 			VisionUtils.MaketempVisible(vSpotables);
 		}
@@ -481,13 +481,18 @@ class SpottingManager {
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
+		console.log(pObjects);
 		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
-		if (vPingIgnoreVisionCycles <= 0) {
+		console.log(vPingIgnoreVisionCycles);
+		if ((vPingIgnoreVisionCycles <= 0) || (!pPassivSpot)) {
+			console.log("check1");
 			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
+				console.log("check2");
 				for (let i = 0; i < pObjects.length; i++) {
 					if (pObjects[i]?.object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
+						console.log("check3");
 						canvas.ping(pObjects[i].object.center, {color : game.user.color, duration : game.settings.get(cModuleName, "SpottingPingDuration") * 1000});
 					}
 				}
@@ -646,6 +651,11 @@ Hooks.once("ready", function() {
 																												
 																												return true;
 																											}
+																											else {
+																												if (game.user.isGM && (this.wall.document.door == 2) && game.settings.get(cModuleName, "SimulatePlayerVision")) {
+																													return false;
+																												}
+																											}
 																											
 																											return vWrapped(args)}, "MIXED");
 		}
@@ -661,6 +671,11 @@ Hooks.once("ready", function() {
 					}
 																																
 					return true;
+				}
+				else {
+					if (game.user.isGM && (this.wall.document.door == 2) && game.settings.get(cModuleName, "SimulatePlayerVision")) {
+						return false;
+					}
 				}
 
 				let vDControlCallBuffer = vOldDControlCall.bind(this);
@@ -683,7 +698,7 @@ Hooks.once("ready", function() {
 																															}
 																															else {
 																																if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
+																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && game.settings.get(cModuleName, "SimulatePlayerVision"))) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 																																		return false;
 																																	}
 																																}
@@ -706,7 +721,7 @@ Hooks.once("ready", function() {
 				}
 				else {
 					if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length)) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
+						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && game.settings.get(cModuleName, "SimulatePlayerVision"))) && !((this.document.disposition == 1) && (vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
 							return false;
 						}
 					}
