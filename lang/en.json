@@ -411,7 +411,7 @@
 			},
 			
 			"LockPPDCFlag" : {
-				"name" 					: "Lock passive passive DC",
+				"name" 					: "Lock passive perception DC",
 				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
 			},
 			
