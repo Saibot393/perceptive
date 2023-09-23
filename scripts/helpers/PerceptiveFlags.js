@@ -46,12 +46,12 @@ const cOverrideWorldSEffectsF = "OverrideWorldSEffectsFlag"; //Flag to override 
 const cSceneBrightEndF = "SceneBrightEndFlag"; //flag that stores the scene darkness value after which a scene is no longer bright
 const cSceneDimEndF = "SceneDimEndFlag"; //flag that stores the scene darkness value after which a scene is no longer dim
 const cPerceptiveStealthingF = "PerceptiveStealthingFlag"; //Flag that stores if this token is perceptive stealthing
-const cLockAPDCF = "LockAPDCFlag"; //Flag to lock the APDC (only for Pf2e)
+const cLockPPDCF = "LockPPDCFlag"; //Flag to lock the PPDC (only for Pf2e)
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockAPDCF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -192,7 +192,7 @@ class PerceptiveFlags {
 	
 	static async setPerceptiveStealthing(pToken, pStealthing) {} //sets the perceptive stealthing of pToken
 	
-	static APDCLocked(pToken) {} //returns if the APDC if pToken is locked (only PF2e)
+	static PPDCLocked(pToken) {} //returns if the PPDC if pToken is locked (only PF2e)
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -579,13 +579,13 @@ class PerceptiveFlags {
 		return false; //default if anything fails
 	}
 	
-	static #LockAPDCFlag (pObject) { 
-	//returns content of LockAPDCFlag of object (boolean)
+	static #LockPPDCFlag (pObject) { 
+	//returns content of LockPPDCFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
 		
 		if (vFlag) {
-			if (vFlag.hasOwnProperty(cLockAPDCF)) {
-				return vFlag.LockAPDCFlag;
+			if (vFlag.hasOwnProperty(cLockPPDCF)) {
+				return vFlag.LockPPDCFlag;
 			}
 		}
 		
@@ -1161,8 +1161,8 @@ class PerceptiveFlags {
 		}
 	}
 	
-	static APDCLocked(pToken) {
-		return this.#LockAPDCFlag(pToken);
+	static PPDCLocked(pToken) {
+		return this.#LockPPDCFlag(pToken);
 	}
 	
 	//effects

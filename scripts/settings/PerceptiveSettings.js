@@ -219,9 +219,9 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	requiresReload: true
   });   
   
-  game.settings.register(cModuleName, "AutoRerollAPDConMove", {
-	name: Translate("Settings.AutoRerollAPDConMove.name"),
-	hint: Translate("Settings.AutoRerollAPDConMove.descrp"),
+  game.settings.register(cModuleName, "AutoRerollPPDConMove", {
+	name: Translate("Settings.AutoRerollPPDConMove.name"),
+	hint: Translate("Settings.AutoRerollPPDConMove.descrp"),
 	scope: "world",
 	config: game.settings.get(cModuleName, "UsePf2eRules"),
 	type: Boolean,

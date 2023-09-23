@@ -155,7 +155,7 @@
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
 			},
 			
-			"AutoRerollAPDConMove" : {
+			"AutoRerollPPDConMove" : {
 				"name"					: "Auto reroll sneaking stealth dc",
 				"descrp"				: "If the sneaking stealth dc should be rerolled when a token moves (can be locked per token)"
 			},
@@ -410,9 +410,9 @@
 				"descrp"				: "DC to be spotted with ative perception (-1 则为不可能, 留空则和被动一样数值)"
 			},
 				
-			"LockAPDCFlag" : {
-				"name" 					: "Lock active perception DC",
-				"descrp"				: "Prevent this tokens active perception DC from being rerolled on move"
+			"LockPPDCFlag" : {
+				"name" 					: "Lock passive perception DC",
+				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
 			},
 			
 			"resetSpottedbyMoveFlag" : {

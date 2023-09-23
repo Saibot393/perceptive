@@ -155,7 +155,7 @@
 				"descrp"				: "Ob die Pf2e Regeln genutzt werden sollen, einschließlich des Unterschiedes zwischen verstecken und schleichen"
 			},
 			
-			"AutoRerollAPDConMove" : {
+			"AutoRerollPPDConMove" : {
 				"name"					: "Automatisch den Schleichen SG neu würfeln",
 				"descrp"				: "Ob der schleichen SG bei Figur bewegungen neu gewürfelt werden soll (kann pro Figur gesperrt werden)"
 			},
@@ -410,9 +410,9 @@
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
 			},
 			
-			"LockAPDCFlag" : {
-				"name" 					: "Aktive Wahrnehmung SG sperren",
-				"descrp"				: "Um zu verhindern, dass der Aktive Wahrnehmung SG dieser Figur bei bewegung neu gewürfelt wird"
+			"LockPPDCFlag" : {
+				"name" 					: "Passive Wahrnehmung SG sperren",
+				"descrp"				: "Um zu verhindern, dass der Passive Wahrnehmung SG dieser Figur bei bewegung neu gewürfelt wird"
 			},
 			
 			"resetSpottedbyMoveFlag" : {
