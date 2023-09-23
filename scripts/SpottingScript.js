@@ -641,7 +641,7 @@ Hooks.once("ready", function() {
 																											
 																											if (SpottingManager.DControlSpottingVisible(this)){
 																												if (!vPrevVisible) {
-																													SpottingManager.onNewlyVisible([this.document], true);
+																													SpottingManager.onNewlyVisible([this.wall.document], true);
 																												}
 																												
 																												return true;
@@ -657,7 +657,7 @@ Hooks.once("ready", function() {
 				
 				if (SpottingManager.DControlSpottingVisible(this)) {
 					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.document], true);
+						SpottingManager.onNewlyVisible([this.wall.document], true);
 					}
 																																
 					return true;

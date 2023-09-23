@@ -25,3 +25,11 @@ Hooks.on("activateWallsLayer", () => {
 		}
 	}
 });
+
+Hooks.on("refreshWall", (pWall) => {
+	if (pWall.visible && (!game.settings.get(cModuleName, "showPerceptiveWalls"))) {
+		if (PerceptiveFlags.isPerceptiveWall(pWall.document)) {
+			pWall.visible = false;
+		}
+	}
+});

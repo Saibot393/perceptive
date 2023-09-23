@@ -87,6 +87,8 @@ class WallUtils {
 		
 		vSettings["renderable"] = pRenderable;
 		
+		vSettings["visible"] = game.settings.get(cModuleName, "showPerceptiveWalls");
+		
 		return await WallDocument.createDocuments([vSettings], {parent : pScene});
 	}
 	
