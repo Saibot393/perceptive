@@ -60,7 +60,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
   - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
   - Allows for the world setting Auto reroll sneaking stealth dc to be activated
-    - Allows the passive perception DC to be locked per token, preventing it from being rerolled
+    - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
 - Automate token Can be spotted: to automatically manage the Can be spotted token setting
 - Player perspective: to allow GMs to only spot tokens players can spot
 - Passive perception formula: to set the formula used for passive perception (if not automated)
