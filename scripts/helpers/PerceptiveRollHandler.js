@@ -24,8 +24,17 @@ class PerceptiveMouseHandler {
 					Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0]);
 				}
 
-				if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
-					Hooks.call(cModuleName + ".StealthRoll", vActorID, pMessage.rolls[0]);
+				if (!game.settings.get(cModuleName, "UsePf2eRules")) {
+					if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
+						Hooks.call(cModuleName + ".StealthRoll", vActorID, pMessage.rolls[0]);
+					}
+				}
+				else {
+					let vPf2eRollType = PerceptiveSystemUtils.Pf2eRollType(pMessage);
+					
+					if (["sneak", "hide"].includes(vPf2eRollType)) {
+						Hooks.call(cModuleName + ".StealthRollPf2e", vActorID, pMessage.rolls[0], vPf2eRollType);
+					}
 				}
 			}
 		}

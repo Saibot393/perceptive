@@ -12,7 +12,8 @@
 				"Title"					: "Aufdecken Infos",
 				"PP"					: "Berechnete passive Wahrnehmung: {pValue}",
 				"Spottedby"				: "Aufgedeckt von: {pNames}",
-				"LightModifier"			: "Wahrnehmungs DC Veränderung durch Lichtstufe: {pValue}",
+				"LightModifier"			: "Wahrnehmungs DC Veränderung durch Lichtstufe: {pValue}",	
+				"LightRollBehaviour"	: "Wahrnehmungs Wurfverhalten durch Lichtstufe: {pBehaviour}",
 				"VisionLevel" : {
 					"name"				: "Sicht Stufe: ",
 					"value0"			: "Normale Sicht",

@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockAPDCF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
@@ -186,32 +186,42 @@ class PerceptiveSheetSettings {
 				//standard settings
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 				
+				if (game.settings(cModuleName, "UsePf2eRules")) {
+					//lock APDC against move refreshes
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cLockAPDCF +".name"), 
+																	vhint : Translate("SheetSettings."+ cLockAPDCF +".descrp"), 
+																	vtype : "checkbox", 
+																	vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
+																	vflagname : cresetSpottedbyMoveF
+																	}, `div[data-tab="${cModuleName}"]`);					
+				}
+				
 				//reset spotted by on move
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cresetSpottedbyMoveF +".name"), 
-													vhint : Translate("SheetSettings."+ cresetSpottedbyMoveF +".descrp"), 
-													vtype : "checkbox", 
-													vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
-													vflagname : cresetSpottedbyMoveF
-													}, `div[data-tab="${cModuleName}"]`);
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cresetSpottedbyMoveF +".name"), 
+																vhint : Translate("SheetSettings."+ cresetSpottedbyMoveF +".descrp"), 
+																vtype : "checkbox", 
+																vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
+																vflagname : cresetSpottedbyMoveF
+																}, `div[data-tab="${cModuleName}"]`);
 								
 				if (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
 					//stealth effects
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
-														vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
-														vtype : "text", 
-														vwide : true,
-														vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
-														vflagname : cStealthEffectsF
-														}, `div[data-tab="${cModuleName}"]`);			
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
+																	vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
+																	vtype : "text", 
+																	vwide : true,
+																	vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
+																	vflagname : cStealthEffectsF
+																	}, `div[data-tab="${cModuleName}"]`);			
 
 					//stealth effects override
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".name"), 
-														vhint : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".descrp"), 
-														vtype : "checkbox", 
-														vwide : true,
-														vvalue : PerceptiveFlags.OverrideWorldSEffects(pApp.document), 
-														vflagname : cOverrideWorldSEffectsF
-														}, `div[data-tab="${cModuleName}"]`);
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".name"), 
+																	vhint : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".descrp"), 
+																	vtype : "checkbox", 
+																	vwide : true,
+																	vvalue : PerceptiveFlags.OverrideWorldSEffects(pApp.document), 
+																	vflagname : cOverrideWorldSEffectsF
+																	}, `div[data-tab="${cModuleName}"]`);
 				}
 								
 				//infos 
@@ -223,7 +233,9 @@ class PerceptiveSheetSettings {
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`);
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pValue :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
+				if (!game.settings(cModuleName, "UsePf2eRules")) {
+					pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
+				}
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${Translate("Titles.SpottingInfos.VisionLevel.name") + Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))}</p>`);
 			}			

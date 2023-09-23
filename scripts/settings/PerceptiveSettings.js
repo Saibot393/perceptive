@@ -181,6 +181,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	requiresReload: true
   });   
   
+  game.settings.register(cModuleName, "UsePf2eRules", {
+	name: Translate("Settings.UsePf2eRules.name"),
+	hint: Translate("Settings.UsePf2eRules.descrp"),
+	scope: "world",
+	config: PerceptiveUtils.isPf2e(),
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  });   
+  
   game.settings.register(cModuleName, "AutomateTokenSpottable", {
 	name: Translate("Settings.AutomateTokenSpottable.name"),
 	hint: Translate("Settings.AutomateTokenSpottable.descrp"),
@@ -230,7 +240,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.AutoStealthDCbehaviour.name"),
 	hint: Translate("Settings.AutoStealthDCbehaviour.descrp"),
 	scope: "world",
-	config: true,
+	config: !game.settings.get(cModuleName, "UsePf2eRules"),
 	type: String,
 	choices: {
 		"off" : Translate("Settings.AutoStealthDCbehaviour.options." + "off"),
@@ -244,7 +254,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.applySystemStealthEffect.name"),
 	hint: Translate("Settings.applySystemStealthEffect.descrp"),
 	scope: "world",
-	config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+	config: (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) && (!game.settings.get(cModuleName, "UsePf2eRules")),
 	type: Boolean,
 	default: false
   });   
@@ -321,7 +331,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.IlluminationAPDCBehaviour.name"),
 	hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
 	scope: "world",
-	config: true,
+	config: !PerceptiveUtils.isPf2e(),
 	type: Array,
 	default: ["=", "="],
 	onChange: async (pValues) => { 	if (game.user.isGM) {

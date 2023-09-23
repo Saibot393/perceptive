@@ -13,6 +13,7 @@
 				"PP"					: "Calculated passive perception: {pValue}",
 				"Spottedby"				: "Spotted by: {pNames}",
 				"LightModifier"			: "Illumination perception DC modifier: {pValue}",
+				"LightRollBehaviour"	: "Illumination perception roll behaviour modifier: {pBehaviour}",
 				"VisionLevel" : {
 					"name"				: "Vision level: ",
 					"value0"			: "Basic sight",

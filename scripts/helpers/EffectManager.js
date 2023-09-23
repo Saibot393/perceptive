@@ -5,17 +5,18 @@ import { PerceptiveCompUtils, cDfredCE, cVision5e } from "../compatibility/Perce
 const cStealthEffectName = "Invisible"; //standard effect
 const cadvancedStealthEffectName = "Inaudible"; //necessry for some vision modules
 
-const cStealthPf2eEffectID = "Compendium.pf2e.conditionitems.Item.VRSef5y1LmL2Hkjf"; //Mounted effects of Pf2e system
+const cUndetectedPf2eEffectID = "Compendium.pf2e.conditionitems.Item.VRSef5y1LmL2Hkjf"; //normal stealth effects of Pf2e system
+const cHiddenPf2eEffectID = "Compendium.pf2e.conditionitems.Item.iU0fEDdBp3rXpTMC"//hide effect of Pf2e system
 
 class EffectManager {
 	
 	//DECLARATIONS
-	static applyStealthEffects(pHider) {} //gives the rider all pEffects
+	static applyStealthEffects(pHider, pInfos = {}) {} //gives the rider all pEffects
 	
 	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as Rideable effect
 	
 	//IMPLEMENTATION
-	static async applyStealthEffects(pHider) {
+	static async applyStealthEffects(pHider, pInfos = {}) {
 		let vEffectDocuments;
 		//Ridden Mounting Effects
 		let vEffectNames = [];
@@ -32,7 +33,20 @@ class EffectManager {
 				//Standard mounting effect
 				if (game.settings.get(cModuleName, "applySystemStealthEffect")) {
 					if (PerceptiveUtils.isPf2e()) {
-						vEffectNames.push(cStealthPf2eEffectID);
+						if (pInfos.hasOwnProperty("Type")) {
+							switch (pInfos.Type) {
+								case "hide" : 
+									vEffectNames.push(cHiddenPf2eEffectID);
+									break;
+								case "sneak" :
+									vEffectNames.push(cUndetectedPf2eEffectID);
+									break;
+									
+							}
+						}
+						else {
+							vEffectNames.push(cUndetectedPf2eEffectID);
+						}
 					}
 					
 					if (game.settings.get(cModuleName, "DFredsEffectsIntegration")) {

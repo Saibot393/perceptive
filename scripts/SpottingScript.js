@@ -70,6 +70,8 @@ class SpottingManager {
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 
 	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
+	
+	static async onStealthRollPf2e(pActor, pRoll, pType) {} //called when a pf2e stealth roll is rolled
 
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {} //called when a wall is updates
 
@@ -559,6 +561,31 @@ class SpottingManager {
 			}
 		}
 	}
+	
+	static async onStealthRollPf2e(pActor, pRoll, pType) {
+		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
+
+		let vNewDCs = {};
+
+		let vStealthResult = pRoll.total;
+		
+		for (let i = 0; i < vRelevantTokens.length; i++) {
+			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			
+			await PerceptiveFlags.MakeSpottable(vRelevantTokens[i]);
+
+			EffectManager.applyStealthEffects(vRelevantTokens[i], {Type : pType});
+		}
+
+		vNewDCs.PPDC = vStealthResult;
+		vNewDCs.APDC = PerceptiveSystemUtils.StealthDCPf2e(vRelevantTokens[0].actor); //al tokens should have the same actor
+		
+		console.log(vNewDCs);
+		
+		for (let i = 0; i < vRelevantTokens.length; i++) {
+			PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
+		}
+	}
 
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {
 		if (game.user.isGM) {
@@ -718,6 +745,8 @@ Hooks.once("ready", function() {
 		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll) => {SpottingManager.onPerceptionRoll(pActorID, pRoll)});
 		
 		Hooks.on(cModuleName + ".StealthRoll", (pActorID, pRoll) => {SpottingManager.onStealthRoll(pActorID, pRoll)});
+		
+		Hooks.on(cModuleName + ".StealthRollPf2e", (pActorID, pRoll, pType) => {SpottingManager.onStealthRollPf2e(pActorID, pRoll, pType)});
 
 		Hooks.on("updateWall", (pWall, pChanges, pInfos, pSender) => {SpottingManager.onWallUpdate(pWall, pChanges, pInfos, pSender)});
 

@@ -33,6 +33,10 @@ class PerceptiveSystemUtils {
 	
 	static canAutodetectPerceptionRolls() {} //returns if stealth rolls can be recognized in this system
 	
+	static Pf2eRollType(pMessage, pInfos) {} //returns the type of roll this Pf2e roll was
+	
+	static StealthDCPf2e(pActor) {} //returns the Stealth DC of pActor
+	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
@@ -125,6 +129,26 @@ class PerceptiveSystemUtils {
 				return false;
 				break;
 		}		
+	}
+	
+	static Pf2eRollType(pMessage, pInfos) {
+		let vContext = pMessage?.flags?.pf2e?.context;
+		
+		if (vContext) {
+			if (vContext.options.includes("action:hide")) {
+				return "hide";
+			}
+			
+			if (vContext.options.includes("action:sneak")) {
+				return "sneak";
+			}
+		}
+		
+		return;
+	}
+	
+	static StealthDCPf2e(pActor) {
+		return pActor?.system.skills.ste.dc;
 	}
 	
 	//system defaults

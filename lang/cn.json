@@ -13,6 +13,7 @@
 				"PP"					: "计算被动察觉: {pValue}",
 				"Spottedby"				: "被: {pNames}发现",
 				"LightModifier"			: "照明察觉DC修正值: {pValue}",
+				"LightRollBehaviour"	: "Illumination perception roll behaviour modifier: {pBehaviour}",
 				"VisionLevel" : {
 					"name"				: "视觉等级: ",
 					"value0"			: "基础视野",
