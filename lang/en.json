@@ -150,6 +150,11 @@
 				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
 			},
 			
+			"SpottingRange" : {
+				"name"					: "Spotting range",
+				"descrp"				: "Maximum range in which tokens and doors can be spotted"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"

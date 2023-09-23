@@ -18,7 +18,8 @@ var vLocalVisionData = {
 	vlastPPvalue : 0,
 	vlastVisionLevel : 0,
 	vlastDisposition : 0,
-	vSimulatePlayerVision : false
+	vSimulatePlayerVision : false,
+	vSpottingRange : Infinity
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -96,6 +97,12 @@ class SpottingManager {
 			if (vWallObject) {
 				const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
+				if (vLocalVisionData.vSpottingRange < Infinity) { //test for spotting range
+					if (!PerceptiveUtils.selectedTokens().find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, pDoorControl.center) <= vLocalVisionData.vSpottingRange)) {
+						//no token in spotting range
+						return false;
+					}
+				}
 
 				// Test two points which are perpendicular to the door midpoint
 				const ray = w.toRay();
@@ -127,6 +134,14 @@ class SpottingManager {
 
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
 			// Otherwise, test visibility against current sight polygons
+			
+			if (vLocalVisionData.vSpottingRange < Infinity) { //test for spotting range
+				if (!PerceptiveUtils.selectedTokens().find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, pToken.center) <= vLocalVisionData.vSpottingRange)) {
+					//no token in spotting range
+					return false;
+				}
+			}
+				
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
 			const tolerance = Math.min(pToken.w, pToken.h) / 4;
 			//return canvas.effects.visibility.testVisibility(pToken.center, {tolerance, object: pToken});
@@ -157,6 +172,13 @@ class SpottingManager {
 			
 			if (game.user.isGM) {
 				vLocalVisionData.vSimulatePlayerVision = true;
+			}
+			
+			if (game.settings.get(cModuleName, "SpottingRange") < 0) {
+				vLocalVisionData.vSpottingRange = Infinity;
+			}
+			else {
+				vLocalVisionData.vSpottingRange = game.settings.get(cModuleName, "SpottingRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
 		}
 		else {
@@ -472,10 +494,12 @@ class SpottingManager {
 			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
 			
 			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel) <= vResultBuffer) {
-				vSpotted.push(vSpotables[i]);
-				
-				if (vSpotables[i].documentName == "Token"){
-					vRollBehaviours.push(vCurrentRollbehaviour);
+				if ((vLocalVisionData.vSpottingRange >= Infinity) || vRelevantTokens.find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, vSpotables[i]) <= vLocalVisionData.vSpottingRange)) {			
+					vSpotted.push(vSpotables[i]);
+					
+					if (vSpotables[i].documentName == "Token"){
+						vRollBehaviours.push(vCurrentRollbehaviour);
+					}
 				}
 			}
 		}

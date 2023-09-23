@@ -150,6 +150,11 @@
 				"descrp"				: "Ob die Aufdecken Funktionalität aktiviert werden soll (ausstellen um Leistung zu verbessern)"
 			},
 			
+			"SpottingRange" : {
+				"name"					: "Aufdecken Reichweite",
+				"descrp"				: "Maximale Reichweite über welche Figuren und Türen aufgedeckt werden können"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Nutze Pf2e Regeln",
 				"descrp"				: "Ob die Pf2e Regeln genutzt werden sollen, einschließlich des Unterschiedes zwischen verstecken und schleichen"

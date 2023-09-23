@@ -149,6 +149,11 @@
 				"name"					: "启用主动察觉隐形物体功能",
 				"descrp"				: "是否启用主动察觉功能（关闭能加强性能）"
 			},
+					
+			"SpottingRange" : {
+				"name"					: "Spotting range",
+				"descrp"				: "Maximum range in which tokens and doors can be spotted"
+			},
 			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",

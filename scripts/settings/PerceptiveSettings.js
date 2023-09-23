@@ -207,7 +207,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Boolean,
 	default: true,
 	requiresReload: true
-  });   
+  });  
+
+  game.settings.register(cModuleName, "SpottingRange", {
+	name: Translate("Settings.SpottingRange.name"),
+	hint: Translate("Settings.SpottingRange.descrp"),
+	scope: "world",
+	config: true,
+	type: Number,
+	default: -1
+  });  
   
   game.settings.register(cModuleName, "UsePf2eRules", {
 	name: Translate("Settings.UsePf2eRules.name"),

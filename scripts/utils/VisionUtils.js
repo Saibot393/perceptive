@@ -197,7 +197,7 @@ class VisionUtils {
 		}
 	}
 	
-	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) { //adapted from foundry.js
+	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null}) { //adapted from foundry.js
 		// If no vision sources are present, the visibility is dependant of the type of user
 		if ( !canvas.effects.visionSources.some(s => s.active) ) return game.user.isGM;
 
