@@ -57,6 +57,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
+- Spotting range to limit the range in which tokens and doors can be spotted
 - Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
   - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
   - Allows for the world setting Auto reroll sneaking stealth dc to be activated
