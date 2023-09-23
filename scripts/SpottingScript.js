@@ -1,10 +1,10 @@
 import {PerceptiveUtils, cModuleName, Translate, TranslateandReplace} from "./utils/PerceptiveUtils.js";
 import {VisionUtils, cLightLevel} from "./utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "./utils/PerceptiveSystemUtils.js";
-import { GeometricUtils } from "./utils/GeometricUtils.js";
+import {GeometricUtils } from "./utils/GeometricUtils.js";
 import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
 import {EffectManager } from "./helpers/EffectManager.js";
-import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 
 const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
@@ -415,31 +415,6 @@ class SpottingManager {
 		}
 	}
 
-	static async onChatMessage(pMessage, pInfos, pSenderID) {
-		if (game.userId == pSenderID) {
-			let vActorID = "";
-
-			if (pMessage.actor) {
-				vActorID = pMessage.actor.id;
-			}
-			else {
-				if (pMessage.speaker) {
-					vActorID = pMessage.speaker.actor;
-				}
-			}
-
-			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
-				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-					SpottingManager.onPerceptionRoll(vActorID, pMessage.rolls[0]);
-				}
-
-				if (PerceptiveSystemUtils.isSystemStealthRoll(pMessage)) {
-					SpottingManager.onStealthRoll(vActorID, pMessage.rolls[0]);
-				}
-			}
-		}
-	}
-
 	static async onPerceptionRoll(pActor, pRoll) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
 
@@ -655,7 +630,7 @@ Hooks.once("ready", function() {
 																												return true;
 																											}
 																											else {
-																												if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision) {
+																												if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
 																													return false;
 																												}
 																											}
@@ -676,7 +651,7 @@ Hooks.once("ready", function() {
 					return true;
 				}
 				else {
-					if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision) {
+					if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
 						return false;
 					}
 				}
@@ -740,7 +715,9 @@ Hooks.once("ready", function() {
 		
 		Hooks.on("preUpdateToken", (...args) => {SpottingManager.onTokenpreupdate(...args)});
 
-		Hooks.on("createChatMessage", (pMessage, pInfos, pSenderID) => {SpottingManager.onChatMessage(pMessage, pInfos, pSenderID)});
+		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll) => {SpottingManager.onPerceptionRoll(pActorID, pRoll)});
+		
+		Hooks.on(cModuleName + ".StealthRoll", (pActorID, pRoll) => {SpottingManager.onStealthRoll(pActorID, pRoll)});
 
 		Hooks.on("updateWall", (pWall, pChanges, pInfos, pSender) => {SpottingManager.onWallUpdate(pWall, pChanges, pInfos, pSender)});
 

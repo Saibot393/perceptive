@@ -340,6 +340,11 @@ class PerceptiveSheetSettings {
 			vrange = pInfos.vrange;
 		} 
 		
+		let vlockedstate = "";
+		if (pInfos.hasOwnProperty("vlocked") && pInfos.vlocked) {
+			vlockedstate = "disabled";
+		}
+		
 		let vnewHTML = ``;
 		
 		if (pwithformgroup) {
@@ -374,23 +379,23 @@ class PerceptiveSheetSettings {
 				
 		switch (vtype){
 			case "number":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" step="${vstep}">`;
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" step="${vstep}" ${vlockedstate}>`;
 				break;
 			case "text":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}">`;
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" ${vlockedstate}>`;
 				break;
 				
 			case "checkbox":
 				if (vvalue) {
-					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} checked>`;
+					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} checked ${vlockedstate}>`;
 				}
 				else {
-					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID}>`;
+					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} ${vlockedstate}>`;
 				}
 				break;
 				
 			case "select":
-				vnewHTML = vnewHTML + `<select name="flags.${cModuleName}.${vflagname}">`;
+				vnewHTML = vnewHTML + `<select name="flags.${cModuleName}.${vflagname}" ${vlockedstate}>`;
 				
 				for (let i = 0; i < voptions.length; i++) {
 					if (voptions[i] == vvalue) {
@@ -404,12 +409,12 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `</select>`;
 				break;
 			case "range":
-				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}">
+				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}" ${vlockedstate}>
 										<span class="${vtype}-value">${vvalue}</span>`;
 				break;
 			case "numberpart":
 			case "numberinterval":
-				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}"><label>${vNumberSeperator}</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}">`;
+				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}" ${vlockedstate}><label>${vNumberSeperator}</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}" ${vlockedstate}>`;
 				break;
 		}
 			
