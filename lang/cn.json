@@ -152,7 +152,7 @@
 					
 			"SpottingRange" : {
 				"name"					: "Spotting range",
-				"descrp"				: "Maximum range in which tokens and doors can be spotted"
+				"descrp"				: "Maximum range in which tokens and doors can be spotted (-1 for unlimited)"
 			},
 			
 			"UsePf2eRules" : {

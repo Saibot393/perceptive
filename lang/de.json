@@ -152,7 +152,7 @@
 			
 			"SpottingRange" : {
 				"name"					: "Aufdecken Reichweite",
-				"descrp"				: "Maximale Reichweite über welche Figuren und Türen aufgedeckt werden können"
+				"descrp"				: "Maximale Reichweite über welche Figuren und Türen aufgedeckt werden können (-1 für unbeschränkt)"
 			},
 			
 			"UsePf2eRules" : {
