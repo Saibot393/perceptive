@@ -1,3 +1,11 @@
+## v1.9.0
+- Added wold setting Use Pf2e rules to activate Pf2e specific behaviour
+  - Differentiates between hiding and sneaking, using the appropiate Pf2e macros (keys will be added in a later version of this module later)
+  - The active perception DC will be calculated like this: stealth modifier + 10
+  - Allows for the world setting Auto reroll sneaking stealth dc to be activated
+    - The passive perception DC will be rerolled when a sneaking token moves
+    - Allows the passive perception DC to be locked per token, preventing it from being rerolled
+
 ## v1.8.4
 - Fixed bug that hid hidden doors from GMs
 
