@@ -45,6 +45,11 @@
 		},
 		
 		"Settings" : {
+			"SplitInteractionDistances" : {
+				"name"					: "Trenne Interaktionsdistanz",
+				"descrp"				: "Ob die Interaktionsdistanz for Schloss durchschauen und Tür bewegen getrennt sein soll"
+			},
+			
 			"InteractionDistance" : {
 				"name"					: "Maximale Interaktionsdistanz",
 				"descrp"				: "Maximale Distanz über welche Spieler mit Türen interagieren können (-1 für unbeschränkt)"
@@ -90,6 +95,11 @@
 				"descrp" 				: "Stops das Schloss-durchschauen von Figuren sobald sie sich bewegen, selbst wenn sie sich noch in der Interaktionsdistanz befinden"
 			}, 
 			
+			"PeekingDistance" : {
+				"name" 					: "Schloss-durchschauen Distanz",
+				"descrp" 				: "Maximale Distanz über welche Spieler Schlösser durchschauen können (-1 für unbeschränkt)"
+			}, 
+			
 			"DoorstandardMove" : {
 				"name" 					: "Standard Tür Bewegung",
 				"descrp" 				: "Die standard Bewegungsart von Türen",
@@ -130,9 +140,24 @@
 				"descrp" 				: "Die standard Tür Schiebe-Geschwindigkeit relativ zur Tür Größe (0-1)"
 			},
 			
+			"MovingDistance" : {
+				"name" 					: "Tür Bewegungs distanz",
+				"descrp" 				: "Maximale Distanz über welche Spieler Türen bewegen können (-1 für unbeschränkt)"
+			}, 
+			
 			"ActivateSpotting" : {
 				"name"					: "Aktiviere Aufdecken Funktionalität",
 				"descrp"				: "Ob die Aufdecken Funktionalität aktiviert werden soll (ausstellen um Leistung zu verbessern)"
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Nutze Pf2e Regeln",
+				"descrp"				: "Ob die Pf2e Regeln genutzt werden sollen, einschließlich des Unterschiedes zwischen verstecken und schleichen"
+			},
+			
+			"AutoRerollAPDConMove" : {
+				"name"					: "Automatisch den Schleichen SG neu würfeln",
+				"descrp"				: "Ob der schleichen SG bei Figur bewegungen neu gewürfelt werden soll (kann pro Figur gesperrt werden)"
 			},
 			
 			"AutomateTokenSpottable" : {
@@ -383,6 +408,11 @@
 			"APDCFlag" : {
 				"name" 					: "Aktive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			},
+			
+			"LockAPDCFlag" : {
+				"name" 					: "Aktive Wahrnehmung SG sperren",
+				"descrp"				: "Um zu verhindern, dass der Aktive Wahrnehmung SG dieser Figur bei bewegung neu gewürfelt wird"
 			},
 			
 			"resetSpottedbyMoveFlag" : {

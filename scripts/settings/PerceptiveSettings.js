@@ -12,9 +12,9 @@ import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
   //general
-  game.settings.register(cModuleName, "SplitInteractionRanges", {
-	name: Translate("Settings.SplitInteractionRanges.name"),
-	hint: Translate("Settings.SplitInteractionRanges.descrp"),
+  game.settings.register(cModuleName, "SplitInteractionDistances", {
+	name: Translate("Settings.SplitInteractionDistances.name"),
+	hint: Translate("Settings.SplitInteractionDistances.descrp"),
 	scope: "world",
 	config: true,
 	type: Boolean,
@@ -26,7 +26,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.InteractionDistance.name"),
 	hint: Translate("Settings.InteractionDistance.descrp"),
 	scope: "world",
-	config: true,
+	config: !game.settings.get(cModuleName, "SplitInteractionDistances"),
 	type: Number,
 	default: 10
   });  
@@ -119,7 +119,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.PeekingDistance.name"),
 	hint: Translate("Settings.PeekingDistance.descrp"),
 	scope: "world",
-	config: game.settings.get(cModuleName, "SplitInteractionRanges"),
+	config: game.settings.get(cModuleName, "SplitInteractionDistances"),
 	type: Number,
 	default: 10
   });
@@ -193,7 +193,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.MovingDistance.name"),
 	hint: Translate("Settings.MovingDistance.descrp"),
 	scope: "world",
-	config: game.settings.get(cModuleName, "SplitInteractionRanges"),
+	config: game.settings.get(cModuleName, "SplitInteractionDistances"),
 	type: Number,
 	default: 10
   });

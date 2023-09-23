@@ -122,7 +122,7 @@ class WallUtils {
 			
 			let vMode = pMode;
 			
-			if (!game.settings.get(cModuleName, "SplitInteractionRanges")) {
+			if (!game.settings.get(cModuleName, "SplitInteractionDistances")) {
 				vMode = "default";
 			}
 			

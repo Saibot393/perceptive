@@ -45,9 +45,14 @@
 		},
 		
 		"Settings" : {
+			"SplitInteractionDistances" : {
+				"name"					: "Split interactions distances",
+				"descrp"				: "If the interactions distances for lock peeking and door moving should be split"
+			},
+			
 			"InteractionDistance" : {
 				"name"					: "Maximum interaction distance",
-				"descrp"				: "Maximum distance over which player can interact with objects (-1 for unlimited)"
+				"descrp"				: "Maximum distance over which players can interact with objects (-1 for unlimited)"
 			},
 			
 			"UseArmsreachDistance" : {
@@ -90,6 +95,11 @@
 				"descrp" 				: "Stops tokens from lockpeeking as soon as they move, even if they are still within the interaction distance"
 			}, 
 			
+			"PeekingDistance" : {
+				"name" 					: "Lock peeking distance",
+				"descrp" 				: "Maximum distance over which players can peek locks (-1 for unlimited)"
+			}, 
+			
 			"DoorstandardMove" : {
 				"name" 					: "Door standard movement type",
 				"descrp" 				: "The standard movement type of doors",
@@ -130,9 +140,24 @@
 				"descrp" 				: "The standard slide speed of doors in parts of door size (0-1)"
 			},
 			
+			"MovingDistance" : {
+				"name" 					: "Door moving distance",
+				"descrp" 				: "Maximum distance over which players can move doors (-1 for unlimited)"
+			}, 
+			
 			"ActivateSpotting" : {
 				"name"					: "Activate Spot Invisible feature",
 				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Use Pf2e rules",
+				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
+			},
+			
+			"AutoRerollAPDConMove" : {
+				"name"					: "Auto reroll sneaking stealth dc",
+				"descrp"				: "If the sneaking stealth dc should be rerolled when a token moves (can be locked per token)"
 			},
 			
 			"AutomateTokenSpottable" : {
@@ -383,6 +408,11 @@
 			"APDCFlag" : {
 				"name" 					: "Active perception DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
+			},
+			
+			"LockAPDCFlag" : {
+				"name" 					: "Lock active perception DC",
+				"descrp"				: "Prevent this tokens active perception DC from being rerolled on move"
 			},
 			
 			"resetSpottedbyMoveFlag" : {

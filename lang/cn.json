@@ -44,7 +44,12 @@
 			}
 		},
 		
-		"Settings" : {
+		"Settings" : {	
+			"SplitInteractionDistances" : {
+				"name"					: "Split interactions distances",
+				"descrp"				: "If the interactions distances for lock peeking and door moving should be split"
+			},
+			
 			"InteractionDistance" : {
 				"name"					: "最大交互距离",
 				"descrp"				: "玩家与物件交互的最大距离（-1为无限）"
@@ -90,6 +95,11 @@
 				"descrp" 				: "指示物移动后，即使仍在交互距离内，也会立即停止锁定窥视"
 			}, 
 			
+			"PeekingDistance" : {
+				"name" 					: "Lock peeking distance",
+				"descrp" 				: "Maximum distance over which player can peek locks (-1 for unlimited)"
+			}, 
+			
 			"DoorstandardMove" : {
 				"name" 					: "开门的基本模式",
 				"descrp" 				: "开门的基本模式",
@@ -130,9 +140,24 @@
 				"descrp" 				: "门的标准滑动速度，相对于门的尺寸 (0-1)"
 			},
 			
+			"MovingDistance" : {
+				"name" 					: "Door moving distance",
+				"descrp" 				: "Maximum distance over which player can move doors (-1 for unlimited)"
+			},
+			
 			"ActivateSpotting" : {
 				"name"					: "启用主动察觉隐形物体功能",
 				"descrp"				: "是否启用主动察觉功能（关闭能加强性能）"
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Use Pf2e rules",
+				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
+			},
+			
+			"AutoRerollAPDConMove" : {
+				"name"					: "Auto reroll sneaking stealth dc",
+				"descrp"				: "If the sneaking stealth dc should be rerolled when a token moves (can be locked per token)"
 			},
 			
 			"AutomateTokenSpottable" : {
@@ -383,6 +408,11 @@
 			"APDCFlag" : {
 				"name" 					: "主动察觉 DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 则为不可能, 留空则和被动一样数值)"
+			},
+				
+			"LockAPDCFlag" : {
+				"name" 					: "Lock active perception DC",
+				"descrp"				: "Prevent this tokens active perception DC from being rerolled on move"
 			},
 			
 			"resetSpottedbyMoveFlag" : {

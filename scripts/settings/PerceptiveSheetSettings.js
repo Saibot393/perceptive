@@ -186,7 +186,7 @@ class PerceptiveSheetSettings {
 				//standard settings
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 				
-				if (game.settings.get(cModuleName, "UsePf2eRules")) {
+				if (game.settings.get(cModuleName, "UsePf2eRules") && game.settings.get(cModuleName, "AutoRerollAPDConMove")) {
 					//lock APDC against move refreshes
 					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cLockAPDCF +".name"), 
 																	vhint : Translate("SheetSettings."+ cLockAPDCF +".descrp"), 
