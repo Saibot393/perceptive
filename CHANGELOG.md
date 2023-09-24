@@ -1,4 +1,4 @@
-## v1.9.11
+## v1.9.3
 - The tab bar of token settings should be less likely to overflow when multiple modules add tabs
 
 ## v1.9.2
