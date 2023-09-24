@@ -306,6 +306,8 @@ class SpottingManager {
 		if (vButtonPosition != "none") {
 			let vIlluminationIcon;
 
+			await PerceptiveFlags.CheckLightLevel(PerceptiveUtils.TokenfromID(pToken._id)); //the given pToken is a bit of a dud, better recheck the real token
+			
 			switch (PerceptiveFlags.LightLevel(pToken)) {
 				case cLightLevel.Dark:
 					vIlluminationIcon = cIconDark;
@@ -317,8 +319,6 @@ class SpottingManager {
 					vIlluminationIcon = cIconBright;
 					break;
 			}
-
-			await PerceptiveFlags.CheckLightLevel(PerceptiveUtils.TokenfromID(pToken._id)); //the given pToken is a bit of a dud, better recheck the real token
 
 			let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-Illumination" title="${Translate("Titles.SpottingInfos.LightLevel.name") + " " + Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))}">
 									<i class="${vIlluminationIcon}"></i>
