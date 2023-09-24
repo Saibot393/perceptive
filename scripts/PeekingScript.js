@@ -127,6 +127,10 @@ class PeekingManager {
 	}
 	
 	static IgnoreWall(pWall, pToken) {
+		if (!pToken) {
+			return PerceptiveFlags.isLockpeekingWall(pWall);
+		}
+		
 		if (WallUtils.isDoor(pWall)) {
 			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken); //is a lock peeked door
 		}
