@@ -1,3 +1,6 @@
+## v1.9.5
+- Fixed bug when calculating the lighting level while global illumination was disabled
+
 ## v1.9.4
 - Fixed a few bugs with the spotting range
 - Added world setting Spotting cone range to set an additional cone shaped spotting range infront of tokens
