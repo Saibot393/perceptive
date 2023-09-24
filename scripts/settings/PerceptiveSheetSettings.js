@@ -25,6 +25,8 @@ class PerceptiveSheetSettings {
 	
 	static createHTMLOption(pInfos, pto, pwithformgroup = false) {} //creates new html "code"
 	
+	static FixSheetWindow(pHTML) {} //fixes the formating of pHTML sheet window
+	
 	//IMPLEMENTATIONS
 	
 	static WallSheetSettings(pApp, pHTML, pData) {
@@ -240,6 +242,8 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${Translate("Titles.SpottingInfos.VisionLevel.name") + Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))}</p>`);
 			}			
 		}
+		
+		PerceptiveSheetSettings.FixSheetWindow(pHTML);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -458,6 +462,20 @@ class PerceptiveSheetSettings {
 				
 				vSheetCallBuffer(args);
 			}
+		}		
+	}
+	
+	static FixSheetWindow(pHTML) {
+		let vNeededWidth = 0;
+
+		pHTML.find(`nav.sheet-tabs[data-group="main"]`).children().each(function() {
+			vNeededWidth = vNeededWidth + $(this).outerWidth() ;
+		});
+		
+		console.log(pHTML.find(`nav.sheet-tabs[data-group="main"]`).children());
+		
+		if (vNeededWidth > pHTML.width()) {
+			pHTML.width(vNeededWidth);
 		}		
 	}
 }
