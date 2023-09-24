@@ -1,3 +1,7 @@
+## v1.9.4
+- Fixed a few bugs with the spotting range
+- Added world setting Spotting cone range to set an additional cone shaped spotting range infront of tokens
+
 ## v1.9.3
 - The tab bar of token settings should be less likely to overflow when multiple modules add tabs
 
