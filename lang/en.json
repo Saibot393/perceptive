@@ -155,6 +155,11 @@
 				"descrp"				: "Maximum range in which tokens and doors can be spotted (-1 for unlimited)"
 			},
 			
+			"SpottingConeRange" : {
+				"name"					: "Spotting cone range",
+				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"

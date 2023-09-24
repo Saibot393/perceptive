@@ -218,6 +218,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: -1
   });  
   
+  game.settings.register(cModuleName, "SpottingConeRange", {
+	name: Translate("Settings.SpottingConeRange.name"),
+	hint: Translate("Settings.SpottingConeRange.descrp"),
+	scope: "world",
+	config: true,
+	type: Number,
+	default: 0
+  });  
+  
   game.settings.register(cModuleName, "UsePf2eRules", {
 	name: Translate("Settings.UsePf2eRules.name"),
 	hint: Translate("Settings.UsePf2eRules.descrp"),

@@ -13,13 +13,16 @@ const cIconBright = "fa-solid fa-circle";
 const cStealthIcon = "fa-solid fa-user-ninja";
 const cnotStealthIcon = "fa-solid fa-user";
 
+const cSpotConeAngle = 90; //in degrees
+
 //bunch of variables for the sake of performance/simplicity
 var vLocalVisionData = {
 	vlastPPvalue : 0,
 	vlastVisionLevel : 0,
 	vlastDisposition : 0,
 	vSimulatePlayerVision : false,
-	vSpottingRange : Infinity
+	vSpottingRange : Infinity,
+	vSpottingConeRange : 0
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -85,6 +88,9 @@ class SpottingManager {
 	static onCanvasReady(pCanvas) {} //called when a canvas is ready
 
 	static async initializeVisionSources(pData) {} //called when new vision sources are initialized
+	
+	//support
+	static inCurrentVisionRange(pSpotters, pObject) {} //returns if pObject is in vision range of one of pSpotters
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
@@ -97,11 +103,8 @@ class SpottingManager {
 			if (vWallObject) {
 				const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
-				if (vLocalVisionData.vSpottingRange < Infinity) { //test for spotting range
-					if (!PerceptiveUtils.selectedTokens().find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, pDoorControl.center) <= vLocalVisionData.vSpottingRange)) {
-						//no token in spotting range
-						return false;
-					}
+				if (!SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center)) {
+					return false;
 				}
 
 				// Test two points which are perpendicular to the door midpoint
@@ -134,12 +137,8 @@ class SpottingManager {
 
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
 			// Otherwise, test visibility against current sight polygons
-			
-			if (vLocalVisionData.vSpottingRange < Infinity) { //test for spotting range
-				if (!PerceptiveUtils.selectedTokens().find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, pToken.center) <= vLocalVisionData.vSpottingRange)) {
-					//no token in spotting range
-					return false;
-				}
+			if (!SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center)) {
+				return false;
 			}
 				
 			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
@@ -174,17 +173,28 @@ class SpottingManager {
 				vLocalVisionData.vSimulatePlayerVision = true;
 			}
 			
+			//burst
 			if (game.settings.get(cModuleName, "SpottingRange") < 0) {
 				vLocalVisionData.vSpottingRange = Infinity;
 			}
 			else {
 				vLocalVisionData.vSpottingRange = game.settings.get(cModuleName, "SpottingRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
+			
+			//cone
+			if (game.settings.get(cModuleName, "SpottingConeRange") < 0) {
+				vLocalVisionData.vSpottingConeRange = 0;
+			}
+			else {
+				vLocalVisionData.vSpottingConeRange = game.settings.get(cModuleName, "SpottingConeRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+			}
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
 
 			vLocalVisionData.vlastVisionLevel = 3;
+			
+			vLocalVisionData.vSpottingConeRange = Infinity;
 		}
 	}
 
@@ -494,7 +504,8 @@ class SpottingManager {
 			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
 			
 			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel) <= vResultBuffer) {
-				if ((vLocalVisionData.vSpottingRange >= Infinity) || vRelevantTokens.find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, vSpotables[i].object?.center) <= vLocalVisionData.vSpottingRange)) {			
+				
+				if (SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center)) {
 					vSpotted.push(vSpotables[i]);
 					
 					if (vSpotables[i].documentName == "Token"){
@@ -628,8 +639,6 @@ class SpottingManager {
 		vNewDCs.PPDC = vStealthResult;
 		vNewDCs.APDC = PerceptiveSystemUtils.StealthDCPf2e(vRelevantTokens[0].actor); //al tokens should have the same actor
 		
-		console.log(vNewDCs);
-		
 		for (let i = 0; i < vRelevantTokens.length; i++) {
 			PerceptiveFlags.setSpottingDCs(vRelevantTokens[i], vNewDCs);
 		}
@@ -686,6 +695,30 @@ class SpottingManager {
 		VisionUtils.MaketempVisible(vSpottables);
 		
 		vPingIgnoreVisionCycles = 1;
+	}
+	
+	//support
+	static inCurrentVisionRange(pSpotters, pPosition) {
+		if (vLocalVisionData.vSpottingRange >= Infinity) {
+			return true;
+		}
+		
+		return pSpotters.find((vSpotter) => {	//burst and cone range check				
+												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+												
+												if(vDistance <= vLocalVisionData.vSpottingRange) {
+													//is in burst
+													return true;
+												}
+												
+												if (vDistance < vLocalVisionData.vSpottingConeRange) {
+													//is in cone range, check angle
+													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
+													
+													return Math.abs(vAngleDiff) < cSpotConeAngle/2;
+												}
+												
+												return false;});
 	}
 }
 

@@ -21,6 +21,8 @@ class GeometricUtils {
 	//basics
 	static Rotated(pPosition, protation) {} //gives px, py rotated by protation[degrees]
 	
+	static NormalAngle(pDirection) {} //returns the angle of pDirection compared to [0, 1] (normal start vision angle)
+	
 	static CenterPosition(pToken) {} //returns the position of the Center of pToken
 	
 	static CenterPositionXY(pToken) {} //returns the center position of pToken
@@ -30,6 +32,8 @@ class GeometricUtils {
 	static NewCenterPosition(pDocument, pChanges) {} //returns the new position of the Center of pDocument (usefull for updates)
 	
 	static Difference(pPositionA, pPositionB) {} //returns the x and y differenc of pPositionA to pPositionB (x-y arrays)
+	
+	static Differencefromxy(pPositionA, pPositionB) {} //returns the x and y differenc of pPositionA to pPositionB (x-y arrays) (from x,y objects)
 	
 	static Summ(pPositionA, pPositionB) {} //returns the summ of both points
 	
@@ -97,12 +101,28 @@ class GeometricUtils {
 		return [Math.cos(cGradtoRad * protation) * pPosition[0] - Math.sin(cGradtoRad * protation) * pPosition[1], Math.sin(cGradtoRad * protation) * pPosition[0] + Math.cos(cGradtoRad * protation) * pPosition[1]];
 	}
 	
+	static NormalAngle(pDirection) {
+		let vBasicDirection = GeometricUtils.norm(pDirection);
+		
+		if (pDirection[0] < 0) {
+			return (Math.acos(vBasicDirection[1])) / cGradtoRad;
+		}
+		else {
+			return ((2*Math.PI) - Math.acos(vBasicDirection[1])) / cGradtoRad;
+		}
+	}
+	
 	static CenterPosition(pToken) {
-		return [pToken.x + GeometricUtils.insceneWidth(pToken)/2, pToken.y + GeometricUtils.insceneHeight(pToken)/2];
+		if (pToken.center) {
+			return [pToken.center.x, pToken.center.y];
+		}
+		else {
+			return [pToken.x + GeometricUtils.insceneWidth(pToken)/2, pToken.y + GeometricUtils.insceneHeight(pToken)/2];
+		}
 	} 
 	
 	static CenterPositionXY(pToken) {
-		return {x : pToken.position.x + pToken.w/2, y : pToken.position.y + pToken.h/2}
+		return {x : pToken.position.x + pToken.w/2, y : pToken.position.y + pToken.h/2};
 	}
 	
 	static CenterPositionWall(pWall) {
@@ -132,6 +152,10 @@ class GeometricUtils {
 	static Difference(pPositionA, pPositionB) {
 		return [pPositionA[0] - pPositionB[0], pPositionA[1] - pPositionB[1]];
 	} 
+	
+	static Differencefromxy(pPositionA, pPositionB) {
+		return [pPositionA.x - pPositionB.x, pPositionA.y - pPositionB.y];
+	}
 	
 	static Summ(pPositionA, pPositionB) {
 		return [pPositionA[0] + pPositionB[0], pPositionA[1] + pPositionB[1]];

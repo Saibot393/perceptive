@@ -155,6 +155,11 @@
 				"descrp"				: "Maximale Reichweite über welche Figuren und Türen aufgedeckt werden können (-1 für unbeschränkt)"
 			},
 			
+			"SpottingConeRange" : {
+				"name"					: "Aufdecken Kegel-Reichweite",
+				"descrp"				: "Eine zusätzliche Aufdeck Reichweite angewandt in einem 90° Kegel vor Figuren (0 um Leistung zu verbessern)"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Nutze Pf2e Regeln",
 				"descrp"				: "Ob die Pf2e Regeln genutzt werden sollen, einschließlich des Unterschiedes zwischen verstecken und schleichen"
