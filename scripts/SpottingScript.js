@@ -494,7 +494,7 @@ class SpottingManager {
 			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
 			
 			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel) <= vResultBuffer) {
-				if ((vLocalVisionData.vSpottingRange >= Infinity) || vRelevantTokens.find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, vSpotables[i]) <= vLocalVisionData.vSpottingRange)) {			
+				if ((vLocalVisionData.vSpottingRange >= Infinity) || vRelevantTokens.find(vSpotter => GeometricUtils.DistanceXY(vSpotter.center, vSpotables[i].object?.center) <= vLocalVisionData.vSpottingRange)) {			
 					vSpotted.push(vSpotables[i]);
 					
 					if (vSpotables[i].documentName == "Token"){
