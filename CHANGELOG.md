@@ -1,3 +1,6 @@
+## v1.9.2
+- Fixed bug that prevented secret doors from being actively spotted when a spotting range was set
+
 ## v1.9.1
 - Added world setting Spotting range to limit the range in which tokens and doors can be spotted
 
