@@ -265,11 +265,11 @@ class VisionUtils {
 		}
 		
 		if (vScene) {
-			if (vScene.darkness < PerceptiveFlags.SceneBrightEnd(vScene)/*cDimInterval[0]*/) {
+			if (vScene.globalLight && (vScene.darkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
 				vLightningLevel = cLightLevel.Bright;
 			}
 			else {
-				if (vScene.darkness < PerceptiveFlags.SceneDimEnd(vScene)/*cDimInterval[1]*/) {
+				if (vScene.globalLight && (vScene.darkness < PerceptiveFlags.SceneDimEnd(vScene))/*cDimInterval[1]*/) {
 					vLightningLevel = cLightLevel.Dim;
 				}
 				
