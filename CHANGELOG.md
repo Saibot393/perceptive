@@ -1,5 +1,8 @@
+## v1.9.3
+- The tab bar of token settings should be less likely to overflow when multiple modules add tabs
+
 ## v1.9.2
-- Fixed bug that prevented secret doors from being actively spotted when a spotting range was set
+- Fixed a bug that prevented secret doors from being actively spotted when a spotting range was set
 
 ## v1.9.1
 - Added world setting Spotting range to limit the range in which tokens and doors can be spotted
