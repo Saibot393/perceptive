@@ -1,3 +1,6 @@
+## v1.9.6
+- Fixed potential compatibility issue with Walled Templates
+
 ## v1.9.5
 - Fixed bug when calculating the lighting level while global illumination was disabled
 
