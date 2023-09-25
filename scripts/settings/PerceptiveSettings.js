@@ -208,24 +208,6 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false,
 	requiresReload: true
   });  
-
-  game.settings.register(cModuleName, "SpottingRange", {
-	name: Translate("Settings.SpottingRange.name"),
-	hint: Translate("Settings.SpottingRange.descrp"),
-	scope: "world",
-	config: true,
-	type: Number,
-	default: -1
-  });  
-  
-  game.settings.register(cModuleName, "SpottingConeRange", {
-	name: Translate("Settings.SpottingConeRange.name"),
-	hint: Translate("Settings.SpottingConeRange.descrp"),
-	scope: "world",
-	config: true,
-	type: Number,
-	default: 0
-  });  
   
   game.settings.register(cModuleName, "UsePf2eRules", {
 	name: Translate("Settings.UsePf2eRules.name"),
@@ -237,166 +219,222 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	onChange: async (pValue) => { if (pValue) {await game.settings.set(cModuleName, "applySystemStealthEffect", true);
 												await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="])}},
 	requiresReload: true
-  });   
-  
-  game.settings.register(cModuleName, "AutoRerollPPDConMove", {
-	name: Translate("Settings.AutoRerollPPDConMove.name"),
-	hint: Translate("Settings.AutoRerollPPDConMove.descrp"),
-	scope: "world",
-	config: game.settings.get(cModuleName, "UsePf2eRules"),
-	type: Boolean,
-	default: true
   });  
   
-  game.settings.register(cModuleName, "AutomateTokenSpottable", {
-	name: Translate("Settings.AutomateTokenSpottable.name"),
-	hint: Translate("Settings.AutomateTokenSpottable.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-  }); 
-  
-  game.settings.register(cModuleName, "SimulatePlayerVision", {
-	name: Translate("Settings.SimulatePlayerVision.name"),
-	hint: Translate("Settings.SimulatePlayerVision.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-  });
-  
-  game.settings.register(cModuleName, "PassivePerceptionFormula", {
-	name: Translate("Settings.PassivePerceptionFormula.name"),
-	hint: Translate("Settings.PassivePerceptionFormula.descrp"),
-	scope: "world",
-	config: !PerceptiveUtils.isPf2e(),
-	type: String,
-	default: PerceptiveSystemUtils.SystemdefaultPPformula()
-  }); 
-  
-  game.settings.register(cModuleName, "PerceptionKeyWord", {
-	name: Translate("Settings.PerceptionKeyWord.name"),
-	hint: Translate("Settings.PerceptionKeyWord.descrp"),
-	scope: "world",
-	config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls(),
-	type: String,
-	default: PerceptiveSystemUtils.SystemdefaultPerceptionKeyWord()
-  });  
-  
-  game.settings.register(cModuleName, "StealthKeyWord", {
-	name: Translate("Settings.StealthKeyWord.name"),
-	hint: Translate("Settings.StealthKeyWord.descrp"),
-	scope: "world",
-	config: !PerceptiveSystemUtils.canAutodetectStealthRolls(),
-	type: String,
-	default: PerceptiveSystemUtils.SystemdefaultStealthKeyWord()
-  });  
-  
-  game.settings.register(cModuleName, "AutoStealthDCbehaviour", {
-	name: Translate("Settings.AutoStealthDCbehaviour.name"),
-	hint: Translate("Settings.AutoStealthDCbehaviour.descrp"),
-	scope: "world",
-	config: !game.settings.get(cModuleName, "UsePf2eRules"),
-	type: String,
-	choices: {
-		"off" : Translate("Settings.AutoStealthDCbehaviour.options." + "off"),
-		"both" : Translate("Settings.AutoStealthDCbehaviour.options." + "both"),
-		"activeonly": Translate("Settings.AutoStealthDCbehaviour.options." + "activeonly")
-	},
-	default: "both"
-  });  
+	//gm ui and control
+	  game.settings.register(cModuleName, "SimulatePlayerVision", {
+		name: Translate("Settings.SimulatePlayerVision.name"),
+		hint: Translate("Settings.SimulatePlayerVision.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  });
+	  
+	  game.settings.register(cModuleName, "GMSpotconfirmDialogbehaviour", {
+		name: Translate("Settings.GMSpotconfirmDialogbehaviour.name"),
+		hint: Translate("Settings.GMSpotconfirmDialogbehaviour.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		choices: {
+			"off" : 		Translate("GMSpotconfirmDialogbehaviour.options.off"),
+			"playersonly" :	Translate("GMSpotconfirmDialogbehaviour.options.playersonly"),
+			"always" :		Translate("GMSpotconfirmDialogbehaviour.options.always")
+		},
+		default: false
+	  }); 
 
-  game.settings.register(cModuleName, "applySystemStealthEffect", {
-	name: Translate("Settings.applySystemStealthEffect.name"),
-	hint: Translate("Settings.applySystemStealthEffect.descrp"),
-	scope: "world",
-	config: (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) && (!game.settings.get(cModuleName, "UsePf2eRules")),
-	type: Boolean,
-	default: false
-  });   
+	  game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
+		name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
+		hint: Translate("Settings.ForceInvertIgnoreRollKey.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  });  	  
   
-  game.settings.register(cModuleName, "usePerceptiveStealthEffect", {
-	name: Translate("Settings.usePerceptiveStealthEffect.name"),
-	hint: Translate("Settings.usePerceptiveStealthEffect.descrp"),
-	scope: "world",
-	config: !PerceptiveUtils.isPf2e(),
-	type: Boolean,
-	default: false
-  }); 
+	//ranges
+	  game.settings.register(cModuleName, "SpottingRange", {
+		name: Translate("Settings.SpottingRange.name"),
+		hint: Translate("Settings.SpottingRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: -1
+	  });  
+	  
+	  game.settings.register(cModuleName, "SpottingConeRange", {
+		name: Translate("Settings.SpottingConeRange.name"),
+		hint: Translate("Settings.SpottingConeRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 0
+	  });   
   
-  game.settings.register(cModuleName, "PerceptiveStealthFriendliesvisible", {
-	name: Translate("Settings.PerceptiveStealthFriendliesvisible.name"),
-	hint: Translate("Settings.PerceptiveStealthFriendliesvisible.descrp"),
-	scope: "world",
-	config: !PerceptiveUtils.isPf2e(),
-	type: Boolean,
-	default: false
-  }); 
+	//automations
+	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
+		name: Translate("Settings.AutomateTokenSpottable.name"),
+		hint: Translate("Settings.AutomateTokenSpottable.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 
+	  
+	  game.settings.register(cModuleName, "AutoRerollPPDConMove", {
+		name: Translate("Settings.AutoRerollPPDConMove.name"),
+		hint: Translate("Settings.AutoRerollPPDConMove.descrp"),
+		scope: "world",
+		config: game.settings.get(cModuleName, "UsePf2eRules"),
+		type: Boolean,
+		default: true
+	  });  
+	  
+	  game.settings.register(cModuleName, "resetSpottedbyMovedefault", {
+		name: Translate("Settings.resetSpottedbyMovedefault.name"),
+		hint: Translate("Settings.resetSpottedbyMovedefault.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 
+
+	  game.settings.register(cModuleName, "MakeSpottedTokensVisible", {
+		name: Translate("Settings.MakeSpottedTokensVisible.name"),
+		hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 	  
+ 
+	//formulas
+	  game.settings.register(cModuleName, "PassivePerceptionFormula", {
+		name: Translate("Settings.PassivePerceptionFormula.name"),
+		hint: Translate("Settings.PassivePerceptionFormula.descrp"),
+		scope: "world",
+		config: !PerceptiveUtils.isPf2e(),
+		type: String,
+		default: PerceptiveSystemUtils.SystemdefaultPPformula()
+	  }); 
+	  
+	  game.settings.register(cModuleName, "PerceptionKeyWord", {
+		name: Translate("Settings.PerceptionKeyWord.name"),
+		hint: Translate("Settings.PerceptionKeyWord.descrp"),
+		scope: "world",
+		config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls(),
+		type: String,
+		default: PerceptiveSystemUtils.SystemdefaultPerceptionKeyWord()
+	  });  
+	  
+	  game.settings.register(cModuleName, "StealthKeyWord", {
+		name: Translate("Settings.StealthKeyWord.name"),
+		hint: Translate("Settings.StealthKeyWord.descrp"),
+		scope: "world",
+		config: !PerceptiveSystemUtils.canAutodetectStealthRolls(),
+		type: String,
+		default: PerceptiveSystemUtils.SystemdefaultStealthKeyWord()
+	  });  
+	  
+	  game.settings.register(cModuleName, "AutoStealthDCbehaviour", {
+		name: Translate("Settings.AutoStealthDCbehaviour.name"),
+		hint: Translate("Settings.AutoStealthDCbehaviour.descrp"),
+		scope: "world",
+		config: !game.settings.get(cModuleName, "UsePf2eRules"),
+		type: String,
+		choices: {
+			"off" : Translate("Settings.AutoStealthDCbehaviour.options." + "off"),
+			"both" : Translate("Settings.AutoStealthDCbehaviour.options." + "both"),
+			"activeonly": Translate("Settings.AutoStealthDCbehaviour.options." + "activeonly")
+		},
+		default: "both"
+	  });  
+
+	//effects
+	  game.settings.register(cModuleName, "applySystemStealthEffect", {
+		name: Translate("Settings.applySystemStealthEffect.name"),
+		hint: Translate("Settings.applySystemStealthEffect.descrp"),
+		scope: "world",
+		config: (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) && (!game.settings.get(cModuleName, "UsePf2eRules")),
+		type: Boolean,
+		default: false
+	  });   
+	  
+	  game.settings.register(cModuleName, "usePerceptiveStealthEffect", {
+		name: Translate("Settings.usePerceptiveStealthEffect.name"),
+		hint: Translate("Settings.usePerceptiveStealthEffect.descrp"),
+		scope: "world",
+		config: !PerceptiveUtils.isPf2e(),
+		type: Boolean,
+		default: false
+	  }); 
+	  
+	  game.settings.register(cModuleName, "PerceptiveStealthFriendliesvisible", {
+		name: Translate("Settings.PerceptiveStealthFriendliesvisible.name"),
+		hint: Translate("Settings.PerceptiveStealthFriendliesvisible.descrp"),
+		scope: "world",
+		config: !PerceptiveUtils.isPf2e(),
+		type: Boolean,
+		default: false
+	  }); 
+	  
+	  game.settings.register(cModuleName, "syncEffectswithPerceptiveStealth", {
+		name: Translate("Settings.syncEffectswithPerceptiveStealth.name"),
+		hint: Translate("Settings.syncEffectswithPerceptiveStealth.descrp"),
+		scope: "world",
+		config: game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+		type: Boolean,
+		default: false
+	  });   
+	  
+	  game.settings.register(cModuleName, "customStealthEffects", {
+		name: Translate("Settings.customStealthEffects.name"),
+		hint: Translate("Settings.customStealthEffects.descrp"),
+		scope: "world",
+		config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+		type: String,
+		default: ""
+	  });   
   
-  game.settings.register(cModuleName, "syncEffectswithPerceptiveStealth", {
-	name: Translate("Settings.syncEffectswithPerceptiveStealth.name"),
-	hint: Translate("Settings.syncEffectswithPerceptiveStealth.descrp"),
-	scope: "world",
-	config: game.settings.get(cModuleName, "DFredsEffectsIntegration"),
-	type: Boolean,
-	default: false
-  });   
-  
-  game.settings.register(cModuleName, "customStealthEffects", {
-	name: Translate("Settings.customStealthEffects.name"),
-	hint: Translate("Settings.customStealthEffects.descrp"),
-	scope: "world",
-	config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
-	type: String,
-	default: ""
-  });   
-  
-  game.settings.register(cModuleName, "resetSpottedbyMovedefault", {
-	name: Translate("Settings.resetSpottedbyMovedefault.name"),
-	hint: Translate("Settings.resetSpottedbyMovedefault.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-  });   
-  
-  game.settings.register(cModuleName, "IlluminationPDCModifier", {
-	name: Translate("Settings.IlluminationPDCModifier.name"),
-	hint: Translate("Settings.IlluminationPDCModifier.descrp"),
-	scope: "world",
-	config: true,
-	type: Array,
-	default: [0, 0],
-	onChange: async (pValues) => { 	if (game.user.isGM) {
-										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
-										await game.settings.set(cModuleName, "useSpottingLightLevels",  game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
-									}
-								 }
-  }); 
-  
-  game.settings.register(cModuleName, "UseIlluminationPDCModifierforAP", {
-	name: Translate("Settings.UseIlluminationPDCModifierforAP.name"),
-	hint: Translate("Settings.UseIlluminationPDCModifierforAP.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: true
-  }); 
-  
-  game.settings.register(cModuleName, "IlluminationAPDCBehaviour", {
-	name: Translate("Settings.IlluminationAPDCBehaviour.name"),
-	hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
-	scope: "world",
-	config: !game.settings.get(cModuleName, "UsePf2eRules"),
-	type: Array,
-	default: ["=", "="],
-	onChange: async (pValues) => { 	if (game.user.isGM) {
-										if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", pValues[0].split(",").map(vValue => vValue))}; //prepare data
-										await game.settings.set(cModuleName, "useLightAdvantageSystem",  game.settings.get(cModuleName, "IlluminationAPDCBehaviour").find(vValue => (PerceptiveUtils.Rollbehaviour(vValue) != 0) && !(isNaN(PerceptiveUtils.Rollbehaviour(vValue))))) //auto detect if feature is active
-									}
-								 }
-  }); 
+	//illumination
+	  game.settings.register(cModuleName, "IlluminationPDCModifier", {
+		name: Translate("Settings.IlluminationPDCModifier.name"),
+		hint: Translate("Settings.IlluminationPDCModifier.descrp"),
+		scope: "world",
+		config: true,
+		type: Array,
+		default: [0, 0],
+		onChange: async (pValues) => { 	if (game.user.isGM) {
+											if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
+											await game.settings.set(cModuleName, "useSpottingLightLevels",  game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
+										}
+									 }
+	  }); 
+	  
+	  game.settings.register(cModuleName, "UseIlluminationPDCModifierforAP", {
+		name: Translate("Settings.UseIlluminationPDCModifierforAP.name"),
+		hint: Translate("Settings.UseIlluminationPDCModifierforAP.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: true
+	  }); 
+	  
+	  game.settings.register(cModuleName, "IlluminationAPDCBehaviour", {
+		name: Translate("Settings.IlluminationAPDCBehaviour.name"),
+		hint: Translate("Settings.IlluminationAPDCBehaviour.descrp"),
+		scope: "world",
+		config: !game.settings.get(cModuleName, "UsePf2eRules"),
+		type: Array,
+		default: ["=", "="],
+		onChange: async (pValues) => { 	if (game.user.isGM) {
+											if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", pValues[0].split(",").map(vValue => vValue))}; //prepare data
+											await game.settings.set(cModuleName, "useLightAdvantageSystem",  game.settings.get(cModuleName, "IlluminationAPDCBehaviour").find(vValue => (PerceptiveUtils.Rollbehaviour(vValue) != 0) && !(isNaN(PerceptiveUtils.Rollbehaviour(vValue))))) //auto detect if feature is active
+										}
+									 }
+	  }); 
   
   /*
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
@@ -407,39 +445,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Boolean,
 	default: false
   }); 
-  */
-  
-   game.settings.register(cModuleName, "GMSpotconfirmDialogbehaviour", {
-	name: Translate("Settings.GMSpotconfirmDialogbehaviour.name"),
-	hint: Translate("Settings.GMSpotconfirmDialogbehaviour.descrp"),
-	scope: "world",
-	config: true,
-	type: String,
-	choices: {
-		"off" : 		Translate("GMSpotconfirmDialogbehaviour.options.off"),
-		"playersonly" :	Translate("GMSpotconfirmDialogbehaviour.options.playersonly"),
-		"always" :		Translate("GMSpotconfirmDialogbehaviour.options.always")
-	},
-	default: false
-  }); 
-
-  game.settings.register(cModuleName, "MakeSpottedTokensVisible", {
-	name: Translate("Settings.MakeSpottedTokensVisible.name"),
-	hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-  });    
-  
-  game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
-	name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
-	hint: Translate("Settings.ForceInvertIgnoreRollKey.descrp"),
-	scope: "world",
-	config: true,
-	type: Boolean,
-	default: false
-  });    
+  */   
   
   //some unexposed settings for automation
   game.settings.register(cModuleName, "useSpottingLightLevels", {
@@ -620,6 +626,21 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   */
 });
 
+function collapseContent(pHTML, pTitle, pIndentifiers) {
+	let vCollapse = `<details>
+						<summary>${Translate("Titles."+pTitle)}</summary>
+						<div content=${pTitle}>
+						</div>
+					</details>`;
+				
+	pHTML.find(pIndentifiers).first().closest(".form-group").before(vCollapse);
+	let vCollapsediv = pHTML.find(`div[content=${pTitle}]`);
+	
+	pHTML.find(pIndentifiers).each(function () {
+		vCollapsediv.append(this);
+	});
+}
+
 //Hooks
 Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 	//add a few titles	
@@ -647,5 +668,33 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 					<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
 		 
 		pHTML.find('input[name="' + cModuleName + '.followTokens"]').closest(".form-group").before(vnewHTML);	
+		
+		//collapses
+		collapseContent(pHTML, "GMuiandcontrol", 	`[data-setting-id="perceptive.SimulatePlayerVision"],
+													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
+													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"]`);
+		
+		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
+												[data-setting-id="perceptive.SpottingConeRange"]`);
+		
+		collapseContent(pHTML, "Automation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
+												[data-setting-id="perceptive.resetSpottedbyMovedefault"],
+												[data-setting-id="perceptive.AutomateTokenSpottable"],
+												[data-setting-id="perceptive.MakeSpottedTokensVisible"]`);
+
+		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
+											[data-setting-id="perceptive.PerceptionKeyWord"],
+											[data-setting-id="perceptive.StealthKeyWord"],
+											[data-setting-id="perceptive.AutoStealthDCbehaviour"]`);
+																										
+		collapseContent(pHTML, "Effects", 	`[data-setting-id="perceptive.applySystemStealthEffect"],
+											[data-setting-id="perceptive.usePerceptiveStealthEffect"],
+											[data-setting-id="perceptive.PerceptiveStealthFriendliesvisible"],
+											[data-setting-id="perceptive.syncEffectswithPerceptiveStealth"],
+											[data-setting-id="perceptive.customStealthEffects"]`);
+		
+		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
+												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
+												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
 	}
-});
+});   
