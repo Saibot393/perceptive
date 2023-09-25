@@ -1,3 +1,7 @@
+## v1.9.7
+- small bug fixes
+- added api for "isSpottedby"
+
 ## v1.9.6
 - Fixed potential compatibility issue with Walled Templates
 
