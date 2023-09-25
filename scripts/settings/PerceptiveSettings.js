@@ -234,7 +234,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: PerceptiveUtils.isPf2e(),
 	type: Boolean,
 	default: false,
-	onChange: async (pValues) => { if (pValues) {game.settings.set(cModuleName, "applySystemStealthEffect", true)}},
+	onChange: async (pValue) => { if (pValue) {await game.settings.set(cModuleName, "applySystemStealthEffect", true);
+												await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="])}},
 	requiresReload: true
   });   
   
@@ -397,6 +398,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 								 }
   }); 
   
+  /*
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
 	name: Translate("Settings.GMSpotconfirmDialog.name"),
 	hint: Translate("Settings.GMSpotconfirmDialog.descrp"),
@@ -404,7 +406,22 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: true,
 	type: Boolean,
 	default: false
-  });  
+  }); 
+  */
+  
+   game.settings.register(cModuleName, "GMSpotconfirmDialogbehaviour", {
+	name: Translate("Settings.GMSpotconfirmDialogbehaviour.name"),
+	hint: Translate("Settings.GMSpotconfirmDialogbehaviour.descrp"),
+	scope: "world",
+	config: true,
+	type: String,
+	choices: {
+		"off" : 		Translate("GMSpotconfirmDialogbehaviour.options.off"),
+		"playersonly" :	Translate("GMSpotconfirmDialogbehaviour.options.playersonly"),
+		"always" :		Translate("GMSpotconfirmDialogbehaviour.options.always")
+	},
+	default: false
+  }); 
 
   game.settings.register(cModuleName, "MakeSpottedTokensVisible", {
 	name: Translate("Settings.MakeSpottedTokensVisible.name"),

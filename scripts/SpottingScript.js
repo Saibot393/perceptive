@@ -222,19 +222,26 @@ class SpottingManager {
 	}
 
 	static async RequestSpotObjects(pObjects, pSpotters, pInfos) {
+		let vObjectIDs = {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))};
+		
 		if (game.user.isGM) {
-			await SpottingManager.SpotObjectsGM(pObjects, pSpotters, pInfos);
+			if (["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour"))) {
+				SpottingManager.openSpottingDialoge(vObjectIDs, PerceptiveUtils.IDsfromTokens(pSpotters), canvas.scene.id, pInfos);
+			}
+			else {
+				await SpottingManager.SpotObjectsGM(pObjects, pSpotters, pInfos);
+			}
 		}
 		else {
 			if (!game.paused) {
-				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))}, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
+				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : vObjectIDs, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
 			}
 		}
 	}
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "GMSpotconfirmDialog")) {
+			if (["playersonly", "always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour"))) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
 			else {
@@ -310,21 +317,19 @@ class SpottingManager {
 		SpottingManager.resetStealthData(vTokens);
 	}
 	
-	static async isSpottedby(pObject, pSpotter, pChecks = {FOV : false, Range : true}) {
+	static async isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
 			if (pObject.parent.id != pSpotter.parent.id) {
 				//different scenes
 				return false;
 			}
 			
-			/*
-			if (pChecks.FOV) {
-				if (!pSpotter.object?.vision?.shape?.contains(pObject.center.x, pObject.center.y)) {
+			if (pChecks.LOS) {
+				if (!pSpotter.object?.los?.contains(pObject.center.x, pObject.center.y)) {
 					//not in FOV
 					return false;
 				}
 			}
-			*/
 			
 			if (pChecks.Range) {
 				//check set vision range
@@ -413,9 +418,13 @@ class SpottingManager {
 				vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
 											<input type="checkbox" id=${vTokens[i].id} checked>
 											<p>${vTokens[i].name}</p>
-											<img src="${vTokens[i].texture.src}" style = "height: 2em;">
-											<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)})}</p>
-										</div>`;
+											<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
+			
+				if (game.settings.get(cModuleName, "useLightAdvantageSystem")) {
+					vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)})}</p>`;
+				}							
+										
+				vContent = vContent + `</div>`;
 			}
 		}
 		else {
@@ -872,4 +881,4 @@ export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return Spot
 
 export function resetStealthDataSelected() {SpottingManager.resetStealthDataSelected()};
 
-export function isSpottedby(pObject, pSpotter, pChecks = {FOV : false, Range : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}
+export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}

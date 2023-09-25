@@ -5,8 +5,8 @@ import {isSpottedby as isSpottedbyRAW} from "../SpottingScript.js";
 //returns if wall of pWallDoc should be ignored by Token of pTokenDoc
 export function IgnoreWall(pWallDoc, pTokenDoc) {return PeekingIgnoreWall(pWallDoc, pTokenDoc)}
 
-//returns if pObject can be spotted by pSpotter (pCheckFOV if spotter FOV should be included in the calculations) 
-export function isSpottedby(pObject, pSpotter, pChecks = {Range : true}) {
+//returns if pObject can be spotted by pSpotter (pCheckFOV if spotter LOS should be included in the calculations) 
+export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {
 	let vObject = pObject;
 	let vSpotter = pSpotter;
 	
