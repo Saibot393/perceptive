@@ -205,7 +205,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	scope: "world",
 	config: true,
 	type: Boolean,
-	default: true,
+	default: false,
 	requiresReload: true
   });  
 
@@ -234,6 +234,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: PerceptiveUtils.isPf2e(),
 	type: Boolean,
 	default: false,
+	onChange: async (pValues) => { if (pValues) {game.settings.set(cModuleName, "applySystemStealthEffect", true)}},
 	requiresReload: true
   });   
   

@@ -65,8 +65,6 @@ class PerceptiveCompatibility {
 	}
 }
 
-export function IgnoreWall(pWallDoc, pTokenDoc) {return PeekingIgnoreWall(pWallDoc, pTokenDoc)}
-
 Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.ignore_conflicts(cModuleName, cArmReach, "DoorControl.prototype._onRightDown");
@@ -94,10 +92,5 @@ Hooks.once("init", () => {
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
 		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && IgnoreWall(pwall.document, options?.source?.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
-	}
-	
-	//compatibility exports
-	game.modules.get(cModuleName).api = {
-		IgnoreWall
 	}
 });

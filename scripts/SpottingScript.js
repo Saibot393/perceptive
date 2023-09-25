@@ -13,8 +13,6 @@ const cIconBright = "fa-solid fa-circle";
 const cStealthIcon = "fa-solid fa-user-ninja";
 const cnotStealthIcon = "fa-solid fa-user";
 
-const cSpotConeAngle = 90; //in degrees
-
 //bunch of variables for the sake of performance/simplicity
 var vLocalVisionData = {
 	vlastPPvalue : 0,
@@ -55,6 +53,8 @@ class SpottingManager {
 
 	static resetStealthDataSelected() {} //resets the stealth data of selected tokens (if owned)
 
+	static isSpottedby(pObject, pSpotter, pCheckFOV = false) {} //returns of pObject is spotted by pSpotter
+	
 	//ui
 	static async addPerceptiveHUD(pHUD, pHTML, pToken) {} //adds a illumination state icon to the HUd of pToken
 
@@ -91,12 +91,14 @@ class SpottingManager {
 	
 	//support
 	static inCurrentVisionRange(pSpotters, pObject) {} //returns if pObject is in vision range of one of pSpotters
+	
+	static inVisionRange(pSpotters, pObject, pRange, pConeRange) {} //returns if pObject is in vision range of one of pSpotters
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue())) {
+		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue)) {
 			// Hide secret doors from players
 			let vWallObject = pDoorControl.wall;
 
@@ -135,7 +137,7 @@ class SpottingManager {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
 
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue) ) {
 			// Otherwise, test visibility against current sight polygons
 			if (!SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center)) {
 				return false;
@@ -306,6 +308,39 @@ class SpottingManager {
 		let vTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.isOwner);
 
 		SpottingManager.resetStealthData(vTokens);
+	}
+	
+	static async isSpottedby(pObject, pSpotter, pChecks = {FOV : false, Range : true}) {
+		if (pObject && pSpotter && pSpotter.documentName == "Token") {
+			if (pObject.parent.id != pSpotter.parent.id) {
+				//different scenes
+				return false;
+			}
+			
+			/*
+			if (pChecks.FOV) {
+				if (!pSpotter.object?.vision?.shape?.contains(pObject.center.x, pObject.center.y)) {
+					//not in FOV
+					return false;
+				}
+			}
+			*/
+			
+			if (pChecks.Range) {
+				//check set vision range
+				if (!VisionUtils.inVisionRange([pSpotter], pObject.object.center, game.settings.get(cModuleName, "SpottingRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance), game.settings.get(cModuleName, "SpottingConeRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance))) {
+					return false;
+				}
+			}
+			
+			//check illumination og pObject
+			await PerceptiveFlags.CheckLightLevel(pObject);
+			
+			//check if pObject can currently be spotted by pSpotter
+			return Boolean(PerceptiveFlags.canbeSpottedwith(pObject, [pSpotter], VisionUtils.VisionLevel(pSpotter), await VisionUtils.PassivPerception(pSpotter)));
+		}
+		
+		return false;
 	}
 
 	//ui
@@ -690,7 +725,7 @@ class SpottingManager {
 		
 		let vSpottables = VisionUtils.spotablesinVision();
 		
-		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, SpottingManager.lastPPvalue()));
+		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue));
 		
 		VisionUtils.MaketempVisible(vSpottables);
 		
@@ -699,26 +734,7 @@ class SpottingManager {
 	
 	//support
 	static inCurrentVisionRange(pSpotters, pPosition) {
-		if (vLocalVisionData.vSpottingRange >= Infinity) {
-			return true;
-		}
-		
-		return pSpotters.find((vSpotter) => {	//burst and cone range check				
-												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
-												
-												if(vDistance <= vLocalVisionData.vSpottingRange) {
-													//is in burst
-													return true;
-												}
-												
-												if (vDistance < vLocalVisionData.vSpottingConeRange) {
-													//is in cone range, check angle
-													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
-													
-													return Math.abs(vAngleDiff) < cSpotConeAngle/2;
-												}
-												
-												return false;});
+		return VisionUtils.inVisionRange(pSpotters, pPosition, vLocalVisionData.vSpottingRange, vLocalVisionData.vSpottingConeRange);
 	}
 }
 
@@ -855,3 +871,5 @@ export function resetStealthRequest({pObjectIDs, pSceneID, pInfos} = {}) {return
 export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs)};
 
 export function resetStealthDataSelected() {SpottingManager.resetStealthDataSelected()};
+
+export function isSpottedby(pObject, pSpotter, pChecks = {FOV : false, Range : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}

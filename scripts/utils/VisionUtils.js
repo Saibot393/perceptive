@@ -7,6 +7,8 @@ import { PerceptiveCompUtils, cVision5e } from "../compatibility/PerceptiveCompU
 
 const cDimInterval = [1/4, 3/4]; //Scene darkness values between which the scene is dim (lower is bright, higher is dark)
 
+const cSpotConeAngle = 90; //in degrees
+
 const cLightLevel = {
 					Dark : 0,
 					Dim : 1,
@@ -30,6 +32,8 @@ class VisionUtils {
 	static spotableDoorsinVision(pToken) {} //returns an array of walls that are spotable and within the vision of pToken
 	
 	static spotableTokensinVision(pToken) {} //returns an array of tokens that are spotable and within the vision of pToken
+	
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
 	
 	static async PassivPerception(pToken) {} //returns the passive perception of pToken
 	
@@ -138,10 +142,33 @@ class VisionUtils {
 		return vTokensinRange.map(vToken => vToken.document);
 	}
 	
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange) {
+		if (pRange >= Infinity) {
+			return true;
+		}
+		
+		return pSpotters.find((vSpotter) => {	//burst and cone range check				
+												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+												
+												if(vDistance <= pRange) {
+													//is in burst
+													return true;
+												}
+												
+												if (vDistance < pConeRange) {
+													//is in cone range, check angle
+													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
+													
+													return Math.abs(vAngleDiff) < cSpotConeAngle/2;
+												}
+												
+												return false;});		
+	}
+	
 	static async PassivPerception(pToken) {
 		if (pToken && pToken.actor) {
 			if (PerceptiveUtils.isPf2e()) {
-				return await pToken.actor.system.attributes.perception.dc;
+				return await pToken.actor.system.attributes.perception?.dc;
 			}
 			else {
 				let vRollData = {actor : pToken.actor};

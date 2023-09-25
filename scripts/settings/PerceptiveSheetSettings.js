@@ -472,8 +472,6 @@ class PerceptiveSheetSettings {
 			vNeededWidth = vNeededWidth + $(this).outerWidth() ;
 		});
 		
-		console.log(pHTML.find(`nav.sheet-tabs[data-group="main"]`).children());
-		
 		if (vNeededWidth > pHTML.width()) {
 			pHTML.width(vNeededWidth);
 		}		

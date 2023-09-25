@@ -66,6 +66,8 @@ class PerceptiveUtils {
 	
 	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {} //applies roll behaviour(adv., normal, disadv.) to pRoll1 and pRoll2
 	
+	static successDegree(pRollresult, pDiceDetails, pDC) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
+	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
 	
@@ -275,6 +277,46 @@ class PerceptiveUtils {
 			default:
 				return pRoll1;
 		}
+	}
+	
+	static successDegree(pRollresult, pDiceDetails, pDC) {
+		let vsuccessDegree;
+		
+		if (pRollresult >= pDC) {
+			vsuccessDegree = 1; //S
+		}
+		else {
+			vsuccessDegree = 0; //F
+		}
+		
+		if (["CritMethod-natCrit", "CritMethod-natCritpm10"].includes(game.settings.get(cModuleName, "CritMethod"))) {
+			//normal crit
+			if (pDiceDetails[0] == 20) {
+				vsuccessDegree = 2; //crit S
+			}
+			
+			if (pDiceDetails[0] == 1) {
+				vsuccessDegree = -1;//crit F
+			}
+			
+			console.log(vsuccessDegree);
+			if (game.settings.get(cModuleName, "CritMethod") == "CritMethod-natCritpm10") {
+				//+-10 crit
+				if (vsuccessDegree == 1) {
+					if (pRollresult >= (pDC + 10)) {
+						vsuccessDegree = 2;//crit S
+					}
+				}
+				
+				if (vsuccessDegree == 0) {
+					if (pRollresult <= (pDC - 10)) {
+						vsuccessDegree = -1;//crit F
+					}
+				}	
+			}
+		}
+		
+		return vsuccessDegree;
 	}
 	
 	static TokenNamesfromIDs(pIDs, pScene = null) {

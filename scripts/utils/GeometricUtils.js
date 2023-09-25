@@ -293,7 +293,7 @@ class GeometricUtils {
 		}
 		
 		if (pObject.documentName == "Wall") {
-			let vCenter = {x: (pObject.c[0] + pObjectc[2])/2, y: (pObject.c[1] + pObjectc[3])/2};
+			let vCenter = {x: (pObject.c[0] + pObject.c[2])/2, y: (pObject.c[1] + pObject.c[3])/2};
 			
 			return vCenter;			
 		}
