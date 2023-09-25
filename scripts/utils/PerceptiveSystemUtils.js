@@ -20,7 +20,9 @@ const cPf2eLoottype = "loot"; //type of loot tokens in Pf2e
 //Lock Types
 const cLockTypeLootPf2e = "LTLootPf2e"; //type for Token
 
-export { cPf2eLoottype, cLockTypeLootPf2e }
+const cPf2eAPDCautomationTypes = ["character", "npc", "familiar"];
+
+export { cPf2eLoottype, cLockTypeLootPf2e, cPf2eAPDCautomationTypes }
 
 //takes care of system specific stuff
 class PerceptiveSystemUtils {

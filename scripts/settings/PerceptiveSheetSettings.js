@@ -6,6 +6,7 @@ import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
 import { PerceptiveCompUtils, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
+import {cPf2eAPDCautomationTypes } from "../utils/PerceptiveSystemUtils.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
 
@@ -294,6 +295,7 @@ class PerceptiveSheetSettings {
 		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cAPDCF +".name"), 
 													vhint : Translate("SheetSettings."+ cAPDCF +".descrp"), 
 													vtype : "number", 
+													vlocked : game.settings.get(cModuleName, "UsePf2eRules") && cPf2eAPDCautomationTypes.includes(pApp.document.actor?.type),
 													vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
 													vflagname : cAPDCF
 													}, pto);		

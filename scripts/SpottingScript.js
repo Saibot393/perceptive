@@ -5,6 +5,7 @@ import {GeometricUtils } from "./utils/GeometricUtils.js";
 import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
 import {EffectManager } from "./helpers/EffectManager.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+import {cPf2eAPDCautomationTypes } from "./utils/PerceptiveSystemUtils.js";
 
 const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
@@ -476,26 +477,38 @@ class SpottingManager {
 				}
 			}
 			
-			if (game.settings.get(cModuleName, "UsePf2eRules") && game.settings.get(cModuleName, "AutoRerollPPDConMove") && !PerceptiveFlags.PPDCLocked(pToken)) {
-				if (vxyChange || velevationChange) {
-					let vInfos = {};
-					
-					let vFormula;
-					
-					if (PerceptiveSystemUtils.StealthStatePf2e(pToken, vInfos) == "sneak") {
-						if (vInfos.hasOwnProperty("sneakEffect")) {
-							vFormula = PerceptiveFlags.EffectInfos(vInfos.sneakEffect)?.RollFormula;
-							
-							if (vFormula) {
-								let vRoll = new Roll(vFormula);
+			if (game.settings.get(cModuleName, "UsePf2eRules")) {
+				let vNewDCs = {};
+				
+				//PPDC
+				if (game.settings.get(cModuleName, "AutoRerollPPDConMove") && !PerceptiveFlags.PPDCLocked(pToken)) {
+					if (vxyChange || velevationChange) {
+						let vInfos = {};
+						
+						let vFormula;
+						
+						if (PerceptiveSystemUtils.StealthStatePf2e(pToken, vInfos) == "sneak") {
+							if (vInfos.hasOwnProperty("sneakEffect")) {
+								vFormula = PerceptiveFlags.EffectInfos(vInfos.sneakEffect)?.RollFormula;
 								
-								await vRoll.evaluate();
-								
-								PerceptiveFlags.setSpottingDCs(pToken, {PPDC: vRoll.total});
+								if (vFormula) {
+									let vRoll = new Roll(vFormula);
+									
+									await vRoll.evaluate();
+									
+									vNewDCs.PPDC = vRoll.total;
+								}
 							}
 						}
 					}
 				}
+				
+				//APDC
+				if (cPf2eAPDCautomationTypes.includes(pToken.actor?.type)) {
+					vNewDCs.APDC = PerceptiveSystemUtils.StealthDCPf2e(pToken.actor);
+				}
+				
+				PerceptiveFlags.setSpottingDCs(pToken, vNewDCs);
 			}
 		}
 		
