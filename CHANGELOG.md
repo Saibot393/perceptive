@@ -1,3 +1,7 @@
+## v1.10.0 (unreleased)
+- Reordered most spotting settings into collapsible subgroups to bring to this mess
+- Changed the GM confirm Spotting setting to  choose when the confirm dialog should show up: never, for players, always
+
 ## v1.9.7
 - small bug fixes
 - added api for "isSpottedby"
