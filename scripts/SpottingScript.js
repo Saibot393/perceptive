@@ -269,6 +269,11 @@ class SpottingManager {
 				switch (pObjects[i].documentName) {
 						case "Token":
 							await EffectManager.removeStealthEffects(pObjects[i]);
+							
+							if (pObjects[i].hidden) {
+								pObjects[i].update({hidden: false});
+							}
+							
 							break;
 						case "Wall":
 							if (pObjects[i].door == 2) {
@@ -352,9 +357,9 @@ class SpottingManager {
 	//ui
 	static async addPerceptiveHUD(pHUD, pHTML, pToken) {
 		//Illumination Indicator
-		let vButtonPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
+		let vIlluminationPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
 
-		if (vButtonPosition != "none") {
+		if (vIlluminationPosition != "none") {
 			let vIlluminationIcon;
 
 			await PerceptiveFlags.CheckLightLevel(PerceptiveUtils.TokenfromID(pToken._id)); //the given pToken is a bit of a dud, better recheck the real token
@@ -375,7 +380,7 @@ class SpottingManager {
 									<i class="${vIlluminationIcon}"></i>
 							  </div>`;
 
-			pHTML.find("div.col."+vButtonPosition).append(vButtonHTML);
+			pHTML.find("div.col."+vIlluminationPosition).append(vButtonHTML);
 
 			//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
 		}
@@ -401,6 +406,22 @@ class SpottingManager {
 																								}
 																							}
 																							});
+		}
+		
+		if (PerceptiveFlags.hasLingeringAP(pToken)) {
+			//Perceptive lingering AP indicator
+			let vLingeringAPPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
+
+			if (vLingeringAPPosition != "none") {
+
+				let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-LingeringAP" title="${Translate("Titles.SpottingInfos.LingeringAP.name")}">
+										${PerceptiveFlags.LingeringAP(pToken)}
+								  </div>`;
+
+				pHTML.find("div.col."+vIlluminationPosition).append(vButtonHTML);
+
+				//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
+			}
 		}
 	}
 

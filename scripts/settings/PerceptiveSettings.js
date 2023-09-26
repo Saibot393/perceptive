@@ -273,7 +273,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: 0
 	  });   
   
-	//automations
+	//automations and rules
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
 		name: Translate("Settings.AutomateTokenSpottable.name"),
 		hint: Translate("Settings.AutomateTokenSpottable.descrp"),
@@ -306,6 +306,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
 		scope: "world",
 		config: true,
+		type: Boolean,
+		default: false
+	  }); 
+
+	  game.settings.register(cModuleName, "LingeringAP", {
+		name: Translate("Settings.LingeringAP.name"),
+		hint: Translate("Settings.LingeringAP.descrp"),
+		scope: "world",
+		config: false,
 		type: Boolean,
 		default: false
 	  }); 	  
