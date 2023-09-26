@@ -326,7 +326,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.LingeringAP.name"),
 		hint: Translate("Settings.LingeringAP.descrp"),
 		scope: "world",
-		config: false,
+		config: true,
 		type: Boolean,
 		default: false
 	  }); 	  

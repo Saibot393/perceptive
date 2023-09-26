@@ -15,14 +15,14 @@
 				"LightModifier"			: "Wahrnehmungs DC Veränderung durch Lichtstufe: {pValue}",	
 				"LightRollBehaviour"	: "Wahrnehmungs Wurfverhalten durch Lichtstufe: {pBehaviour}",
 				"VisionLevel" : {
-					"name"				: "Sicht Stufe: ",
+					"name"				: "Sicht Stufe: {pLevel}",
 					"value0"			: "Normale Sicht",
 					"value1"			: "Gedimmtes-Licht Sicht",
 					"value2"			: "Dunkelsicht",
 					"value3"			: "Dunkelsicht (Total)"
 				},
 				"LightLevel" : {
-					"name"				: "Beleuchtungs Stufe:",
+					"name"				: "Beleuchtungs Stufe: {pLevel}",
 					"value0"		    : "Dunkel",
 					"value1"			: "Düster",
 					"value2"			: "Hell"

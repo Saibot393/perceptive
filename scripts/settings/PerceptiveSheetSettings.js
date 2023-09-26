@@ -240,7 +240,7 @@ class PerceptiveSheetSettings {
 					pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
 				}
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${Translate("Titles.SpottingInfos.VisionLevel.name") + Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))}</p>`);
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`);
 			}			
 		}
 		

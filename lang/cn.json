@@ -15,14 +15,14 @@
 				"LightModifier"			: "照明察觉DC修正值: {pValue}",
 				"LightRollBehaviour"	: "Illumination perception roll behaviour modifier: {pBehaviour}",
 				"VisionLevel" : {
-					"name"				: "视觉等级: ",
+					"name"				: "视觉等级: {pLevel}",
 					"value0"			: "基础视野",
 					"value1"			: "弱光视野",
 					"value2"			: "黑暗视野",
 					"value3"			: "黑暗视野（完全）"
 				},
 				"LightLevel" : {
-					"name"				: "照明等级:",
+					"name"				: "照明等级: {pLevel}",
 					"value0"		    : "黑暗",
 					"value1"			: "弱光",
 					"value2"			: "明亮"

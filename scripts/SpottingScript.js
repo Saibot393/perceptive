@@ -248,7 +248,7 @@ class SpottingManager {
 				}
 			}
 			
-			if (pLingeringAP) {
+			if (!pLingeringAP && game.settings.get(cModuleName, "LingeringAP")) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					PerceptiveFlags.setLingeringAP(pSpotters[i], pResults);
 				}
@@ -440,7 +440,7 @@ class SpottingManager {
 					break;
 			}
 
-			let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-Illumination" title="${Translate("Titles.SpottingInfos.LightLevel.name") + " " + Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))}">
+			let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-Illumination" title="${TranslateandReplace("Titles.SpottingInfos.LightLevel.name", {pLevel : Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))})}">
 									<i class="${vIlluminationIcon}"></i>
 							  </div>`;
 
@@ -472,6 +472,7 @@ class SpottingManager {
 																							});
 		}
 		
+		//lingering AP ui
 		if (PerceptiveFlags.hasLingeringAP(pToken)) {
 			//Perceptive lingering AP indicator
 			let vLingeringAPPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
@@ -482,9 +483,13 @@ class SpottingManager {
 										${PerceptiveFlags.LingeringAP(pToken)}
 								  </div>`;
 
-				pHTML.find("div.col."+vIlluminationPosition).append(vButtonHTML);
+				pHTML.find("div.col."+vLingeringAPPosition).append(vButtonHTML);
 
-				//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
+				if (pToken.isOwner) {
+					let vButton = pHTML.find(`div[data-action="${cModuleName}-LingeringAP"]`);
+					
+					vButton.click((pEvent) => {PerceptiveFlags.resetLingeringAP(pToken)});
+				}
 			}
 		}
 	}

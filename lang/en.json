@@ -15,14 +15,14 @@
 				"LightModifier"			: "Illumination perception DC modifier: {pValue}",
 				"LightRollBehaviour"	: "Illumination perception roll behaviour modifier: {pBehaviour}",
 				"VisionLevel" : {
-					"name"				: "Vision level: ",
+					"name"				: "Vision level: {pLevel}",
 					"value0"			: "Basic sight",
 					"value1"			: "Low-light vision",
 					"value2"			: "Darkvision",
 					"value3"			: "Darkvision (total)"
 				},
 				"LightLevel" : {
-					"name"				: "Illumination level:",
+					"name"				: "Illumination level: {pLevel}",
 					"value0"		    : "Dark",
 					"value1"			: "Dim",
 					"value2"			: "Bright"
