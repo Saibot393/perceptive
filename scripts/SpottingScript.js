@@ -36,7 +36,7 @@ class SpottingManager {
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
-	static CheckAPerception(pSpotters, pResults, pLingeringAP = false) {} //starts an active perception check
+	static async CheckAPerception(pSpotters, pResults, pLingeringAP = false) {} //starts an active perception check
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
 
@@ -44,9 +44,9 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {} //handles a request for pSpotterIDs to spot pObjectIDs in pSceneID
 
-	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pGMspotting = false) {} //call to let Player make the Objects temp visible
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pInfos = {}) {} //call to let Player make the Objects temp visible
 
-	static async resetStealthData(pObjects) {} //resets the stealth data of pObject, including removing effects
+	static async resetStealthData(pObjects, pInfos) {} //resets the stealth data of pObject, including removing effects (or chaning them)
 	
 	static RequestresetStealth(pObjects, pInfos) {} //starts a request to reset stealth of pObject
 	
@@ -70,7 +70,7 @@ class SpottingManager {
 
 	static async onPerceptionRoll(pActor, pRoll, pUserID) {} //called when a perception roll is rolled
 
-	static onNewlyVisible(pObjects, pPassivSpot = false) {} //called when a new object is revealed
+	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {} //called when a new object is revealed
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 
@@ -201,7 +201,7 @@ class SpottingManager {
 		}
 	}
 	
-	static CheckAPerception(pSpotters, pResults, pLingeringAP = false) {
+	static async CheckAPerception(pSpotters, pResults, pLingeringAP = false) {
 		if (pSpotters.length > 0 && pResults.length > 0) {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
@@ -247,25 +247,36 @@ class SpottingManager {
 					}
 				}
 			}
+			
+			if (pLingeringAP) {
+				for (let i = 0; i < pSpotters.length; i++) {
+					PerceptiveFlags.setLingeringAP(pSpotters[i], pResults);
+				}
+			}
 
-			await SpottingManager.RequestSpotObjects(vSpotted, pSpotters, 	{APerceptionResult : pResults[0],
-																			SecondResult : pResults[1], 
-																			RollBehaviours : vRollBehaviours, 
-																			TokenSuccessDegrees : vTokenSuccessDegrees, 
-																			VisionLevel : vLocalVisionData.vlastVisionLevel, 
-																			sendingPlayer : game.user.id,
-																			LingeringAP : pLingeringAP});	
+			let vInfos = 	{APerceptionResult : pResults[0],
+							SecondResult : pResults[1], //used for adv/disadv
+							RollBehaviours : vRollBehaviours, 
+							TokenSuccessDegrees : vTokenSuccessDegrees, 
+							VisionLevel : vLocalVisionData.vlastVisionLevel, 
+							sendingPlayer : game.user.id,
+							LingeringAP : pLingeringAP};
+							
+			await SpottingManager.RequestSpotObjects(vSpotted, pSpotters, vInfos);
+
+			Hooks.call(cModuleName + ".PerceptionCheck", vSpotted, pSpotters, vInfos);
 		}
 	}
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
-		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject) && PerceptiveFlags.getAPDCModified(vObject, pInfos.VisionLevel) <= Math.max(pInfos.APerceptionResult, pInfos.SecondResult));
+		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject));
 
 		if (pInfos.sendingPlayer == game.user.id) {
-			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id), true);
+			pInfos.GMSpotting = true;
+			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id), pInfos);
 		}
 		else {
-			game.socket.emit("module." + cModuleName, {pFunction : "PlayerMakeTempVisible", pData : {pPlayerID : pInfos.sendingPlayer, pObjectIDs : vSpottables.map(vObject => vObject.id)}})
+			game.socket.emit("module." + cModuleName, {pFunction : "PlayerMakeTempVisible", pData : {pPlayerID : pInfos.sendingPlayer, pObjectIDs : vSpottables.map(vObject => vObject.id), pInfos : pInfos}})
 		}
 
 		for (let i = 0; i < pSpotters.length; i++) {
@@ -304,19 +315,19 @@ class SpottingManager {
 		}
 	}
 
-	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pGMspotting = false) {
+	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pInfos = {}) {
 		if (game.user.id == pPlayerID) {
 			let vSpotables = VisionUtils.spotablesinVision();
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 			
-			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => (pGMspotting && game.user.isGM && !vObject?.object?.controlled) || !(vObject?.object?.visible || vObject?.object?.doorControl?.visible)));
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !(vObject?.object?.visible || vObject?.object?.doorControl?.visible)), pInfos);
 
 			VisionUtils.MaketempVisible(vSpotables);
 		}
 	}
 
-	static async resetStealthData(pObjects) {
+	static async resetStealthData(pObjects, pInfos) {
 		for (let i = 0; i < pObjects.length; i++) {
 			if (pObjects[i]) {
 				switch (pObjects[i].documentName) {
@@ -343,7 +354,7 @@ class SpottingManager {
 	
 	static RequestresetStealth(pObjects, pInfos) {
 		if (game.user.isGM) {
-			SpottingManager.resetStealthData(pObjects);
+			SpottingManager.resetStealthData(pObjects, pInfos);
 		}
 		else {
 			let vObjectIDs = {};
@@ -365,7 +376,7 @@ class SpottingManager {
 				
 				vObjects = vObjects.concat(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)));
 				
-				SpottingManager.resetStealthData(vObjects);
+				SpottingManager.resetStealthData(vObjects, pInfos);
 			}
 		}
 	}
@@ -480,7 +491,7 @@ class SpottingManager {
 
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		let vContent =  TranslateandReplace("Titles.SpottingConfirm.content", {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
-																				pResult : pInfos.APerceptionResult,
+																				pResult : pInfos.APerceptionResult[0],
 																				pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
 																				pScene : game.scenes.get(pSceneID)?.name,
 																				pDoors : pObjectIDs.Walls?.length,
@@ -628,11 +639,12 @@ class SpottingManager {
 		SpottingManager.CheckAPerception(vRelevantTokens, [vPerceptionResult, vSecondResult]);
 	}
 
-	static onNewlyVisible(pObjects, pPassivSpot = false) {
+	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {
 		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
-		if ((vPingIgnoreVisionCycles <= 0) || (!pPassivSpot)) {
+		//ping
+		if ((vPingIgnoreVisionCycles <= 0) || (!pInfos.PassivSpot)) {
 			if (game.settings.get(cModuleName, "SpottingPingDuration") > 0) {
 				for (let i = 0; i < pObjects.length; i++) {
 					if (pObjects[i]?.object?.center && (!pObjects[i].isOwner || game.user.isGM)) {
@@ -642,11 +654,8 @@ class SpottingManager {
 			}
 		}
 		
-		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
-			SpottingManager.RequestresetStealth(pObjects, {Spotted : true});
-		}
-		
-		if (!pPassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
+		//chat message
+		if (!pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
 			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
 			
 			if (vTokens.length > 0) {
@@ -673,7 +682,13 @@ class SpottingManager {
 								whisper : [game.user.id]});
 		}
 		
-		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pPassivSpot)
+		//effect resets
+		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
+			pInfos.Spotted = true;
+			SpottingManager.RequestresetStealth(pObjects, pInfos);
+		}
+		
+		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos)
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
@@ -817,7 +832,7 @@ Hooks.once("ready", function() {
 																											
 																											if (SpottingManager.DControlSpottingVisible(this)){
 																												if (!vPrevVisible) {
-																													SpottingManager.onNewlyVisible([this.wall.document], true);
+																													SpottingManager.onNewlyVisible([this.wall.document], {PassivSpot : true});
 																												}
 																												
 																												return true;
@@ -838,7 +853,7 @@ Hooks.once("ready", function() {
 				
 				if (SpottingManager.DControlSpottingVisible(this)) {
 					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.wall.document], true);
+						SpottingManager.onNewlyVisible([this.wall.document], {PassivSpot : true});
 					}
 																																
 					return true;
@@ -862,7 +877,7 @@ Hooks.once("ready", function() {
 																															
 																															if (SpottingManager.TokenSpottingVisible(this)){																															
 																																if (!vPrevVisible) {
-																																	SpottingManager.onNewlyVisible([this.document], true);
+																																	SpottingManager.onNewlyVisible([this.document], {PassivSpot : true});
 																																}
 																																
 																																return true;
@@ -885,7 +900,7 @@ Hooks.once("ready", function() {
 
 				if (SpottingManager.TokenSpottingVisible(this)) {
 					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.document], true);
+						SpottingManager.onNewlyVisible([this.document], {PassivSpot : true});
 					}
 					
 					return true;
@@ -937,7 +952,7 @@ export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} =
 
 export function resetStealthRequest({pObjectIDs, pSceneID, pInfos} = {}) {return SpottingManager.resetStealthRequest(pObjectIDs, pSceneID, pInfos)};
 
-export function PlayerMakeTempVisible({pPlayerID, pObjectIDs} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs)};
+export function PlayerMakeTempVisible({pPlayerID, pObjectIDs, pInfos} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs, pInfos)};
 
 export function resetStealthDataSelected() {SpottingManager.resetStealthDataSelected()};
 

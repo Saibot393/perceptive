@@ -289,7 +289,7 @@ class PerceptiveUtils {
 		}
 	}
 	
-	static successDegree(pRollresult, pDiceDetails, pDC) {
+	static successDegree(pRollresult, pDC) {
 		let vsuccessDegree;
 		
 		if (pRollresult[0] >= pDC) {
@@ -299,7 +299,7 @@ class PerceptiveUtils {
 			vsuccessDegree = 0; //F
 		}
 		
-		if (game.settings.get(cModuleName, "UsePf2eRules")) {
+		if (["CritMethod-natCrit", "CritMethod-natCritpm10"].includes(game.settings.get(cModuleName, "CritMethod"))) {
 			//normal crit
 			if (pRollresult[1] == 20) {
 				vsuccessDegree = 2; //crit S
@@ -309,7 +309,7 @@ class PerceptiveUtils {
 				vsuccessDegree = -1;//crit F
 			}
 			
-			if (game.settings.get(cModuleName, "UsePf2eRules")) {
+			if (game.settings.get(cModuleName, "CritMethod") == "CritMethod-natCritpm10") {
 				//+-10 crit
 				if (vsuccessDegree == 1) {
 					if (pRollresult[0] >= (pDC + 10)) {
@@ -365,7 +365,7 @@ class PerceptiveUtils {
 		
 		for (let i = 0; i < pIdentifications.length; i++) {
 			//world
-			//-uuid
+			//id
 			let vBuffer = await game.items.get(pIdentifications[i]);
 			
 			//-name
@@ -373,7 +373,7 @@ class PerceptiveUtils {
 				vBuffer = await game.items.find(vEffect => vEffect.name == pIdentifications[i]);
 			}
 			
-			//direct id
+			//uu-id
 			if (!vBuffer) {
 				vBuffer = await fromUuid(pIdentifications[i]);
 			}
@@ -383,7 +383,7 @@ class PerceptiveUtils {
 				let vElement;
 				let vPacks = game.packs.filter(vPacks => vPacks.documentName == "Item");//.map(vPack => vPack.index);
 				
-				//-uuid
+				//-id
 				let vPack = vPacks.find(vPack => vPack.index.get(pIdentifications[i]));
 				
 				if (vPack) {
@@ -409,8 +409,13 @@ class PerceptiveUtils {
 				}
 			}
 			
-			if (vBuffer && [cPf2ConditionType, cPf2EffectType].includes(vBuffer.type) ) {
-				vEffects[vEffects.length] = vBuffer.toObject();
+			if (vBuffer && [cPf2ConditionType, cPf2EffectType].includes(vBuffer.type)) {
+				if (typeof vBuffer == "object") {
+					vEffects[vEffects.length] = foundry.utils.duplicate(vBuffer);
+				}
+				else {
+					vEffects[vEffects.length] = vBuffer.toObject();
+				}
 			}
 		}
 		

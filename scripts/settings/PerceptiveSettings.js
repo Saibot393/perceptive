@@ -216,8 +216,6 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: PerceptiveUtils.isPf2e(),
 	type: Boolean,
 	default: false,
-	onChange: async (pValue) => { if (pValue) {await game.settings.set(cModuleName, "applySystemStealthEffect", true);
-												await game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="])}},
 	requiresReload: true
   });  
   
@@ -273,7 +271,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: 0
 	  });   
   
-	//automations and rules
+	//RulesAutomation
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
 		name: Translate("Settings.AutomateTokenSpottable.name"),
 		hint: Translate("Settings.AutomateTokenSpottable.descrp"),
@@ -290,7 +288,21 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: game.settings.get(cModuleName, "UsePf2eRules"),
 		type: Boolean,
 		default: true
-	  });  
+	  }); 
+
+	  game.settings.register(cModuleName, "CritMethod", {
+		name: Translate("Settings.CritMethod.name"),
+		hint: Translate("Settings.CritMethod.descrp"),
+		scope: "world",
+		config: !game.settings.get(cModuleName, "UsePf2eRules"),
+		type: String,
+		choices: {
+			"CritMethod-noCrit": Translate("Settings.CritMethod.options.noCrit"),
+			"CritMethod-natCrit": Translate("Settings.CritMethod.options.natCrit"),
+			"CritMethod-natCritpm10": Translate("Settings.CritMethod.options.natCritpm10")
+		},
+		default: "CritMethod-natCrit"
+	  });	  
 	  
 	  game.settings.register(cModuleName, "resetSpottedbyMovedefault", {
 		name: Translate("Settings.resetSpottedbyMovedefault.name"),
@@ -686,8 +698,9 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
 												[data-setting-id="perceptive.SpottingConeRange"]`);
 		
-		collapseContent(pHTML, "Automation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
+		collapseContent(pHTML, "RulesAutomation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
 												[data-setting-id="perceptive.resetSpottedbyMovedefault"],
+												[data-setting-id="perceptive.CritMethod"],
 												[data-setting-id="perceptive.AutomateTokenSpottable"],
 												[data-setting-id="perceptive.MakeSpottedTokensVisible"]`);
 
@@ -707,3 +720,11 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
 	}
 });   
+
+Hooks.on("ready", function() {
+	if (game.settings.get(cModuleName, "UsePf2eRules")) {
+		game.settings.set(cModuleName, "applySystemStealthEffect", true),
+		game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="]),
+		game.settings.set(cModuleName, "CritMethod", "CritMethod-natCritpm10")
+	}
+});
