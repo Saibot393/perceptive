@@ -1,4 +1,4 @@
-## v1.10.0 (unreleased)
+## v2.0.0 (unreleased)
 - Reordered most spotting settings into collapsible subgroups to bring order to this mess
 - Changed the GM confirm Spotting setting to  choose when the confirm dialog should show up: never, for players, always
 - Changes to Use Pf2e rules:
