@@ -5,6 +5,7 @@
   - The APDC of compatible tokens (Characters, NPCs, Familairs) will now be locked and updated automatically
 - When Make spotted tokens visible is checked Perceptive will now also remove the core foundry invisibility from spotted tokens
 - Added world setting Crit system to choose how crits are calculated for perception checks
+- Added world setting Lingering active perception to continue using the active perception until manually removed in the token HUD
 - Added hooks for active perception checks and newly visible objects
 
 ## v1.9.7
