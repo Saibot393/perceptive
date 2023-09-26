@@ -36,7 +36,7 @@ class SpottingManager {
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
-	static lastPPvalue() {} //returns the last updated passiveperception value
+	static CheckAPerception(pSpotters, pResults, pLingeringAP = false) {} //starts an active perception check
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
 
@@ -68,7 +68,7 @@ class SpottingManager {
 
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chat message is send
 
-	static async onPerceptionRoll(pActor, pRoll) {} //called when a perception roll is rolled
+	static async onPerceptionRoll(pActor, pRoll, pUserID) {} //called when a perception roll is rolled
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {} //called when a new object is revealed
 	
@@ -200,9 +200,62 @@ class SpottingManager {
 			vLocalVisionData.vSpottingConeRange = Infinity;
 		}
 	}
+	
+	static CheckAPerception(pSpotters, pResults, pLingeringAP = false) {
+		if (pSpotters.length > 0 && pResults.length > 0) {
+			let vSpotables = VisionUtils.spotablesinVision();
+			
+			//filter out already spotted
+			vSpotables = vSpotables.filter(vObject => !PerceptiveFlags.isSpottedbyone(vObject, pSpotters));
+					
+			//prepare data
+			let vSpotted = [];
+			
+			let vRollBehaviours = [];
+			
+			let vTokenSuccessDegrees = []
+			
+			//buffers
+			let vCurrentRollbehaviour;
+			
+			let vResultBuffer;
+			
+			let vSuccessDegree
+			
+			for (let i = 0; i < vSpotables.length; i++) {
+				vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
+				
+				if (pResults.length > 1) {
+					vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
+				}
+				else {
+					vResultBuffer = pResults[0]
+				}
+				
+				vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel));
+				
+				if (vSuccessDegree > 0) {
+					
+					if (SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center)) {
+						vSpotted.push(vSpotables[i]);
+						
+						if (vSpotables[i].documentName == "Token"){
+							vRollBehaviours.push(vCurrentRollbehaviour);
+							
+							vTokenSuccessDegrees.push(vSuccessDegree);
+						}
+					}
+				}
+			}
 
-	static lastPPvalue() {
-		return vLocalVisionData.vlastPPvalue;
+			await SpottingManager.RequestSpotObjects(vSpotted, pSpotters, 	{APerceptionResult : pResults[0],
+																			SecondResult : pResults[1], 
+																			RollBehaviours : vRollBehaviours, 
+																			TokenSuccessDegrees : vTokenSuccessDegrees, 
+																			VisionLevel : vLocalVisionData.vlastVisionLevel, 
+																			sendingPlayer : game.user.id,
+																			LingeringAP : pLingeringAP});	
+		}
 	}
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
@@ -443,7 +496,7 @@ class SpottingManager {
 											<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 			
 				if (game.settings.get(cModuleName, "useLightAdvantageSystem")) {
-					vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)})}</p>`;
+					vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
 				}							
 										
 				vContent = vContent + `</div>`;
@@ -467,7 +520,7 @@ class SpottingManager {
 	}
 
 	//ons
-	static async onTokenupdate(pToken, pchanges, pInfos) {
+	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {
 		if (pToken.isOwner && pToken.parent == canvas.scene) {
 			VisionUtils.PrepareSpotables();
 
@@ -533,6 +586,14 @@ class SpottingManager {
 			}
 		}
 		
+		if (pToken.object?.controlled){
+			//lingering APDC
+			if (PerceptiveFlags.hasLingeringAP(pToken)) {
+				SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), true);
+			}
+		}
+		
+		//if update was caused by perceptive vision update
 		if (pInfos.PerceptiveVisionupdate && pToken.parent == canvas.scene) {
 			VisionUtils.PreapreSpotableToken(pToken.object);
 			
@@ -551,55 +612,20 @@ class SpottingManager {
 		}
 	}
 
-	static async onPerceptionRoll(pActor, pRoll) {
+	static async onPerceptionRoll(pActor, pRoll, pUserID) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
 
-		let vSpotables = VisionUtils.spotablesinVision();
-
-		let vPerceptionResult = pRoll.total;
+		let vPerceptionResult = [pRoll.total, pRoll.dice[0].total];
 		
 		//second roll for adv/disadv
 		let vSecondRoll = new Roll(pRoll.formula);
 		
 		await vSecondRoll.evaluate();
 		
-		let vSecondResult = vSecondRoll.total;
+		let vSecondResult = [vSecondRoll.total, vSecondRoll.dice[0].total];
 		
-		//prepare data
-		let vSpotted = [];
-		
-		let vRollBehaviours = [];
-		
-		let vCurrentRollbehaviour;
-		
-		let vResultBuffer;
-		
-		let vDC;
-		
-		for (let i = 0; i < vSpotables.length; i++) {
-			vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
-			
-			vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, vPerceptionResult, vSecondResult);
-			
-			if (PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel) <= vResultBuffer) {
-				
-				if (SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center)) {
-					vSpotted.push(vSpotables[i]);
-					
-					if (vSpotables[i].documentName == "Token"){
-						vRollBehaviours.push(vCurrentRollbehaviour);
-					}
-				}
-			}
-		}
-
-		//vSpotables = vSpotables.filter(vObject => PerceptiveFlags.getAPDCModified(vObject, vLocalVisionData.vlastVisionLevel) <= vPerceptionResult);
-
-		//vSpotables = vSpotables.filter(vObject => (!vObject?.object?.visible || !vObject?.object?.doorControl?.visible));
-
-		//VisionUtils.MaketempVisible(vSpotables);
-
-		await SpottingManager.RequestSpotObjects(vSpotted, vRelevantTokens, {APerceptionResult : vPerceptionResult, SecondResult : vSecondResult, RollBehaviours : vRollBehaviours, VisionLevel : vLocalVisionData.vlastVisionLevel, sendingPlayer : game.user.id});
+		//execute spott
+		SpottingManager.CheckAPerception(vRelevantTokens, [vPerceptionResult, vSecondResult]);
 	}
 
 	static onNewlyVisible(pObjects, pPassivSpot = false) {
@@ -882,7 +908,7 @@ Hooks.once("ready", function() {
 		
 		Hooks.on("preUpdateToken", (...args) => {SpottingManager.onTokenpreupdate(...args)});
 
-		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll) => {SpottingManager.onPerceptionRoll(pActorID, pRoll)});
+		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll, pUserID) => {SpottingManager.onPerceptionRoll(pActorID, pRoll, pUserID)});
 		
 		Hooks.on(cModuleName + ".StealthRoll", (pActorID, pRoll) => {SpottingManager.onStealthRoll(pActorID, pRoll)});
 		

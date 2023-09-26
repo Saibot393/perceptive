@@ -195,7 +195,7 @@ class PerceptiveFlags {
 	
 	static PPDCLocked(pToken) {} //returns if the PPDC if pToken is locked (only PF2e)
 	
-	static setLingeringAP(pToken, pValue) {} //sets the lingering AP of pToken to pValue
+	static setLingeringAP(pToken, pResults) {} //sets the lingering AP of pToken to pResults (array of array each containing total and dice result)
 	
 	static resetLingeringAP(pToken) {} //resets the Lingering AP of pToken
 	
@@ -602,7 +602,7 @@ class PerceptiveFlags {
 	}
 	
 	static #LingeringAPFlag (pObject) { 
-	//returns content of LingeringAPFlag of object (number or undefined if not set)
+	//returns content of LingeringAPFlag of object (array os results)
 		let vFlag = this.#PerceptiveFlags(pObject);
 		
 		if (vFlag) {
@@ -611,7 +611,7 @@ class PerceptiveFlags {
 			}
 		}
 		
-		return undefined; //default if anything fails
+		return []; //default if anything fails
 	}
 	
 	static #resetSpottedbyMoveFlag (pObject) { 
@@ -770,7 +770,7 @@ class PerceptiveFlags {
 	}
 	
 	static async #setLingeringAP (pObject, pContent) {
-		//sets content of LingeringAPFlag (number or undefined)
+		//sets content of LingeringAPFlag (array of results)
 		if (pObject) {
 			await pObject.setFlag(cModuleName, cLingeringAPF, pContent); 
 			
@@ -1197,20 +1197,20 @@ class PerceptiveFlags {
 		return this.#LockPPDCFlag(pToken);
 	}
 	
-	static setLingeringAP(pToken, pValue) {
-		this.#setLingeringAP(pToken, Number(pValue));
+	static setLingeringAP(pToken, pResults) {
+		this.#setLingeringAP(pToken, pResults);
 	}
 	
 	static resetLingeringAP(pToken) {
-		this.#setLingeringAP(pToken, undefined);
+		this.#setLingeringAP(pToken, []);
 	}
 	
 	static LingeringAP(pToken) {
-		return Number(this.#LingeringAPFlag(pToken));
+		return this.#LingeringAPFlag(pToken);
 	}
 	
 	static hasLingeringAP(pToken) {
-		return !(this.#LingeringAPFlag(pToken) == undefined);
+		return (this.#LingeringAPFlag(pToken)?.length > 0);
 	}
 	
 	//effects
