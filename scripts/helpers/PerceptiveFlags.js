@@ -1049,23 +1049,26 @@ class PerceptiveFlags {
 	}
 	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pInfos = {CritMode : 0, TokenSuccessDegrees : {}}) {
-		let vSuccessDegree = 0;
-		
-		
 		if (PerceptiveFlags.canbeSpotted(pObject)) {
-			vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
+			let vSuccessDegree = 0;
 			
-			if (vSuccessDegree > 0 && PerceptiveFlags.isSpottedbyone(pObject, pTokens)) {
-				return true;
+			
+			if (PerceptiveFlags.canbeSpotted(pObject)) {
+				vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
+				
+				if (vSuccessDegree > 0 && PerceptiveFlags.isSpottedbyone(pObject, pTokens)) {
+					return true;
+				}
 			}
+			
+			//console.log([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode, pObject.id, vSuccessDegree);
+			
+			pInfos.TokenSuccessDegrees[pObject.id] = vSuccessDegree; //normal success if no other conditions are met
+			
+			return vSuccessDegree <= 0;
 		}
 		
-		//console.log([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode, pObject.id, vSuccessDegree);
-		
-		pInfos.TokenSuccessDegrees[pObject.id] = vSuccessDegree; //normal success if no other conditions are met
-		
-		return vSuccessDegree <= 0;
-		
+		return false;
 		//return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
@@ -1162,8 +1165,6 @@ class PerceptiveFlags {
 	
 	static async CheckLightLevel(pObject, pUsePosition = false) {
 		if (pUsePosition) {
-			//console.log(GeometricUtils.CenterPositionXY(pObject.object));
-			//console.log(pObject);
 			await this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.CenterPositionXY(pObject.object), pObject.parent));
 		}
 		else {

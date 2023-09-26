@@ -333,7 +333,6 @@ class SpottingManager {
 	}
 
 	static async resetStealthData(pObjects, pInfos) {
-		console.log(pInfos);
 		let vResetStealthValues = true;
 		
 		for (let i = 0; i < pObjects.length; i++) {
@@ -347,8 +346,6 @@ class SpottingManager {
 								
 								let vPreviousFormula = PerceptiveFlags.EffectInfos(vEffectInfos.sneakEffect)?.RollFormula;
 								
-								console.log(vPreviousState);
-								console.log(pInfos.TokenSuccessDegrees[pObjects[i].id]);
 								if ((vPreviousState == "sneak") && ((!pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 1) || (pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 0))) {
 									//only normal failure, replace sneak with stealth
 									await EffectManager.applyStealthEffects(pObjects[i], {Type : "hide", EffectInfos : {RollFormula : vPreviousFormula}});
@@ -376,6 +373,7 @@ class SpottingManager {
 				}
 		
 				if (vResetStealthValues) {
+					console.log(pInfos);
 					PerceptiveFlags.resetStealth(pObjects[i]);
 				}
 			}
@@ -588,6 +586,7 @@ class SpottingManager {
 		if (game.user.isGM) {	
 			if (vxyChange) {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
+					console.log("reset:", pToken.name, pToken);
 					PerceptiveFlags.clearSpottedby(pToken);
 				}
 			}
@@ -697,7 +696,7 @@ class SpottingManager {
 		}
 		
 		//chat message
-		if (!pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
+		if ((pObjects.length > 0 &&) !pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
 			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
 			
 			if (vTokens.length > 0) {
