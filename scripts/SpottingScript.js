@@ -21,7 +21,8 @@ var vLocalVisionData = {
 	vlastDisposition : 0,
 	vSimulatePlayerVision : false,
 	vSpottingRange : Infinity,
-	vSpottingConeRange : 0
+	vSpottingConeRange : 0,
+	vCritType : 0
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -32,7 +33,7 @@ class SpottingManager {
 	//DECLARATIONS
 	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
 
-	static TokenSpottingVisible(pToken) {} //returns wether this pWall is visible though spotting
+	static TokenSpottingVisible(pToken, pInfos = {}) {} //returns wether this pWall is visible though spotting
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
@@ -130,7 +131,7 @@ class SpottingManager {
 		return false;
 	}
 
-	static TokenSpottingVisible(pToken) { //modified from foundry.js
+	static TokenSpottingVisible(pToken, pInfos = {}) { //modified from foundry.js
 		// Clear the detection filter
 		pToken.detectionFilter = undefined;
 
@@ -138,7 +139,9 @@ class SpottingManager {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
 
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue) ) {
+		pInfos.CritMode = vLocalVisionData.vCritType;
+		
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
 			if (!SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center)) {
 				return false;
@@ -191,6 +194,8 @@ class SpottingManager {
 			else {
 				vLocalVisionData.vSpottingConeRange = game.settings.get(cModuleName, "SpottingConeRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
+			
+			vLocalVisionData.vCritType = PerceptiveUtils.CritType();
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
@@ -211,9 +216,9 @@ class SpottingManager {
 			//prepare data
 			let vSpotted = [];
 			
-			let vRollBehaviours = [];
+			let vRollBehaviours = {};
 			
-			let vTokenSuccessDegrees = []
+			let vTokenSuccessDegrees = {};
 			
 			//buffers
 			let vCurrentRollbehaviour;
@@ -240,9 +245,9 @@ class SpottingManager {
 						vSpotted.push(vSpotables[i]);
 						
 						if (vSpotables[i].documentName == "Token"){
-							vRollBehaviours.push(vCurrentRollbehaviour);
+							vRollBehaviours[vSpotables[i].id] = vCurrentRollbehaviour;
 							
-							vTokenSuccessDegrees.push(vSuccessDegree);
+							vTokenSuccessDegrees[vSpotables[i].id] = vSuccessDegree;
 						}
 					}
 				}
@@ -328,11 +333,34 @@ class SpottingManager {
 	}
 
 	static async resetStealthData(pObjects, pInfos) {
+		console.log(pInfos);
+		let vResetStealthValues = true;
+		
 		for (let i = 0; i < pObjects.length; i++) {
 			if (pObjects[i]) {
 				switch (pObjects[i].documentName) {
 						case "Token":
-							await EffectManager.removeStealthEffects(pObjects[i]);
+							if (game.settings.get(cModuleName, "UsePf2eRules")) {
+								let vEffectInfos = {};
+								
+								let vPreviousState = PerceptiveSystemUtils.StealthStatePf2e(pObjects[i], vEffectInfos);
+								
+								let vPreviousFormula = PerceptiveFlags.EffectInfos(vEffectInfos.sneakEffect)?.RollFormula;
+								
+								console.log(vPreviousState);
+								console.log(pInfos.TokenSuccessDegrees[pObjects[i].id]);
+								if ((vPreviousState == "sneak") && ((!pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 1) || (pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 0))) {
+									//only normal failure, replace sneak with stealth
+									await EffectManager.applyStealthEffects(pObjects[i], {Type : "hide", EffectInfos : {RollFormula : vPreviousFormula}});
+								}
+								else {
+									//remove all effects
+									await EffectManager.removeStealthEffects(pObjects[i]);
+								}
+							}
+							else {
+								await EffectManager.removeStealthEffects(pObjects[i]);
+							}
 							
 							if (pObjects[i].hidden) {
 								pObjects[i].update({hidden: false});
@@ -346,8 +374,10 @@ class SpottingManager {
 							}
 							break;			
 				}
-
-				PerceptiveFlags.resetStealth(pObjects[i]);
+		
+				if (vResetStealthValues) {
+					PerceptiveFlags.resetStealth(pObjects[i]);
+				}
 			}
 		}
 	}
@@ -420,13 +450,15 @@ class SpottingManager {
 
 	//ui
 	static async addPerceptiveHUD(pHUD, pHTML, pToken) {
+		let vToken = PerceptiveUtils.TokenfromID(pToken._id);
+		
 		//Illumination Indicator
 		let vIlluminationPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
 
 		if (vIlluminationPosition != "none") {
 			let vIlluminationIcon;
 
-			await PerceptiveFlags.CheckLightLevel(PerceptiveUtils.TokenfromID(pToken._id)); //the given pToken is a bit of a dud, better recheck the real token
+			await PerceptiveFlags.CheckLightLevel(vToken); //the given pToken is a bit of a dud, better recheck the real token
 			
 			switch (PerceptiveFlags.LightLevel(pToken)) {
 				case cLightLevel.Dark:
@@ -480,59 +512,61 @@ class SpottingManager {
 			if (vLingeringAPPosition != "none") {
 
 				let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-LingeringAP" title="${Translate("Titles.SpottingInfos.LingeringAP.name")}">
-										${PerceptiveFlags.LingeringAP(pToken)}
+										${PerceptiveFlags.LingeringAP(pToken)[0][0]}
 								  </div>`;
 
 				pHTML.find("div.col."+vLingeringAPPosition).append(vButtonHTML);
 
-				if (pToken.isOwner) {
+				if (vToken.isOwner) {
 					let vButton = pHTML.find(`div[data-action="${cModuleName}-LingeringAP"]`);
 					
-					vButton.click((pEvent) => {PerceptiveFlags.resetLingeringAP(pToken)});
+					vButton.click((pEvent) => {PerceptiveFlags.resetLingeringAP(vToken)});
 				}
 			}
 		}
 	}
 
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
-		let vContent =  TranslateandReplace("Titles.SpottingConfirm.content", {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
-																				pResult : pInfos.APerceptionResult[0],
-																				pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
-																				pScene : game.scenes.get(pSceneID)?.name,
-																				pDoors : pObjectIDs.Walls?.length,
-																			   });
+		if (pObjectIDs.Walls?.length > 0 || pObjectIDs.Tokens?.length) {
+			let vContent =  TranslateandReplace("Titles.SpottingConfirm.content", {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
+																					pResult : pInfos.APerceptionResult[0],
+																					pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
+																					pScene : game.scenes.get(pSceneID)?.name,
+																					pDoors : pObjectIDs.Walls?.length,
+																				   });
 
-		let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
+			let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
 
-		if (vTokens.length > 0) {
-			for (let i = 0; i < vTokens.length; i++) {
-				vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
-											<input type="checkbox" id=${vTokens[i].id} checked>
-											<p>${vTokens[i].name}</p>
-											<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
-			
-				if (game.settings.get(cModuleName, "useLightAdvantageSystem")) {
-					vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[i], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[i], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
-				}							
-										
-				vContent = vContent + `</div>`;
+			if (vTokens.length > 0) {
+				for (let i = 0; i < vTokens.length; i++) {
+					vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
+												<input type="checkbox" id=${vTokens[i].id} checked>
+												<p>${vTokens[i].name}</p>
+												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
+				
+					if (game.settings.get(cModuleName, "useLightAdvantageSystem")) {
+						vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[vTokens[i].id], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[vTokens[i].id], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
+					}							
+											
+					vContent = vContent + `</div>`;
+				}
 			}
-		}
-		else {
-			vContent = vContent + "-";// + "- <br>";
-		}
+			else {
+				vContent = vContent + "-";// + "- <br>";
+			}
 
-		//vContent = vContent + "<br>"
+			//vContent = vContent + "<br>"
 
-		Dialog.confirm({
-			title: Translate("Titles.SpottingConfirm.name"),
-			content: vContent,
-			yes: (pHTML) => {let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
-							SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(vCheckedTokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
-							},
-			no: () => {},
-			defaultYes: false
-		});
+			Dialog.confirm({
+				title: Translate("Titles.SpottingConfirm.name"),
+				content: vContent,
+				yes: (pHTML) => {let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
+								SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(vCheckedTokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
+								},
+				no: () => {},
+				defaultYes: false
+			});
+		}
 	}
 
 	//ons
@@ -543,13 +577,15 @@ class SpottingManager {
 			SpottingManager.updateVisionValues();
 		}
 
-		if (game.user.isGM) {
-			let vxyChange = pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y");
+		let vxyChange = pchanges.hasOwnProperty("x") || pchanges.hasOwnProperty("y");
+		
+		let vrotChange = pchanges.hasOwnProperty("rotation");
+		
+		let velevationChange = pchanges.hasOwnProperty("elevation");
+		
+		let vmovementChange = vxyChange || vrotChange || velevationChange;
 			
-			let vrotChange = pchanges.hasOwnProperty("rotation");
-			
-			let velevationChange = pchanges.hasOwnProperty("elevation");
-			
+		if (game.user.isGM) {	
 			if (vxyChange) {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
 					PerceptiveFlags.clearSpottedby(pToken);
@@ -587,6 +623,7 @@ class SpottingManager {
 									await vRoll.evaluate();
 									
 									vNewDCs.PPDC = vRoll.total;
+									vNewDCs.PPDice = vRoll.dice[0].total;
 								}
 							}
 						}
@@ -602,7 +639,7 @@ class SpottingManager {
 			}
 		}
 		
-		if (pToken.object?.controlled){
+		if (vmovementChange && pToken.object?.controlled){
 			//lingering APDC
 			if (PerceptiveFlags.hasLingeringAP(pToken)) {
 				SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), true);
@@ -729,6 +766,7 @@ class SpottingManager {
 			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
 				case "both":
 					vNewDCs.PPDC = vStealthResult;
+					vNewDCs.PPDice = pRoll.dice[0].total;
 					break;
 			}
 
@@ -761,6 +799,7 @@ class SpottingManager {
 		}
 
 		vNewDCs.PPDC = vStealthResult;
+		vNewDCs.PPDice = pRoll.dice[0].total;
 		vNewDCs.APDC = PerceptiveSystemUtils.StealthDCPf2e(vRelevantTokens[0].actor); //al tokens should have the same actor
 		
 		for (let i = 0; i < vRelevantTokens.length; i++) {
@@ -880,9 +919,11 @@ Hooks.once("ready", function() {
 			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {
 																															let vPrevVisible = this.visible;
 																															
-																															if (SpottingManager.TokenSpottingVisible(this)){																															
+																															let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
+																															
+																															if (SpottingManager.TokenSpottingVisible(this, vInfos)){																															
 																																if (!vPrevVisible) {
-																																	SpottingManager.onNewlyVisible([this.document], {PassivSpot : true});
+																																	SpottingManager.onNewlyVisible([this.document], vInfos);
 																																}
 																																
 																																return true;
@@ -903,9 +944,11 @@ Hooks.once("ready", function() {
 			CONFIG.Token.objectClass.prototype.__defineGetter__("isVisible", function () {
 				let vPrevVisible = this.visible;
 
-				if (SpottingManager.TokenSpottingVisible(this)) {
+				let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
+				
+				if (SpottingManager.TokenSpottingVisible(this, vInfos)) {
 					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.document], {PassivSpot : true});
+						SpottingManager.onNewlyVisible([this.document], vInfos);
 					}
 					
 					return true;

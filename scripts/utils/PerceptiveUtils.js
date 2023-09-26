@@ -66,7 +66,9 @@ class PerceptiveUtils {
 	
 	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {} //applies roll behaviour(adv., normal, disadv.) to pRoll1 and pRoll2
 	
-	static successDegree(pRollresult, pDC) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
+	static successDegree(pRollresult, pDC, pCritMode = -1) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
+	
+	static CritType(pTypeName = game.settings.get(cModuleName, "CritMethod")) {} //returns the numerical crit type of pTypeName
 	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
@@ -289,8 +291,15 @@ class PerceptiveUtils {
 		}
 	}
 	
-	static successDegree(pRollresult, pDC) {
+	static successDegree(pRollresult, pDC, pCritMode = -1) {
 		let vsuccessDegree;
+		let vCritMode = pCritMode;
+		
+		if (vCritMode < 0) {
+			vCritMode = 0;
+			
+			vCritMode = PerceptiveUtils.CritType();
+		}
 		
 		if (pRollresult[0] >= pDC) {
 			vsuccessDegree = 1; //S
@@ -299,33 +308,61 @@ class PerceptiveUtils {
 			vsuccessDegree = 0; //F
 		}
 		
-		if (["CritMethod-natCrit", "CritMethod-natCritpm10"].includes(game.settings.get(cModuleName, "CritMethod"))) {
-			//normal crit
-			if (pRollresult[1] == 20) {
-				vsuccessDegree = 2; //crit S
-			}
-			
-			if (pRollresult[1] == 1) {
-				vsuccessDegree = -1;//crit F
-			}
-			
-			if (game.settings.get(cModuleName, "CritMethod") == "CritMethod-natCritpm10") {
-				//+-10 crit
-				if (vsuccessDegree == 1) {
-					if (pRollresult[0] >= (pDC + 10)) {
-						vsuccessDegree = 2;//crit S
+		if (pRollresult[1] > 0) {
+			switch (vCritMode) {
+				case 1:
+					//normal crit
+					if (pRollresult[1] == 20) {
+						vsuccessDegree = 2; //crit S
 					}
-				}
-				
-				if (vsuccessDegree == 0) {
-					if (pRollresult[0] <= (pDC - 10)) {
+					
+					if (pRollresult[1] == 1) {
 						vsuccessDegree = -1;//crit F
+					}	
+					break;
+				case 2:
+					//+-10 crit
+					if (vsuccessDegree == 1) {
+						if (pRollresult[0] >= (pDC + 10)) {
+							vsuccessDegree = 2;//crit S
+						}
 					}
-				}	
+					
+					if (vsuccessDegree == 0) {
+						if (pRollresult[0] <= (pDC - 10)) {
+							vsuccessDegree = -1;//crit F
+						}
+					}	
+					
+					if (pRollresult[1] == 20) {
+						vsuccessDegree = vsuccessDegree + 1;//increase degree
+					}
+					
+					if (pRollresult[1] == 1) {
+						vsuccessDegree = vsuccessDegree -1;//decrease degree
+					}
+					break;
 			}
 		}
 		
+		vsuccessDegree = Math.min(2, Math.max(-1, vsuccessDegree)); //make sure vsuccessDegree is in [-1, 2]
+		
 		return vsuccessDegree;
+	}
+	
+	static CritType(pTypeName = game.settings.get(cModuleName, "CritMethod")) {
+		switch (game.settings.get(cModuleName, "CritMethod")) {
+			case "CritMethod-natCrit":
+				return 1;
+				break;
+			case "CritMethod-natCritpm10":
+				return 2;
+				break;	
+			default:
+			case "CritMethod-noCrit":
+				return 0;
+				break;
+		}	
 	}
 	
 	static TokenNamesfromIDs(pIDs, pScene = null) {

@@ -37,6 +37,7 @@ const cPreventNormalOpenF = "PreventNormalOpenFlag"; //Flag to signal that norma
 
 const ccanbeSpottedF = "canbeSpottedFlag"; //returns if this object can be spotted
 const cPPDCF = "PPDCFlag"; //Flag for the passive perception DC of this object
+const cPPDiceF = "PPDiceFlag"; //Flag to store the dice rolled for the PPDC
 const cAPDCF = "APDCFlag"; //Flag for the passive perception DC of this object
 const cSpottedbyF = "SpottedbyFlag"; //Flag to save the ids of actors by which this object has been spotted
 const cresetSpottedbyMoveF = "resetSpottedbyMoveFlag"; //Flag to reset the spooted by ids of this (Token) when it moves
@@ -141,13 +142,15 @@ class PerceptiveFlags {
 	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pInfos = {CritMode : 0, TokenSuccessDegrees : {}}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
 	static canbeSpottedactive(pObject) {}//returns if this pObject can be spotted actively
 	
 	static getPPDC(pObject, praw = false) {} //returns the Passiv perception DC
+	
+	static getPPDice(pObject) {} //returns the dice rolled for the PPDC of pObject
 	
 	static getAPDC(pObject, praw = false) {} //returns the Active perception DC
 	
@@ -484,6 +487,19 @@ class PerceptiveFlags {
 		return -1; //default if anything fails
 	}
 	
+	static #PPDiceFlag (pObject) { 
+	//returns content of PPDiceFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPPDiceF)) {
+				return vFlag.PPDiceFlag;
+			}
+		}
+		
+		return -1; //default if anything fails
+	}
+	
 	static #APDCFlag (pObject) { 
 	//returns content of PPDCFlag of object (number)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -716,6 +732,16 @@ class PerceptiveFlags {
 		//sets content of PPDCFlag (number)
 		if (pObject && !isNaN(pContent)) {
 			await pObject.setFlag(cModuleName, cPPDCF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setPPDice (pObject, pContent) {
+		//sets content of PPDiceFlag (number)
+		if (pObject && !isNaN(pContent)) {
+			await pObject.setFlag(cModuleName, cPPDiceF, pContent); 
 			
 			return true;
 		}
@@ -1022,8 +1048,25 @@ class PerceptiveFlags {
 		this.#setcanbeSpotted(pObject, true);
 	}
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue) {
-		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pInfos = {CritMode : 0, TokenSuccessDegrees : {}}) {
+		let vSuccessDegree = 0;
+		
+		
+		if (PerceptiveFlags.canbeSpotted(pObject)) {
+			vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
+			
+			if (vSuccessDegree > 0 && PerceptiveFlags.isSpottedbyone(pObject, pTokens)) {
+				return true;
+			}
+		}
+		
+		//console.log([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode, pObject.id, vSuccessDegree);
+		
+		pInfos.TokenSuccessDegrees[pObject.id] = vSuccessDegree; //normal success if no other conditions are met
+		
+		return vSuccessDegree <= 0;
+		
+		//return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {
@@ -1043,6 +1086,10 @@ class PerceptiveFlags {
 		else {
 			return vDC;
 		}
+	}
+	
+	static getPPDice(pObject) {
+		return this.#PPDiceFlag(pObject);
 	}
 	
 	static getAPDC(pObject, praw = false) {
@@ -1098,6 +1145,10 @@ class PerceptiveFlags {
 		
 		if (pDCs.hasOwnProperty("APDC")) {
 			await PerceptiveFlags.#setAPDC(pObject, pDCs.APDC)
+		}
+		
+		if (pDCs.hasOwnProperty("PPDice")) {
+			await PerceptiveFlags.#setPPDice(pObject, pDCs.PPDice)
 		}
 	}
 	
@@ -1235,7 +1286,7 @@ class PerceptiveFlags {
 	static EffectInfos(pEffect) {
 		let vFlag = this.#PerceptiveFlags(pEffect);
 		
-		if (vFlag.hasOwnProperty(cEffectInfoF)) {
+		if (vFlag?.hasOwnProperty(cEffectInfoF)) {
 			return vFlag[cEffectInfoF];
 		}
 		
