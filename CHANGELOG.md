@@ -4,6 +4,8 @@
 - Changes to Use Pf2e rules:
   - The APDC of compatible tokens (Characters, NPCs, Familairs) will now be locked and updated automatically
 - When Make spotted tokens visible is checked Perceptive will now also remove the core foundry invisibility from spotted tokens
+- Added world setting Crit system to choose how crits are calculated for perception checks
+- Added hooks for active perception checks and newly visible objects
 
 ## v1.9.7
 - small bug fixes
