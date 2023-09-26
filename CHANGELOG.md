@@ -1,9 +1,12 @@
-## v1.10.0 (unreleased)
+## v2.0.0 (unreleased)
 - Reordered most spotting settings into collapsible subgroups to bring order to this mess
 - Changed the GM confirm Spotting setting to  choose when the confirm dialog should show up: never, for players, always
 - Changes to Use Pf2e rules:
   - The APDC of compatible tokens (Characters, NPCs, Familairs) will now be locked and updated automatically
 - When Make spotted tokens visible is checked Perceptive will now also remove the core foundry invisibility from spotted tokens
+- Added world setting Crit system to choose how crits are calculated for perception checks
+- Added world setting Lingering active perception to continue using the active perception until manually removed in the token HUD
+- Added hooks for active perception checks and newly visible objects
 
 ## v1.9.7
 - small bug fixes
