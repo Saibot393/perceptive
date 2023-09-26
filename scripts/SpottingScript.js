@@ -22,7 +22,8 @@ var vLocalVisionData = {
 	vSimulatePlayerVision : false,
 	vSpottingRange : Infinity,
 	vSpottingConeRange : 0,
-	vCritType : 0
+	vCritType : 0,
+	vPf2eRules : false
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -140,6 +141,7 @@ class SpottingManager {
 		if ( pToken.controlled ) return true;
 
 		pInfos.CritMode = vLocalVisionData.vCritType;
+		pInfos.Pf2eRules = vLocalVisionData.vPf2eRules && cPf2eAPDCautomationTypes.includes(pToken.actor.type);
 		
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
@@ -196,6 +198,8 @@ class SpottingManager {
 			}
 			
 			vLocalVisionData.vCritType = PerceptiveUtils.CritType();
+			
+			vLocalVisionData.vPf2eRules = game.settings.get(cModuleName, "UsePf2eRules");
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
