@@ -1063,8 +1063,6 @@ class PerceptiveFlags {
 					}
 				}
 				
-				//console.log([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode, pObject.id, vSuccessDegree);
-				
 				pInfos.TokenSuccessDegrees[pObject.id] = vSuccessDegree; //normal success if no other conditions are met
 				
 				return vSuccessDegree <= 0;

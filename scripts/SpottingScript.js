@@ -330,7 +330,7 @@ class SpottingManager {
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 			
-			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !(vObject?.object?.visible || vObject?.object?.doorControl?.visible)), pInfos);
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !((vObject?.object?.visible && vObject.documentName == "Token") || vObject?.object?.doorControl?.visible)), pInfos);
 
 			VisionUtils.MaketempVisible(vSpotables);
 		}
@@ -377,7 +377,6 @@ class SpottingManager {
 				}
 		
 				if (vResetStealthValues) {
-					console.log(pInfos);
 					PerceptiveFlags.resetStealth(pObjects[i]);
 				}
 			}
@@ -590,7 +589,6 @@ class SpottingManager {
 		if (game.user.isGM) {	
 			if (vxyChange) {
 				if (PerceptiveFlags.canbeSpotted(pToken) && PerceptiveFlags.resetSpottedbyMove(pToken)) {
-					console.log("reset:", pToken.name, pToken);
 					PerceptiveFlags.clearSpottedby(pToken);
 				}
 			}
@@ -684,7 +682,7 @@ class SpottingManager {
 		SpottingManager.CheckAPerception(vRelevantTokens, [vPerceptionResult, vSecondResult]);
 	}
 
-	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {
+	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {	
 		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
@@ -700,7 +698,7 @@ class SpottingManager {
 		}
 		
 		//chat message
-		if ((pObjects.length > 0 &&) !pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
+		if ((pObjects.length > 0) && !pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
 			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
 			
 			if (vTokens.length > 0) {
