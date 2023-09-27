@@ -52,7 +52,7 @@
 		},
 		
 		"Warnings" : {
-			"MacroSeekDeactivatet" 		: "Setting \"Only macro seek\" has to be activated to use this macro"
+			"MacroSeekDeactivatet" 		: "Setting \"Perception only with Macros\" has to be activated to use this macro"
 		},
 		
 		"Settings" : {	

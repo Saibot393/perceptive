@@ -52,7 +52,7 @@
 		},
 		
 		"Warnings" : {
-			"MacroSeekDeactivatet" 		: "Einstellung \"Nur Macro Suche\" muss aktiviert sein um dieses Macro verwenden zu können"
+			"MacroSeekDeactivatet" 		: "Einstellung \"Wahrnehmung nur mit Macros\" muss aktiviert sein um dieses Macro verwenden zu können"
 		},
 		
 		"Settings" : {

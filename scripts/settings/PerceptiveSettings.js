@@ -261,49 +261,6 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: false
 	  });  	  
   
-	//ranges
-	  game.settings.register(cModuleName, "SpottingRange", {
-		name: Translate("Settings.SpottingRange.name"),
-		hint: Translate("Settings.SpottingRange.descrp"),
-		scope: "world",
-		config: true,
-		type: Number,
-		default: -1
-	  });  
-	  
-	  game.settings.register(cModuleName, "SpottingConeRange", {
-		name: Translate("Settings.SpottingConeRange.name"),
-		hint: Translate("Settings.SpottingConeRange.descrp"),
-		scope: "world",
-		config: true,
-		type: Number,
-		default: 0
-	  });  
-
-	  game.settings.register(cModuleName, "ApplyRange", {
-		name: Translate("Settings.ApplyRange.name"),
-		hint: Translate("Settings.ApplyRange.descrp"),
-		scope: "world",
-		config: true,
-		type: String,
-		choices: {
-			"never": Translate("Settings.ApplyRange.options.never"),
-			"always": Translate("Settings.ApplyRange.options.always"),
-			"activeonly": Translate("Settings.ApplyRange.options.activeonly"),
-			"passiveonly": Translate("Settings.ApplyRange.options.passiveonly")
-		},
-		default: "never"
-	  });
-
-	  game.settings.register(cModuleName, "UseBordertoBorderRange", {
-		name: Translate("Settings.UseBordertoBorderRange.name"),
-		hint: Translate("Settings.UseBordertoBorderRange.descrp"),
-		scope: "world",
-		config: true,
-		type: Boolean,
-		default: false
-	  });  	  
-  
 	//RulesAutomation
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
 		name: Translate("Settings.AutomateTokenSpottable.name"),
@@ -455,7 +412,50 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
 		type: String,
 		default: ""
-	  });   
+	  });  
+
+	//ranges
+	  game.settings.register(cModuleName, "SpottingRange", {
+		name: Translate("Settings.SpottingRange.name"),
+		hint: Translate("Settings.SpottingRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: -1
+	  });  
+	  
+	  game.settings.register(cModuleName, "SpottingConeRange", {
+		name: Translate("Settings.SpottingConeRange.name"),
+		hint: Translate("Settings.SpottingConeRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: 0
+	  });  
+
+	  game.settings.register(cModuleName, "ApplyRange", {
+		name: Translate("Settings.ApplyRange.name"),
+		hint: Translate("Settings.ApplyRange.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		choices: {
+			"never": Translate("Settings.ApplyRange.options.never"),
+			"always": Translate("Settings.ApplyRange.options.always"),
+			"activeonly": Translate("Settings.ApplyRange.options.activeonly"),
+			"passiveonly": Translate("Settings.ApplyRange.options.passiveonly")
+		},
+		default: "never"
+	  });
+
+	  game.settings.register(cModuleName, "UseBordertoBorderRange", {
+		name: Translate("Settings.UseBordertoBorderRange.name"),
+		hint: Translate("Settings.UseBordertoBorderRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  });  	  	  
   
 	//illumination
 	  game.settings.register(cModuleName, "IlluminationPDCModifier", {
@@ -731,16 +731,15 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		//collapses
 		collapseContent(pHTML, "GMuiandcontrol", 	`[data-setting-id="perceptive.SimulatePlayerVision"],
 													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
-													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"]`);
-		
-		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
-												[data-setting-id="perceptive.SpottingConeRange"]`);
+													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"],
+													[data-setting-id="perceptive.onlyMacroSeek"]`);
 		
 		collapseContent(pHTML, "RulesAutomation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
 												[data-setting-id="perceptive.resetSpottedbyMovedefault"],
 												[data-setting-id="perceptive.CritMethod"],
 												[data-setting-id="perceptive.AutomateTokenSpottable"],
-												[data-setting-id="perceptive.MakeSpottedTokensVisible"]`);
+												[data-setting-id="perceptive.MakeSpottedTokensVisible"],
+												[data-setting-id="perceptive.LingeringAP"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],
@@ -752,6 +751,11 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 											[data-setting-id="perceptive.PerceptiveStealthFriendliesvisible"],
 											[data-setting-id="perceptive.syncEffectswithPerceptiveStealth"],
 											[data-setting-id="perceptive.customStealthEffects"]`);
+											
+		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
+												[data-setting-id="perceptive.SpottingConeRange"],
+												[data-setting-id="perceptive.ApplyRange"],
+												[data-setting-id="perceptive.UseBordertoBorderRange"]`);
 		
 		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],

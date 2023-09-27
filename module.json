@@ -50,6 +50,14 @@
 	"scripts/compatibility/PerceptiveCompatibility.js",
 	"scripts/compatibility/APIHandler.js"
   ],
+  "packs": [
+	{
+	  "name": "perceptive",
+	  "label": "Perceptive",
+	  "path": "packs/perceptive.db",
+	  "type": "Macro"
+	}
+  ],
   "url": "https://github.com/Saibot393/perceptive",
   "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v1.9.7.zip",
   "manifest": "https://github.com/Saibot393/perceptive/releases/latest/download/module.json",
