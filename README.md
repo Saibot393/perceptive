@@ -57,30 +57,41 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
-- Spotting range to limit the range in which tokens and doors can be spotted
-- Spotting cone range to set an additional cone shaped spotting range infront of tokens
 - Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
   - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
   - Allows for the world setting Auto reroll sneaking stealth dc to be activated
     - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
-- Automate token Can be spotted: to automatically manage the Can be spotted token setting
-- Player perspective: to allow GMs to only spot tokens players can spot
-- Passive perception formula: to set the formula used for passive perception (if not automated)
-- Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
-- Stealth key-word: to set the key word used to find stealth rolls (if not automated) (a key can be set to not autodetect rolls)
-- Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
-- Apply system stealth effect(s): to automatically apply the systems stealth effects
-- [EXPERIMENTAL!] Use Perceptive stealth: to activate this feature
-- Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
-- Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa 
-- Custom stealth effects: to automatically apply custom stealth effects
-- Reset spotted on token movement by default: to reset the spotters of moving tokens
-- Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
-- Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
-- Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
-- GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
-- Reveal spotted tokens: to make spotted tokens visible to everyone
-- Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
+- GM UI & Controls
+ - Player perspective: to allow GMs to only spot tokens players can spot
+ - GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
+ - Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
+ - Perception only with Marcos[Pf2e only]: to limit perception checks to those made with the included macros
+- Rules & Automations
+ - Automate token Can be spotted: to automatically manage the Can be spotted token setting
+ - Crit system: to set how crits are calculated
+ - Reset spotted on token movement by default: to reset the spotters of moving tokens
+ - Make spotted tokens visible: to make spotted tokens visible to everyone
+ - Active perception lingers to continue using the active perception until manually removed in the token HUD
+- Rolls & Formulas
+ - Passive perception formula: to set the formula used for passive perception (if not automated)
+ - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
+ - Stealth key-word: to set the key word used to find stealth rolls (if not automated) (a key can be set to not autodetect rolls)
+ - Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
+- Effects
+ - Apply system stealth effect(s): to automatically apply the systems stealth effects
+ - [EXPERIMENTAL!] Use Perceptive stealth: to activate this feature
+ - Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
+ - Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa 
+ - Custom stealth effects: to automatically apply custom stealth effects
+- Sight Range
+ - Spotting range to limit the range in which tokens and doors can be spotted
+ - Spotting cone range to set an additional cone shaped spotting range infront of tokens
+ - Apply Ranges: to set when the set ranges should be applied
+ - Border to border distance: to calculate the spotting distance based on token borders instead of the center
+- Illumination  
+ - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
+ - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
+ - Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
 
 #### Walls/Tokens:
 - Can be spotted: to activate the spotting feature on this wall
