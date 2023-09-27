@@ -26,7 +26,8 @@
 					"value0"		    : "黑暗",
 					"value1"			: "弱光",
 					"value2"			: "明亮"
-				}
+				},
+				"LingeringAP"				: "Lingering active perception"
 			},
 			"SpottingConfirm" : {
 				"name"					: "确定发现",
@@ -165,6 +166,22 @@
 				"descrp"				: "Maximum range in which tokens and doors can be spotted (-1 for unlimited)"
 			},
 			
+			"ApplyRange" : {
+				"name"					: "Apply ranges",
+				"descrp"				: "For which checks the ranges should be applied",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"activeonly"		: "active checks only",
+					"passiveonly"		: "passive checks only"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "Use border to border range",
+				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
+			},
+			
 			"SpottingConeRange" : {
 				"name"					: "Spotting cone range",
 				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
@@ -185,6 +202,16 @@
 				"descrp"				: "当隐形状态改变后可以被发现的指示物设定会自动被改变"
 			},
 			
+			"CritMethod": {
+				"name": "大成功/大失败",
+				"descrp": "如何界定大成功与大失败",
+				"options": {
+					"noCrit": "没有大成功与大失败",
+					"natCrit": "掷出1或20",
+					"natCritpm10": "掷出1或20 或是 ±10DC [譬如Pf2e]"
+				}
+			},
+	  
 			"SimulatePlayerVision" : {
 				"name"					: "玩家视角",
 				"descrp"				: "决定GM是否使用与玩家一样的指示物察觉算式 (只适用于指示物)"
@@ -265,14 +292,39 @@
 				"descrp"				: "是否在进行察觉鉴定后为GM创建一个对话框，让GM在对话框中对发现的情况进行确认。"
 			}, 
 			
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "GM confirm Spotting behaviour",
+				"descrp"				: "For which users rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed",
+				"options" : {
+					"off"				: "off",
+					"playersonly"		: "players only",
+					"always"			: "for everyone"
+				}
+			}, 
+			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "让被发现的指示物可见",
 				"descrp"				: "If actively or passively spotted tokens should be made visible"
-			}, 
+			},
+
+			"LingeringAP" : {
+				"name"					: "Active perception lingers",
+				"descrp"				: "If rolled active perception lingers after its innitial role until removed manually",
+				"options" : {
+					"off"				: "off",
+					"always"			: "always",
+					"outofcombatonly"	: "out of combat"
+				}
+			}, 			
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
 				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "Perception only with Macros",
+				"descrp" 				: "If only perception Rolls made with the Perceptive macros should be considered"				
 			},
 			
 			"showPerceptiveWalls" : {

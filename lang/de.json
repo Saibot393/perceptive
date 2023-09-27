@@ -26,7 +26,8 @@
 					"value0"		    : "Dunkel",
 					"value1"			: "Düster",
 					"value2"			: "Hell"
-				}
+				},
+				"LingeringAP"			: "Verbleibende aktive Wahrnehmung"
 			},
 			"SpottingConfirm" : {
 				"name"					: "Aufdecken bestätigen",
@@ -165,6 +166,22 @@
 				"descrp"				: "Maximale Reichweite über welche Figuren und Türen aufgedeckt werden können (-1 für unbeschränkt)"
 			},
 			
+			"ApplyRange" : {
+				"name"					: "Recihweiten Anwenden",
+				"descrp"				: "Für welche Fälle die gesetzten Reichweiten angewandt werden sollen",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"activeonly"		: "Nur aktive Vergleiche",
+					"passiveonly"		: "Nur passive Vergleiche"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "Nutze Rand zu Rand Reichweite",
+				"descrp"				: "Ob die Sichtreichweiten von Figuren von ihren Rändern anstatt ihren Mitten berechnet werden sollen"
+			},
+			
 			"SpottingConeRange" : {
 				"name"					: "Aufdecken Kegel-Reichweite",
 				"descrp"				: "Eine zusätzliche Aufdeck Reichweite angewandt in einem 90° Kegel vor Figuren (0 um Leistung zu verbessern)"
@@ -183,6 +200,16 @@
 			"AutomateTokenSpottable" : {
 				"name"					: "Automatisiere Figure Kann aufgedeckt werden",
 				"descrp"				: "Die Kann aufgedeckt werden Einstellung von Figuren wird automatisch umgestellt wenn eine Verstecken Änderung erkannt wird"
+			},
+			
+			"CritMethod" : {
+				"name" 					: "Krit System",
+				"descrp"				: "Die Art und Weise auf welche kritische Würfe bestimmt werden",
+				"options" : {
+					"noCrit"			: "Keine Krits",
+					"natCrit"			: "Nat 1/20",
+					"natCritpm10"		: "Nat 1/20 & +-10 von SG [z.b. Pf2e]"
+				}
 			},
 			
 			"SimulatePlayerVision" : {
@@ -265,14 +292,39 @@
 				"descrp"				: "Ob bei Wahrnehmungswürfen ein Dialog angezeigt werden soll in welchem die SL den Wurf bestätigen muss"
 			}, 
 			
-			"MakeSpottedTokensVisible" : {
-				"name"					: "Aufgedeckte Figuren sichtbar machen",
-				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren sichtbar gemacht werden sollen"
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "SL Aufdecken bestätigen Verhalten",
+				"descrp"				: "Für welche Nutzer bei Wahrnehmungswürfen ein Dialog angezeigt werden soll in welchem die SL den Wurf bestätigen muss",
+				"options" : {
+					"off"				: "aus",
+					"playersonly"		: "nur Spieler",
+					"always"			: "für Alle"
+				}
 			}, 
 			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Aufgedeckte Figuren sichtbar machen",
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"
+			},
+
+			"LingeringAP" : {
+				"name"					: "Aktive Wahrnehmung verleibt",
+				"descrp"				: "Ob die gewürfelte Wahrnehmung verbleibt bis sie manuell entfernt wird",
+				"options" : {
+					"off"				: "aus",
+					"always"			: "immer",
+					"outofcombatonly"	: "außerhalb von Kämpfen"
+				}
+			}, 			
+			
 			"ForceInvertIgnoreRollKey" : {
-				"name" 					: "Force invert \"Ignore Roll\" key",
-				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+				"name" 					: "Erzwinge \"Wurf Ignorieren\" Tasten invertierung",
+				"descrp" 				: "Invertiere die \"Wurf Ignorieren\" Taste für alle Spieler und entferne die Spieler Einstellung"				
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "Wahrnehmung nur mit Macros",
+				"descrp" 				: "Ob nur Wahrnehmungswürfe mit den Perceptive Macros gewertet werden sollen"				
 			},
 			
 			"showPerceptiveWalls" : {

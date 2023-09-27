@@ -291,9 +291,11 @@ class SpottingManager {
 				}
 			}
 			
-			if (!pInfos.isLingeringAP && game.settings.get(cModuleName, "LingeringAP")) {
+			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
-					PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges});
+					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges});
+					}
 				}
 			}
 
@@ -553,7 +555,7 @@ class SpottingManager {
 
 			if (vLingeringAPPosition != "none") {
 
-				let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-LingeringAP" title="${Translate("Titles.SpottingInfos.LingeringAP.name")}">
+				let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-LingeringAP" title="${Translate("Titles.SpottingInfos.LingeringAP")}">
 										${PerceptiveFlags.LingeringAP(pToken)[0][0]}
 								  </div>`;
 
@@ -684,11 +686,16 @@ class SpottingManager {
 		if (vmovementChange && pToken.object?.controlled){
 			//lingering APDC
 			if (PerceptiveFlags.hasLingeringAP(pToken)) {
-				let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
-				
-				vInfos.isLingeringAP = true;
-				
-				SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+				if (pToken.inCombat && (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly")) {
+					PerceptiveFlags.resetLingeringAP(pToken)
+				}
+				else {
+					let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
+					
+					vInfos.isLingeringAP = true;
+					
+					SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+				}
 			}
 		}
 		

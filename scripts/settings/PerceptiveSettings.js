@@ -236,9 +236,9 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: String,
 		choices: {
-			"off" : 		Translate("GMSpotconfirmDialogbehaviour.options.off"),
-			"playersonly" :	Translate("GMSpotconfirmDialogbehaviour.options.playersonly"),
-			"always" :		Translate("GMSpotconfirmDialogbehaviour.options.always")
+			"off" : Translate("Settings.GMSpotconfirmDialogbehaviour.options.off"),
+			"playersonly" :	Translate("Settings.GMSpotconfirmDialogbehaviour.options.playersonly"),
+			"always" : Translate("Settings.GMSpotconfirmDialogbehaviour.options.always")
 		},
 		default: false
 	  }); 
@@ -287,10 +287,10 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: String,
 		choices: {
-			"never": Translate("Settings.CritMethod.options.never"),
-			"always": Translate("Settings.CritMethod.options.always"),
-			"activeonly": Translate("Settings.CritMethod.options.activeonly"),
-			"passiveonly": Translate("Settings.CritMethod.options.passiveonly")
+			"never": Translate("Settings.ApplyRange.options.never"),
+			"always": Translate("Settings.ApplyRange.options.always"),
+			"activeonly": Translate("Settings.ApplyRange.options.activeonly"),
+			"passiveonly": Translate("Settings.ApplyRange.options.passiveonly")
 		},
 		default: "never"
 	  });
@@ -360,8 +360,13 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.LingeringAP.descrp"),
 		scope: "world",
 		config: true,
-		type: Boolean,
-		default: false
+		type: String,
+		choices: {
+			"off" : Translate("Settings.LingeringAP.options." + "off"),
+			"always" : Translate("Settings.LingeringAP.options." + "always"),
+			"outofcombatonly": Translate("Settings.LingeringAP.options." + "outofcombatonly")
+		},
+		default: "off"
 	  }); 			  
  
 	//formulas

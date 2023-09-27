@@ -26,7 +26,8 @@
 					"value0"		    : "Dark",
 					"value1"			: "Dim",
 					"value2"			: "Bright"
-				}
+				},
+				"LingeringAP"				: "Lingering active perception"
 			},
 			"SpottingConfirm" : {
 				"name"					: "Confirm Spotting",
@@ -170,6 +171,22 @@
 				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
 			},
 			
+			"ApplyRange" : {
+				"name"					: "Apply ranges",
+				"descrp"				: "For which checks the ranges should be applied",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"activeonly"		: "active checks only",
+					"passiveonly"		: "passive checks only"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "Use border to border range",
+				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
@@ -183,6 +200,16 @@
 			"AutomateTokenSpottable" : {
 				"name"					: "Atomate token Can be spotted",
 				"descrp"				: "The Can be spotted setting of Tokens will be automatically changed when a stealth change is detected"
+			},
+	
+			"CritMethod" : {
+				"name" 					: "Crit system",
+				"descrp"				: "The way critical rolls are determined",
+				"options" : {
+					"noCrit"			: "No crits",
+					"natCrit"			: "Nat 1/20",
+					"natCritpm10"		: "Nat 1/20 & +-10 of DC [e.g. Pf2e]"
+				}
 			},
 			
 			"SimulatePlayerVision" : {
@@ -265,14 +292,39 @@
 				"descrp"				: "If rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed"
 			}, 
 			
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "GM confirm Spotting behaviour",
+				"descrp"				: "For which users rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed",
+				"options" : {
+					"off"				: "off",
+					"playersonly"		: "players only",
+					"always"			: "for everyone"
+				}
+			}, 
+			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Make spotted tokens visible",
-				"descrp"				: "If actively or passively spotted tokens should be made visible"
-			}, 
+				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone"
+			},
+
+			"LingeringAP" : {
+				"name"					: "Active perception lingers",
+				"descrp"				: "If rolled active perception lingers after its innitial role until removed manually",
+				"options" : {
+					"off"				: "off",
+					"always"			: "always",
+					"outofcombatonly"	: "out of combat"
+				}
+			}, 			
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
 				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "Perception only with Macros",
+				"descrp" 				: "If only perception Rolls made with the Perceptive macros should be considered"				
 			},
 			
 			"showPerceptiveWalls" : {
