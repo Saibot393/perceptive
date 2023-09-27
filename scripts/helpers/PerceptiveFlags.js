@@ -49,6 +49,7 @@ const cSceneDimEndF = "SceneDimEndFlag"; //flag that stores the scene darkness v
 const cPerceptiveStealthingF = "PerceptiveStealthingFlag"; //Flag that stores if this token is perceptive stealthing
 const cLockPPDCF = "LockPPDCFlag"; //Flag to lock the PPDC (only for Pf2e)
 const cLingeringAPF = "LingeringAPFlag"; //FLag to store lingering AP
+const cLingeringAPInfoF = "LingeringAPInfoFlag"; //Flag to store LingeringAPInfo
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
@@ -198,11 +199,13 @@ class PerceptiveFlags {
 	
 	static PPDCLocked(pToken) {} //returns if the PPDC if pToken is locked (only PF2e)
 	
-	static setLingeringAP(pToken, pResults) {} //sets the lingering AP of pToken to pResults (array of array each containing total and dice result)
+	static async setLingeringAP(pToken, pResults, pInfos = {}) {} //sets the lingering AP of pToken to pResults (array of array each containing total and dice result)
 	
-	static resetLingeringAP(pToken) {} //resets the Lingering AP of pToken
+	static async resetLingeringAP(pToken) {} //resets the Lingering AP of pToken
 	
-	static LingeringAP(pToken) {} //returns the Lingering AP if pToken (undefined if not set)
+	static LingeringAP(pToken) {} //returns the Lingering AP of pToken (undefined if not set)
+	
+	static LingeringAPInfo(pToken) {} //returns the Lingering AP info of pToken
 	
 	static hasLingeringAP(pToken) {} //returns if pToken has a lingering ap set
 	
@@ -630,6 +633,19 @@ class PerceptiveFlags {
 		return []; //default if anything fails
 	}
 	
+	static #LingeringAPInfoFlag (pObject) { 
+	//returns content of LingeringAPInfoFlag of object (object)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cLingeringAPInfoF)) {
+				return vFlag.LingeringAPInfoFlag;
+			}
+		}
+		
+		return {}; //default if anything fails
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -799,6 +815,16 @@ class PerceptiveFlags {
 		//sets content of LingeringAPFlag (array of results)
 		if (pObject) {
 			await pObject.setFlag(cModuleName, cLingeringAPF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setLingeringAPInfo (pObject, pContent) {
+		//sets content of LingeringAPInfoFlag (object)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, cLingeringAPInfoF, pContent); 
 			
 			return true;
 		}
@@ -1251,17 +1277,23 @@ class PerceptiveFlags {
 		return this.#LockPPDCFlag(pToken);
 	}
 	
-	static setLingeringAP(pToken, pResults) {
-		this.#setLingeringAP(pToken, pResults);
+	static async setLingeringAP(pToken, pResults, pInfos = {}) {
+		await this.#setLingeringAP(pToken, pResults);
+		
+		await this.#setLingeringAPInfo(pToken, pInfos);
 	}
 	
-	static resetLingeringAP(pToken) {
-		this.#setLingeringAP(pToken, []);
+	static async resetLingeringAP(pToken) {
+		await this.#setLingeringAP(pToken, []);
 	}
 	
 	static LingeringAP(pToken) {
 		return this.#LingeringAPFlag(pToken);
 	}
+	
+	static LingeringAPInfo(pToken) {
+		return this.#LingeringAPInfoFlag(pToken);
+	} 
 	
 	static hasLingeringAP(pToken) {
 		return (this.#LingeringAPFlag(pToken)?.length > 0);

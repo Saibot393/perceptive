@@ -20,8 +20,10 @@ class PerceptiveMouseHandler {
 			}
 
 			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
-				if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
-					Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID);
+				if (!game.settings.get(cModuleName, "onlyMacroSeek")) {
+					if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
+						Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID);
+					}
 				}
 
 				if (!game.settings.get(cModuleName, "UsePf2eRules")) {

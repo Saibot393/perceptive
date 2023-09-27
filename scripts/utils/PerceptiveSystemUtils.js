@@ -1,4 +1,4 @@
-import { cModuleName} from "./PerceptiveUtils.js";
+import { cModuleName, PerceptiveUtils} from "./PerceptiveUtils.js";
 
 //system names
 const cPf2eName = "pf2e"; //name of Pathfinder 2. edition system
@@ -40,6 +40,8 @@ class PerceptiveSystemUtils {
 	static StealthDCPf2e(pActor) {} //returns the Stealth DC of pActor
 	
 	static StealthStatePf2e(pToken, pInfos = {}) {} //returns the stealth state of pToken (none, hide, sneak, both)
+	
+	static SystemPerceptionMacros(pPerceptionFunction) {} //returns perception macros for this system
 	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
@@ -156,35 +158,60 @@ class PerceptiveSystemUtils {
 	}
 	
 	static StealthStatePf2e(pToken, pInfos = {}) {
-		let vRelevantEffects = pToken.actor.items.filter(vItem => vItem?.flags?.perceptive?.PerceptiveEffectFlag);
+		if (pToken.actor) {
+			let vRelevantEffects = pToken.actor.items.filter(vItem => vItem?.flags?.perceptive?.PerceptiveEffectFlag);
+			
+			let vhidden = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "hidden");
+			
+			pInfos["hideEffect"] = vhidden;
+			
+			let vundetected = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "undetected");
+			
+			pInfos["sneakEffect"] = vundetected;
+			
+			return [["none", "hide"], ["sneak", "both"]][Number(Boolean(vundetected))][Number(Boolean(vhidden))];
+			
+			/*
+			if (!vhidden && !vundetected) {
+				return "none";
+			}
+			
+			if (vhidden && !vundetected) {
+				return "hide"
+			}
+			
+			if (!vhidden && vundetected) {
+				return "sneak"
+			}
+			
+			if (vhidden && vundetected) {
+				return "both"
+			}
+			*/
+		}
+	}
+	
+	static SystemPerceptionMacros(pPerceptionFunction) {
+		let vMacros = {};
 		
-		let vhidden = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "hidden");
-		
-		pInfos["hideEffect"] = vhidden;
-		
-		let vundetected = vRelevantEffects.find(vEffect => vEffect.rollOptionSlug == "undetected");
-		
-		pInfos["sneakEffect"] = vundetected;
-		
-		return [["none", "hide"], ["sneak", "both"]][Number(Boolean(vundetected))][Number(Boolean(vhidden))];
-		
-		/*
-		if (!vhidden && !vundetected) {
-			return "none";
+		if (PerceptiveUtils.isPf2e()) {	
+			vMacros.SeekwithRange = function(pRanges) {
+				if (game.settings.get(cModuleName, "onlyMacroSeek")) {
+					let vActor = PerceptiveUtils.selectedTokens()[0]?.actor;
+					
+					if (vActor) {
+						game.pf2e.actions.seek({
+										actors: vActor,
+										callback: (pCallBack) => {
+											pPerceptionFunction(PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pCallBack.actor.id), [[pCallBack.roll.total, pCallBack.roll.dice[0].total]], {isLingeringAP : false, Ranges : pRanges});
+										}
+						});	
+					}
+				}
+			}
 		}
 		
-		if (vhidden && !vundetected) {
-			return "hide"
-		}
-		
-		if (!vhidden && vundetected) {
-			return "sneak"
-		}
-		
-		if (vhidden && vundetected) {
-			return "both"
-		}
-		*/
+		return vMacros;
 	}
 	
 	//system defaults

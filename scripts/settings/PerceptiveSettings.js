@@ -242,12 +242,21 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		},
 		default: false
 	  }); 
+	  
+	  game.settings.register(cModuleName, "onlyMacroSeek", {
+		name: Translate("Settings.onlyMacroSeek.name"),
+		hint: Translate("Settings.onlyMacroSeek.descrp"),
+		scope: "world",
+		config: PerceptiveUtils.isPf2e(),
+		type: Boolean,
+		default: false
+	  }); 
 
 	  game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
 		name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
 		hint: Translate("Settings.ForceInvertIgnoreRollKey.descrp"),
 		scope: "world",
-		config: true,
+		config: !game.settings.get(cModuleName, "onlyMacroSeek"),
 		type: Boolean,
 		default: false
 	  });  	  
@@ -269,7 +278,22 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: Number,
 		default: 0
-	  });   
+	  });  
+
+	  game.settings.register(cModuleName, "ApplyRange", {
+		name: Translate("Settings.ApplyRange.name"),
+		hint: Translate("Settings.ApplyRange.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		choices: {
+			"never": Translate("Settings.CritMethod.options.never"),
+			"always": Translate("Settings.CritMethod.options.always"),
+			"activeonly": Translate("Settings.CritMethod.options.activeonly"),
+			"passiveonly": Translate("Settings.CritMethod.options.passiveonly")
+		},
+		default: "never"
+	  });	  
   
 	//RulesAutomation
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
@@ -329,7 +353,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: Boolean,
 		default: false
-	  }); 	  
+	  }); 			  
  
 	//formulas
 	  game.settings.register(cModuleName, "PassivePerceptionFormula", {
@@ -526,7 +550,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.InvertIgnoreRollKey.name"),
 	hint: Translate("Settings.InvertIgnoreRollKey.descrp"),
 	scope: "client",
-	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"),
+	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey") && !game.settings.get(cModuleName, "onlyMacroSeek"),
 	type: Boolean,
 	default: false
   }); 
