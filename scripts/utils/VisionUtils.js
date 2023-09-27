@@ -2,6 +2,7 @@ import {GeometricUtils} from "./GeometricUtils.js";
 import { PerceptiveUtils, cModuleName } from "./PerceptiveUtils.js";
 import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
+import {PerceptiveSystemUtils} from "./PerceptiveSystemUtils.js";
 
 //const cTransparentalpha = 0.5;
 
@@ -181,6 +182,10 @@ class VisionUtils {
 			else {
 				let vRollData = {actor : pToken.actor};
 				let vRollFormula = game.settings.get(cModuleName, "PassivePerceptionFormula");
+				
+				if (vRollFormula == "") {
+					vRollFormula = PerceptiveSystemUtils.SystemdefaultPPformula();
+				}
 				
 				let vRoll = new Roll(vRollFormula, vRollData);
 				await vRoll.evaluate();

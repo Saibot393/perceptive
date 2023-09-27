@@ -221,7 +221,7 @@ class PerceptiveSystemUtils {
 	static SystemdefaultPPformula() {
 		switch (game.system.id) {
 			case cDnD5e:
-				return "10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value";
+				return "@actor.system.skills.prc.passive";
 				break;
 			default:
 				return "";
