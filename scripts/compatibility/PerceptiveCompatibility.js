@@ -2,6 +2,7 @@ import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cL
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
+import {IgnoreWall} from "./APIHandler.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -91,6 +92,6 @@ Hooks.once("init", () => {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
-		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && IgnoreWall(pwall.document, options?.source?.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
+		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && IgnoreWall(pwall.document, options.source.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
 	}
 });
