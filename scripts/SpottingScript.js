@@ -25,7 +25,8 @@ var vLocalVisionData = {
 	vActiveRange : false,
 	vPassiveRange : false,
 	vCritType : 0,
-	vPf2eRules : false
+	vPf2eRules : false,
+	vUseRangeTollerance : false
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -95,7 +96,7 @@ class SpottingManager {
 	static async initializeVisionSources(pData) {} //called when new vision sources are initialized
 	
 	//support
-	static inCurrentVisionRange(pSpotters, pObject, pRangeReplacement = undefined) {} //returns if pObject is in vision range of one of pSpotters
+	static inCurrentVisionRange(pSpotters, pObject, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {} //returns if pObject is in vision range of one of pSpotters
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
@@ -108,7 +109,13 @@ class SpottingManager {
 			if (vWallObject) {
 				const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
-				if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center)) {
+				let vTolerance;
+			
+				if (vLocalVisionData.vUseRangeTollerance) {
+					vTolerance = {PointTolerance : 0};
+				}
+				
+				if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance})) {
 					return false;
 				}
 
@@ -145,7 +152,13 @@ class SpottingManager {
 		
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
-			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center)) {
+			let vTolerance;
+			
+			if (vLocalVisionData.vUseRangeTollerance) {
+				vTolerance = {PointTolerance : Math.max(pToken.width, pToken.height)/2};
+			}
+			
+			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance})) {
 				return false;
 			}
 				
@@ -203,6 +216,8 @@ class SpottingManager {
 			
 			vLocalVisionData.vActiveRange = ["always", "activeonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
 			vLocalVisionData.vPassiveRange = ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
+			
+			vLocalVisionData.vUseRangeTollerance = game.settings.get(cModuleName, "UseBordertoBorderRange");
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
@@ -253,8 +268,18 @@ class SpottingManager {
 				vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel));
 				
 				if (vSuccessDegree > 0) {
-					console.log(pInfos);
-					if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, pInfos.Ranges)) {
+					let vTolerance;
+					
+					if (vLocalVisionData.vUseRangeTollerance) {
+						if (vSpotables[i].documentName == "Token") {
+							vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
+						}
+						else {
+							vTolerance = {PointTolerance : 0};
+						}
+					}
+					
+					if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {
 						vSpotted.push(vSpotables[i]);
 						
 						if (vSpotables[i].documentName == "Token"){
@@ -882,22 +907,21 @@ class SpottingManager {
 	}
 	
 	//support
-	static inCurrentVisionRange(pSpotters, pPosition, pRangeReplacement = undefined) {
+	static inCurrentVisionRange(pSpotters, pPosition, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {
 		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange};
 		
-		console.log(pRangeReplacement);
-		if (pRangeReplacement) {
-			console.log(pRangeReplacement);
-			if (pRangeReplacement.hasOwnProperty("Range")) {
-				vRange.Range = pRangeReplacement.Range*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+
+		if (pSettings.RangeReplacement) {
+			if (pSettings.RangeReplacement.hasOwnProperty("Range")) {
+				vRange.Range = pSettings.RangeReplacement.Range*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
 			
-			if (pRangeReplacement.hasOwnProperty()) {
-				vRange.ConeRange = pRangeReplacement.ConeRange*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+			if (pSettings.RangeReplacement.hasOwnProperty("ConeRange")) {
+				vRange.ConeRange = pSettings.RangeReplacement.ConeRange*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
 		}
 		
-		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange);
+		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, pSettings.Tolerance);
 	}
 }
 

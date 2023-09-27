@@ -293,7 +293,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 			"passiveonly": Translate("Settings.CritMethod.options.passiveonly")
 		},
 		default: "never"
-	  });	  
+	  });
+
+	  game.settings.register(cModuleName, "UseBordertoBorderRange", {
+		name: Translate("Settings.UseBordertoBorderRange.name"),
+		hint: Translate("Settings.UseBordertoBorderRange.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  });  	  
   
 	//RulesAutomation
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {

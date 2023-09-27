@@ -34,7 +34,13 @@
 				"Behaviour"				: "mit einem <b>{pBehaviour}</b> Wurf und Resultat <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "Verstecken",
-			"StopStealthing"			: "Aufdecken"
+			"StopStealthing"			: "Aufdecken",
+			"GMuiandcontrol"			: "SL UI & Steuerung",
+			"SightRange"				: "Sichtreichweite",
+			"RulesAutomation"			: "Regeln & Automationen",
+			"RollFormulas"				: "Würfe & Formeln",
+			"Effects"					: "Effekte",
+			"Illumination"				: "Beleuchtung"
 		},
 		
 		"ChatMessage" : {
@@ -42,6 +48,10 @@
 				"content"				: "Du hast es geschafft <b>{pDoors}</b> geheime Türen and folgende Figuren aufzudecken:",
 				"unknown"				: "???"
 			}
+		},
+		
+		"Warnings" : {
+			"MacroSeekDeactivatet" 		: "Einstellung \"Nur Macro Suche\" muss aktiviert sein um dieses Macro verwenden zu können"
 		},
 		
 		"Settings" : {

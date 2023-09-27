@@ -1,4 +1,4 @@
-import { cModuleName, PerceptiveUtils} from "./PerceptiveUtils.js";
+import { cModuleName, PerceptiveUtils, Translate} from "./PerceptiveUtils.js";
 
 //system names
 const cPf2eName = "pf2e"; //name of Pathfinder 2. edition system
@@ -207,6 +207,9 @@ class PerceptiveSystemUtils {
 										}
 						});	
 					}
+				}
+				else {
+					ui.notifications?.warn(Translate("Warnings.MacroSeekDeactivatet"))
 				}
 			}
 		}

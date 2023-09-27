@@ -34,7 +34,13 @@
 				"Behaviour"				: "with a <b>{pBehaviour}</b> roll resulting in <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "开始隐蔽",
-			"StopStealthing"			: "停止隐蔽"
+			"StopStealthing"			: "停止隐蔽",
+			"GMuiandcontrol"			: "GM UI & Control",
+			"SightRange"				: "Sight Range",
+			"RulesAutomation"			: "Rules & Automations",
+			"RollFormulas"				: "Rolls & Formulas",
+			"Effects"					: "Effects",
+			"Illumination"				: "Illumination"
 		},
 		
 		"ChatMessage" : {
@@ -42,6 +48,10 @@
 				"content"				: "You were able to spot <b>{pDoors}</b> secret doors and these hidden tokens:",
 				"unknown"				: "???"
 			}
+		},
+		
+		"Warnings" : {
+			"MacroSeekDeactivatet" 		: "Setting \"Only macro seek\" has to be activated to use this macro"
 		},
 		
 		"Settings" : {	

@@ -33,7 +33,7 @@ class VisionUtils {
 	
 	static spotableTokensinVision(pToken) {} //returns an array of tokens that are spotable and within the vision of pToken
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pTolerance = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
 	
 	static async PassivPerception(pToken) {} //returns the passive perception of pToken
 	
@@ -142,20 +142,28 @@ class VisionUtils {
 		return vTokensinRange.map(vToken => vToken.document);
 	}
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange) {
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pTolerance = undefined) {
 		if (pRange >= Infinity) {
 			return true;
 		}
 		
-		return pSpotters.find((vSpotter) => {	//burst and cone range check				
+		return pSpotters.find((vSpotter) => {	//burst and cone range check	
+												let vTotalTolerance = 0;
+												
+												if (pTolerance) {
+													vTotalTolerance = Math.max(vSpotter.object.width, vSpotter.object.height) / 2;
+													
+													vTotalTolerance = vTotalTolerance + pTolerance.PointTolerance;
+												}
+												
 												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
 												
-												if(vDistance <= pRange) {
+												if((vDistance - vTotalTolerance) <= pRange) {
 													//is in burst
 													return true;
 												}
 												
-												if (vDistance <= pConeRange) {
+												if ((vDistance - vTotalTolerance) <= pConeRange) {
 													//is in cone range, check angle
 													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
 													
