@@ -1,3 +1,6 @@
+## v2.0.1
+- Fixed compatibility bugs with Levels (thanks to [araburguiere](https://github.com/taraburguiere))
+
 ## v2.0.0
 - Reordered most spotting settings into collapsible subgroups to bring order to this mess
 - Changed the GM confirm Spotting setting to  choose when the confirm dialog should show up: never, for players, always
