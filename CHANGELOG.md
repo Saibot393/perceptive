@@ -8,10 +8,11 @@
   - Hidden can be removed with active perception checks
 - When Make spotted tokens visible is checked Perceptive will now also remove the core foundry invisibility from spotted tokens
 - Added world setting Crit system to choose how crits are calculated for perception checks
-- Added world setting Lingering active perception to continue using the active perception until manually removed in the token HUD
-- Added world setting Apply Range conditions to set when the set ranges should be applied
+- Added world setting Active perception lingers to continue using the active perception until manually removed in the token HUD
+- Added world setting Apply Ranges to set when the set ranges should be applied
 - Added world setting Border to border distance to calculate the spotting distance based on token borders instead of the center
 - Added world setting Crit system to set how crits are calculated
+- Added world setting Perception only with Marcos[Pf2e only] to limit perception checks to those made with the included macros
 - Added hooks for active perception checks and newly visible objects
 
 ## v1.9.7
