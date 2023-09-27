@@ -1,3 +1,7 @@
+## v2.0.2
+- Changed passive perception formula for D&D5e (new Formula : @actor.system.skills.prc.passive)
+  - The used formula can be reset to the systems default by setting it to ""
+
 ## v2.0.1
 - Fixed compatibility bugs with Levels (thanks to [araburguiere](https://github.com/taraburguiere))
 
