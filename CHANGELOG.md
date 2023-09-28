@@ -1,3 +1,8 @@
+## v2.0.4
+- Fixed bug in cone range calculation
+- Fixed typo in Seek: 30-Foot Cone macro
+- Added option in combat only to the Apply ranges setting
+
 ## v2.0.3
 - Replaced setting Perception only with Macros with more detailed setting Perception macro use behaviour
 - Fixed small error in Pf2e Seek (unlimited Range) macro
