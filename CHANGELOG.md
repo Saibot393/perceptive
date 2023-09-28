@@ -1,3 +1,7 @@
+## v2.0.3
+- Replaced setting Perception only with Macros with more detailed setting Perception macro use behaviour
+- Fixed small error in Pf2e Seek (unlimited Range) macro
+
 ## v2.0.2
 - Changed passive perception formula for D&D5e (new Formula : @actor.system.skills.prc.passive)
   - The used formula can be reset to the systems default by setting it to ""
