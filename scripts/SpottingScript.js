@@ -389,7 +389,6 @@ class SpottingManager {
 								
 								let vPreviousFormula = PerceptiveFlags.EffectInfos(vEffectInfos.sneakEffect)?.RollFormula;
 								
-								console.log(vPreviousState);
 								if ((vPreviousState == "sneak") && ((!pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 1) || (pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 0))) {
 									//only normal failure/success, replace sneak with stealth
 									vResetallStealthValues = false;
@@ -919,8 +918,6 @@ class SpottingManager {
 	static inCurrentVisionRange(pSpotters, pPosition, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {
 		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange};
 		
-
-		console.log(pSettings);
 		if (pSettings.RangeReplacement) {
 			if (pSettings.RangeReplacement.hasOwnProperty("Range")) {
 				vRange.Range = pSettings.RangeReplacement.Range*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
@@ -930,8 +927,6 @@ class SpottingManager {
 				vRange.ConeRange = pSettings.RangeReplacement.ConeRange*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
 		}
-		
-		console.log(vRange);
 		
 		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, pSettings.Tolerance);
 	}

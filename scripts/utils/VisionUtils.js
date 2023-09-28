@@ -164,8 +164,6 @@ class VisionUtils {
 													return true;
 												}
 												
-												console.log(pConeRange);
-												console.log(vDistance - vTotalTolerance);
 												if ((vDistance - vTotalTolerance) <= pConeRange) {
 													//is in cone range, check angle
 													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
