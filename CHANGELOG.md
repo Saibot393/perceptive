@@ -1,3 +1,6 @@
+## v2.0.5
+- Small fix to cone range calculation
+
 ## v2.0.4
 - Fixed bug in cone range calculation
 - Fixed typo in Seek: 30-Foot Cone macro
