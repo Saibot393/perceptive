@@ -235,7 +235,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		scope: "world",
 		config: true,
 		type: String,
-		choices: {
+		choices : {
 			"off" : Translate("Settings.GMSpotconfirmDialogbehaviour.options.off"),
 			"playersonly" :	Translate("Settings.GMSpotconfirmDialogbehaviour.options.playersonly"),
 			"always" : Translate("Settings.GMSpotconfirmDialogbehaviour.options.always")
@@ -243,20 +243,25 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: false
 	  }); 
 	  
-	  game.settings.register(cModuleName, "onlyMacroSeek", {
-		name: Translate("Settings.onlyMacroSeek.name"),
-		hint: Translate("Settings.onlyMacroSeek.descrp"),
+	  game.settings.register(cModuleName, "MacroSeekBehaviour", {
+		name: Translate("Settings.MacroSeekBehaviour.name"),
+		hint: Translate("Settings.MacroSeekBehaviour.descrp"),
 		scope: "world",
 		config: PerceptiveUtils.isPf2e(),
-		type: Boolean,
-		default: false
+		type: String,
+		choices : {
+			"never" : Translate("Settings.MacroSeekBehaviour.options.never"),
+			"incombatonly" : Translate("Settings.MacroSeekBehaviour.options.incombatonly"),
+			"always" : Translate("Settings.MacroSeekBehaviour.options.always")
+		},
+		default: "never"
 	  }); 
 
 	  game.settings.register(cModuleName, "ForceInvertIgnoreRollKey", {
 		name: Translate("Settings.ForceInvertIgnoreRollKey.name"),
 		hint: Translate("Settings.ForceInvertIgnoreRollKey.descrp"),
 		scope: "world",
-		config: !game.settings.get(cModuleName, "onlyMacroSeek"),
+		config: true,
 		type: Boolean,
 		default: false
 	  });  	  
@@ -564,7 +569,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.InvertIgnoreRollKey.name"),
 	hint: Translate("Settings.InvertIgnoreRollKey.descrp"),
 	scope: "client",
-	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey") && !game.settings.get(cModuleName, "onlyMacroSeek"),
+	config: !game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"),
 	type: Boolean,
 	default: false
   }); 
@@ -732,7 +737,7 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		collapseContent(pHTML, "GMuiandcontrol", 	`[data-setting-id="perceptive.SimulatePlayerVision"],
 													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
 													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"],
-													[data-setting-id="perceptive.onlyMacroSeek"]`);
+													[data-setting-id="perceptive.MacroSeekBehaviour"]`);
 		
 		collapseContent(pHTML, "RulesAutomation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
 												[data-setting-id="perceptive.resetSpottedbyMovedefault"],

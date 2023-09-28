@@ -52,7 +52,7 @@
 		},
 		
 		"Warnings" : {
-			"MacroSeekDeactivatet" 		: "Einstellung \"Wahrnehmung nur mit Macros\" muss aktiviert sein um dieses Macro verwenden zu können"
+			"MacroSeekDeactivatet" 		: "Dieses Macro ist momentan nicht verfügbar, siehe Einstellung \"Wahrnehmungs Macros Verhalten\""
 		},
 		
 		"Settings" : {
@@ -325,6 +325,16 @@
 			"onlyMacroSeek" : {
 				"name" 					: "Wahrnehmung nur mit Macros",
 				"descrp" 				: "Ob nur Wahrnehmungswürfe mit den Perceptive Macros gewertet werden sollen"				
+			},
+			
+			"MacroSeekBehaviour" : {
+				"name"					: "Wahrnehmungs Macros Verhalten",
+				"descrp"				: "Unter wlechen Bedingungen nur Wahrnehmungswürfe welche mit den Perceptive Macros gemacht werden beachtet werden",
+				"options" : {
+					"never"				: "Niemals",
+					"incombatonly"		: "Nur in Kämpfen",
+					"always"			: "Immer"
+				}
 			},
 			
 			"showPerceptiveWalls" : {

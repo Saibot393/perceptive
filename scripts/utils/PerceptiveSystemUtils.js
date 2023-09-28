@@ -43,6 +43,8 @@ class PerceptiveSystemUtils {
 	
 	static SystemPerceptionMacros(pPerceptionFunction) {} //returns perception macros for this system
 	
+	static customPf2eSeek(pOptions) {} //custom Pf2e seek macro to add a custom trait
+	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
@@ -196,9 +198,11 @@ class PerceptiveSystemUtils {
 		
 		if (PerceptiveUtils.isPf2e()) {	
 			vMacros.SeekwithRange = function(pRanges) {
-				if (game.settings.get(cModuleName, "onlyMacroSeek")) {
-					let vActor = PerceptiveUtils.selectedTokens()[0]?.actor;
-					
+				let vActor = PerceptiveUtils.selectedTokens()[0]?.actor;
+				
+				console.log((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") );
+				console.log(((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor.inCombat)));
+				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor.inCombat))) {
 					if (vActor) {
 						game.pf2e.actions.seek({
 										actors: vActor,
@@ -215,6 +219,31 @@ class PerceptiveSystemUtils {
 		}
 		
 		return vMacros;
+	}
+	
+	static customPf2eSeek(pOptions) {
+		const slug = pOptions?.skill ?? "perception"
+		  , rollOptions = ["action:seek"]
+		  , modifiers = pOptions?.modifiers;
+		ActionMacroHelpers.simpleRollActionCheck({
+			actors: pOptions.actors,
+			actionGlyph: pOptions.glyph ?? "A",
+			title: "PF2E.Actions.Seek.Title",
+			checkContext: opts=>ActionMacroHelpers.defaultCheckContext(opts, {
+				modifiers,
+				rollOptions,
+				slug
+			}),
+			traits: ["concentrate", "secret", "custom-source:perceptive"],
+			event: pOptions.event,
+			callback: pOptions.callback,
+			difficultyClass: pOptions.difficultyClass,
+			extraNotes: selector=>[ActionMacroHelpers.note(selector, "PF2E.Actions.Seek", "criticalSuccess"), ActionMacroHelpers.note(selector, "PF2E.Actions.Seek", "success")]
+		}).catch(error=>{
+			throw ui.notifications.error(error.message),
+			error
+		}
+		)		
 	}
 	
 	//system defaults

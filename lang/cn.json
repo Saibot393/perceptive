@@ -52,7 +52,7 @@
 		},
 		
 		"Warnings" : {
-			"MacroSeekDeactivatet" 		: "Setting \"Perception only with Macros\" has to be activated to use this macro"
+			"MacroSeekDeactivatet" 		: "This macro is currently not available, see setting \"Perception macro use behaviour\""
 		},
 		
 		"Settings" : {	
@@ -325,6 +325,16 @@
 			"onlyMacroSeek" : {
 				"name" 					: "Perception only with Macros",
 				"descrp" 				: "If only perception Rolls made with the Perceptive macros should be considered"				
+			},
+			
+			"MacroSeekBehaviour" : {
+				"name"					: "Perception macro use behaviour",
+				"descrp"				: "Under which conditions only perception Rolls made with Perceptive macros are considered",
+				"options" : {
+					"never"				: "never",
+					"incombatonly"		: "only in combat",
+					"always"			: "always"
+				}
 			},
 			
 			"showPerceptiveWalls" : {
