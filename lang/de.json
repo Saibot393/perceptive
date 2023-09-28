@@ -173,7 +173,8 @@
 					"never"				: "niemals",
 					"always"			: "immer",
 					"activeonly"		: "Nur aktive Vergleiche",
-					"passiveonly"		: "Nur passive Vergleiche"
+					"passiveonly"		: "Nur passive Vergleiche",
+					"incombatonly"		: "Nur in Kämpfen (beide Vergleiche)"
 				}
 			},	
 

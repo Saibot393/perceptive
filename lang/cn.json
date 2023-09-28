@@ -173,7 +173,8 @@
 					"never"				: "never",
 					"always"			: "always",
 					"activeonly"		: "active checks only",
-					"passiveonly"		: "passive checks only"
+					"passiveonly"		: "passive checks only",
+					"incombatonly"		: "in combat only (both checks)"
 				}
 			},	
 

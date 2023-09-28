@@ -61,13 +61,13 @@ class PerceptiveSystemUtils {
 				if (vSystemInfo) {
 					switch (game.system.id) {
 						case cPf2eName:
-							return vSystemInfo.context.type == "perception-check";
+							return vSystemInfo.context?.type == "perception-check";
 							break;
 						case cDnD5e:
 							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
 							break;
 						case cPf1eName:
-							return vSystemInfo.subject.skill == "per";
+							return vSystemInfo.subject?.skill == "per";
 							break;
 					}
 				}
@@ -200,8 +200,6 @@ class PerceptiveSystemUtils {
 			vMacros.SeekwithRange = function(pRanges) {
 				let vActor = PerceptiveUtils.selectedTokens()[0]?.actor;
 				
-				console.log((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") );
-				console.log(((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor.inCombat)));
 				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor.inCombat))) {
 					if (vActor) {
 						game.pf2e.actions.seek({

@@ -448,7 +448,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 			"never": Translate("Settings.ApplyRange.options.never"),
 			"always": Translate("Settings.ApplyRange.options.always"),
 			"activeonly": Translate("Settings.ApplyRange.options.activeonly"),
-			"passiveonly": Translate("Settings.ApplyRange.options.passiveonly")
+			"passiveonly": Translate("Settings.ApplyRange.options.passiveonly"),
+			"incombatonly": Translate("Settings.ApplyRange.options.incombatonly")
 		},
 		default: "never"
 	  });

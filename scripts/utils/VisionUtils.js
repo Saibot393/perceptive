@@ -164,11 +164,13 @@ class VisionUtils {
 													return true;
 												}
 												
+												console.log(pConeRange);
+												console.log(vDistance - vTotalTolerance);
 												if ((vDistance - vTotalTolerance) <= pConeRange) {
 													//is in cone range, check angle
 													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
 													
-													return Math.abs(vAngleDiff) < cSpotConeAngle/2;
+													return Math.min(Math.abs(vAngleDiff), Math.abs(vAngleDiff-360)) < cSpotConeAngle/2;
 												}
 												
 												return false;});		

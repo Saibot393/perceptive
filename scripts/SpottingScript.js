@@ -214,8 +214,10 @@ class SpottingManager {
 			
 			vLocalVisionData.vPf2eRules = game.settings.get(cModuleName, "UsePf2eRules");
 			
-			vLocalVisionData.vActiveRange = ["always", "activeonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
-			vLocalVisionData.vPassiveRange = ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
+			let vCombatRange = (game.settings.get(cModuleName, "ApplyRange") == "incombatonly") && vTokens.find(vToken => vToken.actor?.inCombat); //if vision range is on because of combat
+			
+			vLocalVisionData.vActiveRange = vCombatRange || ["always", "activeonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
+			vLocalVisionData.vPassiveRange = vCombatRange || ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
 			
 			vLocalVisionData.vUseRangeTollerance = game.settings.get(cModuleName, "UseBordertoBorderRange");
 		}
@@ -918,6 +920,7 @@ class SpottingManager {
 		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange};
 		
 
+		console.log(pSettings);
 		if (pSettings.RangeReplacement) {
 			if (pSettings.RangeReplacement.hasOwnProperty("Range")) {
 				vRange.Range = pSettings.RangeReplacement.Range*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
@@ -927,6 +930,8 @@ class SpottingManager {
 				vRange.ConeRange = pSettings.RangeReplacement.ConeRange*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
 		}
+		
+		console.log(vRange);
 		
 		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, pSettings.Tolerance);
 	}
