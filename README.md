@@ -92,6 +92,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Spotting cone range to set an additional cone shaped spotting range infront of tokens
   - Apply Ranges: to set when the set ranges should be applied
   - Border to border distance: to calculate the spotting distance based on token borders instead of the center
+  - Standard vision direction: to set in which direction vision cones are applied
 - Illumination  
   - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
   - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
