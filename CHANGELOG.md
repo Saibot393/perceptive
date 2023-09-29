@@ -1,3 +1,6 @@
+## v2.0.6
+- Added world setting Standard vision direction to set in which direction vision cones are applied
+
 ## v2.0.5
 - Small fix to cone range calculation
 
