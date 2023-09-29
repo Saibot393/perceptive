@@ -41,7 +41,7 @@ class PerceptiveSystemUtils {
 	
 	static StealthStatePf2e(pToken, pInfos = {}) {} //returns the stealth state of pToken (none, hide, sneak, both)
 	
-	static SystemPerceptionMacros(pPerceptionFunction) {} //returns perception macros for this system
+	static async SystemPerceptionMacros(pPerceptionFunction) {} //returns perception macros for this system
 	
 	static customPf2eSeek(pOptions) {} //custom Pf2e seek macro to add a custom trait
 	
@@ -193,21 +193,52 @@ class PerceptiveSystemUtils {
 		}
 	}
 	
-	static SystemPerceptionMacros(pPerceptionFunction) {
+	static async SystemPerceptionMacros(pPerceptionFunction) {
 		let vMacros = {};
 		
 		if (PerceptiveUtils.isPf2e()) {	
-			vMacros.SeekwithRange = function(pRanges) {
+			vMacros.SeekwithRange = async function(pRanges) {
 				let vActor = PerceptiveUtils.selectedTokens()[0]?.actor;
+				let vControlled = canvas.tokens.controlled[0];
 				
-				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor.inCombat))) {
-					if (vActor) {
+				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "always") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (vActor?.inCombat))) {
+					let vMacro = function(pConeRotation = undefined) {
+						let vRanges = pRanges;
+						
+						if (pConeRotation != undefined) {
+							vRanges.ConeRotation = pConeRotation;
+						}
+						
+						canvas.tokens.activate();
+						
+						if ((canvas.tokens.controlled.length <= 0) && vControlled) {
+							vControlled.control();
+						}
+						
 						game.pf2e.actions.seek({
 										actors: vActor,
 										callback: (pCallBack) => {
-											pPerceptionFunction(PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pCallBack.actor.id), [[pCallBack.roll.total, pCallBack.roll.dice[0].total]], {isLingeringAP : false, Ranges : pRanges});
+											pPerceptionFunction(PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pCallBack.actor.id), [[pCallBack.roll.total, pCallBack.roll.dice[0].total]], {isLingeringAP : false, Ranges : vRanges});
 										}
 						});	
+					}
+					
+					if (pRanges.withTemplate && pRanges.ConeRange > 0 && vControlled) {
+						const cConeRotCorrection = 90; //to make cones be rotated downwards
+						
+						let vTemplate = new MeasuredTemplateDocument({x : PerceptiveUtils.selectedTokens()[0].object.center.x, y : PerceptiveUtils.selectedTokens()[0].object.center.y, t : "cone", angle : 90, rotation : cConeRotCorrection, distance : pRanges.ConeRange});
+						
+						vTemplate = await vTemplate.constructor.create(vTemplate, {parent : canvas.scene});
+						
+						canvas.templates.activate();
+						
+						vTemplate.object.controlIcon.onclick = function() {
+																			canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [vTemplate.id]);
+																			vMacro(((vTemplate.rotation + (360 - cConeRotCorrection) - vControlled.document.rotation))%360);
+						};
+					}
+					else {
+						vMacro();
 					}
 				}
 				else {
