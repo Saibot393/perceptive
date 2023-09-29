@@ -34,7 +34,7 @@ class VisionUtils {
 	
 	static spotableTokensinVision(pToken) {} //returns an array of tokens that are spotable and within the vision of pToken
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pTolerance = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
 	
 	static async PassivPerception(pToken) {} //returns the passive perception of pToken
 	
@@ -143,7 +143,7 @@ class VisionUtils {
 		return vTokensinRange.map(vToken => vToken.document);
 	}
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pTolerance = undefined) {
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {
 		if (pRange >= Infinity) {
 			return true;
 		}
@@ -166,7 +166,7 @@ class VisionUtils {
 												
 												if ((vDistance - vTotalTolerance) <= pConeRange) {
 													//is in cone range, check angle
-													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - vSpotter.rotation;
+													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - (vSpotter.rotation + pConeRotation)%360;
 													
 													return Math.min(Math.abs(vAngleDiff), Math.abs(vAngleDiff-360)) <= cSpotConeAngle/2;
 												}

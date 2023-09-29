@@ -22,6 +22,7 @@ var vLocalVisionData = {
 	vSimulatePlayerVision : false,
 	vSpottingRange : Infinity,
 	vSpottingConeRange : 0,
+	vSpottingConeRotation : 0,
 	vActiveRange : false,
 	vPassiveRange : false,
 	vCritType : 0,
@@ -209,6 +210,8 @@ class SpottingManager {
 			else {
 				vLocalVisionData.vSpottingConeRange = game.settings.get(cModuleName, "SpottingConeRange")*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
+			
+			vLocalVisionData.vSpottingConeRotation = game.settings.get(cModuleName, "StandardVisionDirection");
 			
 			vLocalVisionData.vCritType = PerceptiveUtils.CritType();
 			
@@ -916,7 +919,7 @@ class SpottingManager {
 	
 	//support
 	static inCurrentVisionRange(pSpotters, pPosition, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {
-		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange};
+		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange, ConeRotation : vLocalVisionData.vSpottingConeRotation};
 		
 		if (pSettings.RangeReplacement) {
 			if (pSettings.RangeReplacement.hasOwnProperty("Range")) {
@@ -926,9 +929,13 @@ class SpottingManager {
 			if (pSettings.RangeReplacement.hasOwnProperty("ConeRange")) {
 				vRange.ConeRange = pSettings.RangeReplacement.ConeRange*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 			}
+			
+			if (pSettings.RangeReplacement.hasOwnProperty("ConeRotation")) {
+				vRange.ConeRotation = pSettings.RangeReplacement.ConeRotation;
+			}
 		}
 		
-		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, pSettings.Tolerance);
+		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, vRange.ConeRotation, pSettings.Tolerance);
 	}
 }
 

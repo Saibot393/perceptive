@@ -183,6 +183,17 @@
 				"descrp"				: "Ob die Sichtreichweiten von Figuren von ihren Rändern anstatt ihren Mitten berechnet werden sollen"
 			},
 			
+			"StandardVisionDirection" : {
+				"name"					: "Standart Sicht Richtung",
+				"descrp"				: "Die Richtung welche für Sichtkegel benutzt wird, an nicht rotierten Figuren gemessen",
+				"options" : {
+					"bottom"			: "unten",
+					"left"				: "links",
+					"top"				: "oben",
+					"right"				: "rechts"
+				}
+			},
+			
 			"SpottingConeRange" : {
 				"name"					: "Aufdecken Kegel-Reichweite",
 				"descrp"				: "Eine zusätzliche Aufdeck Reichweite angewandt in einem 90° Kegel vor Figuren (0 um Leistung zu verbessern)"

@@ -188,6 +188,17 @@
 				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
 			},
 			
+			"StandardVisionDirection" : {
+				"name"					: "Standard vision direction",
+				"descrp"				: "The direction used for vision cones, measured for unrotated tokens",
+				"options" : {
+					"bottom"			: "bottom",
+					"left"				: "left",
+					"top"				: "top",
+					"right"				: "right"
+				}
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"

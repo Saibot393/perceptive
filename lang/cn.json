@@ -183,6 +183,17 @@
 				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
 			},
 			
+			"StandardVisionDirection" : {
+				"name"					: "Standard vision direction",
+				"descrp"				: "The direction used for vision cones, measured for unrotated tokens",
+				"options" : {
+					"bottom"			: "bottom",
+					"left"				: "left",
+					"top"				: "top",
+					"right"				: "right"
+				}
+			},
+			
 			"SpottingConeRange" : {
 				"name"					: "Spotting cone range",
 				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"

@@ -461,7 +461,22 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: Boolean,
 		default: false
-	  });  	  	  
+	  });  	  	
+
+	  game.settings.register(cModuleName, "StandardVisionDirection", {
+		name: Translate("Settings.StandardVisionDirection.name"),
+		hint: Translate("Settings.StandardVisionDirection.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		choices: {
+			0: Translate("Settings.StandardVisionDirection.options.bottom"),
+			90: Translate("Settings.StandardVisionDirection.options.left"),
+			180: Translate("Settings.StandardVisionDirection.options.top"),
+			270: Translate("Settings.StandardVisionDirection.options.right")
+		},
+		default: 0
+	  });	  
   
 	//illumination
 	  game.settings.register(cModuleName, "IlluminationPDCModifier", {
@@ -761,7 +776,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
 												[data-setting-id="perceptive.SpottingConeRange"],
 												[data-setting-id="perceptive.ApplyRange"],
-												[data-setting-id="perceptive.UseBordertoBorderRange"]`);
+												[data-setting-id="perceptive.UseBordertoBorderRange"],
+												[data-setting-id="perceptive.StandardVisionDirection"]`);
 		
 		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
