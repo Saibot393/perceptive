@@ -40,6 +40,9 @@ class PerceptiveMouseHandler {
 	
 	static onCanvasWheel(pEvent) {} //returns of event should be passed along
 	
+	//support
+	static allowCanvasZoom(pEvent) {} //returns if the canvas should currently be zoomed
+	
 	//IMPLEMENTATIONS
 	//registers
 	static RegisterControls() {
@@ -169,16 +172,26 @@ class PerceptiveMouseHandler {
 	} 
 	
 	static onCanvasWheel(pEvent) {
-		if (PerceptiveUtils.hoveredWall()) {
-			return !((pEvent.shiftKey && cDoorScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cDoorScrollsTurnoff.ctrlKey) || (pEvent.altKey && cDoorScrollsTurnoff.altKey) || cDoorScrollsTurnoff.default); 
-		}
-		else {
+		if (PerceptiveMouseHandler.allowCanvasZoom(pEvent)) {
 			return true;
 		}
 	}
+	
+	//support
+	static allowCanvasZoom(pEvent) {
+		if (PerceptiveUtils.hoveredWall()) {
+			return !((pEvent.shiftKey && cDoorScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cDoorScrollsTurnoff.ctrlKey) || (pEvent.altKey && cDoorScrollsTurnoff.altKey) || cDoorScrollsTurnoff.default); 
+		}
+		
+		return true;
+	} //returns if the canvas should currently be zoomed
 }
 
 //Hooks
 Hooks.on("init", function() {
 	PerceptiveMouseHandler.RegisterControls();
 });
+
+//
+
+export function allowCanvasZoom(pEvent) {return PerceptiveMouseHandler.allowCanvasZoom(pEvent)}

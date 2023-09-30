@@ -1,8 +1,9 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {IgnoreWall} from "./APIHandler.js";
+import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -93,5 +94,11 @@ Hooks.once("init", () => {
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
 		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && IgnoreWall(pwall.document, options.source.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
+	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cZnPOptions)) {
+		libWrapper.register(cModuleName, "MouseManager.prototype._onWheel", function(pWrapped, ...args) {if (allowCanvasZoom(args[0])) {return pWrapped(...args)}}, "MIXED");
+	
+		libWrapper.ignore_conflicts(cModuleName, cZnPOptions, "MouseManager.prototype._onWheel");
 	}
 });
