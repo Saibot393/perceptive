@@ -1,3 +1,7 @@
+## v2.0.8
+- Fixed moving door scrolls bug with [Zoom/Pan Options](https://foundryvtt.com/packages/zoom-pan-options) module that caused the canvas to scroll, even when a door control was hovered
+  - Activate [libWrapper](https://foundryvtt.com/packages/lib-wrapper) to activate this fix
+
 ## v2.0.7
 - Added new Macro for PF2e to use a template when seeking within a cone
 
