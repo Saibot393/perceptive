@@ -1,3 +1,6 @@
+## v2.0.7
+- Added new Macro for PF2e to use a template when seeking within a cone
+
 ## v2.0.6
 - Added world setting Standard vision direction to set in which direction vision cones are applied
 
