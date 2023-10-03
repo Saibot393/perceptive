@@ -1,6 +1,10 @@
 # Perceptive
 
- A Foundry VTT module to add a few loosely related vision based features, currently implemented features are:
+ A Foundry VTT module to add a few loosely related vision based features. 
+ 
+ A tutorial for some of the features can be found [here](https://www.youtube.com/watch?v=NZwZUu-Sczk).
+ 
+ Currently implemented features are:
 
 ## Door lock peeking
 
