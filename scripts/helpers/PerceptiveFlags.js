@@ -1214,7 +1214,19 @@ class PerceptiveFlags {
 			return 0;
 		}
 		else {
-			return VisionUtils.LightingPDCModifier(VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel));
+			let vIlluminationLevel = VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel);
+			
+			let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.PDC?.Illumination;
+			
+			if (vModifier) {
+				vModifier = vModifier[vIlluminationLevel];
+			}
+			
+			if (isNaN(vModifier)) {
+				vModifier = 0; //if something went wrong
+			}
+			
+			return VisionUtils.LightingPDCModifier(vIlluminationLevel) + vModifier;
 		}
 	}
 	

@@ -159,8 +159,6 @@ class PerceptiveMouseHandler {
 	static async onDoorRightClick(pDoorEvent, pWall) {
 		let vOldCall = await Hooks.call(cModuleName + "." + "DoorRClick", pWall.document, FCore.keysofevent(pDoorEvent)); //return false to stop normal behaviour
 		
-		console.log(vOldCall);
-		
 		return vOldCall;
 		
 		/*

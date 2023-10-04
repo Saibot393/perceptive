@@ -1,7 +1,7 @@
 import {PerceptiveUtils, cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 
-class PerceptiveMouseHandler {
+class PerceptiveRollHandler {
 	//DECLARATIONS
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chatmessage is created
 	
@@ -19,7 +19,7 @@ class PerceptiveMouseHandler {
 				}
 			}
 
-			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0].key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
+			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0]?.key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
 				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "never") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (!pMessage.actor?.inCombat))) {
 					if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
 						Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID);
@@ -45,7 +45,7 @@ class PerceptiveMouseHandler {
 
 Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
-		Hooks.on("createChatMessage", (pMessage, pInfos, pSenderID) => {PerceptiveMouseHandler.onChatMessage(pMessage, pInfos, pSenderID)});
+		Hooks.on("createChatMessage", (pMessage, pInfos, pSenderID) => {PerceptiveRollHandler.onChatMessage(pMessage, pInfos, pSenderID)});
 	}
 });
 
