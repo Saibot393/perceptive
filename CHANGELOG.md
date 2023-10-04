@@ -1,3 +1,8 @@
+## v2.1.1
+- Added support for active effects
+  - Active effects can now be used to modify the light level dependent perception dcs
+    - Use this syntax flags.perceptive.Modifiers.PDC.Illumination.{#LightLevel} for this modifier (#LightLevel is 0 for dark, 1 for dim and 2 for bright)
+
 ## v2.1.0
 - The control key for lockpeeking a door when rightclicking and for moving a door with the mouse wheel (including fast move) can now be set per client
 
