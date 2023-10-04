@@ -425,6 +425,21 @@
 			"resetStealthSelected" : {
 				"name" 					: "移除选择指示物的隐蔽",
 				"descrp"				: "移除选择指示物的隐蔽效果和信息"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "Mouse Peek lock",
+				"descrp"				: "Hold this button while right clicking to peek the clicked lock"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "Mouse Move door",
+				"descrp"				: "Hold this button while scrolling to move the hovered door (can be left empty)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "Mouse Move door fast",
+				"descrp"				: "Hold this button while scrolling to move the hovered door quickly"
 			}
 		},
 		

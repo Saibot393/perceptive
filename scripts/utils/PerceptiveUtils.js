@@ -76,6 +76,9 @@ class PerceptiveUtils {
 	//effects
 	static CustomWorldStealthEffects() {} //returns array of stealth effects for this world
 	
+	//keyboard
+	static KeyisDown(pKeyName, pnoKeyvalid = false) {} //returns if a key belonging to keybinding pKeyName is down (pnoKeyvalid if no key pressed is valid "input")
+	
 	//IMPLEMENTATIONS
 	
 	//Identification	
@@ -462,6 +465,15 @@ class PerceptiveUtils {
 	//effects
 	static CustomWorldStealthEffects() {
 		return game.settings.get(cModuleName, "customStealthEffects").split(cDelimiter);
+	}
+	
+	//keyboard
+	static KeyisDown(pKeyName, pnoKeyvalid = false) {
+		if (game.keybindings.bindings.get(cModuleName + "." + pKeyName).length > 0) {
+			return Boolean(game.keybindings.get(cModuleName, pKeyName).find(vKey => keyboard.downKeys.has(vKey.key)));
+		}
+		
+		return Boolean(pnoKeyvalid);
 	}
 }
 

@@ -211,11 +211,13 @@ Hooks.once("init", function() {
 });
 
 Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
-	if (pKeyInfos.altKey) {
+	if (PerceptiveUtils.KeyisDown("MouseMoveDoorFast")) {
 		DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y, game.settings.get(cModuleName, "SpeedDoorMovefactor"));
 	}
 	else {
-		DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y);
+		if (PerceptiveUtils.KeyisDown("MouseMoveDoor", true)) {
+			DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y);
+		}
 	}
 }); 
 

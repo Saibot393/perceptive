@@ -221,8 +221,10 @@ Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 });
 
 Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
-	if (pKeyInfos.ctrlKey) {
+	if (PerceptiveUtils.KeyisDown("MousePeekLock")) {
 		PeekingManager.RequestPeekDoor(pWall, PerceptiveUtils.selectedTokens());
+		
+		return false;
 	}
 });
 

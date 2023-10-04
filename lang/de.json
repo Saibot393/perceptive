@@ -425,6 +425,21 @@
 			"resetStealthSelected" : {
 				"name" 					: "Tarnung der ausgewählten Figuren entfernen",
 				"descrp"				: "Entfernt die Tarnung der ausgewählten Figuren"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "Maus Schloss-durchschauen",
+				"descrp"				: "Halte diese Taste und mache einen Rechtsklick um das angeklickte Schloss zu durchschauen"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "Maus Tür bewegen",
+				"descrp"				: "Halte diese Taste und scrolle um eine Tür zu bewegen (kann leer gelassen werden)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "Mause Tür schnell bewegen",
+				"descrp"				: "Halte diese Taste und scrolle um eine Tür schnell zu bewegen"
 			}
 		},
 		

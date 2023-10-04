@@ -24,7 +24,7 @@ class PerceptiveMouseHandler {
 	//doors
 	static RegisterDoorLeftClick() {} //register Door leftclick
 	
-	static RegisterDoorRightClick() {} //register Door reicht click
+	static async RegisterDoorRightClick() {} //register Door reicht click
 	
 	static RegisterDoorWheel() {} //register Door Mousewheel
 	
@@ -34,7 +34,7 @@ class PerceptiveMouseHandler {
 	//ons
 	static onDoorLeftClick(pDoorEvent, pWall) {} //called if Door is left clicked
 	
-	static onDoorRightClick(pDoorEvent, pWall) {} //called if Door is left clicked
+	static async onDoorRightClick(pDoorEvent, pWall) {} //called if Door is left clicked
 	
 	static onDoorWheel(pDoorEvent, pWall) {} //called if Door is wheeled
 	
@@ -96,16 +96,16 @@ class PerceptiveMouseHandler {
 		//}		
 	}
 	
-	static RegisterDoorRightClick() {
+	static async RegisterDoorRightClick() {
 		//register onDoorRightClick (if possible with lib-wrapper)
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", function(vWrapped, ...args) {if (PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
+			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", async function(vWrapped, ...args) {if (await PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
 		}
 		else {
 			const vOldDoorCall = DoorControl.prototype._onRightDown;
 			
-			DoorControl.prototype._onRightDown = function (pEvent) {
-				if (PerceptiveMouseHandler.onDoorRightClick(pEvent, this.wall)) {
+			DoorControl.prototype._onRightDown = async function (pEvent) {
+				if (await PerceptiveMouseHandler.onDoorRightClick(pEvent, this.wall)) {
 				
 					let vDoorCallBuffer = vOldDoorCall.bind(this);
 					vDoorCallBuffer(pEvent);
@@ -156,15 +156,21 @@ class PerceptiveMouseHandler {
 		Hooks.callAll(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
 	} 
 	
-	static onDoorRightClick(pDoorEvent, pWall) {
-		Hooks.callAll(cModuleName + "." + "DoorRClick", pWall.document, FCore.keysofevent(pDoorEvent));
+	static async onDoorRightClick(pDoorEvent, pWall) {
+		let vOldCall = await Hooks.call(cModuleName + "." + "DoorRClick", pWall.document, FCore.keysofevent(pDoorEvent)); //return false to stop normal behaviour
 		
+		console.log(vOldCall);
+		
+		return vOldCall;
+		
+		/*
 		if ((pDoorEvent.shiftKey && cDoorRClickTurnoff.shiftKey) || (pDoorEvent.ctrlKey && cDoorRClickTurnoff.ctrlKey) || (pDoorEvent.altKey && cDoorRClickTurnoff.altKey)) {
 			return false;
 		}
 		else {
 			return true;
 		}
+		*/
 	}
 	
 	static onDoorWheel(pDoorEvent, pWall) {
@@ -180,7 +186,7 @@ class PerceptiveMouseHandler {
 	//support
 	static allowCanvasZoom(pEvent) {
 		if (PerceptiveUtils.hoveredWall()) {
-			return !((pEvent.shiftKey && cDoorScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cDoorScrollsTurnoff.ctrlKey) || (pEvent.altKey && cDoorScrollsTurnoff.altKey) || cDoorScrollsTurnoff.default); 
+			return false;//!((pEvent.shiftKey && cDoorScrollsTurnoff.shiftKey) || (pEvent.ctrlKey && cDoorScrollsTurnoff.ctrlKey) || (pEvent.altKey && cDoorScrollsTurnoff.altKey) || cDoorScrollsTurnoff.default); 
 		}
 		
 		return true;

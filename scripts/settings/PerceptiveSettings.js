@@ -704,6 +704,38 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
   */
+  
+  //Mouse Keys
+  game.keybindings.register(cModuleName, "MousePeekLock", {
+	name: Translate("Keys.MousePeekLock.name"),
+	hint: Translate("Keys.MousePeekLock.descrp"),
+	editable: [
+      {
+        key: "ControlLeft"
+      }
+    ],
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  game.keybindings.register(cModuleName, "MouseMoveDoor", {
+	name: Translate("Keys.MouseMoveDoor.name"),
+	hint: Translate("Keys.MouseMoveDoor.descrp"),
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  game.keybindings.register(cModuleName, "MouseMoveDoorFast", {
+	name: Translate("Keys.MouseMoveDoorFast.name"),
+	hint: Translate("Keys.MouseMoveDoorFast.descrp"),
+	editable: [
+      {
+        key: "AltKey"
+      }
+    ],
+	restricted: false,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
 });
 
 function collapseContent(pHTML, pTitle, pIndentifiers) {
@@ -783,8 +815,9 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
 												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
 	}
-});   
+});  
 
+//some pf2e rules specific settings
 Hooks.on("ready", function() {
 	if (game.settings.get(cModuleName, "UsePf2eRules")) {
 		game.settings.set(cModuleName, "applySystemStealthEffect", true),

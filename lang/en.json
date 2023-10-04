@@ -425,6 +425,21 @@
 			"resetStealthSelected" : {
 				"name" 					: "Remove selected tokens stealth",
 				"descrp"				: "Removes the stealth related data/effects from selected tokens"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "Mouse Peek lock",
+				"descrp"				: "Hold this button while right clicking to peek the clicked lock"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "Mouse Move door",
+				"descrp"				: "Hold this button while scrolling to move the hovered door (can be left empty)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "Mouse Move door fast",
+				"descrp"				: "Hold this button while scrolling to move the hovered door quickly"
 			}
 		},
 		
