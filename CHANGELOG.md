@@ -1,3 +1,6 @@
+## v2.1.0
+- The control key for lockpeeking a door when rightclicking and for moving a door with the mouse wheel (including fast move) can now be set per client
+
 ## v2.0.8
 - Fixed moving door scrolls bug with [Zoom/Pan Options](https://foundryvtt.com/packages/zoom-pan-options) module that caused the canvas to scroll, even when a door control was hovered
   - Activate [libWrapper](https://foundryvtt.com/packages/lib-wrapper) to activate this fix
