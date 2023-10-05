@@ -135,6 +135,9 @@ The following informations will be displayed in the settings (if applicable):
 - Show perception results: to show the result of own perception rolls in the chat
 - Stealthed token transparency: to change the transparency of spotted tokens
 
+### Issues:
+- The setting Player perspective is incompatible with Less Fogs Reveal Token settings
+
 ## General features:
 
 ### Settings:
