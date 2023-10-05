@@ -22,6 +22,9 @@ Allows doors to be set a lock peekable. When a player ctrl+right-clicks a lock p
 - Lock peek size: to set the doorlocks peek size (in parts of the door (0-1))
 - Lock peek position to change the position of the lock gap (in parts of the door (0-1))
 
+### Issues:
+- Lock peeking is currently incompatible with Elevated Vision, a fix is on the way
+
 ## Door moving
 
 Allows doors to be incrementally opened in either a swinging or sliding motion. Players can use the mouse wheel on the door control to slowly open or close a door.
