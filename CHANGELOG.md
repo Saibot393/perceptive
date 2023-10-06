@@ -1,3 +1,6 @@
+## v2.1.2
+- Added Japanese translation (thanks to [doumoku](https://github.com/doumoku))
+
 ## v2.1.1
 - Added support for active effects
   - Active effects can now be used to modify the light level dependent perception dcs
