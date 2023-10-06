@@ -314,6 +314,11 @@
 				}
 			}, 
 			
+			"ShowfailuresinGMconfirm" : {
+				"name"					: "Zeige Fehlschläge in SL bestätigungs Dialog",
+				"descrp"				: "Liste Figuren gegen welche der Wahrnehmunsgwurf missglückt ist als hackenlose Einträge im Dialog"
+			},
+			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Aufgedeckte Figuren sichtbar machen",
 				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"

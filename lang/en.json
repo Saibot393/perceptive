@@ -314,6 +314,11 @@
 				}
 			}, 
 			
+			"ShowfailuresinGMconfirm" : {
+				"name"					: "Show failures in GM confirm dialog",
+				"descrp"				: "Shows tokens for which the perception check failed as unchecked entries in the GM confirm dialog"
+			}, 
+			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Make spotted tokens visible",
 				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone"

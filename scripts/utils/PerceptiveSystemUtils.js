@@ -143,11 +143,11 @@ class PerceptiveSystemUtils {
 		let vContext = pMessage?.flags?.pf2e?.context;
 		
 		if (vContext) {
-			if (vContext.options.includes("action:hide")) {
+			if (vContext.options?.includes("action:hide")) {
 				return "hide";
 			}
 			
-			if (vContext.options.includes("action:sneak")) {
+			if (vContext.options?.includes("action:sneak")) {
 				return "sneak";
 			}
 		}

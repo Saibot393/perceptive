@@ -243,6 +243,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: false
 	  }); 
 	  
+	  game.settings.register(cModuleName, "ShowfailuresinGMconfirm", {
+		name: Translate("Settings.ShowfailuresinGMconfirm.name"),
+		hint: Translate("Settings.ShowfailuresinGMconfirm.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 
+	  
 	  game.settings.register(cModuleName, "MacroSeekBehaviour", {
 		name: Translate("Settings.MacroSeekBehaviour.name"),
 		hint: Translate("Settings.MacroSeekBehaviour.descrp"),
@@ -784,6 +793,7 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		//collapses
 		collapseContent(pHTML, "GMuiandcontrol", 	`[data-setting-id="perceptive.SimulatePlayerVision"],
 													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
+													[data-setting-id="perceptive.ShowfailuresinGMconfirm"],
 													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"],
 													[data-setting-id="perceptive.MacroSeekBehaviour"]`);
 		

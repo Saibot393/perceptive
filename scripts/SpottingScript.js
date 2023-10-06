@@ -253,44 +253,50 @@ class SpottingManager {
 			
 			let vTokenSuccessDegrees = {};
 			
+			let vTokenSpotted = {};
+			
 			//buffers
 			let vCurrentRollbehaviour;
 			
 			let vResultBuffer;
 			
-			let vSuccessDegree
+			let vSuccessDegree;
 			
 			for (let i = 0; i < vSpotables.length; i++) {
-				vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
 				
-				if (pResults.length > 1) {
-					vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
+				let vTolerance;
+				
+				if (vLocalVisionData.vUseRangeTollerance) {
+					if (vSpotables[i].documentName == "Token") {
+						vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
+					}
+					else {
+						vTolerance = {PointTolerance : 0};
+					}
 				}
-				else {
-					vResultBuffer = pResults[0]
-				}
-				
-				vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel));
-				
-				if (vSuccessDegree > 0) {
-					let vTolerance;
+						
+				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {
+					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
 					
-					if (vLocalVisionData.vUseRangeTollerance) {
-						if (vSpotables[i].documentName == "Token") {
-							vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
-						}
-						else {
-							vTolerance = {PointTolerance : 0};
-						}
+					if (pResults.length > 1) {
+						vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
+					}
+					else {
+						vResultBuffer = pResults[0]
 					}
 					
-					if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {
+					vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel));
+					
+					if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && vSpotables[i].documentName == "Token")) {
+						
 						vSpotted.push(vSpotables[i]);
 						
 						if (vSpotables[i].documentName == "Token"){
 							vRollBehaviours[vSpotables[i].id] = vCurrentRollbehaviour;
 							
 							vTokenSuccessDegrees[vSpotables[i].id] = vSuccessDegree;
+							
+							vTokenSpotted[vSpotables[i].id] = (vSuccessDegree > 0);
 						}
 					}
 				}
@@ -308,6 +314,7 @@ class SpottingManager {
 							SecondResult : pResults[1], //used for adv/disadv
 							RollBehaviours : vRollBehaviours, 
 							TokenSuccessDegrees : vTokenSuccessDegrees, 
+							TokenSpotted : vTokenSpotted,
 							VisionLevel : vLocalVisionData.vlastVisionLevel, 
 							sendingPlayer : game.user.id,
 							isLingeringAP : pInfos.isLingeringAP,
@@ -321,6 +328,8 @@ class SpottingManager {
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
 		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject));
+		
+		vSpottables = vSpottables.filter(vObject => !(vObject.documentName == "Token") || pInfos.TokenSpotted[vObject.id]);
 
 		if (pInfos.sendingPlayer == game.user.id) {
 			pInfos.GMSpotting = true;
@@ -585,10 +594,19 @@ class SpottingManager {
 
 			let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
 
+			let vChecked;
+			
 			if (vTokens.length > 0) {
 				for (let i = 0; i < vTokens.length; i++) {
+					if (pInfos.TokenSpotted[vTokens[i].id]) {
+						vChecked = "checked";
+					}
+					else {
+						vChecked = "";
+					}
+					
 					vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
-												<input type="checkbox" id=${vTokens[i].id} checked>
+												<input type="checkbox" id=${vTokens[i].id} ${vChecked}>
 												<p>${vTokens[i].name}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
@@ -608,8 +626,14 @@ class SpottingManager {
 			Dialog.confirm({
 				title: Translate("Titles.SpottingConfirm.name"),
 				content: vContent,
-				yes: (pHTML) => {let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
-								SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(vCheckedTokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
+				yes: (pHTML) => {
+								for (let i = 0; i < pObjectIDs.Tokens.length; i++) {
+									pInfos.TokenSpotted[pObjectIDs.Tokens[i]] = pHTML.find(`input[id=${pObjectIDs.Tokens[i]}]`).prop("checked");
+								}
+					
+								//let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
+								
+								SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
 								},
 				no: () => {},
 				defaultYes: false
