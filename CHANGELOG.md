@@ -1,3 +1,6 @@
+## v2.1.3
+- Added world setting Show failures in GM confirm dialog to show tokens against which the perception roll failed as unchecked entries in the confirm dialog
+
 ## v2.1.2
 - Added Japanese translation (thanks to [doumoku](https://github.com/doumoku))
 
