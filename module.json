@@ -31,6 +31,12 @@
       "name": "中文",
       "path": "lang/cn.json",
       "flags": {}
+    },
+    {
+      "lang": "ja",
+      "name": "日本語",
+      "path": "lang/ja.json",
+      "flags": {}
     }
   ],
   "esmodules": [

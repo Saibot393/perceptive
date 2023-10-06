@@ -1,0 +1,553 @@
+{
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"				: "Perceptive",
+			"LockPeekSettings"			: "鍵穴覗き設定",
+			"DoorMoveSettings"			: "ドアの動き設定",
+			"SpottingSettings"			: "不可視を感知設定",
+			"ClientSettings"			: "クライアント設定",
+			"PeekLock"					: "鍵穴を覗き見",
+			"Basic"						: "基本",
+			"SpottingInfos"	: {
+				"Title"					: "発見時の情報",
+				"PP"					: "計算された受動知覚: {pValue}",
+				"Spottedby"				: "発見者: {pNames}",
+				"LightModifier"			: "光源による知覚判定の難易度修正: {pValue}",
+				"LightRollBehaviour"	: "光源による知覚判定の難易度修正の動作: {pBehaviour}",
+				"VisionLevel" : {
+					"name"				: "視覚レベル: {pLevel}",
+					"value0"			: "基本視覚",
+					"value1"			: "夜目",
+					"value2"			: "暗視",
+					"value3"			: "暗視 (合計)"
+				},
+				"LightLevel" : {
+					"name"				: "照明レベル: {pLevel}",
+					"value0"		    : "暗闇",
+					"value1"			: "薄暗い",
+					"value2"			: "明るい"
+				},
+				"LingeringAP"				: "能動知覚の維持"
+			},
+			"SpottingConfirm" : {
+				"name"					: "発見結果",
+				"content"				: "プレイヤー <b>{pPlayer}</b> は知覚判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 シークレットドアとこれらの不可視コマ: <br>",
+				"Behaviour"				: " <b>{pBehaviour}</b> 判定で <b>{pResult}</b>"
+			},
+			"StartStealthing"			: "隠密開始",
+			"StopStealthing"			: "隠密を止める",
+			"GMuiandcontrol"			: "GM UI & コントロール",
+			"SightRange"				: "視覚射程",
+			"RulesAutomation"			: "ルール & 自動化",
+			"RollFormulas"				: "ロール & ロール式",
+			"Effects"					: "効果",
+			"Illumination"				: "照明"
+		},
+		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "あなたは <b>{pDoors}</b> のシークレットドアとこれらの不可視コマを見つけた:",
+				"unknown"				: "???"
+			}
+		},
+		
+		"Warnings" : {
+			"MacroSeekDeactivatet" 		: "このマクロは現在使用できません。\"Perception macro use behaviour\"設定を確認してください。"
+		},
+		
+		"Settings" : {
+			"SplitInteractionDistances" : {
+				"name"					: "インタラクト距離を分割",
+				"descrp"				: "ドアを動かせる距離と鍵穴覗きの距離を分けるかどうか設定します。"
+			},
+			
+			"InteractionDistance" : {
+				"name"					: "最大インタラクト距離",
+				"descrp"				: "プレイヤーが物体にインタラクトできる最大距離 (-1 で無限)"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Arms Reach の距離を使用",
+				"descrp"				: "最大インタラクト距離に、Arms Reach MODの設定距離を使用します。"
+			},
+			
+			"DFredsEffectsIntegration" : {
+				"name"					: "DFreds Convenient Effects 統合化",
+				"descrp"				: "DFreds Convenient Effectsを使用します。"
+			},
+			
+			"Vision5eIntegration" : {
+				"name"					: "Vision 5e 統合化",
+				"descrp"				: "Vision 5e のルールに則ります。"
+			},
+			
+			"StealthyIntegration" : {
+				"name"					: "Stealthy 統合化",
+				"descrp"				: "隠密難易度がPerceptiveとStealthy間で共通となります。"
+			},
+			
+			"Peekablebydefault" : {
+				"name" 					: "鍵穴覗きをデフォルト化",
+				"descrp" 				: "ドアの鍵穴覗き可能を既定にします"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "鍵穴の通常サイズ",
+				"descrp" 				: "ドアの大きさに対して鍵穴として使用する通常の隙間の大きさを設定します。 (0-1)"
+			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "鍵穴の通常位置",
+				"descrp" 				: "ドアの大きさに関連して覗き見する隙間の位置をせってします。 (0-1)"
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "移動時の鍵穴覗きを無効",
+				"descrp" 				: "インタラクト距離内であっても、コマが移動し始めた瞬間から鍵穴覗きを無効にします。"
+			}, 
+			
+			"PeekingDistance" : {
+				"name" 					: "鍵穴覗きの距離",
+				"descrp" 				: "プレイヤーが鍵穴を覗ける最大距離を設定します。 (-1 で無限)"
+			}, 
+			
+			"DoorstandardMove" : {
+				"name" 					: "ドアの通常動作タイプ",
+				"descrp" 				: "ドアの通常動作を設定します。",
+				"options" : {
+					"none"				: "動作なし (普通のドア)",
+					"swing"				: "開き戸",
+					"slide"				: "引き戸"
+				}
+			}, 
+			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "デフォルトで普通の開閉を無効化",
+				"descrp" 				: "開き戸や引き戸として設定したドアは、左クリックでクリックしても動作なしで開きません。"
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "ドアの通常の丁番位置",
+				"descrp" 				: "ドアの丁番が通常ある位置を指定します。",
+				"options" : {
+					"0"				: "左",
+					"1"				: "右",
+					"2"				: "中央"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "通常の開き速度",
+				"descrp" 				: "通常のドアの開き速度を、角度で設定します。"
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "通常の開き幅",
+				"descrp" 				: "ドアがどこまで開けるか、角度で設定します。 ({min}:{max} 空白で無制限)"
+			}, 			
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "通常のスライド速度",
+				"descrp" 				: "ドアのサイズに対する通常のスライド速度を設定します (0-1)"
+			},
+			
+			"MovingDistance" : {
+				"name" 					: "ドアの移動距離",
+				"descrp" 				: "プレイヤーがドアを動かせる最大距離 (-1 で無限)"
+			}, 
+			
+			"ActivateSpotting" : {
+				"name"					: "「不可視を発見」機能を有効化にする",
+				"descrp"				: "「不可視を発見」機能を有効化にします (オフでパフォーマンスが向上します)"
+			},
+			
+			"SpottingRange" : {
+				"name"					: "発見できる射程",
+				"descrp"				: "ドアが発見できる最大射程 (-1 で無限)"
+			},
+			
+			"SpottingConeRange" : {
+				"name"					: "発見の円錐射程",
+				"descrp"				: "90°の円錐状の発見射程が各コマに付与されます (0 でパフォーマンスが向上します)"
+			},
+			
+			"ApplyRange" : {
+				"name"					: "射程を有効化",
+				"descrp"				: "判定に射程を設定します",
+				"options" : {
+					"never"				: "なし",
+					"always"			: "常時",
+					"activeonly"		: "能動的な判定のみ",
+					"passiveonly"		: "受動的な判定のみ",
+					"incombatonly"		: "戦闘時のみ (両方の判定)"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "コマの端からの距離を使用",
+				"descrp"				: "視覚の射程をコマの中心ではなくコマの端から計算します。"
+			},
+			
+			"StandardVisionDirection" : {
+				"name"					: "通常の視覚向き",
+				"descrp"				: "視覚の円錐に使用する向きを設定します。（回転していないコマの時）",
+				"options" : {
+					"bottom"			: "下",
+					"left"				: "左",
+					"top"				: "上",
+					"right"				: "右"
+				}
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Pf2eルールを使用",
+				"descrp"				: "パスファインダー第二版のルールを使用するかどうかを指定します。隠密と隠れ身の違いなどのルールを含みます。"
+			},
+			
+			"AutoRerollPPDConMove" : {
+				"name"					: "隠密難易度を自動的に再ロール",
+				"descrp"				: "コマの移動時に隠密難易度を再ロールするかどうか設定します。 (コマごとに設定できます)"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "発見可能コマを自動化",
+				"descrp"				: "隠密の状態に変更があった時に、コマの発見可能設定が自動的に変更されます。"
+			},
+	
+			"CritMethod" : {
+				"name" 					: "クリティカル",
+				"descrp"				: "クリティカルが決まる方式",
+				"options" : {
+					"noCrit"			: "クリティカルなし",
+					"natCrit"			: "ダイスの出目1もしく20",
+					"natCritpm10"		: "ダイスの出目1もしくは20 & 難易度から+-10[Pf2eなど]"
+				}
+			},
+			
+			"SimulatePlayerVision" : {
+				"name"					: "プレイヤー視界",
+				"descrp"				: "GMが不可視のコマに対してプレイヤーと同じ発見設定を使用するか設定します。 (コマのみ)"
+			},
+			
+			"PassivePerceptionFormula" : {
+				"name"					: "受動知覚の判定式",
+				"descrp"				: "システムの受動知覚の判定式 (\"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\"など、このMODのGithubページにヘルプがあります。"
+			},
+
+			"PerceptionKeyWord" : {
+				"name"					: "知覚キーワード",
+				"descrp"				: "知覚判定であることを表すキーワードを指定します。 (知覚判定のフレーバーを表す文字列です)"
+			}, 
+			
+			"StealthKeyWord" : {
+				"name"					: "隠密キーワード",
+				"descrp"				: "隠密判定を表すキーワードを指定します。 (隠密判定のフレーバーを表す文字列です)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "オート隠密の動作",
+				"descrp"				: "隠密判定がロールされた時に起きること",
+				"options" : {
+					"off"				: "何も起きない",
+					"both"				: "能動・受動知覚難易度を設定する",
+					"activeonly"		: "能動知覚難易度のみ設定する"
+				}
+			},
+			
+			"applySystemStealthEffect" : {
+				"name"					: "システムの隠密効果を付与",
+				"descrp"				: "隠密をロールした時、システムによる隠密効果を付与するかどうか設定します。"				
+			},
+			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "[テスト中] Perceptive の隠密を使用",
+				"descrp"				: "Perceptive独自の隠密効果を使用するかどうか設定します。"				
+			},
+			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "友好者に可視化させるPerceptive の隠密",
+				"descrp"				: "Perceptiveの隠密であっても、友好的なコマは他の友好コマが見ることができます。"				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Perceptive の隠密解除を共通化",
+				"descrp"				: "perceptiveの隠密をコマから除外する時に隠密効果を同時に無効にします（逆もしかり）"				
+			},
+			
+			"customStealthEffects" : {
+				"name"					: "カスタムした隠密効果",
+				"descrp"				: "コマが隠密した時の追加効果を指定します (名前かID、 \";\"で分割されます)"				
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "コマの移動により発見状態がリセットされることをデフォルトにする",
+				"descrp"				: "不可視コマの発見者の状態が移動によりリセットされるかどうか設定します。"
+			}, 
+			
+			"IlluminationPDCModifier" : {
+				"name"					: "光源による知覚難易度修正",
+				"descrp"				: "光源の度合いにより、知覚の難易度を修正します (薄暗い、明るい、 \"0,0\" で修正なし)"
+			}, 
+			
+			"UseIlluminationPDCModifierforAP" : {
+				"name"					: "能動知覚に、光源による知覚難易度修正を使用",
+				"descrp"				: "能動的な知覚に、光源による知覚難易度修正を使用するか設定します。"
+			},
+			
+			"IlluminationAPDCBehaviour" : {
+				"name"					: "光源下の知覚動作",
+				"descrp"				: "光源の度合いによる知覚判定の動作 (Dim-light,Bright-light , \"=,=\"でデフォルト、有効なキーワード: advantage, adv, +, normal, =, disadvantage, disadv, -)"
+			},
+			
+			"GMSpotconfirmDialog" : {
+				"name"					: "GM による発見の許可",
+				"descrp"				: "知覚判定を行う時、GM宛にダイアログを出力し、発見するために許可を求めます。"
+			}, 
+			
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "発見にGMの許可を要求",
+				"descrp"				: "ユーザが知覚判定をする時、GMにダイアログを送り、GMが許可しないと発見が行われません。",
+				"options" : {
+					"off"				: "オフ",
+					"playersonly"		: "プレイヤーのみ",
+					"always"			: "全員"
+				}
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "見つかったコマを可視化",
+				"descrp"				: "能動的・受動的に見つかったコマが全員に可視化されるかどうかを設定します。"
+			},
+
+			"LingeringAP" : {
+				"name"					: "能動知覚を維持",
+				"descrp"				: "能動的な知覚がロールされたなら、手動で取り除くまで結果がそのまま残ります。",
+				"options" : {
+					"off"				: "オフ",
+					"always"			: "常時",
+					"outofcombatonly"	: "戦闘外のみ"
+				}
+			}, 			
+			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: " \"Ignore Roll\" キーの反転を強制",
+				"descrp" 				: "クライアント設定を無視し、全プレイヤーに対し \"Ignore Roll\" キーの動作を反転します。"				
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "マクロで行われた知覚のみ",
+				"descrp" 				: "Perceptive マクロで行われた知覚判定のみ考慮に入れるかどうか設定します。"				
+			},
+			
+			"MacroSeekBehaviour" : {
+				"name"					: "知覚マクロの使用動作",
+				"descrp"				: "知覚マクロにより行われる知覚判定が使用される状況",
+				"options" : {
+					"never"				: "使わない",
+					"incombatonly"		: "戦闘時のみ",
+					"always"			: "常時"
+				}
+			},
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Perceptive の壁を表示 [DEBUG]",
+				"descrp" 				: "Perceptive壁が可視化されるかどうか(デバッグ用)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "コマ追従",
+				"descrp" 				: "カメラが選択したコマを追従するかどうか設定します。"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "ドアの動きコントロール",
+				"descrp" 				: "動く壁にドアの動きコントロールが追従するかどうか"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "ドアの開閉速度",
+				"descrp" 				: "alt+mouse-wheelでドアを開閉する時の速度"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "光源インジケーターの位置",
+				"descrp" 				: "光源インジケーターのコマ HUDの位置を指定します。",
+				"options" : {
+					"none"				: "なし",
+					"left"				: "左",
+					"right"				: "右"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "発見時のping持続時間",
+				"descrp" 				: "知覚判定によって発見できた物をどれだけpingするか設定します。 (秒数で指定、 0 でping無効化)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "知覚の結果を表示",
+				"descrp" 				: "知覚判定の結果をチャットに投稿します"
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "\"判定無視\" キー反転",
+				"descrp" 				: "ロールの認知に関して、キーを押下した時の動作を反転します"
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "隠密中のコマの透明度",
+				"descrp" 				: "隠密中のコマの透明度を設定します"
+			}			
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "鍵穴覗き"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "ドアを左開きにする"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "ドアを右開きにする"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "コマ追従をトグル"
+			},
+			
+			"IgnoreRoll" : {
+				"name" 					: "ロールを無視",
+				"descrp"				: "隠密や知覚判定のために、このキーを押し続ける間Perceptiveに感知させなくします。 (反転させることも可能)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "選択したコマの隠密を解除",
+				"descrp"				: "選択したコマから隠密に関するデータや効果を解除します。"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "マウスによる鍵穴覗き",
+				"descrp"				: "このボタンを押してる間に右クリックすると、鍵穴が覗けます"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "マウスによってドアを開閉",
+				"descrp"				: "このボタンを押してる間にホバーしている時、スクロールでドアを動かせます (空白にできます)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "マウスによってドアを早く開閉",
+				"descrp"				: "このボタンを押してる間にホバーしている時、スクロールで素早くドアを開閉できます"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "鍵穴覗き可能",
+				"descrp"				: "プレイヤーによって鍵穴が覗けるかどうか"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "鍵穴の大きさ",
+				"descrp"				: "ドアの大きさに対する鍵穴の大きさ (0-1)"
+			},
+			
+			"LockPeekPositionFlag" : {
+				"name" 					: "鍵穴覗きの位置",
+				"descrp"				: "ドアのサイズに対する鍵穴の位置 (0-1)"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "ドアの動き種別",
+				"descrp"				: "このドアの基本的な動き種別",
+				"options" : {
+					"none"				: "動きを設定しない (通常のドア)",
+					"swing"				: "開き戸",
+					"slide"				: "引き戸"
+				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "普通の開閉を無効化",
+				"descrp"				: "このドアが左クリックで開閉できるか設定します (動くドアのみ)"
+			},
+			
+			"DoorHingePositionFlag" : {
+        "name" 					: "ドアの丁番位置",
+				"descrp" 				: "ドアの丁番がある位置を指定します。",
+				"options" : {
+					"0"				: "左",
+					"1"				: "右",
+					"2"				: "中央"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "開閉速度",
+				"descrp"				: "The swing speed of the door in degrees°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "開閉幅",
+				"descrp"				: "ドアがどこまで開けるか、角度で設定します。 (最低-最大)"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "スライド速度",
+				"descrp"				: "ドアのサイズに対するスライド速度 (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "Perceptiveの隠密状態",
+				"descrp"				: "このコマがPerceptiveによる隠密下であるかどうか \"effect\""
+			},
+			
+			"canbeSpottedFlag" : {
+				"name" 					: "発見可能",
+				"descrp"				: "このドアが知覚（受動・能動）によって発見可能か設定します。"
+			},
+			
+			"PPDCFlag" : {
+				"name" 					: "受動知覚の難易度",
+				"descrp"				: "受動知覚により発見される難易度 (-1 で不可能)"
+			},
+			
+			"APDCFlag" : {
+				"name" 					: "能動知覚難易度",
+				"descrp"				: "能動知覚により発見される難易度 (-1 で不可能、空白で受動知覚と共通にします)"
+			},
+			
+			"LockPPDCFlag" : {
+				"name" 					: "受動知覚難易度を固定",
+				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "コマの移動により発見をリセット",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
+			},
+			
+			"StealthEffectsFlag" : {
+				"name"					: "隠密の効果",
+				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
+			},
+			
+			"OverrideWorldSEffectsFlag" : {
+				"name"					: "このワールドにおける隠密の効果を上書き",
+				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "明るい明かりの限度",
+				"descrp"				: "このシーンでは、値以下の明るさは「明るい」と見なされます。 "
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "薄暗い明かりの限度",
+				"descrp"				: "このシーンでは、値以下の明るさは「薄暗い」と見なされます。 "
+			}
+		}
+	}
+}
