@@ -23,7 +23,7 @@ Allows doors to be set a lock peekable. When a player ctrl+right-clicks a lock p
 - Lock peek position to change the position of the lock gap (in parts of the door (0-1))
 
 ### Issues:
-- Lock peeking is currently incompatible with Elevated Vision, a fix is on the way
+- Lock peeking is currently incompatible with Elevated Vision (a fix is on the way)
 
 ## Door moving
 
@@ -167,7 +167,7 @@ The module should be compatible with all game systems and most modules on Foundr
 
 ### Languages:
 
-The module contains an English, a German and a Chinese (thanks to Thousand (_thousand@Discord)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
+The module contains an English, a German,  a Chinese (thanks to Thousand (_thousand@Discord)), and a Japanese (thanks to [doumoku](https://github.com/doumoku)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
 
 ---
 
