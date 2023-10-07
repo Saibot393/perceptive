@@ -275,8 +275,8 @@ class SpottingManager {
 					}
 				}
 						
-				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {
-					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
+				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {			
+					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
 					
