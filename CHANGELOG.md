@@ -1,3 +1,8 @@
+## v2.2.0
+- Improved door moving
+- Improved advantage/disadvantage calculation
+- Added client setting Message popups to enable certain popups for Lock peek and Door moving interactions
+
 ## v2.1.3
 - Added world setting Show failures in GM confirm dialog to show tokens against which the perception roll failed as unchecked entries in the confirm dialog
 
