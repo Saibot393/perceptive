@@ -32,6 +32,7 @@
 			"SpottingConfirm" : {
 				"name"					: "确定发现",
 				"content"				: "玩家 <b>{pPlayer}</b> 在察觉鉴定上得到了 <b>{pResult}</b> 让 <b>{pSpotters}</b> 在场景 <b>{pScene}</b> 发现了 <b>{pDoors}</b> 扇密门和: <br>个隐形指示物",
+				"forcecontent"			: "Player <b>{pPlayer}</b> has requested for <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens <b>without</b> a perception roll: <br>",
 				"Behaviour"				: "with a <b>{pBehaviour}</b> roll resulting in <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "开始隐蔽",

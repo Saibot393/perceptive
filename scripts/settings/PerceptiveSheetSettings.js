@@ -65,6 +65,18 @@ class PerceptiveSheetSettings {
 			vTabbar.append(vTabButtonHTML);
 			vprevTab.after(vTabContentHTML);	
 			
+			/*
+			let vCollapse = `<details>
+						<summary>${Translate("Titles."+"test")}</summary>
+						<div content=${"test"}>
+						</div>
+					</details>`;
+					
+			pHTML.find(`div[data-tab="${cModuleName}"]`).append(vCollapse);
+			*/
+					
+			
+			
 			//wall can be lockpeeked
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
 														vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 

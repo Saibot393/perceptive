@@ -32,6 +32,7 @@
 			"SpottingConfirm" : {
 				"name"					: "発見結果",
 				"content"				: "プレイヤー <b>{pPlayer}</b> は知覚判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 シークレットドアとこれらの不可視コマ: <br>",
+				"forcecontent"			: "Player <b>{pPlayer}</b> has requested for <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens <b>without</b> a perception roll: <br>",
 				"Behaviour"				: " <b>{pBehaviour}</b> 判定で <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "隠密開始",

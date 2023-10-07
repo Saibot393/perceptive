@@ -43,6 +43,8 @@ class SpottingManager {
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
 	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0}) {} //starts an active perception check
+	
+	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {} //requests from the gm to spot all specified objects in vision
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
 
@@ -328,6 +330,62 @@ class SpottingManager {
 			Hooks.call(cModuleName + ".PerceptionCheck", vSpotted, pSpotters, vInfos);
 		}
 	}
+	
+	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {
+		let vSpotters = PerceptiveUtils.selectedTokens();
+		
+		if (vSpotters.length > 0) {
+			let vSpotables = VisionUtils.spotablesinVision(null, pCategory);
+
+			//filter out already spotted
+			if (game.settings.get(cModuleName, "UsePf2eRules")) {
+				//in Pf2e hidden tokens are also spottable, even if already spotted
+				vSpotables = vSpotables.filter(vObject => !PerceptiveFlags.isSpottedbyone(vObject, vSpotters) || PerceptiveSystemUtils.StealthStatePf2e(vObject) == "hide");
+			}
+			else {
+				vSpotables = vSpotables.filter(vObject => !PerceptiveFlags.isSpottedbyone(vObject, vSpotters));
+			}	
+					
+			//prepare data
+			let vSpotted = [];
+			
+			let vTokenSpotted = {};
+			
+			for (let i = 0; i < vSpotables.length; i++) {
+				
+				let vTolerance;
+				
+				if (vLocalVisionData.vUseRangeTollerance) {
+					if (vSpotables[i].documentName == "Token") {
+						vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
+					}
+					else {
+						vTolerance = {PointTolerance : 0};
+					}
+				}
+						
+				if ((!vLocalVisionData.vActiveRange /*&& !pInfos.Ranges*/) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : undefined/*pInfos.Ranges*/, Tolerance : vTolerance})) {			
+					vSpotted.push(vSpotables[i]);
+					
+					if (vSpotables[i].documentName == "Token"){
+						vTokenSpotted[vSpotables[i].id] = false;
+					}
+				}
+			}
+
+			let vInfos = 	{TokenSpotted : vTokenSpotted,
+							sendingPlayer : game.user.id,
+							forceConfirmDialog : true};
+							
+			console.log(vInfos);
+			console.log(vSpotted);
+			console.log(vSpotters);
+							
+			await SpottingManager.RequestSpotObjects(vSpotted, vSpotters, vInfos);
+
+			//Hooks.call(cModuleName + ".PerceptionCheck", vSpotted, pSpotters, vInfos);
+		}		
+	}
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
 		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject));
@@ -353,7 +411,7 @@ class SpottingManager {
 		let vObjectIDs = {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))};
 		
 		if (game.user.isGM) {
-			if (["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour"))) {
+			if (["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) || pInfos.forceConfirmDialog) {
 				SpottingManager.openSpottingDialoge(vObjectIDs, PerceptiveUtils.IDsfromTokens(pSpotters), canvas.scene.id, pInfos);
 			}
 			else {
@@ -369,7 +427,7 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			if (["playersonly", "always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour"))) {
+			if (["playersonly", "always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) || pInfos.forceConfirmDialog) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
 			else {
@@ -587,13 +645,26 @@ class SpottingManager {
 	}
 
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
-		if (pObjectIDs.Walls?.length > 0 || pObjectIDs.Tokens?.length) {
-			let vContent =  TranslateandReplace("Titles.SpottingConfirm.content", {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
-																					pResult : pInfos.APerceptionResult[0],
-																					pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
-																					pScene : game.scenes.get(pSceneID)?.name,
-																					pDoors : pObjectIDs.Walls?.length,
-																				   });
+		if ((pObjectIDs.Walls?.length > 0) || (pObjectIDs.Tokens?.length > 0)) {
+			let vContent;
+			
+			
+			let vData = {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
+						pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
+						pScene : game.scenes.get(pSceneID)?.name,
+						pDoors : pObjectIDs.Walls?.length,
+					    };
+						
+			if (pInfos.APerceptionResult) {
+				vData.pResult = pInfos.APerceptionResult[0];
+			}
+						
+			if (pInfos.forceConfirmDialog) {
+				vContent =  TranslateandReplace("Titles.SpottingConfirm.forcecontent", vData);				
+			}
+			else {
+				vContent =  TranslateandReplace("Titles.SpottingConfirm.content", vData);
+			}
 
 			let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
 
@@ -613,7 +684,8 @@ class SpottingManager {
 												<p>${vTokens[i].name}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
-					if (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0)) {
+					console.log(pInfos);
+					if (!pInfos.forceConfirmDialog && (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0))) {
 						vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[vTokens[i].id], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[vTokens[i].id], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
 					}							
 											
@@ -1113,3 +1185,5 @@ export function resetStealthDataSelected() {SpottingManager.resetStealthDataSele
 export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}
 
 export function CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false}) {return SpottingManager.CheckAPerception(pSpotters, pResults, pInfos)}
+
+export function SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {return SpottingManager.SpotObjectsinVision(pCategory)}

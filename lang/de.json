@@ -32,6 +32,7 @@
 			"SpottingConfirm" : {
 				"name"					: "Aufdecken bestätigen",
 				"content"				: "Spieler <b>{pPlayer}</b> hat eine <b>{pResult}</b> bei einem Wahrnehmungswurf gewürfelt, was <b>{pSpotters}</b> in Scene <b>{pScene}</b> erlaubt <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken: <br>",
+				"forcecontent"			: "Spieler <b>{pPlayer}</b> hat angefragt mit <b>{pSpotters}</b> in Scene <b>{pScene}</b> <b>{pDoors}</b> geheime Türen und folgende Figuren aufzudecken <b>ohne</b> einen Wahrnehmungswurf zu machen: <br>",
 				"Behaviour"				: "mit einem <b>{pBehaviour}</b> Wurf und Resultat <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "Verstecken",

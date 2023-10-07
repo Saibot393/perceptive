@@ -748,7 +748,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Keys.MouseMoveDoorFast.descrp"),
 	editable: [
       {
-        key: "AltKey"
+        key: "AltLeft"
       }
     ],
 	restricted: false,

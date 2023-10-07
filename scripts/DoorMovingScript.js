@@ -103,7 +103,6 @@ class DoorMovingManager {
 			
 			if (vreplacementWall) {
 				if (!(WallUtils.isOpened(pDoor) || pDoorisOpened)) {
-					console.log("hide1");
 					WallUtils.hidewall(vreplacementWall);
 				}
 				else {
@@ -182,7 +181,6 @@ class DoorMovingManager {
 		let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
 		
 		if (vreplacementWall) {
-			console.log("hide2");
 			WallUtils.hidewall(vreplacementWall);
 		}
 	}
