@@ -9,6 +9,8 @@ const cPf2ConditionType = "condition"; //the item type of Pf2e conditions
 
 const cDelimiter = ";";
 
+const cPopUpID = "Popups";
+
 const RollbehaviourKeywords = {
 	advantage : 1,
 	adv : 1,
@@ -71,6 +73,8 @@ class PerceptiveUtils {
 	static successDegree(pRollresult, pDC, pCritMode = -1) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
 	
 	static CritType(pTypeName = game.settings.get(cModuleName, "CritMethod")) {} //returns the numerical crit type of pTypeName
+	
+	static async twoRoll(pRoll, pInfos = {}) {} //returns two rolls based on pRoll (either rerolls for second reroll or uses second roll if present), by order, not result and includes the souce behaviour in pInfos
 	
 	//Pf2e specific
 	static async ApplicableEffects(pIdentifications) {} //returns an array of documents defined by their names or ids through pIdentifications and present in the compendium or items tab
@@ -252,11 +256,19 @@ class PerceptiveUtils {
 	static AddRollBehaviour(pBehaviour1, pBehaviour2, pAsNumber = false) {
 		let vBehaviour1 = pBehaviour1;
 		
+		if (vBehaviour1 == undefined) {
+			vBehaviour1 = 0;
+		}
+		
 		if (isNaN(vBehaviour1)) {
 			vBehaviour1 = PerceptiveUtils.Rollbehaviour(vBehaviour1);
 		}
 		
 		let vBehaviour2 = pBehaviour2;
+		
+		if (vBehaviour2 == undefined) {
+			vBehaviour2 = 0;
+		}
 		
 		if (isNaN(vBehaviour2)) {
 			vBehaviour2 = PerceptiveUtils.Rollbehaviour(vBehaviour2);
@@ -392,6 +404,44 @@ class PerceptiveUtils {
 		}	
 	}
 	
+	static async twoRoll(pRoll, pInfos = {}) {
+		let vFirstResult;
+		let vSecondResult;
+		
+		if ((pRoll.dice[0].number > 1) && pRoll.options?.hasOwnProperty("advantageMode")) {
+			pInfos.SourceRollBehaviour = Number(pRoll.options?.advantageMode);
+			
+			if (pRoll.dice[0].results[0]?.active) {
+				vFirstResult = [pRoll.total, pRoll.dice[0].total];
+				
+				vSecondResult = [pRoll.total - pRoll.dice[0].total + pRoll.dice[0].results[1].result, pRoll.dice[0].results[1].result];	
+			}
+			else {
+				vFirstResult = [pRoll.total - pRoll.dice[0].total + pRoll.dice[0].results[0].result, pRoll.dice[0].results[0].result];
+				
+				vSecondResult = [pRoll.total, pRoll.dice[0].total];					
+			}
+		}
+		else {
+			pInfos.SourceRollBehaviour = RollbehaviourKeywords.normal;
+			
+			vFirstResult = [pRoll.total, pRoll.dice[0].total];
+		
+			//second roll for adv/disadv
+			let vSecondRoll = new Roll(pRoll.formula);
+			
+			await vSecondRoll.evaluate();
+			
+			vSecondResult = [vSecondRoll.total, vSecondRoll.dice[0].total];			
+		}
+		
+		if (pInfos.SourceRollBehaviour == undefined) {
+			pInfos.SourceRollBehaviour = 0;
+		}
+		
+		return [vFirstResult, vSecondResult];
+	}
+	
 	static TokenNamesfromIDs(pIDs, pScene = null) {
 		let vNames = "";
 		
@@ -516,4 +566,4 @@ function TranslateandReplace(pName, pWords = {}){
 }
 
 //Export RideableFlags Class
-export{ PerceptiveUtils, Translate, TranslateandReplace, cModuleName };
+export{ PerceptiveUtils, Translate, TranslateandReplace, cModuleName, cPopUpID};

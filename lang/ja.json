@@ -55,6 +55,13 @@
 			"MacroSeekDeactivatet" 		: "このマクロは現在使用できません。\"Perception macro use behaviour\"設定を確認してください。"
 		},
 		
+		"Popups" : {
+			"OutofRange"				: "Out of range",
+			"CantbePeeked"				: "Cant be peeked",
+			"DoorisLocked"				: "Locked",
+			"CantbeMoved"				: "Cant be moved"
+		},
+		
 		"Settings" : {
 			"SplitInteractionDistances" : {
 				"name"					: "インタラクト距離を分割",
@@ -362,6 +369,11 @@
 			"followTokens" : {
 				"name" 					: "コマ追従",
 				"descrp" 				: "カメラが選択したコマを追従するかどうか設定します。"
+			},
+			
+			"MessagePopUps" : {
+				"name" 					: "Message popups",
+				"descrp" 				: "If messages popups for moving doors and peeking locks should be shown"
 			},
 			
 			"moveDoorControls" : {

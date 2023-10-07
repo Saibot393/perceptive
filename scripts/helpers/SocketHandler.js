@@ -1,6 +1,7 @@
 import { DoorMoveRequest } from "../DoorMovingScript.js";
 import { PeekDoorRequest } from "../PeekingScript.js";
 import { SpotObjectsRequest, resetStealthRequest, PlayerMakeTempVisible } from "../SpottingScript.js";
+import { PopUpRequest } from "../helpers/PerceptivePopups.js";
 
 //execute functions with pData depending on pFunction
 function organiseSocketEvents({pFunction, pData} = {}) {
@@ -19,6 +20,9 @@ function organiseSocketEvents({pFunction, pData} = {}) {
 			break;
 		case "PlayerMakeTempVisible":
 			PlayerMakeTempVisible(pData);
+			break;
+		case "PopUpRequest":
+			PopUpRequest(pData);
 			break;
 	}
 }

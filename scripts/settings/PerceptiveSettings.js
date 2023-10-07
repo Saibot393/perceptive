@@ -572,6 +572,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "MessagePopUps", {
+	name: Translate("Settings.MessagePopUps.name"),
+	hint: Translate("Settings.MessagePopUps.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  });   
+  
   game.settings.register(cModuleName, "moveDoorControls", {
 	name: Translate("Settings.moveDoorControls.name"),
 	hint: Translate("Settings.moveDoorControls.descrp"),

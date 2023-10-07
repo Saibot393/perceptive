@@ -40,7 +40,7 @@ class PeekingManager {
 				vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor, "LockPeek"));
 				
 				if (vAdds.length < vPreviousLength) {
-					PerceptivePopups.TextPopUp(pDoor, "OutofRange") //MESSAGE POPUP
+					PerceptivePopups.TextPopUpID(pDoor, "OutofRange") //MESSAGE POPUP
 				}
 				
 				let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
@@ -61,7 +61,7 @@ class PeekingManager {
 			}
 		}
 		else {
-			PerceptivePopups.TextPopUp(pDoor, "CantbePeeked") //MESSAGE POPUP
+			PerceptivePopups.TextPopUpID(pDoor, "CantbePeeked") //MESSAGE POPUP
 		}
 	}
 	

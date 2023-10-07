@@ -3,6 +3,7 @@ import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags, cDoorMoveTypes} from "./helpers/PerceptiveFlags.js";
 import { GeometricUtils } from "./utils/GeometricUtils.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 
 class DoorMovingManager {
 	//DECLARATION
@@ -29,32 +30,40 @@ class DoorMovingManager {
 	
 	//IMPLEMENTATIONS
 	static async DoorMoveGM(pDoor, pDirection, pSpeed = 1) {
-		if (!WallUtils.isLocked(pDoor) && PerceptiveFlags.Doorcanbemoved(pDoor)) {
-			await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
-			
-			let vDirection = Math.sign(pDirection);
-			
-			switch (PerceptiveFlags.DoorMovementType(pDoor)) {
-				case "swing":
-						await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor) * pSpeed);
-					break;
-					
-				case "slide":
-						await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor) * pSpeed);
-					break;
-			}
+		if (!WallUtils.isLocked(pDoor)) {
+			if (PerceptiveFlags.Doorcanbemoved(pDoor)) {
+				await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
+				
+				let vDirection = Math.sign(pDirection);
+				
+				switch (PerceptiveFlags.DoorMovementType(pDoor)) {
+					case "swing":
+							await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor) * pSpeed);
+						break;
 						
-			if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
-				await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+					case "slide":
+							await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor) * pSpeed);
+						break;
+				}
+							
+				if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
+					await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+				}
+				
+				await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
+				
+				if (!PerceptiveFlags.DoorStateisClosed(pDoor)) {
+					if (!WallUtils.isOpened(pDoor)) {	
+						WallUtils.openDoor(pDoor);
+					}				
+				}
 			}
-			
-			await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
-			
-			if (!PerceptiveFlags.DoorStateisClosed(pDoor)) {
-				if (!WallUtils.isOpened(pDoor)) {	
-					WallUtils.openDoor(pDoor);
-				}				
+			else {
+				PerceptivePopups.TextPopUpID(pDoor, "CantbeMoved") //MESSAGE POPUP
 			}
+		}
+		else {
+			PerceptivePopups.TextPopUpID(pDoor, "DoorisLocked") //MESSAGE POPUP
 		}
 	}
 	
@@ -67,6 +76,9 @@ class DoorMovingManager {
 				if (!game.paused) {
 					if (PerceptiveUtils.selectedTokens().concat(PerceptiveUtils.PrimaryCharacter()).find(vToken => WallUtils.isWithinRange(vToken, pDoor, "DoorMove"))) {
 						game.socket.emit("module." + cModuleName, {pFunction : "DoorMoveRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pDirection : pDirection, pSpeed : pSpeed}});
+					}
+					else {
+						PerceptivePopups.TextPopUpID(pDoor, "OutofRange") //MESSAGE POPUP
 					}
 				}
 			}

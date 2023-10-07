@@ -18,7 +18,7 @@ class PerceptivePopups {
 		}
 		
 		//other clients pop up
-		game.socket.emit("module.Perceptive", {pFunction : "PopUpRequest", pData : {pTokenID: pObject.id, pText : vText}});
+		game.socket.emit("module.perceptive", {pFunction : "PopUpRequest", pData : {pObjectID: pObject.id, pText : vText}});
 		
 		//own pop up
 		PerceptivePopups.PopUpRequest(pObject.id, vText);
@@ -44,6 +44,6 @@ class PerceptivePopups {
 }
 
 //export Popups
-function PopUpRequest({ pObjectID, pText } = {}) { return PerceptivePopups.PopUpRequest(pObjectID, pText); }
+function PopUpRequest({ pObjectID, pText } = {}) {return PerceptivePopups.PopUpRequest(pObjectID, pText); }
 
 export { PerceptivePopups, PopUpRequest }

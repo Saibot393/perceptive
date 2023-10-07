@@ -42,7 +42,7 @@ class SpottingManager {
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
-	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false}) {} //starts an active perception check
+	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0}) {} //starts an active perception check
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
 
@@ -233,7 +233,7 @@ class SpottingManager {
 		}
 	}
 	
-	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false}) {
+	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0}) {
 		if (pSpotters.length > 0 && pResults.length > 0) {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
@@ -278,6 +278,8 @@ class SpottingManager {
 				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i]);
 					
+					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
+					
 					if (pResults.length > 1) {
 						vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
 					}
@@ -305,14 +307,15 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges});
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour});
 					}
 				}
 			}
 
 			let vInfos = 	{APerceptionResult : pResults[0],
 							SecondResult : pResults[1], //used for adv/disadv
-							RollBehaviours : vRollBehaviours, 
+							RollBehaviours : vRollBehaviours,
+							SourceRollBehaviour : pInfos.SourceRollBehaviour,
 							TokenSuccessDegrees : vTokenSuccessDegrees, 
 							TokenSpotted : vTokenSpotted,
 							VisionLevel : vLocalVisionData.vlastVisionLevel, 
@@ -610,7 +613,7 @@ class SpottingManager {
 												<p>${vTokens[i].name}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
-					if (game.settings.get(cModuleName, "useLightAdvantageSystem")) {
+					if (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0)) {
 						vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[vTokens[i].id], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[vTokens[i].id], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
 					}							
 											
@@ -749,6 +752,7 @@ class SpottingManager {
 	static async onPerceptionRoll(pActor, pRoll, pUserID) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
 
+		/*
 		let vPerceptionResult = [pRoll.total, pRoll.dice[0].total];
 		
 		//second roll for adv/disadv
@@ -757,9 +761,13 @@ class SpottingManager {
 		await vSecondRoll.evaluate();
 		
 		let vSecondResult = [vSecondRoll.total, vSecondRoll.dice[0].total];
+		*/
+		let vInfos = {};
+		
+		let vResults = await PerceptiveUtils.twoRoll(pRoll, vInfos);
 		
 		//execute spott
-		SpottingManager.CheckAPerception(vRelevantTokens, [vPerceptionResult, vSecondResult]);
+		SpottingManager.CheckAPerception(vRelevantTokens, vResults, vInfos);
 	}
 
 	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {	

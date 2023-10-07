@@ -55,6 +55,13 @@
 			"MacroSeekDeactivatet" 		: "Dieses Macro ist momentan nicht verfügbar, siehe Einstellung \"Wahrnehmungs Macros Verhalten\""
 		},
 		
+		"Popups" : {
+			"OutofRange"				: "Außer Reichweite",
+			"CantbePeeked"				: "Kann nicht durchschaut werden",
+			"DoorisLocked"				: "Verschlossen",
+			"CantbeMoved"				: "Kann nicht bewegt werden"
+		},
+		
 		"Settings" : {
 			"SplitInteractionDistances" : {
 				"name"					: "Trenne Interaktionsdistanz",
@@ -362,6 +369,11 @@
 			"followTokens" : {
 				"name" 					: "Folge Figuren",
 				"descrp" 				: "Ob die Kamera den ausgewählten Figuren bei Bewegungen folgen soll"
+			},
+			
+			"MessagePopUps" : {
+				"name" 					: "Popups Meldungen",
+				"descrp" 				: "Ob Popup Meldungen für Tür Bewegungen und Schloss durschauen angezeigt werden sollen"
 			},
 			
 			"moveDoorControls" : {

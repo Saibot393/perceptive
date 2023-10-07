@@ -55,6 +55,13 @@
 			"MacroSeekDeactivatet" 		: "This macro is currently not available, see setting \"Perception macro use behaviour\""
 		},
 		
+		"Popups" : {
+			"OutofRange"				: "Out of range",
+			"CantbePeeked"				: "Cant be peeked",
+			"DoorisLocked"				: "Locked",
+			"CantbeMoved"				: "Cant be moved"
+		},
+		
 		"Settings" : {	
 			"SplitInteractionDistances" : {
 				"name"					: "Split interactions distances",
@@ -362,6 +369,11 @@
 			"followTokens" : {
 				"name" 					: "跟随指示物",
 				"descrp" 				: "是否让画面跟随选择的指示物移动"
+			},
+			
+			"MessagePopUps" : {
+				"name" 					: "Message popups",
+				"descrp" 				: "If messages popups for moving doors and peeking locks should be shown"
 			},
 			
 			"moveDoorControls" : {
