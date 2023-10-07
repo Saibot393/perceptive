@@ -17,6 +17,8 @@ Allows doors to be set a lock peekable. When a player ctrl+right-clicks a lock p
 - Standard size of lock peeks: the default size of door lockpeeks
 - Standard position of lock peeks: the default value for the Lock peek position
 - Stop lock peeking on movement: to stop lock peeking even if the moving token is still within the interaction distance
+#### Client:
+- Message popups to enable certain popups for Lock peeking interactions
 #### Walls:
 - Can be lock peeked: to make the door peekable
 - Lock peek size: to set the doorlocks peek size (in parts of the door (0-1))
@@ -39,6 +41,7 @@ Allows doors to be incrementally opened in either a swinging or sliding motion. 
 - Swing range: to limit the range in which this door can swing
 - Standard slide speed: The standard slide speed of doors
 #### Client:
+- Message popups to enable certain popups for Door moving interactions
 - Move door controls: to move the door controls with the moving doors
 - Fast door move factor: to set a speed factor when moving a wall with alt+mouse-wheel
 #### Walls:
