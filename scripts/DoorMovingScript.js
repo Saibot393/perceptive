@@ -12,7 +12,7 @@ class DoorMovingManager {
 	
 	static async DoorMoveRequest(pDoorID, pSceneID, pDirectionInfo, pSpeed = 1) {} //answers a door move request
 	
-	static async updateDoorMovementWall(pDoor) {} //updates the position of the movement wall belonging to pDoor
+	static async updateDoorMovementWall(pDoor, pDoorisOpened = false) {} //updates the position of the movement wall belonging to pDoor
 	
 	static async placeDoorControl(pWall) {} //places the DoorControl of pWall
 	
@@ -47,20 +47,21 @@ class DoorMovingManager {
 			if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
 				await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
 			}
-			else {
+			
+			await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
+			
+			if (!PerceptiveFlags.DoorStateisClosed(pDoor)) {
 				if (!WallUtils.isOpened(pDoor)) {	
 					WallUtils.openDoor(pDoor);
 				}				
 			}
-			
-			await DoorMovingManager.updateDoorMovementWall(pDoor);
 		}
 	}
 	
 	static async RequestDoorMove(pDoor, pDirection, pSpeed = 1) {
 		if (pDoor) {
 			if (game.user.isGM) {
-				DoorMovingManager.DoorMoveGM(pDoor, pDirection, pSpeed);
+				await DoorMovingManager.DoorMoveGM(pDoor, pDirection, pSpeed);
 			}
 			else {
 				if (!game.paused) {
@@ -74,11 +75,11 @@ class DoorMovingManager {
 	
 	static async DoorMoveRequest(pDoorID, pSceneID, pDirection, pSpeed = 1) {
 		if (game.user.isGM) {
-			DoorMovingManager.DoorMoveGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), pDirection, pSpeed)
+			await DoorMovingManager.DoorMoveGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), pDirection, pSpeed)
 		}
 	}
 	
-	static async updateDoorMovementWall(pDoor) {
+	static async updateDoorMovementWall(pDoor, pDoorisOpened = false) {
 		if (PerceptiveFlags.Doorcanbemoved(pDoor)) {
 			let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
 			
@@ -89,7 +90,13 @@ class DoorMovingManager {
 			}
 			
 			if (vreplacementWall) {
-				await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
+				if (!(WallUtils.isOpened(pDoor) || pDoorisOpened)) {
+					console.log("hide1");
+					WallUtils.hidewall(vreplacementWall);
+				}
+				else {
+					await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
+				}
 				
 				let vTargetPosition = PerceptiveFlags.getDoorPosition(pDoor);
 				
@@ -101,10 +108,6 @@ class DoorMovingManager {
 				}
 				
 				//await DoorMovingManager.placeDoorControl(pDoor);
-				
-				if (!WallUtils.isOpened(pDoor)) {
-					WallUtils.hidewall(vreplacementWall);
-				}
 			}	
 		}
 		else {
@@ -167,6 +170,7 @@ class DoorMovingManager {
 		let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
 		
 		if (vreplacementWall) {
+			console.log("hide2");
 			WallUtils.hidewall(vreplacementWall);
 		}
 	}

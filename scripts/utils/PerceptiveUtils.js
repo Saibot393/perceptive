@@ -62,6 +62,8 @@ class PerceptiveUtils {
 	//rolls
 	static Rollbehaviour(pKeyword) {} //returns the Rollrepeat level associated with pKeyword (-1:disadvantage, 0:normal, 1:advantage)
 	
+	static AddRollBehaviour(pBehaviour1, pBehaviour2, pAsNumber = false) {} //returns the Rollbehaviour summ of pBehaviour1 and pBehaviour2
+	
 	static RollbehaviourKeywordsList(pSingleString = false) {} //returns a list of valid keywords
 	
 	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {} //applies roll behaviour(adv., normal, disadv.) to pRoll1 and pRoll2
@@ -239,12 +241,34 @@ class PerceptiveUtils {
 	
 	//rolls
 	static Rollbehaviour(pKeyword) {
-		if (PerceptiveUtils.RollbehaviourKeywordsList(pKeyword)) {
+		if (PerceptiveUtils.RollbehaviourKeywordsList().includes(pKeyword)) {
 			return RollbehaviourKeywords[pKeyword];
 		}
 		else {
 			return Number(pKeyword);
 		}
+	}
+	
+	static AddRollBehaviour(pBehaviour1, pBehaviour2, pAsNumber = false) {
+		let vBehaviour1 = pBehaviour1;
+		
+		if (isNaN(vBehaviour1)) {
+			vBehaviour1 = PerceptiveUtils.Rollbehaviour(vBehaviour1);
+		}
+		
+		let vBehaviour2 = pBehaviour2;
+		
+		if (isNaN(vBehaviour2)) {
+			vBehaviour2 = PerceptiveUtils.Rollbehaviour(vBehaviour2);
+		}		
+		
+		let vResult = Math.min(1, Math.max(-1, vBehaviour1 + vBehaviour2));
+		
+		if (pAsNumber) {
+			return vResult;
+		}
+		
+		return Object.keys(RollbehaviourKeywords).find(vKeyword => RollbehaviourKeywords[vKeyword] == vResult); //find string with associated value
 	}
 	
 	static RollbehaviourKeywordsList(pSingleString = false) {

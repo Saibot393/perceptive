@@ -1,7 +1,8 @@
 import {PerceptiveUtils, cModuleName} from "./utils/PerceptiveUtils.js";
 import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
+import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 
 class PeekingManager {
 	//DECLARATIONS
@@ -28,27 +29,39 @@ class PeekingManager {
 	
 	//IMPLEMENTATIONS
 	static async PeekDoorGM(pDoor, pTokens) {
-		if (PerceptiveFlags.canbeLockpeeked(pDoor) && !WallUtils.isOpened(pDoor)) {		
-			await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
-			
-			let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
-			vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor, "LockPeek"))
-			
-			let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
-			
-			await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
-			
-			await PeekingManager.updateDoorPeekingWall(pDoor);
-			
-			for (let i = 0; i < pTokens.length; i++) {
-				if (vRemoves.includes(pTokens[i])) {
-					await PerceptiveFlags.stopLockpeeking(pTokens[i]);
+		if (PerceptiveFlags.canbeLockpeeked(pDoor)) {
+			if (!WallUtils.isOpened(pDoor)) {		
+				await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
+				
+				let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
+				
+				let vPreviousLength = vAdds.length;
+				
+				vAdds = vAdds.filter(vToken => WallUtils.isWithinRange(vToken, pDoor, "LockPeek"));
+				
+				if (vAdds.length < vPreviousLength) {
+					PerceptivePopups.TextPopUp(pDoor, "OutofRange") //MESSAGE POPUP
 				}
 				
-				if (pTokens[i].object) {
-					pTokens[i].object.updateVisionSource();
+				let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
+				
+				await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
+				
+				await PeekingManager.updateDoorPeekingWall(pDoor);
+				
+				for (let i = 0; i < pTokens.length; i++) {
+					if (vRemoves.includes(pTokens[i])) {
+						await PerceptiveFlags.stopLockpeeking(pTokens[i]);
+					}
+					
+					if (pTokens[i].object) {
+						pTokens[i].object.updateVisionSource();
+					}
 				}
 			}
+		}
+		else {
+			PerceptivePopups.TextPopUp(pDoor, "CantbePeeked") //MESSAGE POPUP
 		}
 	}
 	
