@@ -1,3 +1,6 @@
+## v2.2.1
+-Small bug fix regarding illumination advantage/disadvantage
+
 ## v2.2.0
 - Improved door moving
 - Improved advantage/disadvantage calculation
