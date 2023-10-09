@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
@@ -17,6 +17,9 @@ class PerceptiveSheetSettings {
 	static async TokenSheetSettings(pApp, pHTML, pData) {} //add settinsg to token sheet
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {} //add settinsg to scene sheet 
+	
+	//dialogs
+	static OpenotherSkillDCs(pApp) {} //opens a popup to enter other Skill DCs for object of pApp
 	
 	//standard settings
 	static AddSpottableSettings(pApp, pHTML, pData, pto) {} //adds the Spottable settings to pApp
@@ -285,6 +288,38 @@ class PerceptiveSheetSettings {
 														}, `fieldset[data-group="${cModuleName}"]`);
 	}
 	
+	//dialogs
+	static OpenotherSkillDCs(pApp) {
+		if (game.system?.model?.Actor?.character?.skills) {
+			let vSkills = Object.keys(game.system.model.Actor.character.skills);
+			
+			let vContent = `<p> ${Translate("SheetSettings."+ cotherSkillADCsF +".name")} </p>`;
+			
+			for (let vSkill of vSkills) {
+				vContent = vContent + PerceptiveSheetSettings.createHTMLOption({	vlabel : TranslateandReplace("SheetSettings."+ cotherSkillADCsF +".entry", vSkill), 
+																					//vhint : Translate("SheetSettings."+ vsubFlagname +".descrp"), 
+																					vtype : "text", 
+																					vvalue : PerceptiveFlags.getotherSkillADC(pApp.object, vSkill, true),
+																					vflagname : cotherSkillADCsF + "." + vSkill,
+																					vID : vSkill
+																					}, true);
+			}
+			
+			new Dialog({
+			title: Translate("SheetSettings."+ cotherSkillADCsF + ".Title"),
+			content: vContent,
+			buttons: {
+				confirmButton: {
+					label: Translate("SheetSettings."+ cotherSkillADCsF + ".confirmButtonname"),
+					callback: (html) => {let vInputs = {}; for(let vSkill of vSkills){vInputs[vSkill] = html.find(`input#${vSkill}`).val()}; PerceptiveFlags.setotherSkillADCs(pApp.object, vInputs)},
+					icon: `<i class="fas ${cPerceptiveIcon}"></i>`
+				}
+			},
+			default: Translate("SheetSettings."+ cotherSkillADCsF + ".confirmButtonname")
+		}).render(true);
+		}
+	}
+	
 	//standard settings
 	static AddSpottableSettings(pApp, pHTML, pData, pto) {
 		//can be spotted
@@ -310,7 +345,14 @@ class PerceptiveSheetSettings {
 													vlocked : game.settings.get(cModuleName, "UsePf2eRules") && cPf2eAPDCautomationTypes.includes(pApp.document.actor?.type),
 													vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
 													vflagname : cAPDCF
-													}, pto);		
+													}, pto);
+
+		if (game.system?.model?.Actor?.character?.skills) {
+			//other skill dcs menu button
+			let vButton = `<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`;
+			pHTML.find(pto).append(vButton);
+			pHTML.find(`button[id="${cModuleName}.otherSkillDCs"]`).click(function() {PerceptiveSheetSettings.OpenotherSkillDCs(pApp)});
+		}
 	}
 	
 	//support

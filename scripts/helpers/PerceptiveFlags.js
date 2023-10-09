@@ -50,11 +50,12 @@ const cPerceptiveStealthingF = "PerceptiveStealthingFlag"; //Flag that stores if
 const cLockPPDCF = "LockPPDCFlag"; //Flag to lock the PPDC (only for Pf2e)
 const cLingeringAPF = "LingeringAPFlag"; //FLag to store lingering AP
 const cLingeringAPInfoF = "LingeringAPInfoFlag"; //Flag to store LingeringAPInfo
+const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DCs for spotting
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -208,6 +209,10 @@ class PerceptiveFlags {
 	static LingeringAPInfo(pToken) {} //returns the Lingering AP info of pToken
 	
 	static hasLingeringAP(pToken) {} //returns if pToken has a lingering ap set
+	
+	static setotherSkillADCs(pObject, pADCs) {} //sets other ADCs of pObject
+	
+	static getotherSkillADC(pObject, pKey, pRaw = false) {} //gets the ADC of pObject belonging to pKey
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -646,6 +651,19 @@ class PerceptiveFlags {
 		return {}; //default if anything fails
 	}
 	
+	static #otherSkillADCsFlag (pObject) { 
+	//returns content of otherSkillADCsFlag of object (object)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cotherSkillADCsF)) {
+				return vFlag.otherSkillADCsFlag;
+			}
+		}
+		
+		return {}; //default if anything fails
+	}	
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -825,6 +843,16 @@ class PerceptiveFlags {
 		//sets content of LingeringAPInfoFlag (object)
 		if (pObject) {
 			await pObject.setFlag(cModuleName, cLingeringAPInfoF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setotherSkillADCs (pObject, pContent) {
+		//sets content of otherSkillADCsFlag (object)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, cotherSkillADCsF, pContent); 
 			
 			return true;
 		}
@@ -1309,6 +1337,30 @@ class PerceptiveFlags {
 	
 	static hasLingeringAP(pToken) {
 		return (this.#LingeringAPFlag(pToken)?.length > 0);
+	}
+	
+	static setotherSkillADCs(pObject, pADCs) {
+		this.#setotherSkillADCs(pObject, pADCs);
+	}
+	
+	static getotherSkillADC(pObject, pKey, pRaw = false) {
+		let vADCs = this.#otherSkillADCsFlag(pObject);
+		
+		let vDC;
+		
+		if (vADCs.hasOwnProperty(pKey)) {
+			vDC = vADCs[pKey];
+			
+			if (vDC >= 0) {
+				return vDC;
+			}
+		}
+		
+		if (pRaw) {
+			return -1;
+		}
+		
+		return Infinity;
 	}
 	
 	//effects
