@@ -1,5 +1,9 @@
+## v2.3.0
+- Added macro Request spotting to allow players to request spottables in vision without a roll
+- Added a bunch of api function to filter spottables in range, get illuminations informations and interface with the perceptive stealthing effect
+
 ## v2.2.1
--Small bug fix regarding illumination advantage/disadvantage
+- Small bug fix regarding illumination advantage/disadvantage
 
 ## v2.2.0
 - Improved door moving
