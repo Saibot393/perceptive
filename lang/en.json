@@ -332,6 +332,11 @@
 				"name"					: "Make spotted tokens visible",
 				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone"
 			},
+			
+			"RevealAllies" : {
+				"name"					: "Make allied tokens visible",
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+			},
 
 			"LingeringAP" : {
 				"name"					: "Active perception lingers",
@@ -536,6 +541,13 @@
 			"APDCFlag" : {
 				"name" 					: "Active perception DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Other active skill DCs",
+				"Title"					: "Other active skill DCs",
+				"name"					: "The active spot DCs for other skills (-1 for impossible):",
+				"entry"					: "DC for {pSkill} checks"
 			},
 			
 			"LockPPDCFlag" : {

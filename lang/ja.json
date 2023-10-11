@@ -332,6 +332,11 @@
 				"name"					: "見つかったコマを可視化",
 				"descrp"				: "能動的・受動的に見つかったコマが全員に可視化されるかどうかを設定します。"
 			},
+			
+			"RevealAllies" : {
+				"name"					: "Make allied tokens visible",
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+			},
 
 			"LingeringAP" : {
 				"name"					: "能動知覚を維持",
@@ -536,6 +541,13 @@
 			"APDCFlag" : {
 				"name" 					: "能動知覚難易度",
 				"descrp"				: "能動知覚により発見される難易度 (-1 で不可能、空白で受動知覚と共通にします)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Other active skill DCs",
+				"Title"					: "Other active skill DCs",
+				"name"					: "The active spot DCs for other skills (-1 for impossible):",
+				"entry"					: "DC for {pSkill} checks"
 			},
 			
 			"LockPPDCFlag" : {

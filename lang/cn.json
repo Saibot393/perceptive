@@ -332,6 +332,11 @@
 				"name"					: "让被发现的指示物可见",
 				"descrp"				: "If actively or passively spotted tokens should be made visible"
 			},
+			
+			"RevealAllies" : {
+				"name"					: "Make allied tokens visible",
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+			},
 
 			"LingeringAP" : {
 				"name"					: "Active perception lingers",
@@ -536,6 +541,13 @@
 			"APDCFlag" : {
 				"name" 					: "主动察觉 DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 则为不可能, 留空则和被动一样数值)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Other active skill DCs",
+				"Title"					: "Other active skill DCs",
+				"name"					: "The active spot DCs for other skills (-1 for impossible):",
+				"entry"					: "DC for {pSkill} checks"
 			},
 				
 			"LockPPDCFlag" : {

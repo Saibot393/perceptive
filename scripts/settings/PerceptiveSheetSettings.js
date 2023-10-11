@@ -6,7 +6,7 @@ import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
 import { PerceptiveCompUtils, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
-import {cPf2eAPDCautomationTypes } from "../utils/PerceptiveSystemUtils.js";
+import {PerceptiveSystemUtils, cPf2eAPDCautomationTypes } from "../utils/PerceptiveSystemUtils.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
 
@@ -296,7 +296,7 @@ class PerceptiveSheetSettings {
 			let vContent = `<p> ${Translate("SheetSettings."+ cotherSkillADCsF +".name")} </p>`;
 			
 			for (let vSkill of vSkills) {
-				vContent = vContent + PerceptiveSheetSettings.createHTMLOption({	vlabel : TranslateandReplace("SheetSettings."+ cotherSkillADCsF +".entry", vSkill), 
+				vContent = vContent + PerceptiveSheetSettings.createHTMLOption({	vlabel : TranslateandReplace("SheetSettings."+ cotherSkillADCsF +".entry", {pSkill : vSkill}), 
 																					//vhint : Translate("SheetSettings."+ vsubFlagname +".descrp"), 
 																					vtype : "text", 
 																					vvalue : PerceptiveFlags.getotherSkillADC(pApp.object, vSkill, true),
@@ -347,7 +347,7 @@ class PerceptiveSheetSettings {
 													vflagname : cAPDCF
 													}, pto);
 
-		if (game.system?.model?.Actor?.character?.skills) {
+		if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 			//other skill dcs menu button
 			let vButton = `<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`;
 			pHTML.find(pto).append(vButton);

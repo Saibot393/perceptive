@@ -332,6 +332,11 @@
 				"name"					: "Aufgedeckte Figuren sichtbar machen",
 				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"
 			},
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Aufgedeckte verbündete Figuren sichtbar machen",
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)"
+			},
 
 			"LingeringAP" : {
 				"name"					: "Aktive Wahrnehmung verleibt",
@@ -536,6 +541,13 @@
 			"APDCFlag" : {
 				"name" 					: "Aktive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Andere aktive Fähigkeits SGs",
+				"Title"					: "Andere aktive Fähigkeits SGs",
+				"name"					: "Die aktiven Entdeckungs SGs für andered Fähigkeiten (-1 wenn unmöglich):",
+				"entry"					: "SG für {pSkill} wurf"
 			},
 			
 			"LockPPDCFlag" : {
