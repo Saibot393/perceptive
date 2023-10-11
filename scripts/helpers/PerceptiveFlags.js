@@ -2,6 +2,7 @@ import {WallUtils, cisPerceptiveWall} from "../utils/WallUtils.js";
 import {GeometricUtils} from "../utils/GeometricUtils.js";
 import {cModuleName, PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
+import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
@@ -158,7 +159,7 @@ class PerceptiveFlags {
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {} //returns the Passiv perception DC
 	
-	static getAPDCModified(pObject, pVisionMode = 0) {} //returns the Active perception DC
+	static getAPDCModified(pObject, pVisionMode = 0, pSkill = "") {} //returns the Active perception DC
 	
 	static isSpottedby(pObject, pToken) {} //returns if pObject is spotted by pToken
 	
@@ -1166,12 +1167,21 @@ class PerceptiveFlags {
 		return PerceptiveFlags.getPPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);
 	}
 	
-	static getAPDCModified(pObject, pVisionMode = 0) {
-		if (game.settings.get(cModuleName, "UseIlluminationPDCModifierforAP")) {
-			return PerceptiveFlags.getAPDC(pObject) + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
+	static getAPDCModified(pObject, pVisionMode = 0, pSkill = "") {
+		let vSkillValue;
+		
+		if (!(pSkill?.length > 0)) {
+			vSkillValue = PerceptiveFlags.getAPDC(pObject);
 		}
 		else {
-			return PerceptiveFlags.getAPDC(pObject);
+			vSkillValue = PerceptiveFlags.getotherSkillADC(pObject, pSkill);
+		}
+		
+		if (game.settings.get(cModuleName, "UseIlluminationPDCModifierforAP")) {
+			return vSkillValue + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
+		}
+		else {
+			return vSkillValue;
 		}
 	}
 	

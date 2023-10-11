@@ -17,10 +17,28 @@ const cSandbox = "sandbox"; //name of the sandbox system
 //Tokentype
 const cPf2eLoottype = "loot"; //type of loot tokens in Pf2e
 
-//Lock Types
 const cLockTypeLootPf2e = "LTLootPf2e"; //type for Token
 
 const cPf2eAPDCautomationTypes = ["character", "npc", "familiar"];
+
+const Pf2eSkillDictionary = {
+    acr: "acrobatics",
+    arc: "arcana",
+    ath: "athletics",
+    cra: "crafting",
+    dec: "deception",
+    dip: "diplomacy",
+    itm: "intimidation",
+    med: "medicine",
+    nat: "nature",
+    occ: "occultism",
+    prf: "performance",
+    rel: "religion",
+    soc: "society",
+    ste: "stealth",
+    sur: "survival",
+    thi: "thievery"
+}
 
 export { cPf2eLoottype, cLockTypeLootPf2e, cPf2eAPDCautomationTypes }
 
@@ -29,11 +47,11 @@ class PerceptiveSystemUtils {
 	//DELCARATIONS	
 	static isSystemPerceptionRoll(pMessage, pInfos) {} //returns if the message belongs to a perception roll (AP)
 	
+	static SystemSkillTypes() {} //returns array of all skills in this system
+	
 	static isSystemStealthRoll(pMessage, pInfos) {} //returns if the message belongs to a stealth roll
 	
-	static canAutodetectStealthRolls() {} //returns if perception rolls can be recognized in this system
-	
-	static canAutodetectPerceptionRolls() {} //returns if stealth rolls can be recognized in this system
+	static canAutodetectSkillRolls() {} //returns if skill rolls can be detected in this system
 	
 	static Pf2eRollType(pMessage, pInfos) {} //returns the type of roll this Pf2e roll was
 	
@@ -53,20 +71,30 @@ class PerceptiveSystemUtils {
 	static SystemdefaultStealthKeyWord() {} //returns the systems default key word for stealths
 	
 	//IMPLEMENTATIONS
-	static isSystemPerceptionRoll(pMessage) {
+	static isSystemPerceptionRoll(pMessage, pInfos) {
 		if (pMessage.isRoll) {
-			if (PerceptiveSystemUtils.canAutodetectPerceptionRolls()) {
+			if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 				let vSystemInfo = pMessage.flags?.[game.system.id];
+				
+				let vSkill = "";
 				
 				if (vSystemInfo) {
 					switch (game.system.id) {
 						case cPf2eName:
+							vSkill = Object.keys(Pf2eSkillDictionary).find(vKey => Pf2eSkillDictionary[vKey] == vSystemInfo?.modifierName);
+							
+							pInfos["skill"] = vSkill;
+							
 							return vSystemInfo.context?.type == "perception-check";
 							break;
 						case cDnD5e:
-							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "prc";
+							pInfos["skill"] = vSystemInfo.roll.skillId;
+						
+							return vSystemInfo.roll.skillId == "prc";
 							break;
 						case cPf1eName:
+							pInfos["skill"] = vSystemInfo.subject?.skill;
+						
 							return vSystemInfo.subject?.skill == "per";
 							break;
 					}
@@ -83,14 +111,23 @@ class PerceptiveSystemUtils {
 		return false;
 	}
 	
+	static SystemSkillTypes() {
+		if (game.system?.model?.Actor?.character?.skills) {
+			return Object.keys(game.system.model.Actor.character.skills);
+		}
+		
+		return [];
+	}
+	
 	static isSystemStealthRoll(pMessage, pInfos) {
 		if (pMessage.isRoll) {
-			if (PerceptiveSystemUtils.canAutodetectPerceptionRolls()) {
+			if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 				let vSystemInfo = pMessage.flags?.[game.system.id];
 				
 				if (vSystemInfo) {
 					switch (game.system.id) {
 						case cPf2eName:
+							let vSkillName
 							return vSystemInfo.context.domains.includes("check") && vSystemInfo.context.domains.includes("stealth")
 							break;
 						case cDnD5e:
@@ -113,7 +150,7 @@ class PerceptiveSystemUtils {
 		return false;		
 	}
 	
-	static canAutodetectStealthRolls() {
+	static canAutodetectSkillRolls() {
 		switch (game.system.id) {
 			case cPf2eName:
 			case cDnD5e:
@@ -124,19 +161,6 @@ class PerceptiveSystemUtils {
 				return false;
 				break;
 		}
-	}
-	
-	static canAutodetectPerceptionRolls() {
-		switch (game.system.id) {
-			case cPf2eName:
-			case cDnD5e:
-			case cPf1eName:
-				return true;
-				break;	
-			default:
-				return false;
-				break;
-		}		
 	}
 	
 	static Pf2eRollType(pMessage, pInfos) {

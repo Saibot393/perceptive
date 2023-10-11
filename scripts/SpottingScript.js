@@ -42,7 +42,7 @@ class SpottingManager {
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
-	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0}) {} //starts an active perception check
+	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {} //starts an active perception check
 	
 	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {} //requests from the gm to spot all specified objects in vision
 
@@ -76,7 +76,7 @@ class SpottingManager {
 
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chat message is send
 
-	static async onPerceptionRoll(pActor, pRoll, pUserID) {} //called when a perception roll is rolled
+	static async onPerceptionRoll(pActor, pRoll, pUserID, pReplaceSkill = "") {} //called when a perception roll is rolled
 
 	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {} //called when a new object is revealed
 	
@@ -181,7 +181,9 @@ class SpottingManager {
 			let vBuffer;
 
 			vLocalVisionData.vlastPPvalue = 0;
-
+			vLocalVisionData.vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
+			vLocalVisionData.vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
+			
 			for (let i = 0; i < vTokens.length; i++) {
 				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
 
@@ -189,9 +191,6 @@ class SpottingManager {
 					vLocalVisionData.vlastPPvalue = vBuffer;
 				}
 			}
-
-			vLocalVisionData.vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
-			vLocalVisionData.vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
 			
 			if (game.user.isGM) {
 				vLocalVisionData.vSimulatePlayerVision = true;
@@ -235,7 +234,7 @@ class SpottingManager {
 		}
 	}
 	
-	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0}) {
+	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {
 		if (pSpotters.length > 0 && pResults.length > 0) {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
@@ -261,6 +260,8 @@ class SpottingManager {
 			let vCurrentRollbehaviour;
 			
 			let vResultBuffer;
+			
+			let vADC;
 			
 			let vSuccessDegree;
 			
@@ -289,18 +290,23 @@ class SpottingManager {
 						vResultBuffer = pResults[0]
 					}
 					
-					vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel));
+					vADC = PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill);
 					
-					if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && vSpotables[i].documentName == "Token")) {
+					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
+						//only continue with objects spottable with this attribute unless it is a perception roll
+						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC);
 						
-						vSpotted.push(vSpotables[i]);
-						
-						if (vSpotables[i].documentName == "Token"){
-							vRollBehaviours[vSpotables[i].id] = vCurrentRollbehaviour;
+						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && vSpotables[i].documentName == "Token")) {
 							
-							vTokenSuccessDegrees[vSpotables[i].id] = vSuccessDegree;
+							vSpotted.push(vSpotables[i]);
 							
-							vTokenSpotted[vSpotables[i].id] = (vSuccessDegree > 0);
+							if (vSpotables[i].documentName == "Token"){
+								vRollBehaviours[vSpotables[i].id] = vCurrentRollbehaviour;
+								
+								vTokenSuccessDegrees[vSpotables[i].id] = vSuccessDegree;
+								
+								vTokenSpotted[vSpotables[i].id] = (vSuccessDegree > 0);
+							}
 						}
 					}
 				}
@@ -309,12 +315,13 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour});
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill});
 					}
 				}
 			}
 
 			let vInfos = 	{APerceptionResult : pResults[0],
+							RolledSkill : pInfos.Skill,
 							SecondResult : pResults[1], //used for adv/disadv
 							RollBehaviours : vRollBehaviours,
 							SourceRollBehaviour : pInfos.SourceRollBehaviour,
@@ -376,10 +383,6 @@ class SpottingManager {
 			let vInfos = 	{TokenSpotted : vTokenSpotted,
 							sendingPlayer : game.user.id,
 							forceConfirmDialog : true};
-							
-			console.log(vInfos);
-			console.log(vSpotted);
-			console.log(vSpotters);
 							
 			await SpottingManager.RequestSpotObjects(vSpotted, vSpotters, vInfos);
 
@@ -648,8 +651,14 @@ class SpottingManager {
 		if ((pObjectIDs.Walls?.length > 0) || (pObjectIDs.Tokens?.length > 0)) {
 			let vContent;
 			
+			let vSkillName = pInfos.RolledSkill;
+			
+			if (!(pInfos.RolledSkill?.length > 0)) {
+				vSkillName = Translate("Titles.SpottingConfirm.defaultSkill");
+			}
 			
 			let vData = {pPlayer : game.users.get(pInfos.sendingPlayer)?.name,
+						pSkillName : vSkillName,
 						pSpotters : PerceptiveUtils.TokenNamesfromIDs(pSpotterIDs, game.scenes.get(pSceneID)),
 						pScene : game.scenes.get(pSceneID)?.name,
 						pDoors : pObjectIDs.Walls?.length,
@@ -684,7 +693,6 @@ class SpottingManager {
 												<p>${vTokens[i].name}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
-					console.log(pInfos);
 					if (!pInfos.forceConfirmDialog && (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0))) {
 						vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[vTokens[i].id], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[vTokens[i].id], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
 					}							
@@ -821,7 +829,7 @@ class SpottingManager {
 		}
 	}
 
-	static async onPerceptionRoll(pActor, pRoll, pUserID) {
+	static async onPerceptionRoll(pActor, pRoll, pUserID, pReplaceSkill = "") {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
 
 		/*
@@ -834,7 +842,7 @@ class SpottingManager {
 		
 		let vSecondResult = [vSecondRoll.total, vSecondRoll.dice[0].total];
 		*/
-		let vInfos = {};
+		let vInfos = {Skill : pReplaceSkill};
 		
 		let vResults = await PerceptiveUtils.twoRoll(pRoll, vInfos);
 		
@@ -888,23 +896,32 @@ class SpottingManager {
 		//effect resets
 		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
 			pInfos.Spotted = true;
-			SpottingManager.RequestresetStealth(pObjects, pInfos);
+			
+			let vUnstealthObjects = pObjects;
+			
+			if (!game.settings.get(cModuleName, "RevealAllies")) {
+				vUnstealthObjects = vUnstealthObjects.filter(vObject => vObject.disposition != vLocalVisionData.vlastDisposition)
+			}
+			
+			SpottingManager.RequestresetStealth(vUnstealthObjects, pInfos);
 		}
 		
 		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos)
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
-		if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
-			let vActiveScenes = game.scenes.filter(vScene => vScene.active);
-			
-			for (let i = 0; i < vActiveScenes.length; i++) {
-				let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+		if (game.user.isGM) {
+			if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
 				
-				for (let j = 0; j < vrelevantTokens.length; j++) {				
-					PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
-				}
-			}			
+				for (let i = 0; i < vActiveScenes.length; i++) {
+					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+					
+					for (let j = 0; j < vrelevantTokens.length; j++) {				
+						PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
+					}
+				}			
+			}
 		}
 	}
 
@@ -1148,7 +1165,7 @@ Hooks.once("ready", function() {
 		
 		Hooks.on("preUpdateToken", (...args) => {SpottingManager.onTokenpreupdate(...args)});
 
-		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll, pUserID) => {SpottingManager.onPerceptionRoll(pActorID, pRoll, pUserID)});
+		Hooks.on(cModuleName + ".PerceptionRoll", (pActorID, pRoll, pUserID, pReplaceSkill = "") => {SpottingManager.onPerceptionRoll(pActorID, pRoll, pUserID, pReplaceSkill)});
 		
 		Hooks.on(cModuleName + ".StealthRoll", (pActorID, pRoll) => {SpottingManager.onStealthRoll(pActorID, pRoll)});
 		

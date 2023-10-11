@@ -325,6 +325,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		type: Boolean,
 		default: false
 	  }); 
+	  
+	  game.settings.register(cModuleName, "RevealAllies", {
+		name: Translate("Settings.RevealAllies.name"),
+		hint: Translate("Settings.RevealAllies.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 
 
 	  game.settings.register(cModuleName, "LingeringAP", {
 		name: Translate("Settings.LingeringAP.name"),
@@ -354,7 +363,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.PerceptionKeyWord.name"),
 		hint: Translate("Settings.PerceptionKeyWord.descrp"),
 		scope: "world",
-		config: !PerceptiveSystemUtils.canAutodetectPerceptionRolls(),
+		config: !PerceptiveSystemUtils.canAutodetectSkillRolls(),
 		type: String,
 		default: PerceptiveSystemUtils.SystemdefaultPerceptionKeyWord()
 	  });  
@@ -363,7 +372,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.StealthKeyWord.name"),
 		hint: Translate("Settings.StealthKeyWord.descrp"),
 		scope: "world",
-		config: !PerceptiveSystemUtils.canAutodetectStealthRolls(),
+		config: !PerceptiveSystemUtils.canAutodetectSkillRolls(),
 		type: String,
 		default: PerceptiveSystemUtils.SystemdefaultStealthKeyWord()
 	  });  
@@ -811,6 +820,7 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.CritMethod"],
 												[data-setting-id="perceptive.AutomateTokenSpottable"],
 												[data-setting-id="perceptive.MakeSpottedTokensVisible"],
+												[data-setting-id="perceptive.RevealAllies"],
 												[data-setting-id="perceptive.LingeringAP"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],

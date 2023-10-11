@@ -9,6 +9,8 @@ class PerceptiveRollHandler {
 	static async onChatMessage(pMessage, pInfos, pSenderID) {
 		if (game.userId == pSenderID) {
 			let vActorID = "";
+			
+			let pRollInfos = {};
 
 			if (pMessage.actor) {
 				vActorID = pMessage.actor.id;
@@ -21,8 +23,13 @@ class PerceptiveRollHandler {
 
 			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0]?.key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
 				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "never") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (!pMessage.actor?.inCombat))) {
-					if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage)) {
+					if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage, pRollInfos)) {
 						Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID);
+					}
+					else {
+						if (PerceptiveSystemUtils.canAutodetectSkillRolls() && pRollInfos.skill?.length > 0) {
+							Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID, pRollInfos.skill);
+						}
 					}
 				}
 
