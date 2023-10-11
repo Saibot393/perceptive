@@ -1,3 +1,7 @@
+## v2.4.0
+- Added world setting Make allied tokens visible to set wether allied tokens should be made visible when spotted
+- Added token/wall setting menu Other active skill DCs to set the active spotting DCs when using skills other then perception (currently only works with D&D5e, Pf2e, and Pf1e)
+
 ## v2.3.0
 - Added macro Request spotting to allow players to request spottables in vision without a roll
 - Added a bunch of api function to filter spottables in range, get illuminations informations and interface with the perceptive stealthing effect
