@@ -218,10 +218,11 @@ class SpottingManager {
 			
 			vLocalVisionData.vPf2eRules = game.settings.get(cModuleName, "UsePf2eRules");
 			
-			let vCombatRange = (game.settings.get(cModuleName, "ApplyRange") == "incombatonly") && vTokens.find(vToken => vToken.actor?.inCombat); //if vision range is on because of combat
+			let vInCombatRange = (game.settings.get(cModuleName, "ApplyRange") == "incombatonly") && vTokens.find(vToken => vToken.actor?.inCombat); //if vision range is on because of combat
+			let vOutCombatRange = (game.settings.get(cModuleName, "ApplyRange") == "outcombatonly") && !vTokens.find(vToken => vToken.actor?.inCombat); //if vision range is on because of combat
 			
-			vLocalVisionData.vActiveRange = vCombatRange || ["always", "activeonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
-			vLocalVisionData.vPassiveRange = vCombatRange || ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
+			vLocalVisionData.vActiveRange = vInCombatRange || vOutCombatRange || ["always", "activeonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
+			vLocalVisionData.vPassiveRange = vInCombatRange || vOutCombatRange || ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
 			
 			vLocalVisionData.vUseRangeTollerance = game.settings.get(cModuleName, "UseBordertoBorderRange");
 		}

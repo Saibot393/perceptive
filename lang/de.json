@@ -183,7 +183,8 @@
 					"always"			: "immer",
 					"activeonly"		: "Nur aktive Vergleiche",
 					"passiveonly"		: "Nur passive Vergleiche",
-					"incombatonly"		: "Nur in Kämpfen (beide Vergleiche)"
+					"incombatonly"		: "Nur in Kämpfen (beide Vergleiche)",
+					"outcombatonly"		: "Nur außerhalb von Kämpfen (beide Vergleiche)"
 				}
 			},	
 

@@ -183,7 +183,8 @@
 					"always"			: "always",
 					"activeonly"		: "active checks only",
 					"passiveonly"		: "passive checks only",
-					"incombatonly"		: "in combat only (both checks)"
+					"incombatonly"		: "in combat only (both checks)",
+					"outcombatonly"		: "out of combat only (both checks)"
 				}
 			},	
 

@@ -188,7 +188,8 @@
 					"always"			: "常時",
 					"activeonly"		: "能動的な判定のみ",
 					"passiveonly"		: "受動的な判定のみ",
-					"incombatonly"		: "戦闘時のみ (両方の判定)"
+					"incombatonly"		: "戦闘時のみ (両方の判定)",
+					"outcombatonly"		: "out of combat only (both checks)"
 				}
 			},	
 
