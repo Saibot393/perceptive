@@ -151,7 +151,7 @@ class SpottingManager {
 		if ( pToken.controlled ) return true;
 
 		pInfos.CritMode = vLocalVisionData.vCritType;
-		pInfos.Pf2eRules = vLocalVisionData.vPf2eRules && cPf2eAPDCautomationTypes.includes(pToken.actor.type);
+		pInfos.Pf2eRules = vLocalVisionData.vPf2eRules && cPf2eAPDCautomationTypes.includes(pToken.actor?.type);
 		
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
