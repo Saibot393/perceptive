@@ -1,3 +1,6 @@
+## v2.4.1
+- Added "out of combat only" option to the Apply ranges setting
+
 ## v2.4.0
 - Added world setting Make allied tokens visible to set wether allied tokens should be made visible when spotted
 - Added token/wall setting menu Other active skill DCs to set the active spotting DCs when using skills other then perception (currently only works with D&D5e, Pf2e, and Pf1e)
