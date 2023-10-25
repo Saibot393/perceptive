@@ -770,7 +770,7 @@ class SpottingManager {
 												<p>${PerceptiveFlags.PerceptiveName(vTokens[i])}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
-					if (!pInfos.forceConfirmDialog && (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0))) {
+					if (!pInfos.forceConfirmDialog && vTokens[i].documentName == "Token" && (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0))) {
 						vContent = vContent + `<p>${TranslateandReplace("Titles.SpottingConfirm.Behaviour", {pBehaviour : pInfos.RollBehaviours[vTokens[i].id], pResult : + PerceptiveUtils.ApplyrollBehaviour(pInfos.RollBehaviours[vTokens[i].id], pInfos.APerceptionResult, pInfos.SecondResult)[0]})}</p>`;
 					}							
 											
