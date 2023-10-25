@@ -145,10 +145,12 @@ class PeekingManager {
 		}
 		
 		if (WallUtils.isDoor(pWall)) {
+			//console.log("Wall Check:",pWall.id, PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken)); 
 			return PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken); //is a lock peeked door
 		}
 		
 		if (PerceptiveFlags.isLockpeekingWall(pWall)) {
+			//console.log("Wall Check:",pWall.id, !(PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken))); 
 			return !(PerceptiveFlags.isLockpeekedby(pWall, pToken.id) && PerceptiveFlags.isLockpeeking(pToken)); //is a wall to limit lockpeeking sight
 		}
 		

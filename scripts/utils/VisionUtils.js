@@ -28,11 +28,13 @@ export {cLightLevel, cVisionLevel};
 class VisionUtils {
 	//DECLARATIONS
 	//support
-	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {} //returns spotables in tokens vision of specified categories
+	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true, Tiles : true}) {} //returns spotables in tokens vision of specified categories
 	
 	static spotableDoorsinVision(pToken) {} //returns an array of walls that are spotable and within the vision of pToken
 	
 	static spotableTokensinVision(pToken) {} //returns an array of tokens that are spotable and within the vision of pToken
+	
+	static spotableTilesinVision(pToken) {} //returns an array of tiles that are spotable and within the vision of pToken
 	
 	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
 	
@@ -43,6 +45,8 @@ class VisionUtils {
 	static async PrepareSpotables() {} //generates spotables and makes them pre visible
 	
 	static async PreapreSpotableToken(pToken) {} //generates pToken and makes them pre visible
+	
+	static async PreapreSpotableTile(pTile) {} //generates pTile and makes them pre visible
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
@@ -61,7 +65,7 @@ class VisionUtils {
 	static LightingAPDCBehaviourObject(pToken, pVisionLevel = 0) {} //returns APDC behaviour of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)	
 	
 	//IMPLEMENTATIONS
-	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true}) {
+	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true, Tiles : true}) {
 		let vSpotables = [];
 		
 		if (pCategory.Walls) {
@@ -70,6 +74,10 @@ class VisionUtils {
 		
 		if (pCategory.Tokens) {
 			vSpotables = vSpotables.concat(VisionUtils.spotableTokensinVision(pToken));
+		}
+		
+		if (pCategory.Tiles) {
+			vSpotables = vSpotables.concat(VisionUtils.spotableTilesinVision(pToken));
 		}
 		
 		return vSpotables;
@@ -143,6 +151,38 @@ class VisionUtils {
 		return vTokensinRange.map(vToken => vToken.document);
 	}
 	
+	static spotableTilesinVision(pToken) {
+		let vTiles = canvas.tiles.placeables;
+		
+		let vTilesinRange = [];
+		
+		let vinVision;
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			vinVision = false;
+			
+			if (PerceptiveFlags.canbeSpotted(vTiles[i].document)) {//partly modified from foundry.js
+				// Clear the detection filter
+				//vTokens[i].detectionFilter = undefined;
+
+				// Some tokens are always visible
+				//if ( !canvas.effects.visibility.tokenVision ) return true;
+				//if ( vTokens[i].controlled ) return true;
+				
+				// Otherwise, test visibility against current sight polygons
+				//if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
+				const tolerance = Math.min(vTiles[i].w, vTiles[i].h) / 4;
+				vinVision = VisionUtils.simpletestVisibility(vTiles[i].center, {tolerance, object: vTiles[i]});
+			}
+			
+			if (vinVision) {
+				vTokensinRange.push(vTiles[i]);
+			}
+		}
+		
+		return vTilesinRange.map(vTile => vTile.document);		
+	}
+	
 	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {
 		if (pRange >= Infinity) {
 			return true;
@@ -206,6 +246,13 @@ class VisionUtils {
 				pObjects[i].object.visible = true;
 				pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 			}
+			
+			if ((pObjects[i].documentName == "Tile") && !pObjects[i].object?.visible) {
+				pObjects[i].object.visible = true;
+				if (pObjects[i].object.mesh) {
+					pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
+				}
+			}			
 		}		
 	}
 	
@@ -229,11 +276,26 @@ class VisionUtils {
 				VisionUtils.PreapreSpotableToken(vTokens[i]);
 			}
 		}
+		
+		let vTiles = canvas.tiles.placeables;
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			if (vTiles[i].document.hidden && PerceptiveFlags.canbeSpotted(vTiles[i].document)) {
+				//make token mesh half visible
+				VisionUtils.PreapreSpotableTile(vTiles[i]);
+			}
+		}
 	}
 	
 	static async PreapreSpotableToken(pToken) {
 		if ((pToken.mesh.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) || PerceptiveFlags.isPerceptiveStealthing(pToken.document)) {
 			pToken.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
+		}
+	}
+	
+	static async PreapreSpotableTile(pTile) {
+		if (pTile.mesh.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) {
+			pTile.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 		}
 	}
 	

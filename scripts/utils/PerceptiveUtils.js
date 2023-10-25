@@ -40,6 +40,8 @@ class PerceptiveUtils {
 	
 	static WallsfromIDs(pIDs, pScene = null) {} //returns the Wall matching pID
 	
+	static TilesfromIDs (pIDs, pScene = null) {} //returns an array of Tiles belonging to the pIDs
+	
 	static IDsfromWalls(pWalls) {} //returns IDs of pWalls
 	
 	static hoveredWall() {} //get first hovered wall

@@ -44,7 +44,7 @@ class SpottingManager {
 
 	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {} //starts an active perception check
 	
-	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {} //requests from the gm to spot all specified objects in vision
+	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false, Tiles : false}) {} //requests from the gm to spot all specified objects in vision
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
 
@@ -297,11 +297,11 @@ class SpottingManager {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC);
 						
-						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && vSpotables[i].documentName == "Token")) {
+						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							
 							vSpotted.push(vSpotables[i]);
 							
-							if (vSpotables[i].documentName == "Token"){
+							if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"){
 								vRollBehaviours[vSpotables[i].id] = vCurrentRollbehaviour;
 								
 								vTokenSuccessDegrees[vSpotables[i].id] = vSuccessDegree;
@@ -339,7 +339,7 @@ class SpottingManager {
 		}
 	}
 	
-	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {
+	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false, Tiles : false}) {
 		let vSpotters = PerceptiveUtils.selectedTokens();
 		
 		if (vSpotters.length > 0) {
@@ -364,7 +364,7 @@ class SpottingManager {
 				let vTolerance;
 				
 				if (vLocalVisionData.vUseRangeTollerance) {
-					if (vSpotables[i].documentName == "Token") {
+					if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile") {
 						vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
 					}
 					else {
@@ -375,7 +375,7 @@ class SpottingManager {
 				if ((!vLocalVisionData.vActiveRange /*&& !pInfos.Ranges*/) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : undefined/*pInfos.Ranges*/, Tolerance : vTolerance})) {			
 					vSpotted.push(vSpotables[i]);
 					
-					if (vSpotables[i].documentName == "Token"){
+					if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"){
 						vTokenSpotted[vSpotables[i].id] = false;
 					}
 				}
@@ -394,7 +394,7 @@ class SpottingManager {
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {
 		let vSpottables = pObjects.filter(vObject => PerceptiveFlags.canbeSpotted(vObject));
 		
-		vSpottables = vSpottables.filter(vObject => !(vObject.documentName == "Token") || pInfos.TokenSpotted[vObject.id]);
+		vSpottables = vSpottables.filter(vObject => !(vObject.documentName == "Token" || vObject.documentName == "Tile") || pInfos.TokenSpotted[vObject.id]);
 
 		if (pInfos.sendingPlayer == game.user.id) {
 			pInfos.GMSpotting = true;
@@ -412,7 +412,9 @@ class SpottingManager {
 	}
 
 	static async RequestSpotObjects(pObjects, pSpotters, pInfos) {
-		let vObjectIDs = {Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token"))};
+		let vObjectIDs = {	Walls : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Wall")), 
+							Tokens : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Token")),
+							Tiles : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Tile"))};
 		
 		if (game.user.isGM) {
 			if (["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) || pInfos.forceConfirmDialog) {
@@ -435,7 +437,10 @@ class SpottingManager {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
 			else {
-				await SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
+				let vScene = game.scenes.get(pSceneID);
+				let vObjects = PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, vScene).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), vScene));
+				
+				await SpottingManager.SpotObjectsGM(vObjects, PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos);
 			}
 		}
 	}
@@ -446,7 +451,7 @@ class SpottingManager {
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 			
-			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => pInfos.overrideVFilter || (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !((vObject?.object?.visible && vObject.documentName == "Token") || vObject?.object?.doorControl?.visible)), pInfos);
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => pInfos.overrideVFilter || (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !((vObject?.object?.visible && (vObject.documentName == "Token" || vObject.documentName == "Tile")) || vObject?.object?.doorControl?.visible)), pInfos);
 
 			VisionUtils.MaketempVisible(vSpotables);
 		}
@@ -486,6 +491,12 @@ class SpottingManager {
 							}
 							
 							break;
+						case "Tile":
+							if (pObjects[i].hidden) {
+								pObjects[i].update({hidden: false});
+							}
+							
+							break;							
 						case "Wall":
 							if (pObjects[i].door == 2) {
 								//is secret door
@@ -515,6 +526,8 @@ class SpottingManager {
 			
 			vObjectIDs.Walls = pObjects.filter(vObject => vObject?.documentName == "Wall").map(vWall => vWall.id);
 			
+			vObjectIDs.Tiles = pObjects.filter(vObject => vObject?.documentName == "Tile").map(vTile => vTile.id);
+			
 			game.socket.emit("module." + cModuleName, {pFunction : "resetStealthRequest", pData : {pObjectIDs : vObjectIDs, pSceneID : canvas.scene.id, pInfos : pInfos}});
 		}
 	}
@@ -524,7 +537,7 @@ class SpottingManager {
 			if ((pInfos.Spotted && game.settings.get(cModuleName, "MakeSpottedTokensVisible")) || (pInfos.DoorClicked)) {
 				let vObjects = [];
 				
-				vObjects = vObjects.concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID)));
+				vObjects = vObjects.concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), game.scenes.get(pSceneID)));
 				
 				vObjects = vObjects.concat(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)));
 				

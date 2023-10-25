@@ -16,6 +16,8 @@ class PerceptiveSheetSettings {
 	
 	static async TokenSheetSettings(pApp, pHTML, pData) {} //add settinsg to token sheet
 	
+	static async TileSheetSettings(pApp, pHTML, pData) {} //add settinsg to tile sheet
+	
 	static SceneSheetSettings(pApp, pHTML, pData) {} //add settinsg to scene sheet 
 	
 	//dialogs
@@ -260,6 +262,35 @@ class PerceptiveSheetSettings {
 		}
 		
 		PerceptiveSheetSettings.FixSheetWindow(pHTML);
+	}
+	
+	static async TileSheetSettings(pApp, pHTML, pData) {
+		if (game.user.isGM) {
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {	
+				//add new tab
+				let vTabbar = pHTML.find(`[aria-role="Form Tab Navigation"].sheet-tabs`);
+				let vprevTab = pHTML.find(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
+				
+				let vTabButtonHTML = 	`
+								<a class="item" data-tab="${cModuleName}">
+									<i class="fas ${cPerceptiveIcon}"></i>
+									${Translate("Titles."+cModuleName)}
+								</a>
+								`; //tab button HTML
+				let vTabContentHTML = `<div class="tab" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+				
+				vTabbar.append(vTabButtonHTML);
+				vprevTab.after(vTabContentHTML);	
+													
+				//standard settings
+				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
+				
+				//infos 
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				
+				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+			}
+		}
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -540,6 +571,8 @@ Hooks.once("ready", () => {
 		Hooks.on("renderWallConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.WallSheetSettings(pApp, pHTML, pData)); //for walls
 		
 		Hooks.on("renderTokenConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.TokenSheetSettings(pApp, pHTML, pData)); //for tokens
+		
+		Hooks.on("renderTileConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.TileSheetSettings(pApp, pHTML, pData)); //for tokens
 		
 		Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML, pData)); //for scenes 
 	}
