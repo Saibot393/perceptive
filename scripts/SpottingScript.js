@@ -1083,6 +1083,10 @@ class SpottingManager {
 				}
 			}
 		}
+		
+		if (pToken.controlled && vLocalVisionData.vPassiveRange) {
+			SpottingManager.CheckTilesSpottingVisible();
+		}
 	}
 	
 	static onsightRefresh() {
