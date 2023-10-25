@@ -186,7 +186,12 @@ class SpottingManager {
 			let vTolerance;
 			
 			if (vLocalVisionData.vUseRangeTollerance) {
-				vTolerance = {PointTolerance : Math.max(pTile.width, pTile.height)/2};
+				if (pTile.mesh) {
+					vTolerance = {PointTolerance : Math.max(pTile.mesh.width, pTile.mesh.height)/2};
+				}
+				else {
+					vTolerance = {PointTolerance : Math.max(pTile.width, pTile.height)/2};
+				}
 			}
 			
 			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance})) {
@@ -289,6 +294,7 @@ class SpottingManager {
 		if (pSpotters.length > 0 && pResults.length > 0) {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
+			console.log(vSpotables);
 			//filter out already spotted
 			if (game.settings.get(cModuleName, "UsePf2eRules")) {
 				//in Pf2e hidden tokens are also spottable, even if already spotted
@@ -321,11 +327,19 @@ class SpottingManager {
 				let vTolerance;
 				
 				if (vLocalVisionData.vUseRangeTollerance) {
-					if (vSpotables[i].documentName == "Token") {
-						vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
-					}
-					else {
-						vTolerance = {PointTolerance : 0};
+					switch (vSpotables[i].documentName) {
+						case "Token":
+							vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
+							break;
+						case "Tile":
+							if (vSpotables[i].object.mesh) {
+								vTolerance = {PointTolerance : Math.max(vSpotables[i].object.mesh.width, vSpotables[i].object.mesh.height)/2};
+							}
+							else {
+								vTolerance = {PointTolerance : Math.max(vSpotables[i].object.width, vSpotables[i].object.height)/2};
+							}
+						default:
+							vTolerance = {PointTolerance : 0};
 					}
 				}
 						
@@ -712,7 +726,7 @@ class SpottingManager {
 	}
 
 	static openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
-		if ((pObjectIDs.Walls?.length > 0) || (pObjectIDs.Tokens?.length > 0)) {
+		if ((pObjectIDs.Walls?.length > 0) || (pObjectIDs.Tokens?.length > 0) || (pObjectIDs.Tiles?.length > 0)) {
 			let vContent;
 			
 			let vSkillName = pInfos.RolledSkill;
@@ -739,7 +753,7 @@ class SpottingManager {
 				vContent =  TranslateandReplace("Titles.SpottingConfirm.content", vData);
 			}
 
-			let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID));
+			let vTokens = PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), game.scenes.get(pSceneID));
 
 			let vChecked;
 			
@@ -754,7 +768,7 @@ class SpottingManager {
 					
 					vContent = vContent + `<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em">
 												<input type="checkbox" id=${vTokens[i].id} ${vChecked}>
-												<p>${vTokens[i].name}</p>
+												<p>${PerceptiveFlags.PerceptiveName(vTokens[i])}</p>
 												<img src="${vTokens[i].texture.src}" style = "height: 2em;">`
 				
 					if (!pInfos.forceConfirmDialog && (game.settings.get(cModuleName, "useLightAdvantageSystem") || (pInfos.SourceRollBehaviour != 0))) {
@@ -780,7 +794,7 @@ class SpottingManager {
 					
 								//let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
 								
-								SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens, game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
+								SpottingManager.SpotObjectsGM(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)).concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), game.scenes.get(pSceneID))), PerceptiveUtils.TokensfromIDs(pSpotterIDs, game.scenes.get(pSceneID)), pInfos)
 								},
 				no: () => {},
 				defaultYes: false

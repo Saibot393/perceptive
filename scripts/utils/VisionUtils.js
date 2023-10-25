@@ -171,7 +171,15 @@ class VisionUtils {
 				
 				// Otherwise, test visibility against current sight polygons
 				//if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
-				const tolerance = Math.min(vTiles[i].w, vTiles[i].h) / 4;
+				let tolerance;
+				
+				if (vTiles[i].mesh) {
+					tolerance = Math.min(vTiles[i].mesh.width, vTiles[i].mesh.height) / 4;
+				}
+				else {
+					tolerance = Math.min(vTiles[i].width, vTiles[i].height) / 4;
+				}
+				
 				vinVision = VisionUtils.simpletestVisibility(vTiles[i].center, {tolerance, object: vTiles[i]});
 			}
 			

@@ -1,6 +1,6 @@
 import {WallUtils, cisPerceptiveWall} from "../utils/WallUtils.js";
 import {GeometricUtils} from "../utils/GeometricUtils.js";
-import {cModuleName, PerceptiveUtils} from "../utils/PerceptiveUtils.js";
+import {cModuleName, PerceptiveUtils, Translate} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 
@@ -52,6 +52,7 @@ const cLockPPDCF = "LockPPDCFlag"; //Flag to lock the PPDC (only for Pf2e)
 const cLingeringAPF = "LingeringAPFlag"; //FLag to store lingering AP
 const cLingeringAPInfoF = "LingeringAPInfoFlag"; //Flag to store LingeringAPInfo
 const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DCs for spotting
+const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of the perceptive tile
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
@@ -215,6 +216,8 @@ class PerceptiveFlags {
 	
 	static getotherSkillADC(pObject, pKey, pRaw = false) {} //gets the ADC of pObject belonging to pKey
 	
+	static PerceptiveName(pToken) {} //returns name of pToken, either token name or Tile rideable name
+		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
 	
@@ -664,6 +667,19 @@ class PerceptiveFlags {
 		
 		return {}; //default if anything fails
 	}	
+	
+	static #TilePerceptiveNameFlag (pToken) { 
+	//returns content of TilePerceptiveNameFlag of pToken (if any) (string)
+		let vFlag = this.#PerceptiveFlags(pToken);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cTilePerceptiveNameF)) {
+				return vFlag.TilePerceptiveNameFlag;
+			}
+		}
+		
+		return Translate("Titles.Tile"); //default if anything fails
+	} 
 	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
@@ -1371,6 +1387,19 @@ class PerceptiveFlags {
 		}
 		
 		return Infinity;
+	}
+	
+	static PerceptiveName(pToken) {
+		switch (pToken.documentName) {
+			case "Token":
+				return pToken.name;
+				break;
+			case "Tile":
+				return PerceptiveFlags.#TilePerceptiveNameFlag(pToken);
+				break;
+		}
+		
+		return "";		
 	}
 	
 	//effects
