@@ -36,9 +36,13 @@ const cVisibleNameModes = [30, 50];
 
 class SpottingManager {
 	//DECLARATIONS
-	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible through spotting
+	static DControlSpottingVisible(pDoorControl) {} //returns wether this pDoorControl is visible thrrough spotting
 
-	static TokenSpottingVisible(pToken, pInfos = {}) {} //returns wether this pWall is visible though spotting
+	static TokenSpottingVisible(pToken, pInfos = {}) {} //returns wether this pToken is visible through spotting
+	
+	static TileSpottingVisible(pTile) {} //returns wether this pTile is visible through spotting
+	
+	static CheckTilesSpottingVisible(){} //rechecks the visibility of all spottable tiles in the canvas
 
 	static async updateVisionValues() {} //retruns the passive perception value of pToken
 
@@ -173,6 +177,50 @@ class SpottingManager {
 
 		return false;
 	}
+	
+	static TileSpottingVisible(pTile) {
+		if ( !canvas.effects.visibility.tokenVision ) return true;
+		
+		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue) ) {
+			// Otherwise, test visibility against current sight polygons
+			let vTolerance;
+			
+			if (vLocalVisionData.vUseRangeTollerance) {
+				vTolerance = {PointTolerance : Math.max(pTile.width, pTile.height)/2};
+			}
+			
+			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance})) {
+				return false;
+			}
+				
+			return true;
+		}
+
+		return false;		
+	}
+	
+	static CheckTilesSpottingVisible(){
+		let vTiles = canvas.tiles.placeables.map(vTile => vTile.document).filter(vTile => PerceptiveFlags.canbeSpotted(vTile) && vTile.hidden);
+		
+		let vPrevVisible;
+		
+		let vSelectedTokens = PerceptiveUtils.selectedTokens();
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			if (vSelectedTokens.length > 0) {
+				vPrevVisible = 	vTiles[i].object?.visible;
+
+				vTiles[i].object.visible = SpottingManager.TileSpottingVisible(vTiles[i].object);
+				
+				if (vTiles[i].object.visible && !vPrevVisible) {
+					SpottingManager.onNewlyVisible([vTiles[i]], {PassivSpot : true});
+				}
+			}
+			else {
+				vTiles[i].object.visible = game.user.isGM;
+			}
+		}
+	}
 
 	static async updateVisionValues() {
 		if (!game.user.isGM || game.settings.get(cModuleName, "SimulatePlayerVision")) {
@@ -233,6 +281,8 @@ class SpottingManager {
 			
 			vLocalVisionData.vSpottingConeRange = Infinity;
 		}
+		
+		SpottingManager.CheckTilesSpottingVisible();
 	}
 	
 	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {

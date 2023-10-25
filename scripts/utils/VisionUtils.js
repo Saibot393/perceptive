@@ -176,7 +176,7 @@ class VisionUtils {
 			}
 			
 			if (vinVision) {
-				vTokensinRange.push(vTiles[i]);
+				vTilesinRange.push(vTiles[i]);
 			}
 		}
 		
@@ -294,7 +294,7 @@ class VisionUtils {
 	}
 	
 	static async PreapreSpotableTile(pTile) {
-		if (pTile.mesh.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) {
+		if (pTile.mesh?.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) {
 			pTile.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 		}
 	}
