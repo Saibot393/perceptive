@@ -294,7 +294,6 @@ class SpottingManager {
 		if (pSpotters.length > 0 && pResults.length > 0) {
 			let vSpotables = VisionUtils.spotablesinVision();
 			
-			console.log(vSpotables);
 			//filter out already spotted
 			if (game.settings.get(cModuleName, "UsePf2eRules")) {
 				//in Pf2e hidden tokens are also spottable, even if already spotted
@@ -929,7 +928,7 @@ class SpottingManager {
 	}
 
 	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {	
-		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token");
+		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token" || vObject?.documentName == "Tile");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
 		//ping
@@ -951,8 +950,8 @@ class SpottingManager {
 			for (let i = 0; i < vTokens.length; i++) {
 				vContent = vContent + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
 				
-				if (vTokens[i].isOwner || (cVisibleNameModes.includes(vTokens[i].displayName))) {
-					vContent = vContent + 	`<p>${vTokens[i].name}</p>`;
+				if (vTokens[i].isOwner || (cVisibleNameModes.includes(vTokens[i].displayName)) || vTokens[i].documentName == "Tile") {
+					vContent = vContent + 	`<p>${PerceptiveFlags.PerceptiveName(vTokens[i])}</p>`;
 				}	
 				else {
 					vContent = vContent + 	`<p>${Translate("ChatMessage.SpottingReport.unknown")}</p>`;

@@ -1260,7 +1260,7 @@ class PerceptiveFlags {
 	}
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {
-		if (pObject.documentName == "Wall") {
+		if (pObject.documentName == "Wall" || pObject.documentName == "Tile") {
 			return 0;
 		}
 		
@@ -1285,7 +1285,7 @@ class PerceptiveFlags {
 	}
 	
 	static getAPRollBehaviour(pObject, pVisionLevel = 0) {
-		if (pObject.documentName == "Wall") {
+		if (pObject.documentName == "Wall" || pObject.documentName == "Tile") {
 			return "=";
 		}
 		
