@@ -1,3 +1,6 @@
+## v2.4.2
+- Small bug fix in cases where tokens do not have valid actors
+
 ## v2.4.1
 - Added "out of combat only" option to the Apply ranges setting
 
