@@ -1,5 +1,7 @@
-## v2.5.0 (unreleased)
+## v2.5.0
 - Tiles are now compatible with the Spot Invisible feature
+- Added tile setting Tile name to set the displayed name of this tile for e.g. dialogs
+- Added missing client setting  active perception indicator to se the position of the indicator for the lingering active perception
 
 ## v2.4.2
 - Small bug fix in cases where tokens do not have valid actors
