@@ -404,6 +404,16 @@
 				}
 			},
 			
+			"IlluminationIconPosition" : {
+				"name" 					: "Position of active perception indicator",
+				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"options" : {
+					"none"				: "なし",
+					"left"				: "左",
+					"right"				: "右"
+				}
+			},
+			
 			"SpottingPingDuration" : {
 				"name" 					: "発見時のping持続時間",
 				"descrp" 				: "知覚判定によって発見できた物をどれだけpingするか設定します。 (秒数で指定、 0 でping無効化)"

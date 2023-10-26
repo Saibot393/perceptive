@@ -631,6 +631,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	},
 	default: "none"
   }); 
+  
+  game.settings.register(cModuleName, "LingeringAPIconPosition", {
+	name: Translate("Settings.LingeringAPIconPosition.name"),
+	hint: Translate("Settings.LingeringAPIconPosition.descrp"),
+	scope: "client",
+	config: true,
+	type: String,
+	choices: {
+		"none": Translate("Settings.LingeringAPIconPosition.options.none"),
+		"left": Translate("Settings.LingeringAPIconPosition.options.left"),
+		"right": Translate("Settings.LingeringAPIconPosition.options.right")
+	},
+	default: "none"
+  }); 
 
   game.settings.register(cModuleName, "SpottingPingDuration", {
 	name: Translate("Settings.SpottingPingDuration.name"),

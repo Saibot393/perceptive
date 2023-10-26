@@ -404,6 +404,16 @@
 				}
 			},
 			
+			"LingeringAPIconPosition" : {
+				"name" 					: "Positions des Indikators für aktive Wahrnehmung",
+				"descrp" 				: "Wo im Figur HUD der Indikator für andauernde aktive Wahrnehmung angezeigt wird",
+				"options" : {
+					"none"				: "garnicht",
+					"left"				: "links",
+					"right"				: "rechts"
+				}
+			},
+			
 			"SpottingPingDuration" : {
 				"name" 					: "Aufdecken Ping Dauer",
 				"descrp" 				: "Wie lange Objekte welche durch einen Wahrnehmungswurf aufgedeckt werden gepingt werden sollen (in Sekunden, 0 um die Pings auszuschalten)"

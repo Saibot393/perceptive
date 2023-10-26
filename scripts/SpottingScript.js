@@ -198,7 +198,17 @@ class SpottingManager {
 				return false;
 			}
 				
-			return true;
+			let tolerance;
+			
+			if (pTile.mesh) {
+				tolerance = Math.min(pTile.mesh.width, pTile.mesh.height) / 4;
+			}
+			else {
+				tolerance = Math.min(vTiles[i].width, vTiles[i].height) / 4;
+			}
+			
+			return VisionUtils.simpletestVisibility(pTile.center, {tolerance, object: pTile});
+			//return true;
 		}
 
 		return false;		
@@ -705,7 +715,7 @@ class SpottingManager {
 		//lingering AP ui
 		if (PerceptiveFlags.hasLingeringAP(pToken)) {
 			//Perceptive lingering AP indicator
-			let vLingeringAPPosition = game.settings.get(cModuleName, "IlluminationIconPosition");
+			let vLingeringAPPosition = game.settings.get(cModuleName, "LingeringAPIconPosition");
 
 			if (vLingeringAPPosition != "none") {
 
@@ -1084,7 +1094,7 @@ class SpottingManager {
 			}
 		}
 		
-		if (pToken.controlled && vLocalVisionData.vPassiveRange) {
+		if (pToken.controlled) {
 			SpottingManager.CheckTilesSpottingVisible();
 		}
 	}

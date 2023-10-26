@@ -404,6 +404,16 @@
 				}
 			},
 			
+			"IlluminationIconPosition" : {
+				"name" 					: "Position of active perception indicator",
+				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
 			"SpottingPingDuration" : {
 				"name" 					: "Spotting ping duration",
 				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
