@@ -43,7 +43,8 @@
 			"RulesAutomation"			: "ルール & 自動化",
 			"RollFormulas"				: "ロール & ロール式",
 			"Effects"					: "効果",
-			"Illumination"				: "照明"
+			"Illumination"				: "照明",
+			"Tile"						: "Tile"
 		},
 		
 		"ChatMessage" : {
@@ -404,7 +405,7 @@
 				}
 			},
 			
-			"IlluminationIconPosition" : {
+			"LingeringAPIconPosition" : {
 				"name" 					: "Position of active perception indicator",
 				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
 				"options" : {
@@ -589,6 +590,11 @@
 			"SceneDimEndFlag" : {
 				"name"					: "薄暗い明かりの限度",
 				"descrp"				: "このシーンでは、値以下の明るさは「薄暗い」と見なされます。 "
+			},
+			
+			"TilePerceptiveNameFlag" : {
+				"name"					: "Tile name",
+				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
 			}
 		}
 	}

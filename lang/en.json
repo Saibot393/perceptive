@@ -43,7 +43,8 @@
 			"RulesAutomation"			: "Rules & Automations",
 			"RollFormulas"				: "Rolls & Formulas",
 			"Effects"					: "Effects",
-			"Illumination"				: "Illumination"
+			"Illumination"				: "Illumination",
+			"Tile"						: "Tile"
 		},
 		
 		"ChatMessage" : {
@@ -404,7 +405,7 @@
 				}
 			},
 			
-			"IlluminationIconPosition" : {
+			"LingeringAPIconPosition" : {
 				"name" 					: "Position of active perception indicator",
 				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
 				"options" : {
@@ -589,6 +590,11 @@
 			"SceneDimEndFlag" : {
 				"name"					: "Dim darkness limit",
 				"descrp"				: "A scene darkness level below this value will be considered dim for this scene"
+			},
+			
+			"TilePerceptiveNameFlag" : {
+				"name"					: "Tile name",
+				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
 			}
 		}
 	}

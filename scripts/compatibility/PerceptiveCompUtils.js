@@ -13,13 +13,14 @@ const cVision5e = "vision-5e";
 const cStealthy = "stealthy";
 const cLevels = "levels";
 const cZnPOptions = "zoom-pan-options";
+const cRideable = "Rideable";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -39,6 +40,9 @@ class PerceptiveCompUtils {
 	static FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
+	
+	//specific: Rideable
+	//static compatibilityName(pTile) {} //returns the rideable tile name of pTile, false otherwise
 	
 	//IMPLEMENTATIONS
 	//basic
@@ -138,6 +142,17 @@ class PerceptiveCompUtils {
 	static isPercpetiveEffect(pEffect) {
 		return pEffect.origin == cModuleName;
 	} 
+	
+	//specific: Rideable
+	/*
+	static compatibilityName(pTile) {
+		if (PerceptiveCompUtils.isactiveModule(cRideable)) {
+			return pTile?.flags[cRideable]?.TileRideableNameFlag;
+		}
+		
+		return false;
+	}
+	*/
 }
 
 export { PerceptiveCompUtils };

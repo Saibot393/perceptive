@@ -1,11 +1,11 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
-import { PerceptiveCompUtils, cDfredCE} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cDfredCE, cRideable} from "../compatibility/PerceptiveCompUtils.js";
 import {PerceptiveSystemUtils, cPf2eAPDCautomationTypes } from "../utils/PerceptiveSystemUtils.js";
 
 const cPerceptiveIcon = "fa-regular fa-eye";
@@ -281,7 +281,16 @@ class PerceptiveSheetSettings {
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);	
-													
+							
+				//Tile name for perceptive purposes (possible rideable synch)
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cTilePerceptiveNameF +".name"), 
+																vhint : Translate("SheetSettings."+ cTilePerceptiveNameF +".descrp"), 
+																vtype : "text", 
+																vwide : true,
+																vvalue : PerceptiveFlags.PerceptiveName(pApp.document),
+																vflagname : cTilePerceptiveNameF
+																}, `div[data-tab="${cModuleName}"]`);	
+															
 				//standard settings
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
 				
@@ -469,6 +478,15 @@ class PerceptiveSheetSettings {
 			`;
 		}
 		
+		let vfullflagname;
+		
+		if (pInfos.hasOwnProperty("vfullflagname")) {
+			vfullflagname = pInfos.vfullflagname;
+		}
+		else {
+			vfullflagname = cModuleName + "." + vflagname;
+		}
+		
 		let vNumberSeperator;
 		
 		switch (vtype){
@@ -482,23 +500,23 @@ class PerceptiveSheetSettings {
 				
 		switch (vtype){
 			case "number":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" step="${vstep}" ${vlockedstate}>`;
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${vfullflagname}" id=${vID} value="${vvalue}" step="${vstep}" ${vlockedstate}>`;
 				break;
 			case "text":
-				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" ${vlockedstate}>`;
+				vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${vfullflagname}" id=${vID} value="${vvalue}" ${vlockedstate}>`;
 				break;
 				
 			case "checkbox":
 				if (vvalue) {
-					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} checked ${vlockedstate}>`;
+					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${vfullflagname}" id=${vID} checked ${vlockedstate}>`;
 				}
 				else {
-					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} ${vlockedstate}>`;
+					vnewHTML = vnewHTML + `<input type=${vtype} name="flags.${vfullflagname}" id=${vID} ${vlockedstate}>`;
 				}
 				break;
 				
 			case "select":
-				vnewHTML = vnewHTML + `<select name="flags.${cModuleName}.${vflagname}" ${vlockedstate}>`;
+				vnewHTML = vnewHTML + `<select name="flags.${vfullflagname}" ${vlockedstate}>`;
 				
 				for (let i = 0; i < voptions.length; i++) {
 					if (voptions[i] == vvalue) {
@@ -512,7 +530,7 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `</select>`;
 				break;
 			case "range":
-				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${cModuleName}.${vflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}" ${vlockedstate}>
+				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${vfullflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}" ${vlockedstate}>
 										<span class="${vtype}-value">${vvalue}</span>`;
 				break;
 			case "numberpart":

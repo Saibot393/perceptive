@@ -43,7 +43,8 @@
 			"RulesAutomation"			: "Regeln & Automationen",
 			"RollFormulas"				: "Würfe & Formeln",
 			"Effects"					: "Effekte",
-			"Illumination"				: "Beleuchtung"
+			"Illumination"				: "Beleuchtung",
+			"Tile"						: "Fliese"
 		},
 		
 		"ChatMessage" : {
@@ -589,6 +590,11 @@
 			"SceneDimEndFlag" : {
 				"name"					: "Düsteres Dunkelheits Limit",
 				"descrp"				: "Eine Scenen Dunkelheit unter diesem Wert wird als Düster gewertet"
+			},
+			
+			"TilePerceptiveNameFlag" : {
+				"name"					: "Fliesen Name",
+				"descrp"				: "Name welcher von Perceptive für die Fliese benutzt wird (z.B. Dialoge)"
 			}
 		}
 	}

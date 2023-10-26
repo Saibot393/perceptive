@@ -3,6 +3,7 @@ import {GeometricUtils} from "../utils/GeometricUtils.js";
 import {cModuleName, PerceptiveUtils, Translate} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
+import { PerceptiveCompUtils} from "../compatibility/PerceptiveCompUtils.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
@@ -57,7 +58,7 @@ const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of th
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -1395,6 +1396,12 @@ class PerceptiveFlags {
 				return pToken.name;
 				break;
 			case "Tile":
+				/*
+				if (PerceptiveCompUtils.compatibilityName(pToken)) {
+					return PerceptiveCompUtils.compatibilityName(pToken);
+				}
+				*/
+			
 				return PerceptiveFlags.#TilePerceptiveNameFlag(pToken);
 				break;
 		}

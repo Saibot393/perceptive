@@ -215,7 +215,7 @@ class SpottingManager {
 	}
 	
 	static CheckTilesSpottingVisible(){
-		let vTiles = canvas.tiles.placeables.map(vTile => vTile.document).filter(vTile => PerceptiveFlags.canbeSpotted(vTile) && vTile.hidden);
+		let vTiles = canvas.tiles.placeables.map(vTile => vTile.document).filter(vTile => vTile.hidden && PerceptiveFlags.canbeSpotted(vTile));
 		
 		let vPrevVisible;
 		
