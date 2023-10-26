@@ -1,3 +1,6 @@
+## v2.5.0 (unreleased)
+- Tiles are now compatible with the Spot Invisible feature
+
 ## v2.4.2
 - Small bug fix in cases where tokens do not have valid actors
 
