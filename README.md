@@ -111,7 +111,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
   - Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
 
-#### Walls/Tokens:
+#### Walls/Tokens/Tiles:
 - Can be spotted: to activate the spotting feature on this wall
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
@@ -119,6 +119,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
 - Stealth effects[Tokens only]: to add additional stealth effects to this token
 - Override world stealth effects[Tokens only]: to override the worlds stealth effects with this tokens custom stealth effects
+- Tile name[TIles only]: to set the displayed name of this tile for e.g. dialogs
  
 The following informations will be displayed in the settings (if applicable):
  - Calculated passive perception: The passive perception of this token calculated according to the set formula
@@ -137,6 +138,7 @@ The following informations will be displayed in the settings (if applicable):
 #### Client
 - Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
 - Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
+- Position of active perception indicator: to set the position of the indicator for the lingering active perception
 - Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
 - Show perception results: to show the result of own perception rolls in the chat
 - Stealthed token transparency: to change the transparency of spotted tokens
