@@ -583,7 +583,6 @@ class PerceptiveSheetSettings {
 	}
 }
 
-
 Hooks.once("ready", () => {
 	if (game.user.isGM) {
 		Hooks.on("renderWallConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.WallSheetSettings(pApp, pHTML, pData)); //for walls
@@ -595,3 +594,5 @@ Hooks.once("ready", () => {
 		Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML, pData)); //for scenes 
 	}
 });
+
+export {PerceptiveSheetSettings}

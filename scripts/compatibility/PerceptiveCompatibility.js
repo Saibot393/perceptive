@@ -1,9 +1,10 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cSimpleTConditions } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {IgnoreWall} from "./APIHandler.js";
 import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
+import {PerceptiveSheetSettings} from "../settings/PerceptiveSheetSettings.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 
@@ -16,6 +17,13 @@ class PerceptiveCompatibility {
 	static onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
 	
 	static onEffectupdate(pEffect, pchanges, pInfos) {}//called when a token is updated
+	
+	//specific: MATT
+	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {} //adds the Lock & Key Trigger settings to pApp
+	
+	static async onPerceptiveSpotting(pLock, pCharacter, pInfos) {} //called when someone uses a lock (only GM side)
+	
+	static TriggerTilerequest(pData) {} //called when a tile is requested to be triggered
 	
 	//IMPLEMENTATIONS
 	//specific: Lock & Key
@@ -65,6 +73,88 @@ class PerceptiveCompatibility {
 			}	
 		}
 	}
+	
+	//specific: MATT
+	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {
+		if (pAddBasics) {
+			let vTabbar = pHTML.find(`nav.sheet-tabs`);
+			
+			let vTabButtonHTML = 	`
+							<a class="item" data-tab="triggers">
+								<i class="fas ${cTriggersIcon}"></i>
+								${Translate("Titles.Triggers")}
+							</a>
+							`; //tab button HTML
+			
+			vTabbar.append(vTabButtonHTML);		
+		}
+		
+		let vprevTab = pHTML.find(`div[data-tab=${cModuleName}]`); //places rideable tab after last core tab "basic"
+		let vTabContentHTML = `<div class="tab" data-tab="triggers"></div>`; //tab content sheet HTML
+		vprevTab.after(vTabContentHTML);
+		
+		if (pAddBasics) {
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerTileF +".name"), 
+														vhint : Translate("SheetSettings."+ cMATTTriggerTileF +".descrp"), 
+														vtype : "text",
+														vwide : true,
+														vvalue : PerceptiveCompUtils.MATTTriggerTileID(pApp.object),
+														vflagname : cMATTTriggerTileF
+														}, `div[data-tab="triggers"]`);		
+		}
+			
+		let vTypeOptions;
+		
+		for (let vUseType of [cLUuseKey, cLUusePasskey, cLUpickLock, cLUbreakLock, cLUFreeCircumvent]) {
+			switch (vUseType) {
+				case cLUuseKey:
+				case cLUusePasskey:
+				case cLUFreeCircumvent:
+					vTypeOptions = cSimpleTConditions;
+					break;
+				case cLUpickLock:
+				case cLUbreakLock:
+					vTypeOptions = cTConditions;
+					break;
+			}
+			
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerConditionsF + "." + vUseType +".name"), 
+														//vhint : Translate("SheetSettings."+ cMATTTriggerConditionsF + "." + vUseType +".descrp"), 
+														vtype : "select",
+														voptions : 	vTypeOptions,		
+														voptionsName : cMATTTriggerConditionsF,
+														vvalue : PerceptiveCompUtils.MattTriggerCondition(pApp.object, vUseType),
+														vflagname : cMATTTriggerConditionsF + "." + vUseType
+														}, `div[data-tab="triggers"]`);	
+		}
+	}
+	
+	static async onPerceptiveSpotting(pLock, pCharacter, pInfos) {
+		if (PerceptiveCompUtils.MATTTriggered(pLock, pInfos)) {
+			let vTile = await PerceptiveCompUtils.MATTTriggerTile(pLock);
+			
+			if (vTile) {
+				if (!pInfos.useData.userID || pInfos.useData.userID == game.user.id) {
+					vTile.trigger({ tokens: [pCharacter], method: 'trigger', options: {landing : pInfos.UseType}});
+				}
+				else {
+					game.socket.emit("module."+cModuleName, {pFunction : "TriggerTilerequest", pData : {UserID : pInfos.useData.userID, TileID : vTile.id, CharacterID : pCharacter.id, Infos : pInfos}});
+				}
+			}
+		}
+	}
+	
+	static TriggerTilerequest(pData) {
+		if (pData.UserID == game.user.id) {
+			let vTile = canvas.tiles.get(pData.TileID)?.document;
+			
+			let vCharacter = canvas.tokens.get(pData.CharacterID)?.document;
+			
+			if (vTile && vCharacter) {
+				vTile.trigger({ tokens: [vCharacter], method: 'trigger', options: {landing : pData.Infos.UseType}});
+			}
+		}
+	}
 }
 
 Hooks.once("init", () => {
@@ -101,4 +191,16 @@ Hooks.once("init", () => {
 	
 		libWrapper.ignore_conflicts(cModuleName, cZnPOptions, "MouseManager.prototype._onWheel");
 	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cMATT)) {
+		//Hooks.on(cModuleName + ".WallLockSettings", (pApp, pHTML, pData) => LnKCompatibility.addTriggerSettings(pApp, pHTML, pData));
+		
+		//Hooks.on(cModuleName + ".TokenLockSettings", (pApp, pHTML, pData) => LnKCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
+		
+		//Hooks.on(cModuleName + ".LockUse", (pLock, pCharacter, pInfos) => LnKCompatibility.onLnKLockUse(pLock, pCharacter, pInfos));
+	}
 });
+
+function TriggerTilerequest(pData) {return PerceptiveCompatibility.TriggerTilerequest(pData)};
+
+export {TriggerTilerequest}

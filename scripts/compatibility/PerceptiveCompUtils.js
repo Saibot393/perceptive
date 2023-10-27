@@ -14,13 +14,27 @@ const cStealthy = "stealthy";
 const cLevels = "levels";
 const cZnPOptions = "zoom-pan-options";
 const cRideable = "Rideable";
+const cMATT = "monks-active-tiles";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
 
+//Trigger conditions for MATT
+const cTCNever = "never";
+const cTCAlways = "always";
+const cTCFailure = "failure";
+const cTCcritFailure = "critfailure";
+const cTCSuccess = "success";
+
+const cTConditions = [cTCNever, cTCAlways, cTCFailure, cTCcritFailure, cTCSuccess];
+const cSimpleTConditions = [cTCNever, cTCAlways, cTCFailure, cTCSuccess];
+
+const cMATTTriggerTileF = "MATTTriggerTileFlag";
+const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
+
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cSimpleTConditions}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -40,6 +54,17 @@ class PerceptiveCompUtils {
 	static FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
+	
+	//specific: MATT
+	static async MATTTriggerTile(pObject) {} //returns Tile triggered by pObject actions
+	
+	static MATTTriggerTileID(pObject) {} //returns the ID of the triggered tile of this lock
+	
+	static setMATTTriggercondition(pObject, pInfos) {} //sets the MATT trigger condition of pObject
+	
+	static MattTriggerCondition(pObject, pType) {} //returns the MATT trigger condition of pObject for pType
+	
+	static MATTTriggered(pObject, pType, pOutcome) {} //returns if a triiger of pType with pOutcome triggers the MATT tile of pObject
 	
 	//specific: Rideable
 	//static compatibilityName(pTile) {} //returns the rideable tile name of pTile, false otherwise
@@ -142,6 +167,87 @@ class PerceptiveCompUtils {
 	static isPercpetiveEffect(pEffect) {
 		return pEffect.origin == cModuleName;
 	} 
+	
+	//specific: MATT
+	static async MATTTriggerTile(pObject) {
+		let vID = pObject?.flags[cMATT]?.entity.id; //from MATT
+		
+		if (vID) {
+			return fromUuid(vID);
+		}
+		
+		if (pObject?.flags[cModuleName]) {
+			vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from LnK
+		}		
+		
+		if (vID) {
+			return pObject.parent.tiles.get(vID);
+		}
+	}
+	
+	static MATTTriggerTileID(pObject) {
+		let vID;
+
+		if (pObject?.flags.hasOwnProperty(cModuleName)) {
+			vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from LnK
+		}
+		
+		if (vID) {
+			return vID;
+		}
+		
+		vID = pObject?.flags[cMATT]?.entity.id; //from MATT
+		
+		if (vID) {
+			return vID;
+		}		
+		
+		return "";
+	}
+	
+	static setMATTTriggercondition(pObject, pType, pCondition) {
+		if (pObject) {
+			pObject.setFlag(cModuleName, cMATTTriggerConditionsF + "." + pType, pCondition);
+		}
+	}
+	
+	static MattTriggerCondition(pObject, pType) {
+		let vTriggerCondition;
+		
+		let vFlags = pObject.flags[cModuleName];
+		
+		if (vFlags?.hasOwnProperty(cMATTTriggerConditionsF)) {
+			vTriggerCondition = vFlags[cMATTTriggerConditionsF][pType];
+		}
+		
+		if (cTConditions.includes(vTriggerCondition)) {
+			return vTriggerCondition;
+		}
+		else {
+			return cTCNever;
+		}
+	}
+	
+	static MATTTriggered(pObject, pInfos) {
+		switch (LnKCompUtils.MattTriggerCondition(pObject, pInfos.UseType)) {
+			case cTCAlways:
+				return true;
+				break;
+			case cTCFailure:
+				return pInfos.Outcome <= 0;
+				break;
+			case cTCcritFailure:
+				return pInfos.Outcome < 0;
+				break;
+			case cTCSuccess:
+				return pInfos.Outcome > 0;
+				break;
+			case cTCNever:
+			default:
+				return false;
+				break;
+		}
+	}
 	
 	//specific: Rideable
 	/*
