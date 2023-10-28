@@ -75,7 +75,9 @@ class PerceptiveCompatibility {
 	
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {
-		if (pAddBasics) {
+		let vAddBasics = pAddBasics && !pHTML.find(`a[data-tab="triggers"]`).length;
+		
+		if (vAddBasics) {
 			let vTabbar = pHTML.find(`nav.sheet-tabs`);
 			
 			let vTabButtonHTML = 	`
@@ -88,18 +90,29 @@ class PerceptiveCompatibility {
 			vTabbar.append(vTabButtonHTML);		
 		}
 		
-		let vprevTab = pHTML.find(`div[data-tab=${cModuleName}]`); //places rideable tab after last core tab "basic"
-		let vTabContentHTML = `<div class="tab" data-tab="triggers"></div>`; //tab content sheet HTML
-		vprevTab.after(vTabContentHTML);
+		let vContentTabName = "triggers";
 		
-		if (pAddBasics) {
+		if (pApp.object.documentName == "Tile") {
+			//this is a tile, change tab
+			vContentTabName = "trigger-setup";
+		}
+		else {	
+			if (!pHTML.find(`div[data-tab="${vContentTabName}"]`).length) {
+				//create new tab field
+				let vprevTab = pHTML.find(`div[data-tab=${cModuleName}]`); //places triggers tab after last core tab "basic"
+				let vTabContentHTML = `<div class="tab" data-tab="${vContentTabName}"></div>`; //tab content sheet HTML
+				vprevTab.after(vTabContentHTML);
+			}
+		}
+		
+		if (vAddBasics) {
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerTileF +".name"), 
 														vhint : Translate("SheetSettings."+ cMATTTriggerTileF +".descrp"), 
 														vtype : "text",
 														vwide : true,
 														vvalue : PerceptiveCompUtils.MATTTriggerTileID(pApp.object),
 														vflagname : cMATTTriggerTileF
-														}, `div[data-tab="triggers"]`);		
+														}, `div[data-tab="${vContentTabName}"]`);		
 		}
 			
 		let vTypeOptions;
@@ -114,7 +127,7 @@ class PerceptiveCompatibility {
 														voptionsName : cMATTTriggerConditionsF,
 														vvalue : PerceptiveCompUtils.MattTriggerCondition(pApp.object, vTriggerType),
 														vflagname : cMATTTriggerConditionsF + "." + vTriggerType
-														}, `div[data-tab="triggers"]`);	
+														}, `div[data-tab="${vContentTabName}"]`);	
 		}
 	}
 	
@@ -181,7 +194,7 @@ Hooks.once("init", () => {
 		
 		Hooks.on(cModuleName + ".TokenSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
 		
-		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
+		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
 	}

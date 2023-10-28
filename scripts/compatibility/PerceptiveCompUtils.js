@@ -189,6 +189,10 @@ class PerceptiveCompUtils {
 	
 	static MATTTriggerTileID(pObject) {
 		let vID;
+		
+		if (pObject.documentName == "Tile") {
+			return pObject.id;
+		}
 
 		if (pObject?.flags.hasOwnProperty(cModuleName)) {
 			vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from LnK
