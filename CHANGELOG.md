@@ -1,3 +1,13 @@
+## v2.6.0
+- Added world setting Lingering active perception radius to limit the range in which the active perception remains
+- Added world setting Lingering active perception duration to limit the duration for which the active perception remains
+- Added popups for gained and removed lingering active perception
+- Added macros to remove lingering active perception from selected tokens or scene wide
+- Added compatibility with [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles)
+  - Adds additional Perceptive related trigger for spottable objects (adds a new triggers tab to spottable tokens)
+  - Adds a textbox to enter the tile which should be triggered for spottable tokens
+  - The following landings can be optionally used to differentiate between the different Perceptive trigger conditions: `PassiveSpot`, `ActiveSpot`
+
 ## v2.5.0
 - Tiles are now compatible with the Spot Invisible feature
 - Added tile setting Tile name to set the displayed name of this tile for e.g. dialogs
