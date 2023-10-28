@@ -1,3 +1,8 @@
+## v2.6.1
+- Some small improvements to lingering active perception
+- Added missing popup texts
+- Added world setting GM recives info messages to enabled whispered informations regarding player spotting
+
 ## v2.6.0
 - Added world setting Lingering active perception radius to limit the range in which the active perception remains
 - Added world setting Lingering active perception duration to limit the duration for which the active perception remains
