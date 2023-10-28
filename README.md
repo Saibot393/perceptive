@@ -80,6 +80,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
   - Show failures in GM confirm dialog: to show tokens against which the perception roll failed as unchecked entries in the confirm dialog
   - Force invert "Ignore Roll" key: to invert the key for all players and remove the client setting
+  - GM recives info messages: to enabled whispered informations regarding player spotting
   - Perception macro use behaviour[Pf2e only]: under which conditions perception checks are only considered when using the included macros
 - Rules & Automations
   - Automate token Can be spotted: to automatically manage the Can be spotted token setting
