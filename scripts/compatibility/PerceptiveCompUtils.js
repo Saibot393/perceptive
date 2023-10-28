@@ -172,19 +172,19 @@ class PerceptiveCompUtils {
 	
 	//specific: MATT
 	static async MATTTriggerTile(pObject) {
-		let vID = pObject?.flags[cMATT]?.entity.id; //from MATT
+		let vID = PerceptiveCompUtils.MATTTriggerTileID(pObject); //from MATT
+		
+		let vTile;
 		
 		if (vID) {
-			return fromUuid(vID);
+			vTile = await fromUuid(vID);
 		}
 		
-		if (pObject?.flags[cModuleName]) {
-			vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from LnK
-		}		
-		
-		if (vID) {
-			return pObject.parent.tiles.get(vID);
+		if (!vTile) {
+			vTile = await pObject.parent.tiles.get(vID);
 		}
+		
+		return vTile;
 	}
 	
 	static MATTTriggerTileID(pObject) {
@@ -193,14 +193,25 @@ class PerceptiveCompUtils {
 		if (pObject.documentName == "Tile") {
 			return pObject.id;
 		}
-
-		if (pObject?.flags.hasOwnProperty(cModuleName)) {
-			vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from LnK
+		
+		if (PerceptiveCompUtils.isactiveModule(cLocknKey)) {
+			if (pObject?.flags.hasOwnProperty(cModuleName)) {
+				if (pObject?.flags[cLocknKey]) {
+					vID = pObject?.flags[cLocknKey][cMATTTriggerTileF]; //from LnK
+				}
+			}
+		}
+		else {
+			if (pObject?.flags.hasOwnProperty(cModuleName)) {
+				if (pObject?.flags[cModuleName]) {
+					vID = pObject?.flags[cModuleName][cMATTTriggerTileF]; //from Perceptive
+				}
+			}
 		}
 		
 		if (vID) {
 			return vID;
-		}
+		}		
 		
 		vID = pObject?.flags[cMATT]?.entity.id; //from MATT
 		
@@ -235,7 +246,7 @@ class PerceptiveCompUtils {
 	}
 	
 	static MATTTriggered(pObject, pInfos) {
-		switch (PerceptiveCompUtils.MattTriggerCondition(pObject, pInfos.UseType)) {
+		switch (PerceptiveCompUtils.MattTriggerCondition(pObject, pInfos.TriggerType)) {
 			case cTCAlways:
 				return true;
 				break;

@@ -44,7 +44,10 @@
 			"RollFormulas"				: "Würfe & Formeln",
 			"Effects"					: "Effekte",
 			"Illumination"				: "Beleuchtung",
-			"Tile"						: "Fliese"
+			"Tile"						: "Fliese",
+			"Triggers"					: "Triggers",
+			"GainedLingeringAP"			: "Bleibende aktive Wahrnehmung erhalten",
+			"RemovedLingeringAP"		: "Bleibende aktive Wahrnehmung verloren"
 		},
 		
 		"ChatMessage" : {
@@ -348,7 +351,17 @@
 					"always"			: "immer",
 					"outofcombatonly"	: "außerhalb von Kämpfen"
 				}
-			}, 			
+			}, 		
+
+			"LingeringAPRadius" : {
+				"name"					: "Verbleibende Aktive-Wahrnehmungs Radius",
+				"descrp"				: "Der Radius gemessen vom Punkt des verursachenden Wurfes in welchem die Aktive-Wahrnehmungs verbleibt (-1 für unbegrenzt)"
+			},	
+
+			"LingeringAPDuration" : {
+				"name"					: "Verbleibende Aktive-Wahrnehmungs Dauer",
+				"descrp"				: "Die Dauer für welche die Aktive-Wahrnehmungs verbleibt in Sekunden (-1 für unbegrenzt)"
+			},				
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Erzwinge \"Wurf Ignorieren\" Tasten invertierung",
@@ -595,6 +608,21 @@
 			"TilePerceptiveNameFlag" : {
 				"name"					: "Fliesen Name",
 				"descrp"				: "Name welcher von Perceptive für die Fliese benutzt wird (z.B. Dialoge)"
+			},
+
+			"MATTTriggerTileFlag" : {
+				"name" 					: "Ausgelöste Fliesen ID",
+				"descrp"				: "Die ID der durch Lock & Key Aktionen ausgelösten Fliese (Es ist möglich unterschiedliche Landings zu nutzen)"
+			},
+			
+			"MATTTriggerConditionsFlag" : {
+				"LockuseKey.name"		: "Neu aufgedeckt",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"failure"			: "aktiv",
+					"critfailure"		: "passiv",
+				}
 			}
 		}
 	}

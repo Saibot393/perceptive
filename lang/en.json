@@ -44,7 +44,10 @@
 			"RollFormulas"				: "Rolls & Formulas",
 			"Effects"					: "Effects",
 			"Illumination"				: "Illumination",
-			"Tile"						: "Tile"
+			"Tile"						: "Tile",
+			"Triggers"					: "Triggers",
+			"GainedLingeringAP"			: "Lingering active perception gained",
+			"RemovedLingeringAP"		: "Lingering active perception lost"
 		},
 		
 		"ChatMessage" : {
@@ -348,7 +351,17 @@
 					"always"			: "always",
 					"outofcombatonly"	: "out of combat"
 				}
-			}, 			
+			}, 		
+
+			"LingeringAPRadius" : {
+				"name"					: "Lingering active perception radius",
+				"descrp"				: "The radius measured from the point of the original roll in which the active perception remains (-1 for unlimited)"
+			},	
+
+			"LingeringAPDuration" : {
+				"name"					: "Lingering active perception duration",
+				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
+			},					
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
@@ -595,6 +608,21 @@
 			"TilePerceptiveNameFlag" : {
 				"name"					: "Tile name",
 				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
+			},
+
+			"MATTTriggerTileFlag" : {
+				"name" 					: "Triggered tile ID",
+				"descrp"				: "The ID of the tile triggered by the Lock & Key actions below (you may use different landings)"
+			},
+			
+			"MATTTriggerConditionsFlag" : {
+				"NewlySpotted.name"		: "Newly spotted",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"active"			: "active",
+					"passive"			: "passive"
+				}
 			}
 		}
 	}

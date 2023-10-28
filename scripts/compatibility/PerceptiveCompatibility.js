@@ -106,12 +106,21 @@ class PerceptiveCompatibility {
 		}
 		
 		if (vAddBasics) {
+			//add Trigger Tile ID setting
+			let vFlagPrefix = cModuleName;
+			
+			if (PerceptiveCompUtils.isactiveModule(cLocknKey)) {
+				vFlagPrefix = cLocknKey;
+			}
+			
+			vFlagPrefix = vFlagPrefix + ".";
+			
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerTileF +".name"), 
 														vhint : Translate("SheetSettings."+ cMATTTriggerTileF +".descrp"), 
 														vtype : "text",
 														vwide : true,
 														vvalue : PerceptiveCompUtils.MATTTriggerTileID(pApp.object),
-														vflagname : cMATTTriggerTileF
+														vfullflagname : vFlagPrefix + cMATTTriggerTileF
 														}, `div[data-tab="${vContentTabName}"]`);		
 		}
 			
@@ -132,7 +141,10 @@ class PerceptiveCompatibility {
 	}
 	
 	static async onPerceptiveSpotting(pObjects, pInfos, pSpotters) {
-		console.log(pInfos);
+		let vInfos = pInfos;
+		
+		vInfos.TriggerType = cTTNewlySpotted;
+		
 		for (let i = 0; i < pObjects.length; i++) {
 			if (PerceptiveCompUtils.MATTTriggered(pObjects[i], pInfos)) {
 				let vTile = await PerceptiveCompUtils.MATTTriggerTile(pObjects[i]);
