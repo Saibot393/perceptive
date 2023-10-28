@@ -40,7 +40,11 @@ class PerceptiveUtils {
 	
 	static WallsfromIDs(pIDs, pScene = null) {} //returns the Wall matching pID
 	
-	static TilesfromIDs (pIDs, pScene = null) {} //returns an array of Tiles belonging to the pIDs
+	static TilesfromIDs(pIDs, pScene = null) {} //returns an array of Tiles belonging to the pIDs
+	
+	static TilefromID(pID, pScene = null) {} //returns tile belonging to pID in pScene
+	
+	static ObjectfromID(pID, pScene = null) {} //returns object (token, wall, tile) belonging to pID in pScene
 	
 	static IDsfromWalls(pWalls) {} //returns IDs of pWalls
 	
@@ -176,6 +180,40 @@ class PerceptiveUtils {
 	static WallsfromIDs(pIDs, pScene = null) {
 		return pIDs.map(vID => PerceptiveUtils.WallfromID(vID, pScene));
 	}
+	
+	static TilesfromIDs(pIDs, pScene = null) {
+		return vIDs.map(vID => PerceptiveUtils.TilefromID(vID, pScene));
+	}
+	
+	static TilefromID(pID, pScene = null) {
+		if (pScene) {
+			return pScene.tiles.get(pID);
+		}
+		else {
+			//default scene
+			let vTile = canvas.tiles.get(pID);
+			if (vTile) {
+				return vTile.document;
+			}
+			else {
+				return null;
+			}
+		}			
+	}
+	
+	static ObjectfromID(pID, pScene = null) {
+		let vObject = PerceptiveUtils.TokenfromID(pID, pScene);
+		
+		if (!vObject) {
+			vObject = PerceptiveUtils.WallfromID(pID, pScene);
+			
+			if (!vObject) {
+				vObject = PerceptiveUtils.TilefromID(pID, pScene);
+			}
+		}
+		
+		return vObject;
+	} 
 	
 	static IDsfromWalls(pWalls) {
 		return pWalls.map(vWall => vWall.id);

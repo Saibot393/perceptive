@@ -347,7 +347,25 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 			"outofcombatonly": Translate("Settings.LingeringAP.options." + "outofcombatonly")
 		},
 		default: "off"
-	  }); 			  
+	  }); 		
+
+	  game.settings.register(cModuleName, "LingeringAPRadius", {
+		name: Translate("Settings.LingeringAPRadius.name"),
+		hint: Translate("Settings.LingeringAPRadius.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: -1
+	  }); 	 
+
+	  game.settings.register(cModuleName, "LingeringAPDuration", {
+		name: Translate("Settings.LingeringAPDuration.name"),
+		hint: Translate("Settings.LingeringAPDuration.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		default: -1
+	  }); 		  
  
 	//formulas
 	  game.settings.register(cModuleName, "PassivePerceptionFormula", {
@@ -836,7 +854,9 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.AutomateTokenSpottable"],
 												[data-setting-id="perceptive.MakeSpottedTokensVisible"],
 												[data-setting-id="perceptive.RevealAllies"],
-												[data-setting-id="perceptive.LingeringAP"]`);
+												[data-setting-id="perceptive.LingeringAP"],
+												[data-setting-id="perceptive.LingeringAPRadius"],
+												[data-setting-id="perceptive.LingeringAPDuration"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],

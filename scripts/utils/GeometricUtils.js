@@ -29,6 +29,8 @@ class GeometricUtils {
 	
 	static CenterPositionWall(pWall) {} //returns the position of the Center of pWall
 	
+	static CenterPositionObject(pObject) {} //returns the center position of pObject
+	
 	static NewCenterPosition(pDocument, pChanges) {} //returns the new position of the Center of pDocument (usefull for updates)
 	
 	static Difference(pPositionA, pPositionB) {} //returns the x and y differenc of pPositionA to pPositionB (x-y arrays)
@@ -128,6 +130,19 @@ class GeometricUtils {
 	static CenterPositionWall(pWall) {
 		return [(pWall.c[0] + pWall.c[2])/2, (pWall.c[1] + pWall.c[3])/2];
 	} 
+	
+	static CenterPositionObject(pObject) {
+		switch (pObject.documentName) {
+			case "Wall":
+				return GeometricUtils.CenterPositionWall(pObject);
+				break;
+			case "Token":
+				return GeometricUtils.CenterPosition(pObject);
+				break;
+		}	
+		
+		return [-1,-1];
+	}
 	
 	static NewCenterPosition(pDocument, pChanges) {
 		let vPosition = [GeometricUtils.insceneWidth(pDocument)/2, GeometricUtils.insceneHeight(pDocument)/2];

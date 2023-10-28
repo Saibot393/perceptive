@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cSimpleTConditions } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -7,6 +7,7 @@ import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
 import {PerceptiveSheetSettings} from "../settings/PerceptiveSheetSettings.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
+const cTriggersIcon = "fa-running";
 
 class PerceptiveCompatibility {
 	//DECLARATION
@@ -21,9 +22,7 @@ class PerceptiveCompatibility {
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {} //adds the Lock & Key Trigger settings to pApp
 	
-	static async onPerceptiveSpotting(pLock, pCharacter, pInfos) {} //called when someone uses a lock (only GM side)
-	
-	static TriggerTilerequest(pData) {} //called when a tile is requested to be triggered
+	static async onPerceptiveSpotting(pObjects, pInfos, pSpotters) {} //called when someone spots a lock
 	
 	//IMPLEMENTATIONS
 	//specific: Lock & Key
@@ -105,53 +104,38 @@ class PerceptiveCompatibility {
 			
 		let vTypeOptions;
 		
-		for (let vUseType of [cLUuseKey, cLUusePasskey, cLUpickLock, cLUbreakLock, cLUFreeCircumvent]) {
-			switch (vUseType) {
-				case cLUuseKey:
-				case cLUusePasskey:
-				case cLUFreeCircumvent:
-					vTypeOptions = cSimpleTConditions;
-					break;
-				case cLUpickLock:
-				case cLUbreakLock:
-					vTypeOptions = cTConditions;
-					break;
-			}
+		for (let vTriggerType of cTTypes) {
+			vTypeOptions = cTConditions;
 			
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerConditionsF + "." + vUseType +".name"), 
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cMATTTriggerConditionsF + "." + vTriggerType +".name"), 
 														//vhint : Translate("SheetSettings."+ cMATTTriggerConditionsF + "." + vUseType +".descrp"), 
 														vtype : "select",
 														voptions : 	vTypeOptions,		
 														voptionsName : cMATTTriggerConditionsF,
-														vvalue : PerceptiveCompUtils.MattTriggerCondition(pApp.object, vUseType),
-														vflagname : cMATTTriggerConditionsF + "." + vUseType
+														vvalue : PerceptiveCompUtils.MattTriggerCondition(pApp.object, vTriggerType),
+														vflagname : cMATTTriggerConditionsF + "." + vTriggerType
 														}, `div[data-tab="triggers"]`);	
 		}
 	}
 	
-	static async onPerceptiveSpotting(pLock, pCharacter, pInfos) {
-		if (PerceptiveCompUtils.MATTTriggered(pLock, pInfos)) {
-			let vTile = await PerceptiveCompUtils.MATTTriggerTile(pLock);
-			
-			if (vTile) {
-				if (!pInfos.useData.userID || pInfos.useData.userID == game.user.id) {
-					vTile.trigger({ tokens: [pCharacter], method: 'trigger', options: {landing : pInfos.UseType}});
+	static async onPerceptiveSpotting(pObjects, pInfos, pSpotters) {
+		console.log(pInfos);
+		for (let i = 0; i < pObjects.length; i++) {
+			if (PerceptiveCompUtils.MATTTriggered(pObjects[i], pInfos)) {
+				let vTile = await PerceptiveCompUtils.MATTTriggerTile(pObjects[i]);
+				
+				let vLanding;
+				
+				if (pInfos.PassivSpot) {
+					vLanding = "PassiveSpot";
 				}
 				else {
-					game.socket.emit("module."+cModuleName, {pFunction : "TriggerTilerequest", pData : {UserID : pInfos.useData.userID, TileID : vTile.id, CharacterID : pCharacter.id, Infos : pInfos}});
+					vLanding = "ActiveSpot";
 				}
-			}
-		}
-	}
-	
-	static TriggerTilerequest(pData) {
-		if (pData.UserID == game.user.id) {
-			let vTile = canvas.tiles.get(pData.TileID)?.document;
-			
-			let vCharacter = canvas.tokens.get(pData.CharacterID)?.document;
-			
-			if (vTile && vCharacter) {
-				vTile.trigger({ tokens: [vCharacter], method: 'trigger', options: {landing : pData.Infos.UseType}});
+				
+				if (vTile) {
+					vTile.trigger({ tokens: pSpotters, method: 'trigger', options: {landing : vLanding}});
+				}
 			}
 		}
 	}
@@ -193,11 +177,13 @@ Hooks.once("init", () => {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cMATT)) {
-		//Hooks.on(cModuleName + ".WallLockSettings", (pApp, pHTML, pData) => LnKCompatibility.addTriggerSettings(pApp, pHTML, pData));
+		Hooks.on(cModuleName + ".WallSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
-		//Hooks.on(cModuleName + ".TokenLockSettings", (pApp, pHTML, pData) => LnKCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
+		Hooks.on(cModuleName + ".TokenSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
 		
-		//Hooks.on(cModuleName + ".LockUse", (pLock, pCharacter, pInfos) => LnKCompatibility.onLnKLockUse(pLock, pCharacter, pInfos));
+		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData, true));
+		
+		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
 	}
 });
 

@@ -1,4 +1,4 @@
-import { CheckAPerception, SpotObjectsinVision } from "../SpottingScript.js";
+import { CheckAPerception, SpotObjectsinVision, RemoveLingeringAP} from "../SpottingScript.js";
 import { PerceptiveSystemUtils } from "../utils/PerceptiveSystemUtils.js";
 
 //functions for macros
@@ -7,6 +7,7 @@ Hooks.on("init",async function () {
 	
 	game.Perceptive = {
 		Perception,
-		SpotObjectsinVision
+		SpotObjectsinVision,
+		RemoveLingeringAP
 	};
 });

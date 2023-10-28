@@ -171,6 +171,8 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				
+				Hooks.call(cModuleName + ".WallSpottingSettings", pApp, pHTML, pData);
 			}
 		}
 	}
@@ -258,6 +260,8 @@ class PerceptiveSheetSettings {
 				}
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`);
+			
+				Hooks.call(cModuleName + ".TokenSpottingSettings", pApp, pHTML, pData);
 			}			
 		}
 		
@@ -298,6 +302,8 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
 				
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				
+				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
 			}
 		}
 	}

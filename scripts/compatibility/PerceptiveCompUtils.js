@@ -22,19 +22,21 @@ const cLockTypeDoor = "LTDoor"; //type for door locks
 //Trigger conditions for MATT
 const cTCNever = "never";
 const cTCAlways = "always";
-const cTCFailure = "failure";
-const cTCcritFailure = "critfailure";
-const cTCSuccess = "success";
+const cTCactive = "active";
+const cTCpassive = "passive";
 
-const cTConditions = [cTCNever, cTCAlways, cTCFailure, cTCcritFailure, cTCSuccess];
-const cSimpleTConditions = [cTCNever, cTCAlways, cTCFailure, cTCSuccess];
+const cTConditions = [cTCNever, cTCAlways, cTCactive, cTCpassive];
+
+const cTTNewlySpotted = "NewlySpotted";
+
+const cTTypes = [cTTNewlySpotted];
 
 const cMATTTriggerTileF = "MATTTriggerTileFlag";
 const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cSimpleTConditions}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -229,18 +231,15 @@ class PerceptiveCompUtils {
 	}
 	
 	static MATTTriggered(pObject, pInfos) {
-		switch (LnKCompUtils.MattTriggerCondition(pObject, pInfos.UseType)) {
+		switch (PerceptiveCompUtils.MattTriggerCondition(pObject, pInfos.UseType)) {
 			case cTCAlways:
 				return true;
 				break;
-			case cTCFailure:
-				return pInfos.Outcome <= 0;
+			case cTCactive:
+				return !pInfos.PassivSpot;
 				break;
-			case cTCcritFailure:
-				return pInfos.Outcome < 0;
-				break;
-			case cTCSuccess:
-				return pInfos.Outcome > 0;
+			case cTCpassive:
+				return pInfos.PassivSpot;
 				break;
 			case cTCNever:
 			default:

@@ -6,6 +6,7 @@ import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
 import {EffectManager } from "./helpers/EffectManager.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 import {cPf2eAPDCautomationTypes } from "./utils/PerceptiveSystemUtils.js";
+import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 
 const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
@@ -48,6 +49,8 @@ class SpottingManager {
 
 	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {} //starts an active perception check
 	
+	static RemoveLingeringAP(pTokens, pPopup = true) {} //removes the lingering AP from pToken
+	
 	static async SpotObjectsinVision(pCategory = {Walls : false, Tokens : false, Tiles : false}) {} //requests from the gm to spot all specified objects in vision
 
 	static async SpotObjectsGM(pObjects, pSpotters, pInfos) {} //sets pObjects to be spotted by pSpotters
@@ -82,7 +85,7 @@ class SpottingManager {
 
 	static async onPerceptionRoll(pActor, pRoll, pUserID, pReplaceSkill = "") {} //called when a perception roll is rolled
 
-	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {} //called when a new object is revealed
+	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}, pSpotters = canvas.tokens.controlled.map(vToken => vToken.document)) {} //called when a new object is revealed
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 
@@ -389,7 +392,13 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill});
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill, RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y}});
+						
+						PerceptivePopups.TextPopUpID(pSpotters[i], "GainedLingeringAP") //MESSAGE POPUP
+						
+						if (game.settings.get(cModuleName, "LingeringAPDuration") > 0) {
+							setTimeout(() => {SpottingManager.RemoveLingeringAP([pSpotters[i]])}, game.settings.get(cModuleName, "LingeringAPDuration") * 1000);
+						}
 					}
 				}
 			}
@@ -409,6 +418,18 @@ class SpottingManager {
 			await SpottingManager.RequestSpotObjects(vSpotted, pSpotters, vInfos);
 
 			Hooks.call(cModuleName + ".PerceptionCheck", vSpotted, pSpotters, vInfos);
+		}
+	}
+	
+	static RemoveLingeringAP(pTokens, pPopup = true) {
+		for (let i = 0; i <= pTokens.length; i++) {
+			if (PerceptiveFlags.hasLingeringAP(pTokens[i]) && pTokens[i].isOwner) {
+				PerceptiveFlags.resetLingeringAP(pTokens[i]);
+				
+				if (pPopup) {
+					PerceptivePopups.TextPopUpID(pTokens[i], "RemovedLingeringAP") //MESSAGE POPUP
+				}
+			}
 		}
 	}
 	
@@ -728,7 +749,7 @@ class SpottingManager {
 				if (vToken.isOwner) {
 					let vButton = pHTML.find(`div[data-action="${cModuleName}-LingeringAP"]`);
 					
-					vButton.click((pEvent) => {PerceptiveFlags.resetLingeringAP(vToken)});
+					vButton.click((pEvent) => {SpottingManager.RemoveLingeringAP([vToken])});
 				}
 			}
 		}
@@ -890,9 +911,14 @@ class SpottingManager {
 				else {
 					let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
 					
-					vInfos.isLingeringAP = true;
-					
-					SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+					if (game.settings.get(cModuleName, "LingeringAPRadius") > 0 && vInfos.RollPosition && (GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance)) > game.settings.get(cModuleName, "LingeringAPRadius")) {
+						SpottingManager.RemoveLingeringAP([pToken]);
+					}
+					else {
+						vInfos.isLingeringAP = true;
+						
+						SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+					}
 				}
 			}
 		}
@@ -937,7 +963,7 @@ class SpottingManager {
 		SpottingManager.CheckAPerception(vRelevantTokens, vResults, vInfos);
 	}
 
-	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}) {	
+	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}, pSpotters = canvas.tokens.controlled.map(vToken => vToken.document)) {	
 		let vTokens = pObjects.filter(vObject => vObject?.documentName == "Token" || vObject?.documentName == "Tile");
 		let vDoors = pObjects.filter(vObject => vObject?.documentName == "Wall");
 		
@@ -993,7 +1019,7 @@ class SpottingManager {
 			SpottingManager.RequestresetStealth(vUnstealthObjects, pInfos);
 		}
 		
-		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos)
+		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos, pSpotters)
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
@@ -1295,3 +1321,5 @@ export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : t
 export function CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false}) {return SpottingManager.CheckAPerception(pSpotters, pResults, pInfos)}
 
 export function SpotObjectsinVision(pCategory = {Walls : false, Tokens : false}) {return SpottingManager.SpotObjectsinVision(pCategory)}
+
+export function RemoveLingeringAP(pTokens, pPopup = true) {return SpottingManager.RemoveLingeringAP(pTokens, pPopup)};

@@ -30,12 +30,12 @@ class PerceptivePopups {
 	
 	static PopUpRequest(pObjectID, pText) {
 		if (game.settings.get(cModuleName, "MessagePopUps")) {
-			//only relevant if token is on current canves, no scene necessary
-			let vWall = PerceptiveUtils.WallfromID(pObjectID); 
-			let vPosition;
+			//only relevant if object is on current canvas, no scene necessary
+			let vObject = PerceptiveUtils.ObjectfromID(pObjectID); 
+			let vPosition;		
 			
-			if (vWall) {
-				vPosition = GeometricUtils.CenterPositionWall(vWall);
+			if (vObject) {
+				vPosition = GeometricUtils.CenterPositionObject(vObject);
 				
 				canvas.interface.createScrollingText({x: vPosition[0], y: vPosition[1]}, pText, {text: pText, anchor: CONST.TEXT_ANCHOR_POINTS.TOP, fill: "#FFFFFF", stroke: "#000000"});
 			}
