@@ -392,7 +392,7 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill, RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y}});
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill, RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y}, UserSource : game.user.id});
 						
 						PerceptivePopups.TextPopUpID(pSpotters[i], "GainedLingeringAP") //MESSAGE POPUP
 						
@@ -422,6 +422,8 @@ class SpottingManager {
 	}
 	
 	static RemoveLingeringAP(pTokens, pPopup = true) {
+		let vChatMessage = ``;
+		
 		for (let i = 0; i <= pTokens.length; i++) {
 			if (PerceptiveFlags.hasLingeringAP(pTokens[i]) && pTokens[i].isOwner) {
 				PerceptiveFlags.resetLingeringAP(pTokens[i]);
@@ -429,7 +431,25 @@ class SpottingManager {
 				if (pPopup) {
 					PerceptivePopups.TextPopUpID(pTokens[i], "RemovedLingeringAP") //MESSAGE POPUP
 				}
+				
+				//chat message
+				let vGMWhisperRemoval = game.settings.get(cModuleName, "GMReciveInformationWhisper");
+				
+				if (game.settings.get(cModuleName, "GMReciveInformationWhisper")) {
+					vChatMessage = vChatMessage + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
+					
+					vChatMessage = vChatMessage	+   `<img src="${pTokens[i].texture.src}" style = "height: 2em;">`;
+					
+					vChatMessage = vChatMessage + 	`<p>${TranslateandReplace("ChatMessage.LostLingeringAP", {pName : PerceptiveFlags.PerceptiveName(pTokens[i])})}</p>
+													</div>`;
+				}
 			}
+		}
+		
+		if (pTokens.length > 0 && game.settings.get(cModuleName, "GMReciveInformationWhisper")) {
+			ChatMessage.create({user: game.user.id, 
+						content : vChatMessage,
+						whisper : PerceptiveUtils.GMUserIDs()});
 		}
 	}
 	
@@ -902,22 +922,28 @@ class SpottingManager {
 			}
 		}
 		
-		if (vmovementChange && pToken.object?.controlled){
+		if (vmovementChange && (pToken.object?.controlled || game.user.isGM)){
 			//lingering APDC
 			if (PerceptiveFlags.hasLingeringAP(pToken)) {
+				let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
+				
 				if (pToken.inCombat && (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly")) {
-					PerceptiveFlags.resetLingeringAP(pToken)
-				}
-				else {
-					let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
-					
-					if (game.settings.get(cModuleName, "LingeringAPRadius") > 0 && vInfos.RollPosition && (GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance)) > game.settings.get(cModuleName, "LingeringAPRadius")) {
+					if (game.user.isGM) {
 						SpottingManager.RemoveLingeringAP([pToken]);
 					}
+				}
+				else {
+					if (game.settings.get(cModuleName, "LingeringAPRadius") > 0 && vInfos.RollPosition && (GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance)) > game.settings.get(cModuleName, "LingeringAPRadius")) {
+						if (game.user.isGM) {
+							SpottingManager.RemoveLingeringAP([pToken]);
+						}
+					}
 					else {
-						vInfos.isLingeringAP = true;
-						
-						SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+						if (game.user.id == vInfos.UserSource) {
+							vInfos.isLingeringAP = true;
+							
+							SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
+					    }
 					}
 				}
 			}
@@ -979,7 +1005,11 @@ class SpottingManager {
 		}
 		
 		//chat message
-		if ((pObjects.length > 0) && !pInfos.PassivSpot && game.settings.get(cModuleName, "WhisperPerceptionResult")) {
+		let vUserWhisperResult = game.settings.get(cModuleName, "WhisperPerceptionResult");
+		
+		let vGMWhisperResult = game.settings.get(cModuleName, "GMReciveInformationWhisper");
+		
+		if ((pObjects.length > 0) && !pInfos.PassivSpot && (vUserWhisperResult || vGMWhisperResult)) {
 			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
 			
 			if (vTokens.length > 0) {
@@ -1000,10 +1030,20 @@ class SpottingManager {
 			else {
 				vContent = vContent + "-";// + "- <br>";
 			}
-		
+			
+			let vWhisperTargets = [];
+			
+			if (vUserWhisperResult) {
+				vWhisperTargets = vWhisperTargets.concat([game.user.id]);
+			}
+			
+			if (vGMWhisperResult) {
+				vWhisperTargets = vWhisperTargets.concat(PerceptiveUtils.GMUserIDs());
+			}
+			
 			ChatMessage.create({user: game.user.id, 
 								content : vContent,
-								whisper : [game.user.id]});
+								whisper : vWhisperTargets});
 		}
 		
 		//effect resets

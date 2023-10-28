@@ -45,16 +45,15 @@
 			"Effects"					: "Effekte",
 			"Illumination"				: "Beleuchtung",
 			"Tile"						: "Fliese",
-			"Triggers"					: "Triggers",
-			"GainedLingeringAP"			: "Bleibende aktive Wahrnehmung erhalten",
-			"RemovedLingeringAP"		: "Bleibende aktive Wahrnehmung verloren"
+			"Triggers"					: "Triggers"
 		},
 		
 		"ChatMessage" : {
 			"SpottingReport" : {
 				"content"				: "Du hast es geschafft <b>{pDoors}</b> geheime Türen and folgende Figuren aufzudecken:",
 				"unknown"				: "???"
-			}
+			},
+			"LostLingeringAP" 			: "{pName} hat bleibende aktive Wahrnehmung verloren"
 		},
 		
 		"Warnings" : {
@@ -65,7 +64,9 @@
 			"OutofRange"				: "Außer Reichweite",
 			"CantbePeeked"				: "Kann nicht durchschaut werden",
 			"DoorisLocked"				: "Verschlossen",
-			"CantbeMoved"				: "Kann nicht bewegt werden"
+			"CantbeMoved"				: "Kann nicht bewegt werden",
+			"GainedLingeringAP"			: "Bleibende aktive Wahrnehmung erhalten",
+			"RemovedLingeringAP"		: "Bleibende aktive Wahrnehmung verloren"
 		},
 		
 		"Settings" : {
@@ -366,6 +367,11 @@
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Erzwinge \"Wurf Ignorieren\" Tasten invertierung",
 				"descrp" 				: "Invertiere die \"Wurf Ignorieren\" Taste für alle Spieler und entferne die Spieler Einstellung"				
+			},
+			
+			"GMReciveInformationWhisper" : {
+				"name"					: "SL erhält Info Nachrichten",
+				"descrp"				: "Ob die SL geflüsterte Chat nachrichten zu Spieler Aktualisierungen erhält" 
 			},
 			
 			"onlyMacroSeek" : {

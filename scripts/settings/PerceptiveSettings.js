@@ -274,6 +274,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		type: Boolean,
 		default: false
 	  });  	  
+	  
+	  game.settings.register(cModuleName, "GMReciveInformationWhisper", {
+		name: Translate("Settings.GMReciveInformationWhisper.name"),
+		hint: Translate("Settings.GMReciveInformationWhisper.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: true
+	  }); 
   
 	//RulesAutomation
 	  game.settings.register(cModuleName, "AutomateTokenSpottable", {
@@ -846,6 +855,7 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
 													[data-setting-id="perceptive.ShowfailuresinGMconfirm"],
 													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"],
+													[data-setting-id="perceptive.GMReciveInformationWhisper"],
 													[data-setting-id="perceptive.MacroSeekBehaviour"]`);
 		
 		collapseContent(pHTML, "RulesAutomation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],

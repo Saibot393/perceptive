@@ -91,6 +91,11 @@ class PerceptiveUtils {
 	//keyboard
 	static KeyisDown(pKeyName, pnoKeyvalid = false) {} //returns if a key belonging to keybinding pKeyName is down (pnoKeyvalid if no key pressed is valid "input")
 	
+	//users
+	static GMUserIDs() {} //returns an array of GM role users
+	
+	static OwnerIDs(pToken) {} //returns IDs of owners of this token
+	
 	//IMPLEMENTATIONS
 	
 	//Identification	
@@ -589,6 +594,15 @@ class PerceptiveUtils {
 		
 		return Boolean(pnoKeyvalid);
 	}
+	
+	//users
+	static GMUserIDs() {
+		return game.users.filter(vUser => vUser.isGM).map(vUser => vUser.id);
+	}
+	
+	static OwnerIDs(pToken) {
+		
+	} 
 }
 
 function Translate(pName){

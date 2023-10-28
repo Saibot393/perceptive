@@ -45,16 +45,15 @@
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
 			"Tile"						: "Tile",
-			"Triggers"					: "Triggers",
-			"GainedLingeringAP"			: "Lingering active perception gained",
-			"RemovedLingeringAP"		: "Lingering active perception lost"
+			"Triggers"					: "Triggers"
 		},
 		
 		"ChatMessage" : {
 			"SpottingReport" : {
 				"content"				: "あなたは <b>{pDoors}</b> のシークレットドアとこれらの不可視コマを見つけた:",
 				"unknown"				: "???"
-			}
+			},
+			"LostLingeringAP" 			: "{pName} has lost lingering active perception"
 		},
 		
 		"Warnings" : {
@@ -65,7 +64,9 @@
 			"OutofRange"				: "Out of range",
 			"CantbePeeked"				: "Cant be peeked",
 			"DoorisLocked"				: "Locked",
-			"CantbeMoved"				: "Cant be moved"
+			"CantbeMoved"				: "Cant be moved",
+			"GainedLingeringAP"			: "Lingering active perception gained",
+			"RemovedLingeringAP"		: "Lingering active perception lost"
 		},
 		
 		"Settings" : {
@@ -366,6 +367,11 @@
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: " \"Ignore Roll\" キーの反転を強制",
 				"descrp" 				: "クライアント設定を無視し、全プレイヤーに対し \"Ignore Roll\" キーの動作を反転します。"				
+			},
+			
+			"GMReciveInformationWhisper" : {
+				"name"					: "GM recives info messages",
+				"descrp"				: "If the GM should recive whispered player update messages" 
 			},
 			
 			"onlyMacroSeek" : {

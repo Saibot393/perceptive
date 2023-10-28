@@ -45,16 +45,15 @@
 			"Effects"					: "Effects",
 			"Illumination"				: "Illumination",
 			"Tile"						: "Tile",
-			"Triggers"					: "Triggers",
-			"GainedLingeringAP"			: "Lingering active perception gained",
-			"RemovedLingeringAP"		: "Lingering active perception lost"
+			"Triggers"					: "Triggers"
 		},
 		
 		"ChatMessage" : {
 			"SpottingReport" : {
 				"content"				: "You were able to spot <b>{pDoors}</b> secret doors and these hidden tokens:",
 				"unknown"				: "???"
-			}
+			},
+			"LostLingeringAP" 			: "{pName} has lost lingering active perception"
 		},
 		
 		"Warnings" : {
@@ -65,7 +64,9 @@
 			"OutofRange"				: "Out of range",
 			"CantbePeeked"				: "Cant be peeked",
 			"DoorisLocked"				: "Locked",
-			"CantbeMoved"				: "Cant be moved"
+			"CantbeMoved"				: "Cant be moved",
+			"GainedLingeringAP"			: "Lingering active perception gained",
+			"RemovedLingeringAP"		: "Lingering active perception lost"
 		},
 		
 		"Settings" : {
@@ -366,6 +367,11 @@
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
 				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
+			"GMReciveInformationWhisper" : {
+				"name"					: "GM recives info messages",
+				"descrp"				: "If the GM should recive whispered player update messages" 
 			},
 			
 			"onlyMacroSeek" : {
