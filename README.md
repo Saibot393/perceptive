@@ -87,7 +87,9 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Reset spotted on token movement by default: to reset the spotters of moving tokens
   - Make spotted tokens visible: to make spotted tokens visible to everyone
   - Make allied tokens visible: to set wether allied tokens should be made visible when spotted
-  - Active perception lingers to continue using the active perception until manually removed in the token HUD
+  - Active perception lingers: to continue using the active perception until manually removed in the token HUD
+  - Lingering active perception radius: to limit the range in which the active perception remains
+  - Lingering active perception duration: to limit the duration for which the active perception remains
 - Rolls & Formulas
   - Passive perception formula: to set the formula used for passive perception (if not automated)
   - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
@@ -172,6 +174,10 @@ The module should be compatible with all game systems and most modules on Foundr
   - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
 - [Stealthy](https://foundryvtt.com/packages/stealthy)
   - Addtional setting "Stealthy integration" to synch the stealth DCs between Stealthy and Perceptive
+- [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles)
+  - Adds additional Perceptive related trigger for spottable objects (adds a new triggers tab to spottable tokens)
+  - Adds a textbox to enter the tile which should be triggered for spottable tokens
+  - The following landings can be optionally used to differentiate between the different Perceptive trigger conditions: `PassiveSpot`, `ActiveSpot`
 
 ### Languages:
 
