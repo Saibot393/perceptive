@@ -1236,7 +1236,7 @@ class SpottingManager {
 		//if bug, search here
 		//VisionUtils.MaketempVisible(vSpottables);
 		
-		//vPingIgnoreVisionCycles = 1;
+		vPingIgnoreVisionCycles = 1;
 	}
 	
 	//support
