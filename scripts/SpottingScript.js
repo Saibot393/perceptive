@@ -355,6 +355,10 @@ class SpottingManager {
 					}
 				}
 						
+				if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+					console.log("perceptive: Range Check AP:", vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vLocalVisionData);
+				}
+		
 				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {			
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
@@ -414,6 +418,10 @@ class SpottingManager {
 							sendingPlayer : game.user.id,
 							isLingeringAP : pInfos.isLingeringAP,
 							overrideVFilter : game.settings.get(cModuleName, "UsePf2eRules")};
+							
+			if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+				console.log("perceptive: Infos AP:", vInfos);
+			}
 							
 			await SpottingManager.RequestSpotObjects(vSpotted, pSpotters, vInfos);
 
@@ -927,6 +935,10 @@ class SpottingManager {
 			if (PerceptiveFlags.hasLingeringAP(pToken)) {
 				let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
 				
+				if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+					console.log("perceptive: Lingering AP:", vInfos);
+				}
+				
 				if (pToken.inCombat && (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly")) {
 					if (game.user.isGM) {
 						SpottingManager.RemoveLingeringAP([pToken]);
@@ -1059,7 +1071,11 @@ class SpottingManager {
 			SpottingManager.RequestresetStealth(vUnstealthObjects, pInfos);
 		}
 		
-		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos, pSpotters)
+		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos, pSpotters);
+		
+		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+			console.log("perceptive: Newly visible:", pInfos);
+		}
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
@@ -1213,12 +1229,20 @@ class SpottingManager {
 			}
 		}
 		
-		return VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, vRange.ConeRotation, pSettings.Tolerance);
+		let vinRange =  VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, vRange.ConeRotation, pSettings.Tolerance);
+		
+		return vinRange;
 	}
 }
 
 //Hooks
 Hooks.once("ready", function() {
+	if (!CONFIG.debug.hasOwnProperty(cModuleName)) {
+		CONFIG.debug[cModuleName] = {};
+	}
+	
+	CONFIG.debug.perceptive.SpottingScript = false;
+	
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
