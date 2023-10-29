@@ -1,3 +1,6 @@
+## v2.6.5
+- Micro fix for previous  fix
+
 ## v2.6.4
 - Fixed a stupid bug
 
