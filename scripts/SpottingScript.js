@@ -1202,6 +1202,7 @@ class SpottingManager {
 
 		await SpottingManager.updateVisionValues();
 		
+		/*
 		let vSpottables = VisionUtils.spotablesinVision();
 		
 		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue));
@@ -1230,11 +1231,12 @@ class SpottingManager {
 				return SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {RangeReplacement : undefined, Tolerance : vTolerance})
 			});
 		}
+		*/
 		
 		//if bug, search here
-		VisionUtils.MaketempVisible(vSpottables);
+		//VisionUtils.MaketempVisible(vSpottables);
 		
-		vPingIgnoreVisionCycles = 1;
+		//vPingIgnoreVisionCycles = 1;
 	}
 	
 	//support
