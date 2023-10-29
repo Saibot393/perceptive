@@ -1,3 +1,7 @@
+## v2.6.2
+- Small UI bug fix for MATT trigger settings
+- Small translation improvement for MATT trigger settings
+
 ## v2.6.1
 - Some small improvements to lingering active perception
 - Added missing popup texts
