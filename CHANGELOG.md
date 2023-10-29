@@ -1,3 +1,6 @@
+## v2.6.3
+- A console debug mode for the spotting feature can now be accessed with `CONFIG.debug.perceptive.SpottingScript = true`
+
 ## v2.6.2
 - Small UI bug fix for MATT trigger settings
 - Small translation improvement for MATT trigger settings
