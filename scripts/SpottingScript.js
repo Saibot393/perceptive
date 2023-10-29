@@ -359,7 +359,7 @@ class SpottingManager {
 					console.log("perceptive: Range Check AP:", vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vLocalVisionData);
 				}
 		
-				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {			
+				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {		
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
@@ -574,7 +574,7 @@ class SpottingManager {
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 			
 			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => pInfos.overrideVFilter || (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !((vObject?.object?.visible && (vObject.documentName == "Token" || vObject.documentName == "Tile")) || vObject?.object?.doorControl?.visible)), pInfos);
-
+		
 			VisionUtils.MaketempVisible(vSpotables);
 		}
 	}
@@ -1206,6 +1206,32 @@ class SpottingManager {
 		
 		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue));
 		
+		if (vLocalVisionData.vPassiveRange) {
+			vSpottables = vSpottables.filter(vObject => {
+				let vTolerance;
+					
+				if (vLocalVisionData.vUseRangeTollerance) {
+					switch (vObject.documentName) {
+						case "Token":
+							vTolerance = {PointTolerance : Math.max(vObject.object.width, vObject.object.height)/2};
+							break;
+						case "Tile":
+							if (vObject.object.mesh) {
+								vTolerance = {PointTolerance : Math.max(vObject.object.mesh.width, vObject.object.mesh.height)/2};
+							}
+							else {
+								vTolerance = {PointTolerance : Math.max(vObject.object.width, vObject.object.height)/2};
+							}
+						default:
+							vTolerance = {PointTolerance : 0};
+					}
+				}
+		
+				return SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {RangeReplacement : undefined, Tolerance : vTolerance})
+			});
+		}
+		
+		//if bug, search here
 		VisionUtils.MaketempVisible(vSpottables);
 		
 		vPingIgnoreVisionCycles = 1;
@@ -1250,6 +1276,7 @@ Hooks.once("ready", function() {
 																											let vPrevVisible = this.visible;
 																											
 																											if (SpottingManager.DControlSpottingVisible(this)){
+																												
 																												if (!vPrevVisible) {
 																													SpottingManager.onNewlyVisible([this.wall.document], {PassivSpot : true});
 																												}
