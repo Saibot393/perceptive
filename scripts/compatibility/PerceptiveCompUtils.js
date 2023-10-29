@@ -213,7 +213,7 @@ class PerceptiveCompUtils {
 			return vID;
 		}		
 		
-		vID = pObject?.flags[cMATT]?.entity.id; //from MATT
+		vID = pObject?.flags[cMATT]?.entity?.id; //from MATT
 		
 		if (vID) {
 			return vID;

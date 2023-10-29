@@ -622,7 +622,7 @@
 			},
 			
 			"MATTTriggerConditionsFlag" : {
-				"NewlySpotted.name"		: "Newly spotted",
+				"NewlySpotted.name"		: "On newly spotted",
 				"options" : {
 					"never"				: "never",
 					"always"			: "always",

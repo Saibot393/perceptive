@@ -622,7 +622,7 @@
 			},
 			
 			"MATTTriggerConditionsFlag" : {
-				"LockuseKey.name"		: "Neu aufgedeckt",
+				"LockuseKey.name"		: "Bei neu aufgedeckt",
 				"options" : {
 					"never"				: "niemals",
 					"always"			: "immer",
