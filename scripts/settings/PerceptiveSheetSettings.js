@@ -306,6 +306,8 @@ class PerceptiveSheetSettings {
 				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
 			}
 		}
+		
+		PerceptiveSheetSettings.FixSheetWindow(pHTML);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
