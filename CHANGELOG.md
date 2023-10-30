@@ -1,3 +1,6 @@
+## v2.6.7
+- Small ui fix for tile settings
+
 ## v2.6.6
 - Added Reset "spotted by" button to sheet settings
 
