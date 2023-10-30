@@ -45,7 +45,8 @@
 			"Effects"					: "Effekte",
 			"Illumination"				: "Beleuchtung",
 			"Tile"						: "Fliese",
-			"Triggers"					: "Triggers"
+			"Triggers"					: "Triggers",
+			"ResetSpottedby"			: "Resette \"Aufgedeckt von\""
 		},
 		
 		"ChatMessage" : {

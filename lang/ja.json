@@ -45,7 +45,8 @@
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
 			"Tile"						: "Tile",
-			"Triggers"					: "Triggers"
+			"Triggers"					: "Triggers",
+			"ResetSpottedby"			: "Reset \"spotted by\""
 		},
 		
 		"ChatMessage" : {

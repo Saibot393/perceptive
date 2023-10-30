@@ -395,10 +395,14 @@ class PerceptiveSheetSettings {
 
 		if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 			//other skill dcs menu button
-			let vButton = `<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`;
-			pHTML.find(pto).append(vButton);
+			let vSkillsButton = `<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`;
+			pHTML.find(pto).append(vSkillsButton);
 			pHTML.find(`button[id="${cModuleName}.otherSkillDCs"]`).click(function() {PerceptiveSheetSettings.OpenotherSkillDCs(pApp)});
 		}
+		
+		let vResetButton = `<button id = "${cModuleName}.ResetSpottedby"> ${Translate("Titles.ResetSpottedby")} </button>`;
+		pHTML.find(pto).append(vResetButton);
+		pHTML.find(`button[id="${cModuleName}.ResetSpottedby"]`).click(function() {PerceptiveFlags.clearSpottedby(pApp.document);});		
 	}
 	
 	//support

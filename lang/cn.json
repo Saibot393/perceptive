@@ -45,7 +45,8 @@
 			"Effects"					: "Effects",
 			"Illumination"				: "Illumination",
 			"Tile"						: "Tile",
-			"Triggers"					: "Triggers"
+			"Triggers"					: "Triggers",
+			"ResetSpottedby"			: "Reset \"spotted by\""
 		},
 		
 		"ChatMessage" : {
