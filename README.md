@@ -119,6 +119,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
 - Other active skill DCs: to set the active spotting DCs when using skills other then perception (currently only works with D&D5e, Pf2e, and Pf1e)
+- Reset "spotted by": to reset by whom this object has already be actively spotted by
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
 - Stealth effects[Tokens only]: to add additional stealth effects to this token
 - Override world stealth effects[Tokens only]: to override the worlds stealth effects with this tokens custom stealth effects
