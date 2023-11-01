@@ -1,4 +1,4 @@
-## v2.7.0 (unreleased)
+## v2.7.0
 - Added active effects modifiers:
   - The attribute key `flags.perceptive.Modifiers.perception.MOD.#ObjectType.#CheckType` can be used to add modifiers to certain checks
   - The attribute key `flags.perceptive.Modifiers.perception.BEH.#ObjectType.#CheckType` can be used to alter the roll behaviour for certain checks
@@ -6,6 +6,10 @@
     -  This attribute is additive with other advantage/disadvantage sources (use e.g. +2 to force advantage)
   -  Valid `#ObjectType` values: Wall,Token,Tile
   -  Valid `#CheckType` values: active, passive(`MOD` only), all other skill abreviations as per the "Other active skill DCs" menu
+- Added custom actions for MATT:
+  - Added action Spot object to spot specified objects
+  - Added filter Filter objects spotted by to filter objects (not) spotted by specified tokens
+  - Added filter Filter tokens having spotted to filter tokens (not) having spotted a specified token 
 
 ## v2.6.7
 - Small ui fix for tile settings
