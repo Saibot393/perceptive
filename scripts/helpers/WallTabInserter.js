@@ -1,6 +1,6 @@
 import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
 
-const cBaicIcon = "fa-building-columns";
+const cBasicIcon = "fa-building-columns";
 
 class WallTabInserter {
 	//DECLARATIONS
@@ -14,10 +14,14 @@ class WallTabInserter {
 			//save basic settings content
 			let vOriginalContent = pHTML.find(`form`);
 			
+			if (!vOriginalContent.length) {
+				vOriginalContent = pHTML;
+			}
+			
 			//create tab header with basic settings
 			let vTabs = `<nav class="sheet-tabs tabs">
 							<a class="item active" data-tab="basic">
-								<i class="fas ${cBaicIcon}"></i>
+								<i class="fas ${cBasicIcon}"></i>
 								${Translate("Titles.Basic")}
 							</a>
 						</nav>`;

@@ -383,6 +383,10 @@ class SpottingManager {
 
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBehaviour(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE behaviour
 					
+					if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+						console.log("perceptive: Roll Behaviour:", vCurrentRollbehaviour, vSpotables[i]);
+					}
+			
 					if (pResults.length > 1) {
 						vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
 					}
@@ -395,8 +399,6 @@ class SpottingManager {
 					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
-						
-						console.log(Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill))));
 						
 						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							

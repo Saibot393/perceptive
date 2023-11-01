@@ -277,7 +277,7 @@
 			},
 			
 			"usePerceptiveStealthEffect" : {
-				"name"					: "[EXPERIMENTAL] Nutze Perceptive verstecken",
+				"name"					: "Nutze Perceptive verstecken",
 				"descrp"				: "Ob Perceptives eigener Verstecken \"Effekt\" genutzt werden soll"				
 			},
 			

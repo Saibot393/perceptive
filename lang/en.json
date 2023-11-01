@@ -227,7 +227,7 @@
 			},
 			
 			"AutomateTokenSpottable" : {
-				"name"					: "Atomate token Can be spotted",
+				"name"					: "Automate token Can be spotted",
 				"descrp"				: "The Can be spotted setting of Tokens will be automatically changed when a stealth change is detected"
 			},
 	
@@ -277,7 +277,7 @@
 			},
 			
 			"usePerceptiveStealthEffect" : {
-				"name"					: "[EXPERIMENTAL] Use Perceptive stealth",
+				"name"					: "Use Perceptive stealth",
 				"descrp"				: "If perceptives own stealth \"effect\" should be used"				
 			},
 			

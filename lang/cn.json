@@ -277,7 +277,7 @@
 			},
 			
 			"usePerceptiveStealthEffect" : {
-				"name"					: "[试用性] 使用Perceptive模组的隐蔽",
+				"name"					: "使用Perceptive模组的隐蔽",
 				"descrp"				: "是否使用Perceptive模组自己的隐蔽\"效果\""				
 			},
 			

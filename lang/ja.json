@@ -277,7 +277,7 @@
 			},
 			
 			"usePerceptiveStealthEffect" : {
-				"name"					: "[テスト中] Perceptive の隠密を使用",
+				"name"					: "Perceptive の隠密を使用",
 				"descrp"				: "Perceptive独自の隠密効果を使用するかどうか設定します。"				
 			},
 			
