@@ -2,6 +2,7 @@
 - Fixed a few typos and ui bugs
 - No longer sprinkles tokens with fine particles
 - The perceptive stealthing "effect" is no longer considered experimental (i received no bug reports so...)
+- The wall settings tab will no longer disappear when reopening the settings by double clicking a wall again
 
 ## v2.7.0
 - Added active effects modifiers:
