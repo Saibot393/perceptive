@@ -218,6 +218,10 @@ class PerceptiveFlags {
 	static getotherSkillADC(pObject, pKey, pRaw = false) {} //gets the ADC of pObject belonging to pKey
 	
 	static PerceptiveName(pToken) {} //returns name of pToken, either token name or Tile rideable name
+	
+	static getPerceptionAEBonus(pToken, pObjectType, pPerceptionType) {} //returns pTokens bonus to spot a pObjectType[Wall,Token,Tile] with pPerceptionType[passive, active ("" will fall back to this), other skills]
+	
+	static getPerceptionAEBehaviour(pToken, pObjectType, pPerceptionType) {} //returns pTokens roll behaviour to spot a pObjectType[Wall,Token,Tile] with pPerceptionType[active ("" will fall back to this), other skills]
 		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -1271,7 +1275,7 @@ class PerceptiveFlags {
 		else {
 			let vIlluminationLevel = VisionUtils.correctedLightLevel(PerceptiveFlags.LightLevel(pObject), pVisionLevel);
 			
-			let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.PDC?.Illumination;
+			let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.PDC?.Illumination; //AE effects source
 			
 			if (vModifier) {
 				vModifier = vModifier[vIlluminationLevel];
@@ -1407,6 +1411,60 @@ class PerceptiveFlags {
 		}
 		
 		return "";		
+	}
+	
+	static getPerceptionAEBonus(pToken, pObjectType, pPerceptionType) {
+		let vType = pPerceptionType;
+		
+		if (vType == "") {
+			vType = "active";
+		}
+		
+		let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.perceptionMOD?; //AE effects source
+		
+		if (vModifier) {
+			vModifier = vModifier[pObjectType];
+			
+			if (vModifier) {
+				vModifier = vModifier[vType];
+				
+				if (vModifier) {
+					console.log(pObjectType, pPerceptionType);
+					console.log(vModifier);
+					
+					return vModifier;
+				}
+			}
+		}
+
+		return 0; //if anything fails
+	}
+	
+	static getPerceptionAEBehaviour(pToken, pObjectType, pPerceptionType) {
+		let vType = pPerceptionType;
+		
+		if (vType == "") {
+			vType = "active";
+		}
+		
+		let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.perceptionBEH?; //AE effects source
+		
+		if (vModifier) {
+			vModifier = vModifier[pObjectType];
+			
+			if (vModifier) {
+				vModifier = vModifier[vType];
+				
+				if (vModifier) {
+					console.log(pObjectType, pPerceptionType);
+					console.log(vModifier);
+					
+					return vModifier;
+				}
+			}
+		}
+
+		return 0; //if anything fails		
 	}
 	
 	//effects

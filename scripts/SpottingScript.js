@@ -28,7 +28,8 @@ var vLocalVisionData = {
 	vPassiveRange : false,
 	vCritType : 0,
 	vPf2eRules : false,
-	vUseRangeTollerance : false
+	vUseRangeTollerance : false,
+	vPPModifiers : {}
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -112,7 +113,7 @@ class SpottingManager {
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue)) {
+		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall)) {
 			// Hide secret doors from players
 			let vWallObject = pDoorControl.wall;
 
@@ -160,7 +161,7 @@ class SpottingManager {
 		pInfos.CritMode = vLocalVisionData.vCritType;
 		pInfos.Pf2eRules = vLocalVisionData.vPf2eRules && cPf2eAPDCautomationTypes.includes(pToken.actor?.type);
 		
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue, pInfos) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
 			let vTolerance;
 			
@@ -184,7 +185,7 @@ class SpottingManager {
 	static TileSpottingVisible(pTile) {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		
-		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile) ) {
 			// Otherwise, test visibility against current sight polygons
 			let vTolerance;
 			
@@ -246,10 +247,10 @@ class SpottingManager {
 
 			let vBuffer;
 
-			vLocalVisionData.vlastPPvalue = 0;
 			vLocalVisionData.vlastVisionLevel = Math.max(vTokens.map(vToken => VisionUtils.VisionLevel(vToken)));
 			vLocalVisionData.vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
-			
+
+			vLocalVisionData.vlastPPvalue = 0;
 			for (let i = 0; i < vTokens.length; i++) {
 				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
 
@@ -257,6 +258,14 @@ class SpottingManager {
 					vLocalVisionData.vlastPPvalue = vBuffer;
 				}
 			}
+			
+			vLocalVisionData.vPPModifiers = { //Add AE modifiers
+				Wall: Math.max(vTokens.map(vToken => PerceptiveFlags.getPerceptionAEBonus(vToken, "Wall", "passive"))),
+				Token: Math.max(vTokens.map(vToken => PerceptiveFlags.getPerceptionAEBonus(vToken, "Token", "passive"))),
+				Tile: Math.max(vTokens.map(vToken => PerceptiveFlags.getPerceptionAEBonus(vToken, "Tile", "passive")))
+			}
+			
+			console.log(vLocalVisionData.vPPModifiers);
 			
 			if (game.user.isGM) {
 				vLocalVisionData.vSimulatePlayerVision = true;
@@ -364,6 +373,10 @@ class SpottingManager {
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
 					
+					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBehaviour(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE behaviour
+					
+					console.log(vCurrentRollbehaviour);
+					
 					if (pResults.length > 1) {
 						vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
 					}
@@ -375,7 +388,9 @@ class SpottingManager {
 					
 					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
 						//only continue with objects spottable with this attribute unless it is a perception roll
-						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC);
+						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
+						
+						console.log(Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill))));
 						
 						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							

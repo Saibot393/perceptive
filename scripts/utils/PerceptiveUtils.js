@@ -76,7 +76,7 @@ class PerceptiveUtils {
 	
 	static ApplyrollBehaviour(pBehaviour, pRoll1, pRoll2) {} //applies roll behaviour(adv., normal, disadv.) to pRoll1 and pRoll2
 	
-	static successDegree(pRollresult, pDC, pCritMode = -1) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
+	static successDegree(pRollresult, pDC, pCritMode = -1, pRollBonus = 0) {} //returns the degree of success of pRollresult and pRolldetails based on the pDC and the world crit settings
 	
 	static CritType(pTypeName = game.settings.get(cModuleName, "CritMethod")) {} //returns the numerical crit type of pTypeName
 	
@@ -375,9 +375,12 @@ class PerceptiveUtils {
 		}
 	}
 	
-	static successDegree(pRollresult, pDC, pCritMode = -1) {
+	static successDegree(pRollresult, pDC, pCritMode = -1, pRollBonus = 0) {
 		let vsuccessDegree;
 		let vCritMode = pCritMode;
+		
+		let vTotalResult = pRollresult[0] + pRollBonus;
+		let vDiceResult = pRollresult[1];
 		
 		if (vCritMode < 0) {
 			vCritMode = 0;
@@ -385,44 +388,44 @@ class PerceptiveUtils {
 			vCritMode = PerceptiveUtils.CritType();
 		}
 		
-		if (pRollresult[0] >= pDC) {
+		if (vTotalResult >= pDC) {
 			vsuccessDegree = 1; //S
 		}
 		else {
 			vsuccessDegree = 0; //F
 		}
 		
-		if (pRollresult[1] > 0) {
+		if (vDiceResult > 0) {
 			switch (vCritMode) {
 				case 1:
 					//normal crit
-					if (pRollresult[1] == 20) {
+					if (vDiceResult == 20) {
 						vsuccessDegree = 2; //crit S
 					}
 					
-					if (pRollresult[1] == 1) {
+					if (vDiceResult == 1) {
 						vsuccessDegree = -1;//crit F
 					}	
 					break;
 				case 2:
 					//+-10 crit
 					if (vsuccessDegree == 1) {
-						if (pRollresult[0] >= (pDC + 10)) {
+						if (vTotalResult >= (pDC + 10)) {
 							vsuccessDegree = 2;//crit S
 						}
 					}
 					
 					if (vsuccessDegree == 0) {
-						if (pRollresult[0] <= (pDC - 10)) {
+						if (vTotalResult <= (pDC - 10)) {
 							vsuccessDegree = -1;//crit F
 						}
 					}	
 					
-					if (pRollresult[1] == 20) {
+					if (vDiceResult == 20) {
 						vsuccessDegree = vsuccessDegree + 1;//increase degree
 					}
 					
-					if (pRollresult[1] == 1) {
+					if (vDiceResult == 1) {
 						vsuccessDegree = vsuccessDegree -1;//decrease degree
 					}
 					break;
