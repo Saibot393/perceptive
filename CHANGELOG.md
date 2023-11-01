@@ -1,3 +1,12 @@
+## v2.7.0 (unreleased)
+- Added active effects modifiers:
+  - The attribute key `flags.perceptive.Modifiers.perception.MOD.#ObjectType.#CheckType` can be used to add modifiers to certain checks
+  - The attribute key `flags.perceptive.Modifiers.perception.BEH.#ObjectType.#CheckType` can be used to alter the roll behaviour for certain checks
+    -  advantage: +1, normal: 0, disadvantage: -1
+    -  This attribute is additive with other advantage/disadvantage sources (use e.g. +2 to force advantage)
+  -  Valid `#ObjectType` values: Wall,Token,Tile
+  -  Valid `#CheckType` values: active, passive(`MOD` only), all other skill abreviations as per the "Other active skill DCs" menu
+
 ## v2.6.7
 - Small ui fix for tile settings
 
