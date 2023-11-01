@@ -46,7 +46,8 @@
 			"Illumination"				: "Illumination",
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
-			"ResetSpottedby"			: "Reset \"spotted by\""
+			"ResetSpottedby"			: "Reset \"spotted by\"",
+			"with"						: "with"
 		},
 		
 		"ChatMessage" : {
@@ -629,6 +630,55 @@
 					"always"			: "always",
 					"active"			: "active",
 					"passive"			: "passive"
+				}
+			}
+		},
+		
+		"monks-active-tiles" : {
+			"filters" : {
+				"name"						: "Filter",
+				
+				"filter-spotted-by" : {
+					"name"					: "Filter objects spotted by",
+					"settings" : {
+						"spotters" : {
+							"name" 			: "Spotters"
+						},
+						"filterCondition" : {
+							"name"			: "Filter if",
+							"options" : {
+								"spotted"	: "has been spotted",
+								"notspotted": "has not been spotted"
+							}
+						}
+					}
+				},
+				
+				"filter-has-spotted" : {
+					"name"					: "Filter tokens having spotted",
+					"settings" : {
+						"spotted" : {
+							"name" 			: "Spotted"
+						},
+						"filterCondition" : {
+							"name"			: "Filter if",
+							"options" : {
+								"spotted"	: "has spotted",
+								"notspotted": "has not spotted"
+							}
+						}
+					}
+				}
+			},
+			
+			"actions" : {
+				"spot-object" : {
+					"name"					: "Spot object",
+					"settings" : {
+						"target" : {
+							"name"			: "Target"
+						}
+					}
 				}
 			}
 		}

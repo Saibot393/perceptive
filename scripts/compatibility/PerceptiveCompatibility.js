@@ -5,6 +5,7 @@ import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {IgnoreWall} from "./APIHandler.js";
 import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
 import {PerceptiveSheetSettings} from "../settings/PerceptiveSheetSettings.js";
+import {SpottingManager} from "../SpottingScript.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 const cTriggersIcon = "fa-running";
@@ -209,6 +210,248 @@ Hooks.once("init", () => {
 		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
+	}
+});
+
+Hooks.once("setupTileActions", (pMATT) => {
+	if (PerceptiveCompUtils.isactiveModule(cMATT)) {
+		if (pMATT) {
+			pMATT.registerTileGroup(cModuleName, Translate("Titles." + cModuleName));
+			
+			//spot object
+			pMATT.registerTileAction(cModuleName, 'spot-object', {
+				name: Translate(cMATT + ".actions." + "spot-object" + ".name"),
+				requiresGM: true,
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => { return (entity instanceof Token); }
+					},
+					{
+						id: "targets",
+						name: Translate(cMATT + ".actions." + "spot-object" + ".settings." + "target" + ".name"),
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)); }
+					}
+				],
+				group: cModuleName,
+				fn: async (args = {}) => {
+					const { action } = args;
+					
+					let vSpotters = await pMATT.getEntities(args);
+					
+					let vSpotted = await pMATT.getEntities(args, "tokens", action.data?.targets);
+					
+					let vTokenSpotted = {};
+					
+					for (let i = 0; i < vSpotted.length; i++) {
+						vTokenSpotted[vSpotted[i].id] = true; //technically only tokens and tiles are required, but oh well
+					}
+					
+					let vInfos = {TokenSpotted : vTokenSpotted,
+								  sendingPlayer : args.userid,
+							      forceConfirmDialog : true};
+							
+					SpottingManager.RequestSpotObjects(vSpotted, vSpotters, vInfos);
+				},
+				content: async (trigger, action) => {
+					let entityName = await pMATT.entityName(action.data?.entity);
+					return `<span class="logic-style">${Translate(trigger.name, false)}</span> ${Translate(Titles.with, false)} <span class="entity-style">${entityName}</span>`;
+				}
+			});
+			
+			//filter spotted by
+			pMATT.registerTileAction(cModuleName, 'filter-spotted-by', {
+				name: Translate(cMATT + ".filters." + "filter-spotted-by" + ".name"),
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => {
+							return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile));
+						},
+					},
+					{
+						id: "spotters",
+						name: Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "spotters" + ".name"),
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => { return (entity instanceof Token) }
+					},
+					{
+						id: "filterCondition",
+						name: Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".name"),
+						list: "filterCondition",
+						type: "list",
+						defvalue: 'yes'
+					},
+					{
+						id: "continue",
+						name: "Continue if",
+						list: "continue",
+						type: "list",
+						defvalue: 'always'
+					}
+				],
+				values: {
+					"filterCondition": {
+						"spotted": Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "spotted"),
+						"notspotted": Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "notspotted"),
+					},
+					'continue': {
+						"always": "Always",
+						"any": "Any Matches",
+						"all": "All Matches",
+					}
+				},
+				fn: async (args = {}) => {
+
+					const { action } = args;
+
+					const entities = await pMATT.getEntities(args);
+					
+					let vSpotters = await pMATT.getEntities(args, "tokens", action.data?.spotters);
+					
+					let vEntityCount = entities.length;
+					
+					let vFiltered;
+
+					switch (action.data?.filterCondition) {
+						case "spotted":
+							vFiltered = entities.filter(vObject => PerceptiveFlags.isSpottedbyone(vObject, vSpotters));
+							break;
+						case "notspotted":
+							vFiltered = entities.filter(vObject => !PerceptiveFlags.isSpottedbyone(vObject, vSpotters));
+							break;
+					}
+
+					const vContinue = (action.data?.continue === 'always'
+						|| (action.data?.continue === 'any' && vFiltered.length > 0)
+						|| (action.data?.continue === 'all' && vFiltered.length == vEntityCount && vFiltered.length > 0));
+
+					return { continue: vContinue, tokens: vFiltered };
+
+				},
+				content: async (trigger, action) => {
+					const entityName = await pMATT.entityName(action.data?.entity);
+					let html = `<span class="filter-style">${Translate(cMATT + ".filters.name")}</span> <span class="entity-style">${entityName}</span>`;
+					
+					switch(action.data.filterCondition) {
+						case "spotted" :
+							html = html + " " + Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "spotted");
+							break;
+						case "notspotted" : 
+							html = html + " " + Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "notspotted");
+							break;
+					}
+					
+					return html;
+				}
+			});
+			
+			//filter has spotted
+			pMATT.registerTileAction(cModuleName, 'filter-has-spotted', {
+				name: Translate(cMATT + ".filters." + "filter-has-spotted" + ".name"),
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => { return (entity instanceof Token); }
+					},
+					{
+						id: "spotted",
+						name: Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "spotted" + ".name"),
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)) }
+					},
+					{
+						id: "filterCondition",
+						name: Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".name"),
+						list: "filterCondition",
+						type: "list",
+						defvalue: 'yes'
+					},
+					{
+						id: "continue",
+						name: "Continue if",
+						list: "continue",
+						type: "list",
+						defvalue: 'always'
+					}
+				],
+				values: {
+					"filterCondition": {
+						"spotted": Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "spotted"),
+						"notspotted": Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "notspotted"),
+					},
+					'continue': {
+						"always": "Always",
+						"any": "Any Matches",
+						"all": "All Matches",
+					}
+				},
+				fn: async (args = {}) => {
+
+					const { action } = args;
+
+					const entities = await pMATT.getEntities(args);
+					
+					let vSpotted = await pMATT.getEntities(args, "tokens", action.data?.spotted);
+					
+					let vEntityCount = entities.length;
+
+					let vfilterSpotted = action.data?.filterCondition == "spotted";
+					
+					let vFiltered;
+		
+					switch(action.data?.filterCondition) {
+						case "spotted":
+							vFiltered = entities.filter(vObject => vSpotted.find(vSpotted => PerceptiveFlags.isSpottedbyone(vSpotted, [vObject])));
+							break;
+						case "notspotted":
+							vFiltered = entities.filter(vObject => !vSpotted.find(vSpotted => PerceptiveFlags.isSpottedbyone(vSpotted, [vObject])));
+							break;
+					}
+
+					const vContinue = (action.data?.continue === 'always'
+						|| (action.data?.continue === 'any' && vFiltered.length > 0)
+						|| (action.data?.continue === 'all' && vFiltered.length == vEntityCount && vFiltered.length > 0));
+
+					return { continue: vContinue, tokens: vFiltered };
+
+				},
+				content: async (trigger, action) => {
+					const entityName = await pMATT.entityName(action.data?.entity);
+					let html = `<span class="filter-style">${Translate(cMATT + ".filters.name")}</span> <span class="entity-style">${entityName}</span>`;
+					
+					switch(action.data.filterCondition) {
+						case "spotted" :
+							html = html + " " + Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "spotted");
+							break;
+						case "notspotted" : 
+							html = html + " " + Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "notspotted");
+							break;
+					}
+					
+					return html;
+				}
+			});
+		}
 	}
 });
 

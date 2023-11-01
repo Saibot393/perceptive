@@ -265,8 +265,6 @@ class SpottingManager {
 				Tile: Math.max(vTokens.map(vToken => PerceptiveFlags.getPerceptionAEBonus(vToken, "Tile", "passive")))
 			}
 			
-			console.log(vLocalVisionData.vPPModifiers);
-			
 			if (game.user.isGM) {
 				vLocalVisionData.vSimulatePlayerVision = true;
 			}
@@ -307,9 +305,19 @@ class SpottingManager {
 			vLocalVisionData.vlastVisionLevel = 3;
 			
 			vLocalVisionData.vSpottingConeRange = Infinity;
+			
+			vLocalVisionData.vPPModifiers = { //Add AE modifiers
+				Wall: 0,
+				Token: 0,
+				Tile: 0
+			}
 		}
 		
 		SpottingManager.CheckTilesSpottingVisible();
+		
+		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
+			console.log("perceptive: New vision data:", vLocalVisionData);
+		}
 	}
 	
 	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {
@@ -372,10 +380,8 @@ class SpottingManager {
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
-					
+
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBehaviour(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE behaviour
-					
-					console.log(vCurrentRollbehaviour);
 					
 					if (pResults.length > 1) {
 						vResultBuffer = PerceptiveUtils.ApplyrollBehaviour(vCurrentRollbehaviour, pResults[0], pResults[1]);
@@ -1413,6 +1419,8 @@ Hooks.once("ready", function() {
 		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor))
 	}
 });
+
+export {SpottingManager}
 
 //socket exports
 export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} = {}) {return SpottingManager.SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos)};

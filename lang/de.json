@@ -46,7 +46,8 @@
 			"Illumination"				: "Beleuchtung",
 			"Tile"						: "Fliese",
 			"Triggers"					: "Triggers",
-			"ResetSpottedby"			: "Resette \"Aufgedeckt von\""
+			"ResetSpottedby"			: "Resette \"Aufgedeckt von\"",
+			"with"						: "mit"
 		},
 		
 		"ChatMessage" : {
@@ -628,7 +629,56 @@
 					"never"				: "niemals",
 					"always"			: "immer",
 					"failure"			: "aktiv",
-					"critfailure"		: "passiv",
+					"critfailure"		: "passiv"
+				}
+			}
+		},
+		
+		"monks-active-tiles" : {
+			"filters" : {
+				"name"						: "Filter",
+				
+				"filter-spotted-by" : {
+					"name"					: "Filter Objekte aufgedeckt von",
+					"settings" : {
+						"spotters" : {
+							"name" 			: "Aufdecker"
+						},
+						"filterCondition" : {
+							"name"			: "Filtere wenn",
+							"options" : {
+								"spotted"	: "wurde aufgedeckt",
+								"notspotted": "wurde nicht aufgedeckt"
+							}
+						}
+					}
+				},
+				
+				"filter-has-spotted" : {
+					"name"					: "Filter Figuren welche aufgedeckt haben",
+					"settings" : {
+						"spotted" : {
+							"name" 			: "Aufgedeckt"
+						},
+						"filterCondition" : {
+							"name"			: "Filtere wenn",
+							"options" : {
+								"spotted"	: "hat aufgedeckt",
+								"notspotted": "hat nicht aufgedeckt"
+							}
+						}
+					}
+				}
+			},
+			
+			"actions" : {
+				"spot-object" : {
+					"name"					: "Entdecke Objekt",
+					"settings" : {
+						"target" : {
+							"name"			: "Ziel"
+						}
+					}
 				}
 			}
 		}

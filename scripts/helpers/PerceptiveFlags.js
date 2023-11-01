@@ -219,9 +219,9 @@ class PerceptiveFlags {
 	
 	static PerceptiveName(pToken) {} //returns name of pToken, either token name or Tile rideable name
 	
-	static getPerceptionAEBonus(pToken, pObjectType, pPerceptionType) {} //returns pTokens bonus to spot a pObjectType[Wall,Token,Tile] with pPerceptionType[passive, active ("" will fall back to this), other skills]
+	static getPerceptionAEBonus(pToken, pObjectType, pCheckType) {} //returns pTokens bonus to spot a pObjectType[Wall,Token,Tile] with pCheckType[passive, active ("" will fall back to this), other skills]
 	
-	static getPerceptionAEBehaviour(pToken, pObjectType, pPerceptionType) {} //returns pTokens roll behaviour to spot a pObjectType[Wall,Token,Tile] with pPerceptionType[active ("" will fall back to this), other skills]
+	static getPerceptionAEBehaviour(pToken, pObjectType, pCheckType) {} //returns pTokens roll behaviour to spot a pObjectType[Wall,Token,Tile] with pCheckType[active ("" will fall back to this), other skills]
 		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -1413,14 +1413,14 @@ class PerceptiveFlags {
 		return "";		
 	}
 	
-	static getPerceptionAEBonus(pToken, pObjectType, pPerceptionType) {
-		let vType = pPerceptionType;
+	static getPerceptionAEBonus(pToken, pObjectType, pCheckType) {
+		let vType = pCheckType;
 		
 		if (vType == "") {
 			vType = "active";
 		}
 		
-		let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.perceptionMOD?; //AE effects source
+		let vModifier = pToken.actor?.flags?.perceptive?.Modifiers?.perception?.MOD; //AE effects source
 		
 		if (vModifier) {
 			vModifier = vModifier[pObjectType];
@@ -1429,9 +1429,6 @@ class PerceptiveFlags {
 				vModifier = vModifier[vType];
 				
 				if (vModifier) {
-					console.log(pObjectType, pPerceptionType);
-					console.log(vModifier);
-					
 					return vModifier;
 				}
 			}
@@ -1440,26 +1437,23 @@ class PerceptiveFlags {
 		return 0; //if anything fails
 	}
 	
-	static getPerceptionAEBehaviour(pToken, pObjectType, pPerceptionType) {
-		let vType = pPerceptionType;
+	static getPerceptionAEBehaviour(pToken, pObjectType, pCheckType) {
+		let vType = pCheckType;
 		
 		if (vType == "") {
 			vType = "active";
 		}
 		
-		let vModifier = pObject.actor?.flags?.perceptive?.Modifiers?.perceptionBEH?; //AE effects source
+		let vBehaviour = pToken.actor?.flags?.perceptive?.Modifiers?.perception?.BEH; //AE effects source
 		
-		if (vModifier) {
-			vModifier = vModifier[pObjectType];
+		if (vBehaviour) {
+			vBehaviour = vBehaviour[pObjectType];
 			
-			if (vModifier) {
-				vModifier = vModifier[vType];
+			if (vBehaviour) {
+				vBehaviour = vBehaviour[vType];
 				
-				if (vModifier) {
-					console.log(pObjectType, pPerceptionType);
-					console.log(vModifier);
-					
-					return vModifier;
+				if (vBehaviour) {
+					return vBehaviour;
 				}
 			}
 		}
