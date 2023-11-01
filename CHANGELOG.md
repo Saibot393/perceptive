@@ -1,3 +1,8 @@
+## v2.7.1
+- Fixed a few typos and ui bugs
+- No longer sprinkles tokens with fine particles
+- The perceptive stealthing "effect" is no longer considered experimental (i received no bug reports so...)
+
 ## v2.7.0
 - Added active effects modifiers:
   - The attribute key `flags.perceptive.Modifiers.perception.MOD.#ObjectType.#CheckType` can be used to add modifiers to certain checks
