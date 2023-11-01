@@ -110,7 +110,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Standard vision direction: to set in which direction vision cones are applied
 - Illumination  
   - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
-    - Can be modified using active effects with the syntax flags.perceptive.Modifiers.PDC.Illumination.{#LightLevel} (#LightLevel is 0 for dark, 1 for dim, and 2 for bright)
+    - Can be modified using active effects with the syntax `flags.perceptive.Modifiers.PDC.Illumination.{#LightLevel}` (#LightLevel is 0 for dark, 1 for dim, and 2 for bright)
   - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
   - Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
 
