@@ -135,6 +135,14 @@ The following informations will be displayed in the settings (if applicable):
    - Darkvision: Can see tokens in darkness as if they were in dim light and in dim light as if they were in bright light
    - Darkvision (total): Can se all tokens (even those in darkness) as if they were in bright light
   
+#### Active Effects (Actors)
+  - The attribute key `flags.perceptive.Modifiers.perception.MOD.#ObjectType.#CheckType` can be used to add modifiers to certain checks
+  - The attribute key `flags.perceptive.Modifiers.perception.BEH.#ObjectType.#CheckType` can be used to alter the roll behaviour for certain checks
+    -  advantage: +1, normal: 0, disadvantage: -1
+    -  This attribute is additive with other advantage/disadvantage sources (use e.g. +2 to force advantage)
+  -  Valid `#ObjectType` values: Wall,Token,Tile
+  -  Valid `#CheckType` values: active, passive(`MOD` only), all other skill abreviations as per the "Other active skill DCs" menu
+  
 #### Scene:
  - Bright illumination limit: to set the value below which the scene darkness is considered bright
  - Dim illumination limit: to set the value below which the scene darkness is considered dim
@@ -180,6 +188,10 @@ The module should be compatible with all game systems and most modules on Foundr
   - Adds additional Perceptive related trigger for spottable objects (adds a new triggers tab to spottable tokens)
   - Adds a textbox to enter the tile which should be triggered for spottable tokens
   - The following landings can be optionally used to differentiate between the different Perceptive trigger conditions: `PassiveSpot`, `ActiveSpot`
+  - Adds additional Actions & Filters:
+    - Action Spot object to spot specified objects
+    - Filter Filter objects spotted by to filter objects (not) spotted by specified tokens
+    - Filter Filter tokens having spotted to filter tokens (not) having spotted a specified token 
 
 ### Languages:
 
