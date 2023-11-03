@@ -594,8 +594,12 @@ class PerceptiveSheetSettings {
 			vNeededWidth = vNeededWidth + $(this).outerWidth() ;
 		});
 		
-		if (vNeededWidth > pHTML.width()) {
-			pHTML.width(vNeededWidth);
+		let vWindow = pHTML.find(pIndentifier).closest(`div.app.window-app`);
+		
+		if (vNeededWidth > vWindow.width()) {
+			vWindow.width(vNeededWidth);
+			
+			vWindow.find(`form`).removeAttr(`style`);
 		}		
 	}
 }
