@@ -1,3 +1,7 @@
+## v2.7.2
+- Small tile settings ui fix
+- Fixed MATT action Spot object ui
+
 ## v2.7.1
 - Fixed a few typos and ui bugs
 - No longer sprinkles tokens with fine particles
