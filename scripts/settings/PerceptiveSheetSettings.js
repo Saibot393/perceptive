@@ -265,7 +265,7 @@ class PerceptiveSheetSettings {
 			}			
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML);
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, `nav.sheet-tabs[data-group="main"]`);
 	}
 	
 	static async TileSheetSettings(pApp, pHTML, pData) {
@@ -307,7 +307,7 @@ class PerceptiveSheetSettings {
 			}
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML);
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, `nav.sheet-tabs[aria-role="Form Tab Navigation"]`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -587,10 +587,10 @@ class PerceptiveSheetSettings {
 		}		
 	}
 	
-	static FixSheetWindow(pHTML) {
+	static FixSheetWindow(pHTML, pIndentifier) {
 		let vNeededWidth = 0;
 
-		pHTML.find(`nav.sheet-tabs[data-group="main"]`).children().each(function() {
+		pHTML.find(pIndentifier).children().each(function() {
 			vNeededWidth = vNeededWidth + $(this).outerWidth() ;
 		});
 		
