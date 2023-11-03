@@ -674,6 +674,7 @@
 			"actions" : {
 				"spot-object" : {
 					"name"					: "Spot object",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> with <span class=\"entity-style\">{pEntities}</span>",
 					"settings" : {
 						"target" : {
 							"name"			: "Target"

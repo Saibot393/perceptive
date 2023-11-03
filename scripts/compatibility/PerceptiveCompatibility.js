@@ -1,5 +1,5 @@
 import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted } from "./PerceptiveCompUtils.js";
-import {cModuleName, Translate} from "../utils/PerceptiveUtils.js";
+import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {IgnoreWall} from "./APIHandler.js";
@@ -262,7 +262,9 @@ Hooks.once("setupTileActions", (pMATT) => {
 				},
 				content: async (trigger, action) => {
 					let entityName = await pMATT.entityName(action.data?.entity);
-					return `<span class="logic-style">${Translate(trigger.name, false)}</span> ${Translate(Titles.with, false)} <span class="entity-style">${entityName}</span>`;
+					let vTargets = await pMATT.entityName(action.data?.targets);
+					
+					return TranslateandReplace(cMATT + ".actions." + "spot-object" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName, pTargets : vTargets});
 				}
 			});
 			
