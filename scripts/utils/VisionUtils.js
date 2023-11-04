@@ -36,7 +36,7 @@ class VisionUtils {
 	
 	static spotableTilesinVision(pToken) {} //returns an array of tiles that are spotable and within the vision of pToken
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined, pInfos = undefined) {} //checks if pPosition is in pRange or pConeRange of one of pSpotters 
 	
 	static async PassivPerception(pToken) {} //returns the passive perception of pToken
 	
@@ -62,7 +62,9 @@ class VisionUtils {
 	
 	static LightingAPDCBehaviour(pLightLevel, pVisionLevel = 0) {} //returns the APDC behaviour for pLightLevel (-1:disadvantage, 0:normal, 1:advantage)
 	
-	static LightingAPDCBehaviourObject(pToken, pVisionLevel = 0) {} //returns APDC behaviour of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)	
+	static LightingAPDCBehaviourToken(pToken, pVisionLevel = 0) {} //returns APDC behaviour of pToken when viewed with pVisionLevel(Normalsight = 0, Low-Light Vision = 1, Darkvision = 2)	
+	
+	static RangeDCModifier(pRangeInfo, pRangeInterval, pRangeDC) {} //return the range dependetn DC modifier (per complete pRangeInterval increase by pRangeDC)
 	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true, Tiles : true}) {
@@ -191,8 +193,8 @@ class VisionUtils {
 		return vTilesinRange.map(vTile => vTile.document);		
 	}
 	
-	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined) {
-		if (pRange >= Infinity) {
+	static inVisionRange(pSpotters, pPosition, pRange, pConeRange, pConeRotation = 0, pTolerance = undefined, pInfos = undefined) {
+		if (pRange >= Infinity && !pInfos) {
 			return true;
 		}
 		
@@ -207,12 +209,18 @@ class VisionUtils {
 												
 												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
 												
-												if((vDistance - vTotalTolerance) <= pRange) {
+												let vCalculatedDistance = vDistance - vTotalTolerance;
+												
+												if (pInfos) {
+													pInfos.VisionDistance = vCalculatedDistance;
+												}
+												
+												if((vCalculatedDistance) <= pRange) {
 													//is in burst
 													return true;
 												}
 												
-												if ((vDistance - vTotalTolerance) <= pConeRange) {
+												if ((vCalculatedDistance) <= pConeRange) {
 													//is in cone range, check angle
 													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - (vSpotter.rotation + pConeRotation)%360;
 													
@@ -456,6 +464,14 @@ class VisionUtils {
 	static LightingAPDCBehaviourToken(pToken, pVisionLevel = 0) {
 		return VisionUtils.LightingAPDCBehaviour(VisionUtils.correctedLightLevel(VisionUtils.LightingLevel(pToken, pToken.parent), pVisionLevel));
 	}	
+	
+	static RangeDCModifier(pRangeInfo, pRangeInterval, pRangeDC) {
+		if (pRangeInterval > 0 && pRangeDC != 0 && pRangeInfo.VisionDistance) {
+			return Math.floor(pRangeInfo.VisionDistance/pRangeInterval) * pRangeDC;
+		}
+		
+		return 0;
+	}
 }
 
 export { VisionUtils }

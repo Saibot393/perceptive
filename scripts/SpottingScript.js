@@ -29,7 +29,9 @@ var vLocalVisionData = {
 	vCritType : 0,
 	vPf2eRules : false,
 	vUseRangeTollerance : false,
-	vPPModifiers : {}
+	vPPModifiers : {},
+	vRangeDCInterval : 0,
+	vRangeDCModifier : 0
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -109,32 +111,47 @@ class SpottingManager {
 	static async initializeVisionSources(pData) {} //called when new vision sources are initialized
 	
 	//support
-	static inCurrentVisionRange(pSpotters, pObject, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {} //returns if pObject is in vision range of one of pSpotters
+	static inCurrentVisionRange(pSpotters, pObject, pSettings = {RangeReplacement : undefined, Tolerance : undefined}, pInfos = undefined) {} //returns if pObject is in vision range of one of pSpotters
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 
-		if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall)) {
-			// Hide secret doors from players
-			let vWallObject = pDoorControl.wall;
-
-			if (vWallObject) {
-				const w = vWallObject;
-				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
-				let vTolerance;
+		let vWallObject = pDoorControl.wall;
+		
+		if (vWallObject) {
+			if (!PerceptiveFlags.canbeSpotted(vWallObject.document)) return false;
 			
+			let vTolerance;
+			let vCustomRange;
+		
+			if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 				if (vLocalVisionData.vUseRangeTollerance) {
 					vTolerance = {PointTolerance : 0};
 				}
-				
-				let vCustomRange;
-				
+								
 				if (PerceptiveFlags.HasSpottingRange(vWallObject.document)) {
 					vCustomRange = {Range : PerceptiveFlags.SpottingRange(vWallObject.document)};
+				}		
+			}
+			
+			let vRangeInfo = {};
+			
+			if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+				//performance reason (vLocalVisionData.vRangeDCModifier)
+				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
+					return false;
 				}
+			}
+			
+			let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
+			
+			if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall, vRangeDCModifier)) {
+				// Hide secret doors from players
+				const w = vWallObject;
+				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
 				
-				if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+				if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 					return false;
 				}
 
@@ -165,25 +182,39 @@ class SpottingManager {
 		// Some tokens are always visible
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
+		//or invisible
+		if (!PerceptiveFlags.canbeSpotted(pToken.document)) return false;
 
 		pInfos.CritMode = vLocalVisionData.vCritType;
 		pInfos.Pf2eRules = vLocalVisionData.vPf2eRules && cPf2eAPDCautomationTypes.includes(pToken.actor?.type);
 		
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, pInfos) ) {
-			// Otherwise, test visibility against current sight polygons
-			let vTolerance;
-			
+		let vTolerance;
+		let vCustomRange;
+		
+		if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 			if (vLocalVisionData.vUseRangeTollerance) {
 				vTolerance = {PointTolerance : Math.max(pToken.width, pToken.height)/2};
 			}
-			
-			let vCustomRange;
-				
+							
 			if (PerceptiveFlags.HasSpottingRange(pToken.document)) {
 				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pToken.document)};
+			}		
+		}
+		
+		let vRangeInfo = {};
+		
+		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+			//performance reason (vLocalVisionData.vRangeDCModifier)
+			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
+				return false;
 			}
-			
-			if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+		}
+		
+		let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
+		
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, vRangeDCModifier, pInfos) ) {
+			// Otherwise, test visibility against current sight polygons
+			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -199,10 +230,12 @@ class SpottingManager {
 	static TileSpottingVisible(pTile) {
 		if ( !canvas.effects.visibility.tokenVision ) return true;
 		
-		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile) ) {
-			// Otherwise, test visibility against current sight polygons
-			let vTolerance;
-			
+		if (!PerceptiveFlags.canbeSpotted(pTile.document)) return false;
+		
+		let vTolerance;
+		let vCustomRange;
+		
+		if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 			if (vLocalVisionData.vUseRangeTollerance) {
 				if (pTile.mesh) {
 					vTolerance = {PointTolerance : Math.max(pTile.mesh.width, pTile.mesh.height)/2};
@@ -211,14 +244,27 @@ class SpottingManager {
 					vTolerance = {PointTolerance : Math.max(pTile.width, pTile.height)/2};
 				}
 			}
-			
-			let vCustomRange;
-				
+							
 			if (PerceptiveFlags.HasSpottingRange(pTile.document)) {
 				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pTile.document)};
+			}			
+		}
+		
+		let vRangeInfo = {};
+		
+		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+			//performance reason (vLocalVisionData.vRangeDCModifier)
+			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
+				return false;
 			}
+		}
+		
+		let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
+		
+		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile, vRangeDCModifier) ) {
+			// Otherwise, test visibility against current sight polygons
 			
-			if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -228,7 +274,7 @@ class SpottingManager {
 				tolerance = Math.min(pTile.mesh.width, pTile.mesh.height) / 4;
 			}
 			else {
-				tolerance = Math.min(vTiles[i].width, vTiles[i].height) / 4;
+				tolerance = Math.min(pTile.width, pTile.height) / 4;
 			}
 			
 			return VisionUtils.simpletestVisibility(pTile.center, {tolerance, object: pTile});
@@ -318,6 +364,17 @@ class SpottingManager {
 			vLocalVisionData.vPassiveRange = vInCombatRange || vOutCombatRange || ["always", "passiveonly"].includes(game.settings.get(cModuleName, "ApplyRange"));
 			
 			vLocalVisionData.vUseRangeTollerance = game.settings.get(cModuleName, "UseBordertoBorderRange");
+			
+			vLocalVisionData.vRangeDCModifier = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[0]);
+			vLocalVisionData.vRangeDCInterval = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[1])*(canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+			
+			if (isNaN(vLocalVisionData.vRangeDCModifier)) {
+				vLocalVisionData.vRangeDCModifier = 0;
+			}
+			
+			if (isNaN(vLocalVisionData.vRangeDCInterval)) {
+				vLocalVisionData.vRangeDCInterval = 0;
+			}			
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
@@ -404,7 +461,15 @@ class SpottingManager {
 					console.log("perceptive: Range Check AP:", vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vLocalVisionData);
 				}
 		
-				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance})) {		
+				let vRangeInfo = {};
+				
+				let vInRange = false;
+				
+				if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vActiveRange || pInfos.Ranges) {
+					vInRange = SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vRangeInfo);
+				}
+				
+				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || vInRange) {		
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
@@ -422,7 +487,7 @@ class SpottingManager {
 						vResultBuffer = pResults[0]
 					}
 					
-					vADC = PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill);
+					vADC = PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill) + VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
 					
 					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
 						//only continue with objects spottable with this attribute unless it is a perception roll
@@ -1320,7 +1385,7 @@ class SpottingManager {
 	}
 	
 	//support
-	static inCurrentVisionRange(pSpotters, pPosition, pSettings = {RangeReplacement : undefined, Tolerance : undefined}) {
+	static inCurrentVisionRange(pSpotters, pPosition, pSettings = {RangeReplacement : undefined, Tolerance : undefined}, pInfos = undefined) {
 		let vRange = {Range : vLocalVisionData.vSpottingRange, ConeRange : vLocalVisionData.vSpottingConeRange, ConeRotation : vLocalVisionData.vSpottingConeRotation};
 		
 		if (pSettings.RangeReplacement) {
@@ -1337,7 +1402,7 @@ class SpottingManager {
 			}
 		}
 		
-		let vinRange =  VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, vRange.ConeRotation, pSettings.Tolerance);
+		let vinRange =  VisionUtils.inVisionRange(pSpotters, pPosition, vRange.Range, vRange.ConeRange, vRange.ConeRotation, pSettings.Tolerance, pInfos);
 		
 		return vinRange;
 	}

@@ -148,7 +148,7 @@ class PerceptiveFlags {
 	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
@@ -1142,7 +1142,7 @@ class PerceptiveFlags {
 		this.#setcanbeSpotted(pObject, true);
 	}
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {
 		if (pInfos.Pf2eRules) {
 			//only Pf2e
 			if (PerceptiveFlags.canbeSpotted(pObject)) {
@@ -1150,7 +1150,7 @@ class PerceptiveFlags {
 				
 				
 				if (PerceptiveFlags.canbeSpotted(pObject)) {
-					vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel), PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
+					vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier, PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
 					
 					if (vSuccessDegree > 0 && PerceptiveFlags.isSpottedbyone(pObject, pTokens)) {
 						return true;
@@ -1165,7 +1165,7 @@ class PerceptiveFlags {
 			return false;
 		}
 		
-		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
+		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {

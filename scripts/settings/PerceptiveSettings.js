@@ -522,7 +522,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 			270: Translate("Settings.StandardVisionDirection.options.right")
 		},
 		default: 0
-	  });	  
+	  });	
+
+	  game.settings.register(cModuleName, "RangePDCModifier", {
+		name: Translate("Settings.RangePDCModifier.name"),
+		hint: Translate("Settings.RangePDCModifier.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		default: "0/0"
+	  }); 	  
   
 	//illumination
 	  game.settings.register(cModuleName, "IlluminationPDCModifier", {
