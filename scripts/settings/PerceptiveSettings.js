@@ -696,6 +696,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "WhisperLingeringAPremoval", {
+	name: Translate("Settings.WhisperLingeringAPremoval.name"),
+	hint: Translate("Settings.WhisperLingeringAPremoval.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   game.settings.register(cModuleName, "SpottedTokenTransparency", {
 	name: Translate("Settings.SpottedTokenTransparency.name"),
 	hint: Translate("Settings.SpottedTokenTransparency.descrp"),

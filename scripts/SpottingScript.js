@@ -126,7 +126,13 @@ class SpottingManager {
 					vTolerance = {PointTolerance : 0};
 				}
 				
-				if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance})) {
+				let vCustomRange;
+				
+				if (PerceptiveFlags.HasSpottingRange(vWallObject.document)) {
+					vCustomRange = {Range : PerceptiveFlags.SpottingRange(vWallObject.document)};
+				}
+				
+				if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 					return false;
 				}
 
@@ -169,7 +175,13 @@ class SpottingManager {
 				vTolerance = {PointTolerance : Math.max(pToken.width, pToken.height)/2};
 			}
 			
-			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance})) {
+			let vCustomRange;
+				
+			if (PerceptiveFlags.HasSpottingRange(pToken.document)) {
+				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pToken.document)};
+			}
+			
+			if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -198,7 +210,13 @@ class SpottingManager {
 				}
 			}
 			
-			if (vLocalVisionData.vPassiveRange && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance})) {
+			let vCustomRange;
+				
+			if (PerceptiveFlags.HasSpottingRange(pTile.document)) {
+				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pTile.document)};
+			}
+			
+			if ((vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -371,6 +389,14 @@ class SpottingManager {
 							vTolerance = {PointTolerance : 0};
 					}
 				}
+				
+				if (PerceptiveFlags.HasSpottingRange(vSpotables[i])) {
+					if(!pInfos.Ranges) {
+						pInfos.Ranges = {};
+					}
+					
+					pInfos.Ranges.Range = PerceptiveFlags.SpottingRange(vSpotables[i]);
+				}
 						
 				if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
 					console.log("perceptive: Range Check AP:", vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vLocalVisionData);
@@ -419,7 +445,12 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges, SourceRollBehaviour : pInfos.SourceRollBehaviour, Skill : pInfos.Skill, RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y}, UserSource : game.user.id});
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges,
+																				SourceRollBehaviour : pInfos.SourceRollBehaviour,
+																				Skill : pInfos.Skill,
+																				RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y},
+																				UserSource : game.user.id,
+																				WhisperonRemoval : game.settings.get(cModuleName, "WhisperLingeringAPremoval")});
 						
 						PerceptivePopups.TextPopUpID(pSpotters[i], "GainedLingeringAP") //MESSAGE POPUP
 						
@@ -455,6 +486,8 @@ class SpottingManager {
 	static RemoveLingeringAP(pTokens, pPopup = true) {
 		let vChatMessage = ``;
 		
+		let vInfos = pTokens.map(pToken => PerceptiveFlags.LingeringAPInfo(pToken));
+		
 		for (let i = 0; i <= pTokens.length; i++) {
 			if (PerceptiveFlags.hasLingeringAP(pTokens[i]) && pTokens[i].isOwner) {
 				PerceptiveFlags.resetLingeringAP(pTokens[i]);
@@ -464,23 +497,33 @@ class SpottingManager {
 				}
 				
 				//chat message
-				let vGMWhisperRemoval = game.settings.get(cModuleName, "GMReciveInformationWhisper");
+				vChatMessage = vChatMessage + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
 				
-				if (game.settings.get(cModuleName, "GMReciveInformationWhisper")) {
-					vChatMessage = vChatMessage + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
-					
-					vChatMessage = vChatMessage	+   `<img src="${pTokens[i].texture.src}" style = "height: 2em;">`;
-					
-					vChatMessage = vChatMessage + 	`<p>${TranslateandReplace("ChatMessage.LostLingeringAP", {pName : PerceptiveFlags.PerceptiveName(pTokens[i])})}</p>
-													</div>`;
-				}
+				vChatMessage = vChatMessage	+   `<img src="${pTokens[i].texture.src}" style = "height: 2em;">`;
+				
+				vChatMessage = vChatMessage + 	`<p>${TranslateandReplace("ChatMessage.LostLingeringAP", {pName : PerceptiveFlags.PerceptiveName(pTokens[i])})}</p>
+												</div>`;
 			}
 		}
 		
-		if (pTokens.length > 0 && game.settings.get(cModuleName, "GMReciveInformationWhisper")) {
+		if (pTokens.length > 0) {
+			let vRecipients = [];
+			
+			if (game.settings.get(cModuleName, "GMReciveInformationWhisper")) {
+				vRecipients = vRecipients.concat(PerceptiveUtils.GMUserIDs());
+			}
+			
+			for (let i = 0; i < vInfos.length; i++) {
+				if (vInfos[i].WhisperonRemoval) {
+					vRecipients.push(vInfos[i].UserSource);
+				}
+			}
+
+			console.log(vRecipients);			
+			
 			ChatMessage.create({user: game.user.id, 
-						content : vChatMessage,
-						whisper : PerceptiveUtils.GMUserIDs()});
+								content : vChatMessage,
+								whisper : vRecipients});
 		}
 	}
 	
@@ -968,6 +1011,9 @@ class SpottingManager {
 					}
 				}
 				else {
+					console.log(game.settings.get(cModuleName, "LingeringAPRadius"));
+					console.log(GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance));
+					console.log(vInfos.RollPosition);
 					if (game.settings.get(cModuleName, "LingeringAPRadius") > 0 && vInfos.RollPosition && (GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance)) > game.settings.get(cModuleName, "LingeringAPRadius")) {
 						if (game.user.isGM) {
 							SpottingManager.RemoveLingeringAP([pToken]);

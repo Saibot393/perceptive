@@ -54,11 +54,12 @@ const cLingeringAPF = "LingeringAPFlag"; //FLag to store lingering AP
 const cLingeringAPInfoF = "LingeringAPInfoFlag"; //Flag to store LingeringAPInfo
 const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DCs for spotting
 const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of the perceptive tile
+const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this object can be seen
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -222,6 +223,10 @@ class PerceptiveFlags {
 	static getPerceptionAEBonus(pToken, pObjectType, pCheckType) {} //returns pTokens bonus to spot a pObjectType[Wall,Token,Tile] with pCheckType[passive, active ("" will fall back to this), other skills]
 	
 	static getPerceptionAEBehaviour(pToken, pObjectType, pCheckType) {} //returns pTokens roll behaviour to spot a pObjectType[Wall,Token,Tile] with pCheckType[active ("" will fall back to this), other skills]
+	
+	static HasSpottingRange(pObject) {} //returns if pObject has a spotting range
+	
+	static SpottingRange(pObject) {} //returns the spotting range of pObject
 		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -685,6 +690,19 @@ class PerceptiveFlags {
 		
 		return Translate("Titles.Tile"); //default if anything fails
 	} 
+	
+	static #SpottingRangeFlag (pObject) {
+	//returns content of SpottingRangeFlag of pToken (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cSpottingRangeF)) {
+				return vFlag.SpottingRangeFlag;
+			}
+		}
+		
+		return -1; //default if anything fails		
+	}
 	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
@@ -1459,6 +1477,14 @@ class PerceptiveFlags {
 		}
 
 		return 0; //if anything fails		
+	}
+	
+	static HasSpottingRange(pObject) {
+		return (this.#SpottingRangeFlag(pObject) != null) && (this.#SpottingRangeFlag(pObject) >= 0);
+	}
+	
+	static SpottingRange(pObject) {
+		return this.#SpottingRangeFlag(pObject);
 	}
 	
 	//effects
