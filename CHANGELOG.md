@@ -1,3 +1,11 @@
+## v2.8.0
+- Added world setting Range perception DC modifier to set a spotting DC modifer per range increment (DCIncrement/RangeIncrement)
+- Added world setting Spotted Sound for a sound to be played, should a controlled  token be spotted
+- Added client setting Notify on lingering AP removal to notify the user when a lingering active perception is removed from an owned token
+- The lingering active perception will now be removed at the start of cambat should Active perception lingers be set to out of combat
+- Added object setting Spotting Range to set a specific range in which this object can be spotted
+- Improved spottables visibility on innitial render
+
 ## v2.7.3
 - Fixed MATT ui bug
 
