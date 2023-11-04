@@ -80,6 +80,8 @@ class SpottingManager {
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
 	
+	static oncreateCombatant(pCombatant, pInfos, pUserID) {} //called when a combatant is created 
+	
 	static onTokenpreupdate(pToken, pchanges, pInfos) {}//called pre update token
 
 	static async onChatMessage(pMessage, pInfos, pSenderID) {} //called when a chat message is send
@@ -517,9 +519,7 @@ class SpottingManager {
 				if (vInfos[i].WhisperonRemoval) {
 					vRecipients.push(vInfos[i].UserSource);
 				}
-			}
-
-			console.log(vRecipients);			
+			}			
 			
 			ChatMessage.create({user: game.user.id, 
 								content : vChatMessage,
@@ -928,6 +928,7 @@ class SpottingManager {
 
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {
+		
 		if (pToken.isOwner && pToken.parent == canvas.scene) {
 			VisionUtils.PrepareSpotables();
 
@@ -996,9 +997,10 @@ class SpottingManager {
 			}
 		}
 		
-		if (vmovementChange && (pToken.object?.controlled || game.user.isGM)){
+		
+		if (PerceptiveFlags.hasLingeringAP(pToken)) {
 			//lingering APDC
-			if (PerceptiveFlags.hasLingeringAP(pToken)) {
+			if (vmovementChange && (pToken.object?.controlled || game.user.isGM)){
 				let vInfos = PerceptiveFlags.LingeringAPInfo(pToken);
 				
 				if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
@@ -1011,9 +1013,6 @@ class SpottingManager {
 					}
 				}
 				else {
-					console.log(game.settings.get(cModuleName, "LingeringAPRadius"));
-					console.log(GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance));
-					console.log(vInfos.RollPosition);
 					if (game.settings.get(cModuleName, "LingeringAPRadius") > 0 && vInfos.RollPosition && (GeometricUtils.DistanceXY(vInfos.RollPosition, pToken)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance)) > game.settings.get(cModuleName, "LingeringAPRadius")) {
 						if (game.user.isGM) {
 							SpottingManager.RemoveLingeringAP([pToken]);
@@ -1024,7 +1023,7 @@ class SpottingManager {
 							vInfos.isLingeringAP = true;
 							
 							SpottingManager.CheckAPerception([pToken], PerceptiveFlags.LingeringAP(pToken), vInfos);
-					    }
+						}
 					}
 				}
 			}
@@ -1038,6 +1037,18 @@ class SpottingManager {
 			
 			for (let i = 0; i < vControlledTokens.length; i++) {
 				vControlledTokens[i].object.updateVisionSource();
+			}
+		}
+	}
+	
+	static oncreateCombatant(pCombatant, pInfos, pUserID) {
+		if (game.user.isGM) {
+			let vToken = game.scenes.get(pCombatant.sceneId)?.tokens.get(pCombatant.tokenId);
+			
+			if (vToken) {
+				if (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly") {
+					SpottingManager.RemoveLingeringAP([vToken]);
+				}
 			}
 		}
 	}
@@ -1441,6 +1452,8 @@ Hooks.once("ready", function() {
 		}
 
 		Hooks.on("updateToken", (...args) => {SpottingManager.onTokenupdate(...args)});
+		
+		Hooks.on("createCombatant", (...args) => {SpottingManager.oncreateCombatant(...args)});
 		
 		Hooks.on("preUpdateToken", (...args) => {SpottingManager.onTokenpreupdate(...args)});
 
