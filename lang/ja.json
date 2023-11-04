@@ -44,6 +44,7 @@
 			"RollFormulas"				: "ロール & ロール式",
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
+			"Sound"						: "Sound",
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Reset \"spotted by\"",
@@ -214,6 +215,11 @@
 					"top"				: "上",
 					"right"				: "右"
 				}
+			},
+			
+			"RangePDCModifier" : {
+				"name"					: "Range perception DC modifier",
+				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
 			},
 			
 			"UsePf2eRules" : {
@@ -391,6 +397,11 @@
 				}
 			},
 			
+			"SpottedSound" : {
+				"name"					: "Spotted Sound",
+				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+			},	
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Perceptive の壁を表示 [DEBUG]",
 				"descrp" 				: "Perceptive壁が可視化されるかどうか(デバッグ用)"
@@ -444,6 +455,11 @@
 			"WhisperPerceptionResult" : {
 				"name" 					: "知覚の結果を表示",
 				"descrp" 				: "知覚判定の結果をチャットに投稿します"
+			},
+			
+			"WhisperLingeringAPremoval" : {
+				"name" 					: "Notify on lingering AP removal",
+				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -574,6 +590,11 @@
 			"APDCFlag" : {
 				"name" 					: "能動知覚難易度",
 				"descrp"				: "能動知覚により発見される難易度 (-1 で不可能、空白で受動知覚と共通にします)"
+			},
+			
+			"SpottingRangeFlag" : {
+				"name"					: "Spotting Range",
+				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
 			},
 			
 			"otherSkillADCsFlag" : {

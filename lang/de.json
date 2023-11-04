@@ -44,6 +44,7 @@
 			"RollFormulas"				: "Würfe & Formeln",
 			"Effects"					: "Effekte",
 			"Illumination"				: "Beleuchtung",
+			"Sound"						: "Geräusche",
 			"Tile"						: "Fliese",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Resette \"Aufgedeckt von\"",
@@ -214,6 +215,11 @@
 			"SpottingConeRange" : {
 				"name"					: "Aufdecken Kegel-Reichweite",
 				"descrp"				: "Eine zusätzliche Aufdeck Reichweite angewandt in einem 90° Kegel vor Figuren (0 um Leistung zu verbessern)"
+			},
+			
+			"RangePDCModifier" : {
+				"name"					: "Abstands basierte Wahrnehmungs SG veränderung",
+				"descrp"				: "Wahrnehmungs SG veränderung basiredn auf Distanz zu aufdeckbarem Objekt (SGInkrement/DistanzInkrement, 0/0 um es aus zu stellen)"
 			},
 			
 			"UsePf2eRules" : {
@@ -391,6 +397,11 @@
 				}
 			},
 			
+			"SpottedSound" : {
+				"name"					: "Aufgedeckt Geräusch",
+				"descrp"				: "Geräusch welches abgespielt wird, wenn eine kontrollierte Figur aufgedeckt wird (Pfad zur Datei)"
+			},	
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
 				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
@@ -444,6 +455,11 @@
 			"WhisperPerceptionResult" : {
 				"name" 					: "Zeihe Wahrnehmungs Resultat",
 				"descrp" 				: "Ob das Resultat von eigenen Wahrnehmungswürfen im Chat angezeigt werden soll"
+			},
+			
+			"WhisperLingeringAPremoval" : {
+				"name" 					: "Notify on lingering AP removal",
+				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -574,6 +590,11 @@
 			"APDCFlag" : {
 				"name" 					: "Aktive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			},
+			
+			"SpottingRangeFlag" : {
+				"name"					: "Aufdecken Reichweite",
+				"descrp"				: "Reichweite über welche dieses Objekt aufgedeckt werden kann (überschreibt Welt standard, -1 um auszustellen)"
 			},
 			
 			"otherSkillADCsFlag" : {

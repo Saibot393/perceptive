@@ -7,6 +7,7 @@ import {EffectManager } from "./helpers/EffectManager.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 import {cPf2eAPDCautomationTypes } from "./utils/PerceptiveSystemUtils.js";
 import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
+import {PerceptiveSound} from "./helpers/PerceptiveSound.js";
 
 const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
@@ -46,9 +47,9 @@ class SpottingManager {
 	
 	static TileSpottingVisible(pTile) {} //returns wether this pTile is visible through spotting
 	
-	static CheckTilesSpottingVisible(){} //rechecks the visibility of all spottable tiles in the canvas
+	static CheckTilesSpottingVisible(pIgnoreNewlyVisible = false){} //rechecks the visibility of all spottable tiles in the canvas
 
-	static async updateVisionValues() {} //retruns the passive perception value of pToken
+	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {} //retruns the passive perception value of pToken
 
 	static async CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {} //starts an active perception check
 	
@@ -284,7 +285,7 @@ class SpottingManager {
 		return false;		
 	}
 	
-	static CheckTilesSpottingVisible(){
+	static CheckTilesSpottingVisible(pIgnoreNewlyVisible = false){
 		let vTiles = canvas.tiles.placeables.map(vTile => vTile.document).filter(vTile => vTile.hidden && PerceptiveFlags.canbeSpotted(vTile));
 		
 		let vPrevVisible;
@@ -297,7 +298,7 @@ class SpottingManager {
 
 				vTiles[i].object.visible = SpottingManager.TileSpottingVisible(vTiles[i].object);
 				
-				if (vTiles[i].object.visible && !vPrevVisible) {
+				if (vTiles[i].object.visible && !vPrevVisible && !pIgnoreNewlyVisible) {
 					SpottingManager.onNewlyVisible([vTiles[i]], {PassivSpot : true});
 				}
 			}
@@ -307,7 +308,7 @@ class SpottingManager {
 		}
 	}
 
-	static async updateVisionValues() {
+	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
 		if (!game.user.isGM || game.settings.get(cModuleName, "SimulatePlayerVision")) {
 			let vTokens = PerceptiveUtils.selectedTokens();
 
@@ -390,7 +391,7 @@ class SpottingManager {
 			}
 		}
 		
-		SpottingManager.CheckTilesSpottingVisible();
+		SpottingManager.CheckTilesSpottingVisible(pIgnoreNewlyVisibleTiles);
 		
 		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
 			console.log("perceptive: New vision data:", vLocalVisionData);
@@ -1216,6 +1217,13 @@ class SpottingManager {
 			SpottingManager.RequestresetStealth(vUnstealthObjects, pInfos);
 		}
 		
+		//sound
+		console.log(pObjects);
+		console.log(pObjects.filter(vObject => vObject instanceof Token));
+		if (vPingIgnoreVisionCycles <= 0) {
+			PerceptiveSound.PlaySpottedSound(pObjects.filter(vObject => vObject.documentName == "Token"));
+		}
+		
 		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos, pSpotters);
 		
 		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
@@ -1345,43 +1353,57 @@ class SpottingManager {
 	static async initializeVisionSources(pData) {
 		VisionUtils.PrepareSpotables();
 
-		await SpottingManager.updateVisionValues();
+		vPingIgnoreVisionCycles = 1;
 		
-		/*
+		await SpottingManager.updateVisionValues(true);
+		
 		let vSpottables = VisionUtils.spotablesinVision();
 		
-		vSpottables = vSpottables.filter(vObject => PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue));
-		
-		if (vLocalVisionData.vPassiveRange) {
-			vSpottables = vSpottables.filter(vObject => {
-				let vTolerance;
-					
-				if (vLocalVisionData.vUseRangeTollerance) {
-					switch (vObject.documentName) {
-						case "Token":
+		console.log(vSpottables);
+		vSpottables = vSpottables.filter(vObject => {
+			let vTolerance;
+				
+			if (vLocalVisionData.vUseRangeTollerance) {
+				switch (vObject.documentName) {
+					case "Token":
+						vTolerance = {PointTolerance : Math.max(vObject.object.width, vObject.object.height)/2};
+						break;
+					case "Tile":
+						if (vObject.object.mesh) {
+							vTolerance = {PointTolerance : Math.max(vObject.object.mesh.width, vObject.object.mesh.height)/2};
+						}
+						else {
 							vTolerance = {PointTolerance : Math.max(vObject.object.width, vObject.object.height)/2};
-							break;
-						case "Tile":
-							if (vObject.object.mesh) {
-								vTolerance = {PointTolerance : Math.max(vObject.object.mesh.width, vObject.object.mesh.height)/2};
-							}
-							else {
-								vTolerance = {PointTolerance : Math.max(vObject.object.width, vObject.object.height)/2};
-							}
-						default:
-							vTolerance = {PointTolerance : 0};
-					}
+						}
+					default:
+						vTolerance = {PointTolerance : 0};
 				}
-		
-				return SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {RangeReplacement : undefined, Tolerance : vTolerance})
-			});
-		}
-		*/
-		
-		//if bug, search here
-		//VisionUtils.MaketempVisible(vSpottables);
+			}
+			
+			let vCustomRange;
+			
+			if (PerceptiveFlags.HasSpottingRange(vObject)) {
+				vCustomRange = {Range : PerceptiveFlags.SpottingRange(vObject)};
+			}	
+
+			let vRangeInfo = {};			
+			
+			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+				//performance reason (vLocalVisionData.vRangeDCModifier)
+				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
+					return false;
+				}
+			}
+			
+			let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
+			
+			return PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers[vObject.documentName], vRangeDCModifier);
+		});
 		
 		vPingIgnoreVisionCycles = 1;
+		
+		//if bug, search here
+		VisionUtils.MaketempVisible(vSpottables);
 	}
 	
 	//support

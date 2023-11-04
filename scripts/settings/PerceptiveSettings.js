@@ -570,6 +570,17 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 										}
 									 }
 	  }); 
+	  
+	//sounds
+	
+	  game.settings.register(cModuleName, "SpottedSound", {
+		name: Translate("Settings.SpottedSound.name"),
+		hint: Translate("Settings.SpottedSound.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		default: ""
+	  }); 	
   
   /*
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
@@ -901,11 +912,14 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.SpottingConeRange"],
 												[data-setting-id="perceptive.ApplyRange"],
 												[data-setting-id="perceptive.UseBordertoBorderRange"],
-												[data-setting-id="perceptive.StandardVisionDirection"]`);
+												[data-setting-id="perceptive.StandardVisionDirection"],
+												[data-setting-id="perceptive.RangePDCModifier"]`);
 		
 		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
 												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
+												
+		collapseContent(pHTML, "Sound", 	`[data-setting-id="perceptive.SpottedSound"]`);
 	}
 });  
 

@@ -44,6 +44,7 @@
 			"RollFormulas"				: "Rolls & Formulas",
 			"Effects"					: "Effects",
 			"Illumination"				: "Illumination",
+			"Sound"						: "Sound",
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Reset \"spotted by\"",
@@ -214,6 +215,11 @@
 			"SpottingConeRange" : {
 				"name"					: "Spotting cone range",
 				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
+			},
+			
+			"RangePDCModifier" : {
+				"name"					: "Range perception DC modifier",
+				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
 			},
 			
 			"UsePf2eRules" : {
@@ -391,6 +397,11 @@
 				}
 			},
 			
+			"SpottedSound" : {
+				"name"					: "Spotted Sound",
+				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+			},	
+			
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
@@ -444,6 +455,11 @@
 			"WhisperPerceptionResult" : {
 				"name" 					: "Show perception results",
 				"descrp" 				: "If the result of own perception rolls should be shown in the chat"
+			},
+			
+			"WhisperLingeringAPremoval" : {
+				"name" 					: "Notify on lingering AP removal",
+				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -574,6 +590,11 @@
 			"APDCFlag" : {
 				"name" 					: "主动察觉 DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 则为不可能, 留空则和被动一样数值)"
+			},
+			
+			"SpottingRangeFlag" : {
+				"name"					: "Spotting Range",
+				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
 			},
 			
 			"otherSkillADCsFlag" : {
