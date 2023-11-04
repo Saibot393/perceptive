@@ -108,16 +108,20 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Apply Ranges: to set when the set ranges should be applied
   - Border to border distance: to calculate the spotting distance based on token borders instead of the center
   - Standard vision direction: to set in which direction vision cones are applied
+  - Range perception DC modifier: to set a spotting DC modifer per range increment (DCIncrement/RangeIncrement)
 - Illumination  
   - Illumination perception DC modifiers: to add a perception DC modifier based on the light level of a token
     - Can be modified using active effects with the syntax `flags.perceptive.Modifiers.PDC.Illumination.{#LightLevel}` (#LightLevel is 0 for dark, 1 for dim, and 2 for bright)
   - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
   - Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
+- Sound
+  - Spotted Sound for a sound: to be played, should a controlled token be spotted 
 
 #### Walls/Tokens/Tiles:
 - Can be spotted: to activate the spotting feature on this wall
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
+- Spotting Range: to set a specific range in which this object can be spotted
 - Other active skill DCs: to set the active spotting DCs when using skills other then perception (currently only works with D&D5e, Pf2e, and Pf1e)
 - Reset "spotted by": to reset by whom this object has already be actively spotted by
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
@@ -153,6 +157,7 @@ The following informations will be displayed in the settings (if applicable):
 - Position of active perception indicator: to set the position of the indicator for the lingering active perception
 - Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
 - Show perception results: to show the result of own perception rolls in the chat
+- Notify on lingering AP removal: to notify the user when a lingering active perception is removed from an owned token
 - Stealthed token transparency: to change the transparency of spotted tokens
 
 ### Issues:
