@@ -1,3 +1,6 @@
+## v2.7.3
+- Fixed MATT ui bug
+
 ## v2.7.2
 - Small tile settings ui fix
 - Fixed MATT action Spot object ui
