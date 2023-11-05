@@ -1,3 +1,6 @@
+## v2.8.1
+- Fixed ui bug caused by minimizing the object settings window
+
 ## v2.8.0
 - Added world setting Range perception DC modifier to set a spotting DC modifer per range increment (DCIncrement/RangeIncrement)
 - Added world setting Spotted Sound for a sound to be played, should a controlled  token be spotted
