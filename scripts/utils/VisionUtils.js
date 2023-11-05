@@ -391,13 +391,17 @@ class VisionUtils {
 					vLightningLevel = cLightLevel.Dim;
 				}
 				
-				let vrelevantLightSources = vScene.lights.filter(vDocument => vDocument._object?.source.shape?.contains(pPoint.x, pPoint.y));
+				let vrelevantLightSources = vScene.lights.map(vLight => vLight._object?.source);
+				
+				vrelevantLightSources = vrelevantLightSources.concat(vScene.tokens.filter(vToken => vToken.object?.light?.active).map(vToken => vToken.object.light));
+				
+				vrelevantLightSources = vrelevantLightSources.filter(vLight => vLight?.shape?.contains(pPoint.x, pPoint.y));
 				
 				if (vrelevantLightSources.length > 0) {
 					//at least Dim
 					vLightningLevel = cLightLevel.Dim;
 					
-					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument)/(canvas.scene.dimensions.size)*(canvas.scene.dimensions.distance) < vDocument.config.bright)) {
+					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument) < vDocument.data.bright)) {
 						//is Bright
 						vLightningLevel = cLightLevel.Bright;
 					}
