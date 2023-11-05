@@ -1,3 +1,6 @@
+## v2.8.2
+- Illumination calculations now correctly consider token lights
+
 ## v2.8.1
 - Fixed ui bug caused by minimizing the object settings window
 
