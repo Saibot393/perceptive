@@ -1218,8 +1218,6 @@ class SpottingManager {
 		}
 		
 		//sound
-		console.log(pObjects);
-		console.log(pObjects.filter(vObject => vObject instanceof Token));
 		if (vPingIgnoreVisionCycles <= 0) {
 			PerceptiveSound.PlaySpottedSound(pObjects.filter(vObject => vObject.documentName == "Token"));
 		}
@@ -1359,7 +1357,8 @@ class SpottingManager {
 		
 		let vSpottables = VisionUtils.spotablesinVision();
 		
-		console.log(vSpottables);
+		//let vPrevVisible = vSpottables.map(vDocument => vDocument.object.visible);
+		
 		vSpottables = vSpottables.filter(vObject => {
 			let vTolerance;
 				
@@ -1403,7 +1402,7 @@ class SpottingManager {
 		vPingIgnoreVisionCycles = 1;
 		
 		//if bug, search here
-		VisionUtils.MaketempVisible(vSpottables);
+		SpottingManager.onNewlyVisible(vSpottables, {PassivSpot : true});
 	}
 	
 	//support
