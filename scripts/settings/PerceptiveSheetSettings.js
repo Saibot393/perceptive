@@ -31,7 +31,7 @@ class PerceptiveSheetSettings {
 	
 	static createHTMLOption(pInfos, pto, pwithformgroup = false) {} //creates new html "code"
 	
-	static FixSheetWindow(pHTML) {} //fixes the formating of pHTML sheet window
+	static FixSheetWindow(pHTML, pApp, pIndentifier) {} //fixes the formating of pHTML sheet window
 	
 	//IMPLEMENTATIONS
 	
@@ -265,7 +265,7 @@ class PerceptiveSheetSettings {
 			}			
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, `nav.sheet-tabs[data-group="main"]`);
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs[data-group="main"]`);
 	}
 	
 	static async TileSheetSettings(pApp, pHTML, pData) {
@@ -307,7 +307,8 @@ class PerceptiveSheetSettings {
 			}
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, `nav.sheet-tabs[aria-role="Form Tab Navigation"]`);
+		
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs[aria-role="Form Tab Navigation"]`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -595,19 +596,21 @@ class PerceptiveSheetSettings {
 		}		
 	}
 	
-	static FixSheetWindow(pHTML, pIndentifier) {
+	static FixSheetWindow(pHTML, pApp, pIndentifier) {
 		let vNeededWidth = 0;
-
+		
 		pHTML.find(pIndentifier).children().each(function() {
-			vNeededWidth = vNeededWidth + $(this).outerWidth() ;
+			vNeededWidth = vNeededWidth + $(this).outerWidth();
 		});
 		
 		let vWindow = pHTML.find(pIndentifier).closest(`div.app.window-app`);
 		
-		if (vNeededWidth > vWindow.width()) {
-			vWindow.width(vNeededWidth);
+		if (vNeededWidth > pApp.options.width/*vWindow.width()*/) {
+			//vWindow.width(vNeededWidth);
 			
-			vWindow.find(`form`).removeAttr(`style`);
+			//vWindow.find(`form`).removeAttr(`style`);
+			
+			pApp.setPosition({"width" : vNeededWidth});
 		}		
 	}
 }
