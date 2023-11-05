@@ -1,6 +1,3 @@
-## v2.8.1
-- Improvement for innitial spottables render
-
 ## v2.8.0
 - Added world setting Range perception DC modifier to set a spotting DC modifer per range increment (DCIncrement/RangeIncrement)
 - Added world setting Spotted Sound for a sound to be played, should a controlled  token be spotted
