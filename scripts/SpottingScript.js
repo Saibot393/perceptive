@@ -1402,7 +1402,8 @@ class SpottingManager {
 		vPingIgnoreVisionCycles = 1;
 		
 		//if bug, search here
-		SpottingManager.onNewlyVisible(vSpottables, {PassivSpot : true});
+		//SpottingManager.onNewlyVisible(vSpottables, {PassivSpot : true});
+		VisionUtils.MaketempVisible(vSpottables);
 	}
 	
 	//support
