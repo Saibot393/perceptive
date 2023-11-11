@@ -1,3 +1,7 @@
+## v2.8.3
+- Fixed bug that sometimes cuased empty messages to be displayed when character with lingering active perception entered combat
+- Improved MATT actions and filter text
+
 ## v2.8.2
 - Illumination calculations now correctly consider token lights
 
