@@ -1,61 +1,75 @@
 import { PerceptiveUtils, cModuleName } from "../utils/PerceptiveUtils.js";
 import { PerceptiveFlags } from "./PerceptiveFlags.js";
 
+const cTimeOutLength = 500; //in ms
+
 let vTimeOutList = [];
 
 class PerceptiveSound {
 	//DECLARATIONS
 	//basics
-	static PlaySound(pSound, pScene, pInfos = {pListenToken : undefined, pTimeOutSound : false}) {} //starts PlaySound requests for all user
+	static PlaySoundforTokens(pSound, pTokens, pInfos) {} //starts a play sound with pSound for all pTokens
 	
-	static PlaySoundRequest(pSound, pSceneID, pInfos = {pListenTokenID : "", pTimeOutSound : false}) {} //plays sound pSound if enabled
+	static PlaySound(pSound, pScene, pInfos = {pListenToken : undefined, pTimeOutSound : false, pTest : false, pVolume : undefined}) {} //starts PlaySound requests for all user
+	
+	static PlaySoundRequest(pSound, pSceneID, pInfos = {pListenTokenID : "", pTimeOutSound : false, pTest : false, pVolume : undefined}) {} //plays sound pSound if enabled
 	
 	//specifics
-	static async PlaySpottedSound(pTokens) {} //start PlaySound requests for Lock sound
+	static async PlaySpottedSound(pTokens, pTest = false) {} //start PlaySound requests for Lock sound
 	
 	//IMPLEMENTATIONS
-	static PlaySound(pSound, pScene, pInfos = {pListenToken : undefined, pTimeOutSound : false}) {
-		
-		//other clients pop up
-		game.socket.emit("module."+cModuleName, {pFunction : "PlaySoundRequest", pData : {pSound : pSound, pSceneID : pScene.id, pInfos : {pListenTokenID : pInfos?.pListenToken?.id, pTimeOutSound : pInfos?.pTimeOutSound}}});
-		
-		//own pop up
-		PerceptiveSound.PlaySoundRequest(pSound, pScene.id, {pListenTokenID : pInfos?.pListenToken?.id, pTimeOutSound : pInfos?.pTimeOutSound});
+	static PlaySoundforTokens(pSound, pTokens, pInfos) {
+		if (pInfos.pTest) {
+			PerceptiveSound.PlaySound(pSound, null, {pTest : true});
+		}
+		else {
+			for (let i = 0; i < pTokens.length; i++) {
+				PerceptiveSound.PlaySound(pSound, pTokens[i].parent, {pListenToken : pTokens[i], pTimeOutSound : pInfos.pTimeOutSound, pVolume : pInfos.pVolume});
+			}			
+		}
 	}
 	
-	static PlaySoundRequest(pSound, pSceneID, pInfos = {pListenTokenID : "", pTimeOutSound : false}) {
-		if (canvas.scene.id == pSceneID) {
-			if (!pInfos.pListenTokenID || canvas.tokens.controlled.find(vToken => vToken.id == pInfos.pListenTokenID)) {
+	static PlaySound(pSound, pScene, pInfos = {pListenToken : undefined, pTimeOutSound : false, pTest : false, pVolume : undefined}) {
+		let vInfos = {pListenTokenID : pInfos?.pListenToken?.id, pTimeOutSound : pInfos?.pTimeOutSound, pVolume : pInfos?.pVolume, pTest : pInfos.pTest};
+		
+		//other clients pop up
+		if (!pInfos.pTest) {
+			game.socket.emit("module."+cModuleName, {pFunction : "PlaySoundRequest", pData : {pSound : pSound, pSceneID : pScene?.id, pInfos : vInfos}});
+		}
+		
+		//own pop up
+		PerceptiveSound.PlaySoundRequest(pSound, pScene?.id, vInfos);
+	}
+	
+	static PlaySoundRequest(pSound, pSceneID, pInfos = {pListenTokenID : "", pTimeOutSound : false, pTest : false, pVolume : undefined}) {
+		if (pInfos.pTest || (canvas.scene.id == pSceneID)) {
+			if (pInfos.pTest || !pInfos.pListenTokenID || canvas.tokens.controlled.find(vToken => vToken.id == pInfos.pListenTokenID)) {
 				//only play sound if in same scene
-				if (!vTimeOutList.includes(pSound)) {
+				if (pInfos.pTest || !vTimeOutList.includes(pSound)) {
 					if (pInfos.pTimeOutSound) {
 						vTimeOutList.push(pSound);
 						
-						setTimeout(() => {vTimeOutList = vTimeOutList.filter(vSound => vSound != pSound)}, 500);
+						setTimeout(() => {vTimeOutList = vTimeOutList.filter(vSound => vSound != pSound)}, cTimeOutLength);
 					}
 					
-					AudioHelper.play({src: pSound, volume: 1});
+					let vVolume = 1;
+					if (!isNaN(pInfos.pVolume) && !(pInfos.pVolume === false)) {
+						vVolume = pInfos.pVolume;
+					}
+					
+					AudioHelper.play({src: pSound, volume: vVolume});
 				}
 			}
 		}
 	}
 	
 	//specifics
-	static async PlaySpottedSound(pTokens) {
+	static async PlaySpottedSound(pTokens, pTest = false) {
 		if (game.settings.get(cModuleName, "SpottedSound")) {
-			for (let i = 0; i < pTokens.length; i++) {
-				PerceptiveSound.PlaySound(game.settings.get(cModuleName, "SpottedSound"), pTokens[i].parent, {pListenToken : pTokens[i], pTimeOutSound : true});
-			}
+			PerceptiveSound.PlaySoundforTokens(game.settings.get(cModuleName, "SpottedSound"), pTokens, {pTimeOutSound : true, pTest : pTest, pVolume : game.settings.get(cModuleName, "SpottedSoundVolume")});
 		}
 	}
 }
-/*
-Hooks.on(cModuleName+".onLock", (pLockType, pLock) => LnKSound.PlayLockSound(pLockType, pLock));
-		
-Hooks.on(cModuleName+".onunLock", (pLockType, pLock) => LnKSound.PlayunLockSound(pLockType, pLock));
-
-Hooks.on(cModuleName+".DiceRoll", (pRollType, pCharacter) => LnKSound.PlayDiceSound(pCharacter));
-*/
 
 export function PlaySoundRequest(pData) {
 	PerceptiveSound.PlaySoundRequest(pData.pSound, pData.pSceneID, pData.pInfos);

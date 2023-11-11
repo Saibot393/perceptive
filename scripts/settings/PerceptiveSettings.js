@@ -9,6 +9,10 @@ import {resetStealthDataSelected} from "../SpottingScript.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 
+import {PerceptiveSound} from "../helpers/PerceptiveSound.js";
+
+const cPlaySoundIcon = "fa-solid fa-play";
+
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
   //general
@@ -581,6 +585,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		type: String,
 		default: ""
 	  }); 	
+	  
+	  game.settings.register(cModuleName, "SpottedSoundVolume", {
+		name: Translate("Settings.SpottedSoundVolume.name"),
+		hint: Translate("Settings.SpottedSoundVolume.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		range: {
+			min: 0,
+			max: 2,
+			step: 0.05
+		},
+		default: 1
+	  }); 
   
   /*
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
@@ -920,6 +938,14 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
 												
 		collapseContent(pHTML, "Sound", 	`[data-setting-id="perceptive.SpottedSound"]`);
+		
+		//test buttons
+		let vSoundForm;
+		let vNewDiv;
+		
+		vSoundForm = pHTML.find(`div.form-group[data-setting-id="perceptive.SpottedSound"]`);
+		vSoundForm.find('div').after(`<i class="${cPlaySoundIcon} audio-preview" style="flex-grow:0"></i>`);
+		vSoundForm.find(`i`).on("click", () => {PerceptiveSound.PlaySound(vSoundForm.find("input").val(), null, {pTest : true, pVolume : pHTML.find(`input[name="perceptive.SpottedSoundVolume"]`).val()})});
 	}
 });  
 
