@@ -554,11 +554,15 @@ class SpottingManager {
 	static RemoveLingeringAP(pTokens, pPopup = true) {
 		let vChatMessage = ``;
 		
+		let vRemovals = 0;
+		
 		let vInfos = pTokens.map(pToken => PerceptiveFlags.LingeringAPInfo(pToken));
 		
 		for (let i = 0; i <= pTokens.length; i++) {
 			if (PerceptiveFlags.hasLingeringAP(pTokens[i]) && pTokens[i].isOwner) {
 				PerceptiveFlags.resetLingeringAP(pTokens[i]);
+				
+				vRemovals = vRemovals + 1;
 				
 				if (pPopup) {
 					PerceptivePopups.TextPopUpID(pTokens[i], "RemovedLingeringAP") //MESSAGE POPUP
@@ -574,7 +578,7 @@ class SpottingManager {
 			}
 		}
 		
-		if (pTokens.length > 0) {
+		if (vRemovals > 0) {
 			let vRecipients = [];
 			
 			if (game.settings.get(cModuleName, "GMReciveInformationWhisper")) {

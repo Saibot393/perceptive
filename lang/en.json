@@ -661,6 +661,7 @@
 				
 				"filter-spotted-by" : {
 					"name"					: "Filter objects spotted by",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} by <span class=\"entity-style\">{pSpotters}</span>",
 					"settings" : {
 						"spotters" : {
 							"name" 			: "Spotters"
@@ -677,6 +678,7 @@
 				
 				"filter-has-spotted" : {
 					"name"					: "Filter tokens having spotted",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
 					"settings" : {
 						"spotted" : {
 							"name" 			: "Spotted"

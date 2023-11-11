@@ -471,7 +471,7 @@ class VisionUtils {
 	
 	static RangeDCModifier(pRangeInfo, pRangeInterval, pRangeDC) {
 		if (pRangeInterval > 0 && pRangeDC != 0 && pRangeInfo.VisionDistance) {
-			return Math.floor(pRangeInfo.VisionDistance/pRangeInterval) * pRangeDC;
+			return Math.trunc(pRangeInfo.VisionDistance/pRangeInterval) * pRangeDC;
 		}
 		
 		return 0;

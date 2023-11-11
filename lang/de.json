@@ -661,6 +661,7 @@
 				
 				"filter-spotted-by" : {
 					"name"					: "Filter Objekte aufgedeckt von",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} von <span class=\"entity-style\">{pSpotters}</span>",
 					"settings" : {
 						"spotters" : {
 							"name" 			: "Aufdecker"
@@ -677,6 +678,7 @@
 				
 				"filter-has-spotted" : {
 					"name"					: "Filter Figuren welche aufgedeckt haben",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
 					"settings" : {
 						"spotted" : {
 							"name" 			: "Aufgedeckt"
@@ -695,6 +697,7 @@
 			"actions" : {
 				"spot-object" : {
 					"name"					: "Entdecke Objekt",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> mit <span class=\"entity-style\">{pEntities}</span>",
 					"settings" : {
 						"target" : {
 							"name"			: "Ziel"

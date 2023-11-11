@@ -175,7 +175,7 @@ Hooks.once("init", () => {
 	}	
 	
 	if (PerceptiveCompUtils.isactiveModule(cLocknKey)) {
-		Hooks.on(cLocknKey +  ".DoorInteractionMenu", (pButtons, pLockObject, pLockType, pCharacter, pShowall) => {
+		Hooks.on(cLocknKey +  ".ObjectInteractionMenu", (pButtons, pLockObject, pLockType, pCharacter, pShowall) => {
 			if (pLockType == cLockTypeDoor) {
 				PerceptiveCompatibility.addPeekingButton(pButtons, pLockObject, pLockType, pCharacter, pShowall);
 			};
@@ -229,6 +229,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
 						restrict: (entity) => { return (entity instanceof Token); }
 					},
 					{
@@ -237,6 +238,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						required: true,
 						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)); }
 					}
 				],
@@ -261,7 +263,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 					SpottingManager.RequestSpotObjects(vSpotted, vSpotters, vInfos);
 				},
 				content: async (trigger, action) => {
-					let entityName = await pMATT.entityName(action.data?.entity);
+					let entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
 					let vTargets = await pMATT.entityName(action.data?.targets);
 					
 					return TranslateandReplace(cMATT + ".actions." + "spot-object" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName, pTargets : vTargets});
@@ -278,6 +280,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
 						restrict: (entity) => {
 							return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile));
 						},
@@ -288,6 +291,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						required: true,
 						restrict: (entity) => { return (entity instanceof Token) }
 					},
 					{
@@ -295,7 +299,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						name: Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".name"),
 						list: "filterCondition",
 						type: "list",
-						defvalue: 'yes'
+						defvalue: 'spotted'
 					},
 					{
 						id: "continue",
@@ -345,19 +349,11 @@ Hooks.once("setupTileActions", (pMATT) => {
 
 				},
 				content: async (trigger, action) => {
-					const entityName = await pMATT.entityName(action.data?.entity);
-					let html = `<span class="filter-style">${Translate(cMATT + ".filters.name")}</span> <span class="entity-style">${entityName}</span>`;
+					const entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					const vSpotters = await pMATT.entityName(action.data?.spotters);
+					const vSpottingCondition = Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + action.data.filterCondition);
 					
-					switch(action.data.filterCondition) {
-						case "spotted" :
-							html = html + " " + Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "spotted");
-							break;
-						case "notspotted" : 
-							html = html + " " + Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + "notspotted");
-							break;
-					}
-					
-					return html;
+					return TranslateandReplace(cMATT + ".filters." + "filter-spotted-by" + ".descrp", {pEntities : entityName, pSpotters : vSpotters, pFilterCondition : vSpottingCondition});
 				}
 			});
 			
@@ -371,6 +367,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
 						restrict: (entity) => { return (entity instanceof Token); }
 					},
 					{
@@ -379,6 +376,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						type: "select",
 						subtype: "entity",
 						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						required: true,
 						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)) }
 					},
 					{
@@ -386,7 +384,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						name: Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".name"),
 						list: "filterCondition",
 						type: "list",
-						defvalue: 'yes'
+						defvalue: 'spotted'
 					},
 					{
 						id: "continue",
@@ -438,19 +436,11 @@ Hooks.once("setupTileActions", (pMATT) => {
 
 				},
 				content: async (trigger, action) => {
-					const entityName = await pMATT.entityName(action.data?.entity);
-					let html = `<span class="filter-style">${Translate(cMATT + ".filters.name")}</span> <span class="entity-style">${entityName}</span>`;
+					const entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					const vSpotted = await pMATT.entityName(action.data?.spotted);
+					const vSpottingCondition = Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + action.data.filterCondition);
 					
-					switch(action.data.filterCondition) {
-						case "spotted" :
-							html = html + " " + Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "spotted");
-							break;
-						case "notspotted" : 
-							html = html + " " + Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + "notspotted");
-							break;
-					}
-					
-					return html;
+					return TranslateandReplace(cMATT + ".filters." + "filter-has-spotted" + ".descrp", {pEntities : entityName, pSpotted : vSpotted, pFilterCondition : vSpottingCondition});
 				}
 			});
 		}
