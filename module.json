@@ -45,6 +45,7 @@
 	"scripts/helpers/PerceptiveRollHandler.js",
 	"scripts/helpers/PerceptiveFlags.js",
 	"scripts/helpers/PerceptivePopups.js",
+	"scripts/helpers/CustomPings.js",
 	"scripts/settings/PerceptiveSettings.js",
 	"scripts/PeekingScript.js",
 	"scripts/DoorMovingScript.js",
