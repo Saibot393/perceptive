@@ -1226,6 +1226,13 @@ class SpottingManager {
 			PerceptiveSound.PlaySpottedSound(pObjects.filter(vObject => vObject.documentName == "Token"));
 		}
 		
+		//image popup
+		if (vPingIgnoreVisionCycles <= 0) {
+			for (let i = 0; i < pSpotters.length; i++) {
+				canvas.ping(pSpotters[i].object?.center, {style : "CustomPing", duration :  1000 * game.settings.get(cModuleName, "SpotterImagePingDuration"), Image : game.settings.get(cModuleName, "SpotterImagePing")});
+			}
+		}
+		
 		Hooks.call(cModuleName + ".NewlyVisible", pObjects, pInfos, pSpotters);
 		
 		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG

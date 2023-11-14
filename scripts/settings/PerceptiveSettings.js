@@ -599,6 +599,30 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		},
 		default: 1
 	  }); 
+	  
+	//image pings
+	  game.settings.register(cModuleName, "SpotterImagePing", {
+		name: Translate("Settings.SpotterImagePing.name"),
+		hint: Translate("Settings.SpotterImagePing.descrp"),
+		scope: "world",
+		config: true,
+		type: String,
+		default: ""
+	  }); 	
+	  
+	  game.settings.register(cModuleName, "SpotterImagePingDuration", {
+		name: Translate("Settings.SpotterImagePingDuration.name"),
+		hint: Translate("Settings.SpotterImagePingDuration.descrp"),
+		scope: "world",
+		config: true,
+		type: Number,
+		range: {
+			min: 0,
+			max: 10,
+			step: 0.1
+		},
+		default: 1
+	  });	
   
   /*
   game.settings.register(cModuleName, "GMSpotconfirmDialog", {
