@@ -128,6 +128,24 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: 10
   });
   
+  game.settings.register(cModuleName, "GMConfirmPeeking", {
+	name: Translate("Settings.GMConfirmPeeking.name"),
+	hint: Translate("Settings.GMConfirmPeeking.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  });
+  
+  game.settings.register(cModuleName, "PeekingDefaultDC", {
+	name: Translate("Settings.PeekingDefaultDC.name"),
+	hint: Translate("Settings.PeekingDefaultDC.descrp"),
+	scope: "world",
+	config: true,
+	type: Number,
+	default: 0
+  });
+  
   //door moving
   game.settings.register(cModuleName, "DoorstandardMove", {
 	name: Translate("Settings.DoorstandardMove.name"),

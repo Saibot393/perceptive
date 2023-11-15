@@ -111,12 +111,7 @@ class CustomPing extends Ping {
   }
 }
 
-class PingManager {
-	//DECLARATIONS
-	
-	//IMPLEMENTATIONS
-}
-
+/*
 Hooks.on("init", () => {
 	CONFIG.Canvas.pings.styles.CustomPing = {
 		class : CustomPing,
@@ -137,3 +132,4 @@ Hooks.on("init", () => {
 		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
 	  });
 });
+*/

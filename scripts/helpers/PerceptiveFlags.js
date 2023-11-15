@@ -26,6 +26,7 @@ const cisLockPeekingWallF = "isLockpeekingWallFlag"; //Flag that signals, that t
 const cLockPeekSizeF = "LockPeekSizeFlag"; //Flag that stores the size of the LockPeek
 const cLockPeekPositionF = "LockPeekPositionFlag"; //Flag that stores the position of the LockPeek
 const cisLockpeekingF = "isLockpeekingFlag"; //Flag that signals, that this token is lock peeking
+const cPeekingDCF = "PeekingDCFlag"; //Flag to store the peek DC of this door
 
 const cDoormovingWallIDF = "DoormovingWallIDFlag"; //Flag for id of the DoormovingWall belonging to this door
 const cDoorMovementF = "DoorMovementFlag"; //Flag that contains the movement type of this door
@@ -59,7 +60,7 @@ const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -99,6 +100,8 @@ class PerceptiveFlags {
 	static async stopLockpeeking(pToken) {} //set pToken to no longer be lockpeeking
 	
 	static getLockpeekedWall(pToken) {} //returns the wall that is peeked by pToken (if any)
+	
+	static PeekingDC(pDoor, pRaw = false) {} //returns the peeking dc of this pdoor
 	
 	//moving door
 	static Doorcanbemoved(pDoor) {} //if pDoor is a moving door
@@ -359,6 +362,19 @@ class PerceptiveFlags {
 		}
 		
 		return false; //default if anything fails
+	}
+	
+	static #PeekingDCFlag(pWall) { 
+	//returns content of PeekingDCFlag of pWall (if any) (number)
+		let vFlag = this.#PerceptiveFlags(pWall);
+
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPeekingDCF)) {
+				return vFlag.PeekingDCFlag;
+			}
+		}
+		
+		return game.settings.get(cModuleName, "PeekingDefaultDC");//game.settings.get(cModuleName, "LockpeekstandardPosition"); //default if anything fails
 	}
 	
 	static #DoormovingWallIDFlag (pWall) { 
@@ -1009,6 +1025,16 @@ class PerceptiveFlags {
 	
 	static getLockpeekedWall(pToken) {
 		return pToken.object.scene.walls.find(vWall => !PerceptiveFlags.isPerceptiveWall(vWall) && PerceptiveFlags.isLockpeekedby(vWall, pToken.id));
+	}
+	
+	static PeekingDC(pDoor, pRaw = false) {
+		let vDC = this.#PeekingDCFlag(pDoor);
+		
+		if (vDC < 0 && !pRaw) {
+			return Infinity;
+		}
+		
+		return vDC;
 	}
 	
 	//moving door

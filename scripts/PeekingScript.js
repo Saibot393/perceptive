@@ -1,4 +1,4 @@
-import {PerceptiveUtils, cModuleName} from "./utils/PerceptiveUtils.js";
+import {PerceptiveUtils, cModuleName, Translate} from "./utils/PerceptiveUtils.js";
 import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
@@ -6,7 +6,7 @@ import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 
 class PeekingManager {
 	//DECLARATIONS
-	static async PeekDoorGM(pDoor) {} //start peeking pWall with all selected tokens
+	static async PeekDoorGM(pDoor, pTokens, pInfos) {} //start peeking pWall with all selected tokens
 	
 	static async RequestPeekDoor(pDoor, pTokens) {} //starts a request to peek door
 	
@@ -28,9 +28,9 @@ class PeekingManager {
 	static OnTokenupdate(pToken, pchanges, pInfos) {} //called when a token is updated
 	
 	//IMPLEMENTATIONS
-	static async PeekDoorGM(pDoor, pTokens) {
+	static async PeekDoorGM(pDoor, pTokens, pInfos) {
 		if (PerceptiveFlags.canbeLockpeeked(pDoor)) {
-			if (!WallUtils.isOpened(pDoor)) {		
+			if (!WallUtils.isOpened(pDoor)) {	
 				await PerceptiveFlags.createLockpeekingWalls(pDoor); //to prevent bugs
 				
 				let vAdds = pTokens.filter(vToken => !PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && !PerceptiveFlags.isLockpeeking(vToken));
@@ -45,18 +45,37 @@ class PeekingManager {
 				
 				let vRemoves = pTokens.filter(vToken => !vAdds.includes(vToken) && PerceptiveFlags.isLockpeekedby(pDoor, vToken.id) && PerceptiveFlags.isLockpeeking(vToken));
 				
-				await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
-				
-				await PeekingManager.updateDoorPeekingWall(pDoor);
-				
-				for (let i = 0; i < pTokens.length; i++) {
-					if (vRemoves.includes(pTokens[i])) {
-						await PerceptiveFlags.stopLockpeeking(pTokens[i]);
+				let vAction = async function(pRemoveAdds = false) {
+					if (pRemoveAdds) {
+						vAdds = [];
 					}
 					
-					if (pTokens[i].object) {
-						pTokens[i].object.updateVisionSource();
+					await PerceptiveFlags.addremoveLockpeekedby(pDoor, PerceptiveUtils.IDsfromTokens(vAdds), PerceptiveUtils.IDsfromTokens(vRemoves));
+					
+					await PeekingManager.updateDoorPeekingWall(pDoor);
+					
+					for (let i = 0; i < pTokens.length; i++) {
+						if (vRemoves.includes(pTokens[i])) {
+							await PerceptiveFlags.stopLockpeeking(pTokens[i]);
+						}
+						
+						if (pTokens[i].object) {
+							pTokens[i].object.updateVisionSource();
+						}
 					}
+				}
+				
+				if (!game.settings.get(cModuleName, "GMConfirmPeeking") || (vAdds.length <= 0) || (pInfos?.PlayerID == game.user.id)) {
+					vAction();
+				}
+				else {
+					Dialog.confirm({
+					  title: Translate("PeekingConfirm.name"),
+					  content: Translate("PeekingConfirm.descrp", {pUserName : game.users.get(pInfos?.PlayerID).name}),
+					  yes: () => {vAction()},
+					  no: () => {vAction(true)},
+					  defaultYes: false
+					});					
 				}
 			}
 		}
@@ -66,21 +85,23 @@ class PeekingManager {
 	}
 	
 	static async RequestPeekDoor(pDoor, pTokens) {
+		let vInfos = {PlayerID : game.user.id};
+		
 		if (pDoor) {
 			if (game.user.isGM) {
-				PeekingManager.PeekDoorGM(pDoor, pTokens);
+				PeekingManager.PeekDoorGM(pDoor, pTokens, vInfos);
 			}
 			else {
 				if (!game.paused) {
-					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens)}});
+					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : vInfos}});
 				}
 			}	
 		}
 	}
 	
-	static async PeekDoorRequest(pDoorID, pSceneID, pTokenIDs) {
+	static async PeekDoorRequest(pDoorID, pSceneID, pTokenIDs, pInfos) {
 		if (game.user.isGM) {
-			PeekingManager.PeekDoorGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), PerceptiveUtils.TokensfromIDs(pTokenIDs, game.scenes.get(pSceneID)))
+			PeekingManager.PeekDoorGM(PerceptiveUtils.WallfromID(pDoorID, game.scenes.get(pSceneID)), PerceptiveUtils.TokensfromIDs(pTokenIDs, game.scenes.get(pSceneID)), pInfos)
 		}		
 	}
 	
@@ -244,7 +265,7 @@ Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
 });
 
 //socket exports
-export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs} = {}) {return PeekingManager.PeekDoorRequest(pDoorID, pSceneID, pTokenIDs)};
+export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs, pInfos} = {}) {return PeekingManager.PeekDoorRequest(pDoorID, pSceneID, pTokenIDs, pInfos)};
 
 //exports
 export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.RequestPeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
