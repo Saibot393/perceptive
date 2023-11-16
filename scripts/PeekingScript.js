@@ -8,7 +8,9 @@ class PeekingManager {
 	//DECLARATIONS
 	static async PeekDoorGM(pDoor, pTokens, pInfos) {} //start peeking pWall with all selected tokens
 	
-	static async RequestPeekDoor(pDoor, pTokens) {} //starts a request to peek door
+	static async RequestPeekDoor(pDoor, pTokens, pInfos) {} //starts a request to peek door
+	
+	static async PeekDoor(pDoor, pTokens) {} //starts a lock peek for pTokens of pDoor
 	
 	static async PeekDoorRequest(pDoorID, pSceneID, pDirectionInfo) {} //answers a door peek request
 	
@@ -84,18 +86,90 @@ class PeekingManager {
 		}
 	}
 	
-	static async RequestPeekDoor(pDoor, pTokens) {
-		let vInfos = {PlayerID : game.user.id};
+	static async RequestPeekDoor(pDoor, pTokens, pInfos = {}) {
+		let pInfos = {PlayerID : game.user.id};
 		
 		if (pDoor) {
 			if (game.user.isGM) {
-				PeekingManager.PeekDoorGM(pDoor, pTokens, vInfos);
+				PeekingManager.PeekDoorGM(pDoor, pTokens, pInfos);
 			}
 			else {
 				if (!game.paused) {
-					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : vInfos}});
+					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : pInfos}});
 				}
 			}	
+		}
+	}
+	
+	static async PeekDoor(pDoor, pTokens) {
+		let vInfos = {};
+		
+		let vDirectRequest = true;
+		
+		let vCharacter = pTokens[0];
+		
+		if (PerceptiveFlags.hasPeekingDC(pDoor) && game.settings.get(cModuleName, "PeekingFormula").length > 0) {
+			if (!game.settings.get(cModuleName, "usePf2eSystem")) {
+				
+				let vRollData = {actor : vCharacter?.actor};
+				
+				let vRollFormula = VisionUtils.PeekingFormula();
+				
+				if (!vRollFormula.length) {
+					//if nothing has been set
+					vRollFormula = "0";
+				}
+			
+				let vRoll =  new Roll(vRollFormula, vRollData);
+					
+				PerceptiveSound.PlayDiceSound(pTokens);
+					
+				await vRoll.evaluate();
+					
+				await ChatMessage.create({user: game.user.id, flavor : Translate("ChatMessage.Peeking", {pName : vCharacter?.name}),rolls : [vRoll], type : 5}); //CHAT MESSAGE
+					
+				vInfos = {Rollresult : vRoll.total, Diceresult : vRoll.dice[0].results.map(vDie => vDie.result)};
+			}
+			else {	
+				vDirectRequest = false;
+				
+				//no roll neccessary, handled by Pf2e system
+				let vCallback = async (proll) => {
+					let vResult;
+					
+					switch (proll.outcome) {
+						case 'criticalFailure':
+							vResult = -1;
+							break;
+						case 'failure':
+							vResult = 0;
+							break;
+						case 'success':
+							vResult = 1;
+							break;
+						case 'criticalSuccess':
+							vResult = 2;
+							break;
+						default:
+							vResult = 0;
+							break;
+					}
+					
+					vInfos = {usePf2eRoll : true, Pf2eresult : vResult};
+				
+					PeekingManager.RequestPeekDoor(pDoor, pTokens, vInfos);
+				};
+	
+				game.pf2e.actions.seek({
+					actors: vCharacter.actor,
+					callback: vCallback,
+					difficultyClass: {value : PerceptiveFlags.PickPocketDC(pDoor)}
+				});
+			}
+		}
+		
+		if (vDirectRequest) {
+			PeekingManager.RequestPeekDoor(pDoor, pTokens, vInfos);
 		}
 	}
 	

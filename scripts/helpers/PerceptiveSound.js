@@ -3,6 +3,8 @@ import { PerceptiveFlags } from "./PerceptiveFlags.js";
 
 const cTimeOutLength = 500; //in ms
 
+const cDiceSound = "sounds/dice.wav";
+
 let vTimeOutList = [];
 
 class PerceptiveSound {
@@ -16,6 +18,8 @@ class PerceptiveSound {
 	
 	//specifics
 	static async PlaySpottedSound(pTokens, pTest = false) {} //start PlaySound requests for Lock sound
+	
+	static async PlayDiceSound(pTokens) {} //start PlaySound requests for Dice sound
 	
 	//IMPLEMENTATIONS
 	static PlaySoundforTokens(pSound, pTokens, pInfos) {
@@ -68,6 +72,10 @@ class PerceptiveSound {
 		if (game.settings.get(cModuleName, "SpottedSound")) {
 			PerceptiveSound.PlaySoundforTokens(game.settings.get(cModuleName, "SpottedSound"), pTokens, {pTimeOutSound : true, pTest : pTest, pVolume : game.settings.get(cModuleName, "SpottedSoundVolume")});
 		}
+	}
+	
+	static async PlayDiceSound(pTokens) {
+		PerceptiveSound.PlaySoundforTokens(cDiceSound, pTokens, {pTimeOutSound : false});
 	}
 }
 

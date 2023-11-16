@@ -103,6 +103,8 @@ class PerceptiveFlags {
 	
 	static PeekingDC(pDoor, pRaw = false) {} //returns the peeking dc of this pdoor
 	
+	static hasPeekingDC(pDoor) {} //returns of pDoor has a peeking dc
+	
 	//moving door
 	static Doorcanbemoved(pDoor) {} //if pDoor is a moving door
 	
@@ -1035,6 +1037,10 @@ class PerceptiveFlags {
 		}
 		
 		return vDC;
+	}
+	
+	static hasPeekingDC(pDoor) {
+		return (PerceptiveFlags.PeekingDC(pDoor) != 0);
 	}
 	
 	//moving door

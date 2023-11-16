@@ -137,6 +137,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });
   
+  game.settings.register(cModuleName, "PeekingFormula", {
+	name: Translate("Settings.PeekingFormula.name"),
+	hint: Translate("Settings.PeekingFormula.descrp"),
+	scope: "world",
+	config: true,
+	type: String,
+	default: ""
+  });
+  
   game.settings.register(cModuleName, "PeekingDefaultDC", {
 	name: Translate("Settings.PeekingDefaultDC.name"),
 	hint: Translate("Settings.PeekingDefaultDC.descrp"),
