@@ -1227,9 +1227,18 @@ class SpottingManager {
 		}
 		
 		//image popup
-		if (vPingIgnoreVisionCycles <= 0) {
-			for (let i = 0; i < pSpotters.length; i++) {
-				canvas.ping(pSpotters[i].object?.center, {style : "CustomPing", duration :  1000 * game.settings.get(cModuleName, "SpotterImagePingDuration"), Image : game.settings.get(cModuleName, "SpotterImagePing")});
+		if (game.settings.get(cModuleName, "SpotterImagePing").length > 0) {
+			if (vPingIgnoreVisionCycles <= 0) {
+				for (let i = 0; i < pSpotters.length; i++) {
+					canvas.ping(pSpotters[i].object?.center, {style : "CustomPing", duration :  1000 * game.settings.get(cModuleName, "SpotterImagePingDuration"), Image : game.settings.get(cModuleName, "SpotterImagePing")});
+				}
+			}
+		}
+		
+		//chat message
+		for (let i = 0; i < pObjects.length; i++) {
+			if (PerceptiveFlags.hasSpottingMessage(pObjects[i])) {
+				ChatMessage.create({user: game.user.id, flavor : PerceptiveFlags.SpottingMessage(pObjects[i]), type : 5, whisper : [game.user.id]}); //CHAT MESSAGE
 			}
 		}
 		
@@ -1398,6 +1407,11 @@ class SpottingManager {
 
 			let vRangeInfo = {};			
 			
+			//BUG, RANGE NOT REPECTED; LOOK HERE!
+			console.log(SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo));
+			console.log(vObject.object.center);
+			console.log({Tolerance : vTolerance, RangeReplacement : vCustomRange});
+			console.log(vRangeInfo);
 			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 				//performance reason (vLocalVisionData.vRangeDCModifier)
 				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {

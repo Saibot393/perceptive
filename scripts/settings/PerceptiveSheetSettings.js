@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF} from "../helpers/PerceptiveFlags.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
@@ -421,7 +421,16 @@ class PerceptiveSheetSettings {
 		
 		let vResetButton = `<button id = "${cModuleName}.ResetSpottedby"> ${Translate("Titles.ResetSpottedby")} </button>`;
 		pHTML.find(pto).append(vResetButton);
-		pHTML.find(`button[id="${cModuleName}.ResetSpottedby"]`).click(function() {PerceptiveFlags.clearSpottedby(pApp.document);});		
+		pHTML.find(`button[id="${cModuleName}.ResetSpottedby"]`).click(function() {PerceptiveFlags.clearSpottedby(pApp.document);});	
+
+		//spotting message 
+		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSpottingMessageF +".name"), 
+													vhint : Translate("SheetSettings."+ cSpottingMessageF +".descrp"), 
+													vtype : "text", 
+													vvalue : PerceptiveFlags.SpottingMessage(pApp.document), 
+													vflagname : cSpottingMessageF
+													}, pto);
+									
 	}
 	
 	//support

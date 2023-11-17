@@ -128,13 +128,13 @@ class PerceptiveSystemUtils {
 					switch (game.system.id) {
 						case cPf2eName:
 							let vSkillName
-							return vSystemInfo.context.domains.includes("check") && vSystemInfo.context.domains.includes("stealth")
+							return vSystemInfo.context?.domains.includes("check") && vSystemInfo.context.domains.includes("stealth")
 							break;
 						case cDnD5e:
-							return vSystemInfo.roll.type == "skill" && vSystemInfo.roll.skillId == "ste";
+							return vSystemInfo.roll?.type == "skill" && vSystemInfo.roll.skillId == "ste";
 							break;
 						case cPf1eName:
-							return vSystemInfo.subject.skill == "ste";
+							return vSystemInfo.subject?.skill == "ste";
 							break;
 					}
 				}

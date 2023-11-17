@@ -56,11 +56,12 @@ const cLingeringAPInfoF = "LingeringAPInfoFlag"; //Flag to store LingeringAPInfo
 const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DCs for spotting
 const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of the perceptive tile
 const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this object can be seen
+const cSpottingMessageF = "SpottingMessageFlag"; //Flag to store the chat message when this object is spotted
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -82,6 +83,8 @@ class PerceptiveFlags {
 	static async setLockpeekedby(pWall, pIDs) {} //set the Lockppekedby Flag of pWall
 	
 	static isLockpeekedby(pWall, pID) {} //returns if this wall is Lockpeekedby id
+	
+	static isLockpeekedbyToken(pWall, pToken) {} //returns if this wall is Lockpeekedby pToken
 	
 	static async addLockpeekedby(pWall, pIDs) {} //add to the Lockppekedby Flag of pWall
 	
@@ -232,6 +235,10 @@ class PerceptiveFlags {
 	static HasSpottingRange(pObject) {} //returns if pObject has a spotting range
 	
 	static SpottingRange(pObject) {} //returns the spotting range of pObject
+	
+	static SpottingMessage(pObject) {} //returns the spotting message displayed when pObject is spotted
+	
+	static hasSpottingMessage(pObject) {} //returns wether pObject has a Spotting Message
 		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -722,6 +729,19 @@ class PerceptiveFlags {
 		return -1; //default if anything fails		
 	}
 	
+	static #SpottingMessageFlag (pObject) {
+	//returns content of SpottingMessageFlag of pObject (string)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cSpottingMessageF)) {
+				return vFlag.SpottingMessageFlag;
+			}
+		}
+		
+		return ""; //default if anything fails		
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -987,6 +1007,10 @@ class PerceptiveFlags {
 	
 	static isLockpeekedby(pWall, pID) {
 		return this.#LockpeekedbyFlag(pWall).includes(pID);
+	}
+	
+	static isLockpeekedbyToken(pWall, pToken) {
+		return PerceptiveFlags.isLockpeekedby(pWall, pToken.id);
 	}
 	
 	static async addLockpeekedby(pWall, pIDs) {
@@ -1517,6 +1541,14 @@ class PerceptiveFlags {
 	
 	static SpottingRange(pObject) {
 		return this.#SpottingRangeFlag(pObject);
+	}
+	
+	static SpottingMessage(pObject) {
+		return this.#SpottingMessageFlag(pObject);
+	}
+	
+	static hasSpottingMessage(pObject) {
+		return PerceptiveFlags.SpottingMessage(pObject).length > 0;
 	}
 	
 	//effects

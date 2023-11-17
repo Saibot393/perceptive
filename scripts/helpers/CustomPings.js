@@ -111,13 +111,14 @@ class CustomPing extends Ping {
   }
 }
 
-/*
+
 Hooks.on("init", () => {
 	CONFIG.Canvas.pings.styles.CustomPing = {
 		class : CustomPing,
 		default : cDefaultoptions
 	};
 	
+	/*
 	  game.keybindings.register(cModuleName, "PingCustom", {
 		name: "Press Me",
 		editable: [
@@ -130,6 +131,5 @@ Hooks.on("init", () => {
 		},
 		restricted: false,
 		precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
-	  });
+	  });*/
 });
-*/

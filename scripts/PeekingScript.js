@@ -3,12 +3,15 @@ import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
+import {PerceptiveSound} from "./helpers/PerceptiveSound.js";
 
 class PeekingManager {
 	//DECLARATIONS
 	static async PeekDoorGM(pDoor, pTokens, pInfos) {} //start peeking pWall with all selected tokens
 	
 	static async RequestPeekDoor(pDoor, pTokens, pInfos) {} //starts a request to peek door
+	
+	static PeekCheck(pDoor, pInfos, pCharacter, pChatMessages = true) {} //checks if pDoor is openable with check included in pInfos
 	
 	static async PeekDoor(pDoor, pTokens) {} //starts a lock peek for pTokens of pDoor
 	
@@ -87,18 +90,64 @@ class PeekingManager {
 	}
 	
 	static async RequestPeekDoor(pDoor, pTokens, pInfos = {}) {
-		let pInfos = {PlayerID : game.user.id};
+		pInfos.PlayerID = game.user.id;
 		
-		if (pDoor) {
-			if (game.user.isGM) {
-				PeekingManager.PeekDoorGM(pDoor, pTokens, pInfos);
+		if (PeekingManager.PeekCheck(pDoor, pInfos, pTokens[0])) {
+			if (pDoor) {
+				if (game.user.isGM) {
+					PeekingManager.PeekDoorGM(pDoor, pTokens, pInfos);
+				}
+				else {
+					if (!game.paused) {
+						game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : pInfos}});
+					}
+				}	
+			}
+		}
+	}
+	
+	static PeekCheck(pDoor, pInfos, pCharacter, pChatMessages = true) {
+		if (PerceptiveFlags.hasPeekingDC(pDoor) && !PerceptiveFlags.isLockpeekedbyToken(pDoor, pCharacter)) {
+			
+			let vSuccessDegree;
+			
+			let vData = pInfos?.pData;
+			
+			if (!vData.usePf2eRoll) {
+				vSuccessDegree = PerceptiveUtils.successDegree([vData.Rollresult, vData.Diceresult], PerceptiveFlags.PeekingDC(pDoor));
 			}
 			else {
-				if (!game.paused) {
-					game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : pInfos}});
+				vSuccessDegree = vData.Pf2eresult;
+			}
+			
+			let vCritMessagesuffix = ".default";	
+			
+			if (PerceptiveFlags.canbeLockpeeked(pDoor)) {
+				if ((vSuccessDegree > 1) || (vSuccessDegree < 0)) {
+					vCritMessagesuffix = ".crit";
 				}
-			}	
+				
+				if (vSuccessDegree > 0) {
+					//success		
+					if (pChatMessages) {
+						ChatMessage.create({user: pInfos.PlayerID, content : Translate("ChatMessage.PeekingSuccess"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
+					}	
+					
+					return true;
+				}
+				else {
+					//failure
+					if (pChatMessages) {
+						ChatMessage.create({user: pInfos.PlayerID, content : Translate("ChatMessage.PeekingFail"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
+					}
+					
+					return false
+				}
+			}
 		}
+		
+		//no peek dc => skip checks
+		return true;
 	}
 	
 	static async PeekDoor(pDoor, pTokens) {
@@ -108,16 +157,19 @@ class PeekingManager {
 		
 		let vCharacter = pTokens[0];
 		
-		if (PerceptiveFlags.hasPeekingDC(pDoor) && game.settings.get(cModuleName, "PeekingFormula").length > 0) {
-			if (!game.settings.get(cModuleName, "usePf2eSystem")) {
+		if (PerceptiveFlags.hasPeekingDC(pDoor) && !PerceptiveFlags.isLockpeekedbyToken(pDoor, vCharacter) && game.settings.get(cModuleName, "PeekingFormula").length > 0) {
+			console.log(1);
+			if (!game.settings.get(cModuleName, "UsePf2eRules")) {
 				
 				let vRollData = {actor : vCharacter?.actor};
 				
-				let vRollFormula = VisionUtils.PeekingFormula();
+				let vRollFormula = game.settings.get(cModuleName, "PeekingFormula");
+				
+				console.log(1);
 				
 				if (!vRollFormula.length) {
 					//if nothing has been set
-					vRollFormula = "0";
+					vRollFormula = "1d0";
 				}
 			
 				let vRoll =  new Roll(vRollFormula, vRollData);
@@ -128,7 +180,9 @@ class PeekingManager {
 					
 				await ChatMessage.create({user: game.user.id, flavor : Translate("ChatMessage.Peeking", {pName : vCharacter?.name}),rolls : [vRoll], type : 5}); //CHAT MESSAGE
 					
-				vInfos = {Rollresult : vRoll.total, Diceresult : vRoll.dice[0].results.map(vDie => vDie.result)};
+				vInfos.pData = {Rollresult : vRoll.total, Diceresult : vRoll.dice[0].results.map(vDie => vDie.result)};
+				
+				console.log(vInfos);
 			}
 			else {	
 				vDirectRequest = false;
@@ -157,13 +211,13 @@ class PeekingManager {
 					
 					vInfos = {usePf2eRoll : true, Pf2eresult : vResult};
 				
-					PeekingManager.RequestPeekDoor(pDoor, pTokens, vInfos);
+					PeekingManager.RequestPeekDoor(pDoor, pTokens, {pData : vInfos});
 				};
 	
 				game.pf2e.actions.seek({
 					actors: vCharacter.actor,
 					callback: vCallback,
-					difficultyClass: {value : PerceptiveFlags.PickPocketDC(pDoor)}
+					difficultyClass: {value : PerceptiveFlags.PeekingDC(pDoor)}
 				});
 			}
 		}
@@ -332,7 +386,7 @@ Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
 
 Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
 	if (PerceptiveUtils.KeyisDown("MousePeekLock")) {
-		PeekingManager.RequestPeekDoor(pWall, PerceptiveUtils.selectedTokens());
+		PeekingManager.PeekDoor(pWall, PerceptiveUtils.selectedTokens());
 		
 		return false;
 	}
@@ -342,8 +396,8 @@ Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
 export function PeekDoorRequest({pDoorID, pSceneID, pTokenIDs, pInfos} = {}) {return PeekingManager.PeekDoorRequest(pDoorID, pSceneID, pTokenIDs, pInfos)};
 
 //exports
-export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.RequestPeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
+export function RequestPeekDoor(pDoor, pTokens) {PeekingManager.PeekDoor(pDoor, pTokens)} //to request a peek change of tokens for wall
 
-export function SelectedPeekhoveredDoor() {PeekingManager.RequestPeekDoor(PerceptiveUtils.hoveredWall(), PerceptiveUtils.selectedTokens())}
+export function SelectedPeekhoveredDoor() {PeekingManager.PeekDoor(PerceptiveUtils.hoveredWall(), PerceptiveUtils.selectedTokens())}
 
 export function PeekingIgnoreWall(pWall, pToken) {return PeekingManager.IgnoreWall(pWall, pToken)}
