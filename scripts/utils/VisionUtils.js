@@ -378,6 +378,9 @@ class VisionUtils {
 		
 		let vScene = pScene;
 		
+		let v3Dcalc = pPoint.hasOwnProperty("elevation");
+		let vElevationScale = 1;
+		
 		if (!vScene) {
 			vScene = canvas.scene;
 		}
@@ -397,13 +400,27 @@ class VisionUtils {
 				
 				vrelevantLightSources = vrelevantLightSources.filter(vLight => vLight?.shape?.contains(pPoint.x, pPoint.y));
 				
+				if (v3Dcalc) {
+					vElevationScale = vScene.dimensions.size/vScene.dimensions.distance;
+					
+					vrelevantLightSources = vrelevantLightSources.filter(vLight => (vLight.elevation == pPoint.elevation) || (GeometricUtils.DistanceXYZ(pPoint, vLight, vElevationScale) < vLight.data.dim));
+				}
+				
 				if (vrelevantLightSources.length > 0) {
 					//at least Dim
 					vLightningLevel = cLightLevel.Dim;
 					
-					if (vrelevantLightSources.find(vDocument => GeometricUtils.DistanceXY(pPoint, vDocument) < vDocument.data.bright)) {
-						//is Bright
-						vLightningLevel = cLightLevel.Bright;
+					if (v3Dcalc) {
+						if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXYZ(pPoint, vLight, vElevationScale) < vLight.data.bright)) {
+							//is Bright
+							vLightningLevel = cLightLevel.Bright;
+						}						
+					}
+					else {
+						if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXY(pPoint, vLight) < vLight.data.bright)) {
+							//is Bright
+							vLightningLevel = cLightLevel.Bright;
+						}
 					}
 				}
 			}

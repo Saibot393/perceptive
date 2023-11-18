@@ -63,6 +63,8 @@ class GeometricUtils {
 	
 	static DistanceXY(pPositionA, pPositionB) {} //returns the distance between points A nad B
 	
+	static DistanceXYZ(pPositionA, pPositionB, pElevationScale = 1) {} //returns the distance between points A nad B
+	
 	static scaledDistance(pPositionA, pPositionB, pfactorarray, protation = 0) {} //returns the distance between position A nad B with the x and y component scaled with pfactorarray (rotates difference before claculation if protation != 0)
 	
 	static TokenDistance(pTokenA, pTokenB) {} //returns (in game) Distance between Tokens
@@ -236,6 +238,10 @@ class GeometricUtils {
 	
 	static DistanceXY(pPositionA, pPositionB) {
 		return Math.sqrt((pPositionA.x - pPositionB.x)**2 + (pPositionA.y - pPositionB.y)**2);
+	}
+	
+	static DistanceXYZ(pPositionA, pPositionB, pElevationScale = 1) {
+		return Math.sqrt((pPositionA.x - pPositionB.x)**2 + (pPositionA.y - pPositionB.y)**2 + ((pPositionA.elevation - pPositionB.elevation)*pElevationScale)**2);
 	}
 	
 	static scaledDistance(pPositionA, pPositionB, pfactorarray, protation = 0) {

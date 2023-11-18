@@ -602,6 +602,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 									 }
 	  }); 
 	  
+	  game.settings.register(cModuleName, "Light3Dcalc", {
+		name: Translate("Settings.Light3Dcalc.name"),
+		hint: Translate("Settings.Light3Dcalc.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 
+	  
 	//sounds
 	
 	  game.settings.register(cModuleName, "SpottedSound", {
@@ -986,9 +995,13 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		
 		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
-												[data-setting-id="perceptive.IlluminationAPDCBehaviour"]`);
+												[data-setting-id="perceptive.IlluminationAPDCBehaviour"],
+												[data-setting-id="perceptive.Light3Dcalc"]`);
 												
-		collapseContent(pHTML, "Sound", 	`[data-setting-id="perceptive.SpottedSound"]`);
+		collapseContent(pHTML, "SoundnImages", 	`[data-setting-id="perceptive.SpottedSound"],
+												[data-setting-id="perceptive.SpottedSoundVolume"],
+												[data-setting-id="perceptive.SpotterImagePing"],
+												[data-setting-id="perceptive.SpotterImagePingDuration"]`);
 		
 		//test buttons
 		let vSoundForm;

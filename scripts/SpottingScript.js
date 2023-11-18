@@ -1407,11 +1407,6 @@ class SpottingManager {
 
 			let vRangeInfo = {};			
 			
-			//BUG, RANGE NOT REPECTED; LOOK HERE!
-			console.log(SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo));
-			console.log(vObject.object.center);
-			console.log({Tolerance : vTolerance, RangeReplacement : vCustomRange});
-			console.log(vRangeInfo);
 			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 				//performance reason (vLocalVisionData.vRangeDCModifier)
 				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {

@@ -1325,17 +1325,24 @@ class PerceptiveFlags {
 	}
 	
 	static async CheckLightLevel(pObject, pUsePosition = false) {
+		let vCenterPoint;
 		if (pUsePosition) {
-			await this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.CenterPositionXY(pObject.object), pObject.parent));
+			vCenterPoint = GeometricUtils.CenterPositionXY(pObject.object);
 		}
 		else {
 			if (pObject.center) {
-				await this.#setLightLevel(pObject, VisionUtils.LightingLevel(pObject.center, pObject.parent));
+				vCenterPoint = pObject.center;
 			}
 			else {
-				await this.#setLightLevel(pObject, VisionUtils.LightingLevel(GeometricUtils.insceneCenter(pObject), pObject.parent));
+				vCenterPoint = GeometricUtils.insceneCenter(pObject);
 			}
 		}
+		
+		if (game.settings.get(cModuleName, "Light3Dcalc")) {
+			vCenterPoint.elevation = pObject.elevation;
+		}
+		
+		await this.#setLightLevel(pObject, VisionUtils.LightingLevel(vCenterPoint, pObject.parent));
 	}
 	
 	static getLightLevelModifier(pObject, pVisionLevel = 0) {
