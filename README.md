@@ -71,13 +71,6 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
-  - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
-  - Allows for the world setting Auto reroll sneaking stealth dc to be activated
-    - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
-   - The active perception DC of compatible tokens (Characters, NPCs, Familairs) will now be locked and updated automatically
-   - The passive perception DC will be calculated as a skill check for compatible tokens (Characters, NPCs, Familairs)
-   - Undetected will only be removed on a critical failure/success and be replaced with hidden otherwise
-   - Hidden can be removed with active perception checks
 - GM UI & Controls
   - Player perspective: to allow GMs to only spot tokens players can spot
   - GM confirm Spotting: to open a dialog for the GM when a player rolls a perception check to conform which tokens are spotted
@@ -181,6 +174,13 @@ The following informations will be displayed in the settings (if applicable):
   - Allows for Door moving world setting Door moving distance to be set to limit the distance over which players can move doors
 - Maximum Interaction Distance: to limit the distance over which players can interact with doors
 - Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
+  - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
+  - Allows for the world setting Auto reroll sneaking stealth dc to be activated
+    - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
+   - The active perception DC of compatible tokens (Characters, NPCs, Familairs) will now be locked and updated automatically
+   - The passive perception DC will be calculated as a skill check for compatible tokens (Characters, NPCs, Familairs)
+   - Undetected will only be removed on a critical failure/success and be replaced with hidden otherwise
+   - Hidden can be removed with active perception checks
 - Show Perceptive walls [DEBUG]: to show the modules walls in the wall layer for debug purposes
 
 ### Compatibility:
