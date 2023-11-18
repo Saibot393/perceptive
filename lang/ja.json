@@ -45,6 +45,7 @@
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
 			"Sound"						: "Sound",
+			"SoundnImages"				: "Geräusche & Bilder",
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Reset \"spotted by\"",
@@ -127,6 +128,21 @@
 				"name" 					: "鍵穴覗きの距離",
 				"descrp" 				: "プレイヤーが鍵穴を覗ける最大距離を設定します。 (-1 で無限)"
 			}, 
+			
+			"GMConfirmPeeking" : {
+				"name"					: "GM confrims peeks",
+				"descrp"				: "If the GM has to confirm every peek action"
+			},
+			
+			"PeekingFormula" : {
+				"name"					: "Peeking formula",
+				"descrp"				: "Formalu used for peeking through locks (leave empty to deactivate)"
+			},
+			
+			"PeekingDefaultDC" : {
+				"name"					: "Peeking default DC",
+				"descrp"				: "Default DC for peeking through newly created walls"
+			},
 			
 			"DoorstandardMove" : {
 				"name" 					: "ドアの通常動作タイプ",

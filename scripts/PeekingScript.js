@@ -107,7 +107,7 @@ class PeekingManager {
 	}
 	
 	static PeekCheck(pDoor, pInfos, pCharacter, pChatMessages = true) {
-		if (PerceptiveFlags.hasPeekingDC(pDoor) && !PerceptiveFlags.isLockpeekedbyToken(pDoor, pCharacter)) {
+		if (PerceptiveFlags.hasPeekingDC(pDoor) && !PerceptiveFlags.isLockpeekedbyToken(pDoor, pCharacter) && game.settings.get(cModuleName, "PeekingFormula").length > 0) {
 			
 			let vSuccessDegree;
 			

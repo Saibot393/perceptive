@@ -45,6 +45,7 @@
 			"Effects"					: "Effekte",
 			"Illumination"				: "Beleuchtung",
 			"Sound"						: "Geräusche",
+			"SoundnImages"				: "Geräusche & Bilder",
 			"Tile"						: "Fliese",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Resette \"Aufgedeckt von\"",
@@ -127,6 +128,21 @@
 				"name" 					: "Schloss-durchschauen Distanz",
 				"descrp" 				: "Maximale Distanz über welche Spieler Schlösser durchschauen können (-1 für unbeschränkt)"
 			}, 
+			
+			"GMConfirmPeeking" : {
+				"name"					: "SL bestätigt Durchschauen",
+				"descrp"				: "Ob die SL jede Durchschauen aktion bestätigen soll"
+			},
+			
+			"PeekingFormula" : {
+				"name"					: "Durchschauen Formel",
+				"descrp"				: "Formel welche für das durchschauen von Schlössern benutzt wird (frei lassen um es zu deaktivieren)"
+			},
+			
+			"PeekingDefaultDC" : {
+				"name"					: "Durchschauen standard SG",
+				"descrp"				: "Die standard Schwierigkeit für das durchschauen von neuen Wänden"
+			},
 			
 			"DoorstandardMove" : {
 				"name" 					: "Standard Tür Bewegung",

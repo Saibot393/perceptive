@@ -45,6 +45,7 @@
 			"Effects"					: "Effects",
 			"Illumination"				: "Illumination",
 			"Sound"						: "Sound",
+			"SoundnImages"				: "Sound & Images",
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Reset \"spotted by\"",
@@ -127,6 +128,21 @@
 				"name" 					: "Lock peeking distance",
 				"descrp" 				: "Maximum distance over which players can peek locks (-1 for unlimited)"
 			}, 
+			
+			"GMConfirmPeeking" : {
+				"name"					: "GM confrims peeks",
+				"descrp"				: "If the GM has to confirm every peek action"
+			},
+			
+			"PeekingFormula" : {
+				"name"					: "Peeking formula",
+				"descrp"				: "Formula used for peeking through locks (leave empty to deactivate)"
+			},
+			
+			"PeekingDefaultDC" : {
+				"name"					: "Peeking default DC",
+				"descrp"				: "Default DC for peeking through newly created walls"
+			},
 			
 			"DoorstandardMove" : {
 				"name" 					: "Door standard movement type",
