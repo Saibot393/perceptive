@@ -338,6 +338,11 @@
 				"descrp"				: "Einfluss der Beleuchtung auf Wahrnehmungswürfe (Schwacheslicht,Helleslicht , \"=,=\" für keinen Einfluss, valide Wörter: advantage, adv, +, normal, =, disadvantage, disadv, -)"
 			},
 			
+			"Light3Dcalc" : {
+				"name"					: "Beleuchtungs 3D Berechnung",
+				"descrp"				: "Ob die Figure Beleuchtung in 3D berechnet werden soll (anstatt 2D)"
+			},
+			
 			"GMSpotconfirmDialog" : {
 				"name"					: "SL Aufdecken bestätigen",
 				"descrp"				: "Ob bei Wahrnehmungswürfen ein Dialog angezeigt werden soll in welchem die SL den Wurf bestätigen muss"
@@ -416,6 +421,21 @@
 			"SpottedSound" : {
 				"name"					: "Aufgedeckt Geräusch",
 				"descrp"				: "Geräusch welches abgespielt wird, wenn eine kontrollierte Figur aufgedeckt wird (Pfad zur Datei)"
+			},	
+			
+			"SpottedSoundVolume" : {
+				"name"					: "Aufgedeckt Geräusch Lautstärke",
+				"descrp"				: "Lautstärke des aufgedeckt geräusches"
+			},	
+
+			"SpotterImagePing" : {
+				"name"					: "Beobachter ping Bild",
+				"descrp"				: "Das Bild mit welchem Figuren welche versteckte Objekte aufdecken gepingt werden"
+			},		
+
+			"SpotterImagePingDuration" : {
+				"name"					: "Beobachter ping Bild Dauer",
+				"descrp"				: "Die dauer für welche das Beobachter ping Bild sichtbar bleibt (in Sekunden)"
 			},	
 			
 			"showPerceptiveWalls" : {
@@ -538,6 +558,11 @@
 				"descrp"				: "Ob Spieler durch das Schloss der Tür schauen können"
 			},
 			
+			"PeekingDCFlag" : {
+				"name" 					: "Durschau SG",
+				"descrp"				: "Der Schwierigkeitsgrad um dieses Schloss zu durchschauen (0 um Würfe aus zu stellen)"
+			},
+			
 			"LockPeekSizeFlag" : {
 				"name" 					: "Schlüsselloch Größe",
 				"descrp"				: "Die standard Größe des Schlüssellochs relativ zur Tür Größe (0-1)"
@@ -618,6 +643,11 @@
 				"Title"					: "Andere aktive Fähigkeits SGs",
 				"name"					: "Die aktiven Entdeckungs SGs für andered Fähigkeiten (-1 wenn unmöglich):",
 				"entry"					: "SG für {pSkill} wurf"
+			},
+			
+			"SpottingMessageFlag" : {
+				"name"					: "Entdeckt Nachricht",
+				"descrp"				: "Nachricht welche an den ENtdecker dieses Objekts geflüstert wird"
 			},
 			
 			"LockPPDCFlag" : {

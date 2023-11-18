@@ -72,6 +72,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "UsePf2eRules", {
+	name: Translate("Settings.UsePf2eRules.name"),
+	hint: Translate("Settings.UsePf2eRules.descrp"),
+	scope: "world",
+	config: PerceptiveUtils.isPf2e(),
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  });  
+  
   //peeking
   game.settings.register(cModuleName, "Peekablebydefault", {
 	name: Translate("Settings.Peekablebydefault.name"),
@@ -141,7 +151,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.PeekingFormula.name"),
 	hint: Translate("Settings.PeekingFormula.descrp"),
 	scope: "world",
-	config: true,
+	config: !game.settings.get(cModuleName, "UsePf2eRules"),
 	type: String,
 	default: ""
   });
@@ -235,16 +245,6 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Settings.ActivateSpotting.descrp"),
 	scope: "world",
 	config: true,
-	type: Boolean,
-	default: false,
-	requiresReload: true
-  });  
-  
-  game.settings.register(cModuleName, "UsePf2eRules", {
-	name: Translate("Settings.UsePf2eRules.name"),
-	hint: Translate("Settings.UsePf2eRules.descrp"),
-	scope: "world",
-	config: PerceptiveUtils.isPf2e(),
 	type: Boolean,
 	default: false,
 	requiresReload: true

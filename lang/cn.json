@@ -338,6 +338,11 @@
 				"descrp"				: "Behaviour of perception rolls for different Light levels (Dim-light,Bright-light , \"=,=\" for default behaviour, valid key words: advantage, adv, +, normal, =, disadvantage, disadv, -)"
 			},
 			
+			"Light3Dcalc" : {
+				"name"					: "Illumination 3D calculation",
+				"descrp"				: "If the token illumination should be calculated in 3D (instead of 2D)"
+			},
+			
 			"GMSpotconfirmDialog" : {
 				"name"					: "GM确定发现",
 				"descrp"				: "是否在进行察觉鉴定后为GM创建一个对话框，让GM在对话框中对发现的情况进行确认。"
@@ -416,6 +421,21 @@
 			"SpottedSound" : {
 				"name"					: "Spotted Sound",
 				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+			},	
+			
+			"SpottedSoundVolume" : {
+				"name"					: "Spotted Sound volume",
+				"descrp"				: "Volume of the spotted sound"
+			},	
+
+			"SpotterImagePing" : {
+				"name"					: "Spotter ping image",
+				"descrp"				: "The image with which spotters of hidden objects are pinged"
+			},		
+
+			"SpotterImagePingDuration" : {
+				"name"					: "Spotter ping image duration",
+				"descrp"				: "The duration for which the spotter ping image persists (in seconds)"
 			},	
 			
 			"showPerceptiveWalls" : {
@@ -538,6 +558,11 @@
 				"descrp"				: "钥匙孔是否可以被玩家窥视"
 			},
 			
+			"PeekingDCFlag" : {
+				"name" 					: "Peeking DC",
+				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
+			},
+			
 			"LockPeekSizeFlag" : {
 				"name" 					: "钥匙孔大小",
 				"descrp"				: "钥匙孔的大小，相对于门的尺寸 (0-1)"
@@ -618,6 +643,11 @@
 				"Title"					: "Other active skill DCs",
 				"name"					: "The active spot DCs for other skills (-1 for impossible):",
 				"entry"					: "DC for {pSkill} checks"
+			},
+			
+			"SpottingMessageFlag" : {
+				"name"					: "Spotting message",
+				"descrp"				: "Message whispered to the spotter of this object"
 			},
 				
 			"LockPPDCFlag" : {

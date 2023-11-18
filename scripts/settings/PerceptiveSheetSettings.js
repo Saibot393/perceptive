@@ -427,6 +427,7 @@ class PerceptiveSheetSettings {
 		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSpottingMessageF +".name"), 
 													vhint : Translate("SheetSettings."+ cSpottingMessageF +".descrp"), 
 													vtype : "text", 
+													vwide : true,
 													vvalue : PerceptiveFlags.SpottingMessage(pApp.document), 
 													vflagname : cSpottingMessageF
 													}, pto);

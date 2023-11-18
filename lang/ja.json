@@ -338,6 +338,11 @@
 				"descrp"				: "光源の度合いによる知覚判定の動作 (Dim-light,Bright-light , \"=,=\"でデフォルト、有効なキーワード: advantage, adv, +, normal, =, disadvantage, disadv, -)"
 			},
 			
+			"Light3Dcalc" : {
+				"name"					: "Illumination 3D calculation",
+				"descrp"				: "If the token illumination should be calculated in 3D (instead of 2D)"
+			},
+			
 			"GMSpotconfirmDialog" : {
 				"name"					: "GM による発見の許可",
 				"descrp"				: "知覚判定を行う時、GM宛にダイアログを出力し、発見するために許可を求めます。"
@@ -416,6 +421,21 @@
 			"SpottedSound" : {
 				"name"					: "Spotted Sound",
 				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+			},	
+			
+			"SpottedSoundVolume" : {
+				"name"					: "Spotted Sound volume",
+				"descrp"				: "Volume of the spotted sound"
+			},	
+
+			"SpotterImagePing" : {
+				"name"					: "Spotter ping image",
+				"descrp"				: "The image with which spotters of hidden objects are pinged"
+			},		
+
+			"SpotterImagePingDuration" : {
+				"name"					: "Spotter ping image duration",
+				"descrp"				: "The duration for which the spotter ping image persists (in seconds)"
 			},	
 			
 			"showPerceptiveWalls" : {
@@ -538,6 +558,11 @@
 				"descrp"				: "プレイヤーによって鍵穴が覗けるかどうか"
 			},
 			
+			"PeekingDCFlag" : {
+				"name" 					: "Peeking DC",
+				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
+			},
+			
 			"LockPeekSizeFlag" : {
 				"name" 					: "鍵穴の大きさ",
 				"descrp"				: "ドアの大きさに対する鍵穴の大きさ (0-1)"
@@ -618,6 +643,11 @@
 				"Title"					: "Other active skill DCs",
 				"name"					: "The active spot DCs for other skills (-1 for impossible):",
 				"entry"					: "DC for {pSkill} checks"
+			},
+			
+			"SpottingMessageFlag" : {
+				"name"					: "Spotting message",
+				"descrp"				: "Message whispered to the spotter of this object"
 			},
 			
 			"LockPPDCFlag" : {
