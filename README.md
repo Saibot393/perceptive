@@ -17,12 +17,16 @@ Allows doors to be set a lock peekable. When a player ctrl+right-clicks a lock p
 - Standard size of lock peeks: the default size of door lockpeeks
 - Standard position of lock peeks: the default value for the Lock peek position
 - Stop lock peeking on movement: to stop lock peeking even if the moving token is still within the interaction distance
+- GM confrims peeks: to set wether a GM has to confirm lock peeking actions
+- Peeking formula: to set the formula used when peeking a lock with a peeking DC
+- Peekind default DC: to set the default DC used for new peeking doors
 #### Client:
 - Message popups to enable certain popups for Lock peeking interactions
 #### Walls:
 - Can be lock peeked: to make the door peekable
 - Lock peek size: to set the doorlocks peek size (in parts of the door (0-1))
 - Lock peek position to change the position of the lock gap (in parts of the door (0-1))
+- Peeking DC: to set the DC for peeking through this lock
 
 ### Issues:
 - Lock peeking is currently incompatible with Elevated Vision (a fix is on the way)
@@ -67,7 +71,6 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### World:
 - Activate Spot Invisible feature: to activate/deactivate Spot Invisible feature
-- Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
   - Differentiates between hiding and sneaking, using the appropiate Pf2e macros
   - Allows for the world setting Auto reroll sneaking stealth dc to be activated
     - Allows for the token setting Lock passive perception DC to be set to prevent it from being rerolled
@@ -114,8 +117,12 @@ Allows for player to either passively or actively spot secret doors and hidden t
     - Can be modified using active effects with the syntax `flags.perceptive.Modifiers.PDC.Illumination.{#LightLevel}` (#LightLevel is 0 for dark, 1 for dim, and 2 for bright)
   - Use Illumination perception DC modifiers for active perception: to enable the set modifiers ofr perception rolls
   - Illumination perception behaviour: to set advantage or disadvantage for active perception rolls dependent on illumination
-- Sound
-  - Spotted Sound for a sound: to be played, should a controlled token be spotted 
+  - Illumination 3D calculation: to set wether the illumination should be calculated in 3D (with elevation)
+- Sounds & Images
+  - Spotted Sound for a sound: to be played, should a controlled token be spotted
+  - Spotted sound volume: to set the volume of the custom spotted sound
+  - Spotter ping Image: to set an image with which tokens that spot an object are pinged
+  - Spotter ping duration: to set the duration the Spotter ping Image show up for
 
 #### Walls/Tokens/Tiles:
 - Can be spotted: to activate the spotting feature on this wall
@@ -127,7 +134,8 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Reset spotted on token movement[Tokens only]: to reset spotters of this token on movement
 - Stealth effects[Tokens only]: to add additional stealth effects to this token
 - Override world stealth effects[Tokens only]: to override the worlds stealth effects with this tokens custom stealth effects
-- Tile name[TIles only]: to set the displayed name of this tile for e.g. dialogs
+- Tile name[Tiles only]: to set the displayed name of this tile for e.g. dialogs
+- Spotting Message: to set a chat message displayed for tokens that spot this object
  
 The following informations will be displayed in the settings (if applicable):
  - Calculated passive perception: The passive perception of this token calculated according to the set formula
@@ -172,6 +180,7 @@ The following informations will be displayed in the settings (if applicable):
   - Allows for Lock peeking world setting Lock peeking distance to be set to limit the distance over which players can peek locks
   - Allows for Door moving world setting Door moving distance to be set to limit the distance over which players can move doors
 - Maximum Interaction Distance: to limit the distance over which players can interact with doors
+- Use Pf2e rules[Pf2e only]: to activate Pf2e specific behaviour
 - Show Perceptive walls [DEBUG]: to show the modules walls in the wall layer for debug purposes
 
 ### Compatibility:
