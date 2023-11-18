@@ -4,7 +4,7 @@
     -  Added world setting Peeking formula to set the formula used when peeking a lock with a peeking DC
     -  Added world setting Peekind default DC to set the default DC used for new peeking doors
     -  Added wall setting Peeking DC to set the DC for peeking through this lock
-  -  Spotting feature:
+-  Spotting feature:
     -  Use Illumnation 3D calculation to set wether the illumination should be calculated in 3D (with elevation)
     -  Added world setting Spotted sound volume to set the volume of the custom spotted sound
     -  Added a test button for the custom spotted sound
