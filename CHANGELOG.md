@@ -1,4 +1,4 @@
-## v2.9.0 (unreleased)
+## v2.9.0
 - Lock peeking feature:
     -  Added world setting GM confrims peeks to set wether a GM has to confirm lock peeking actions
     -  Added world setting Peeking formula to set the formula used when peeking a lock with a peeking DC
@@ -12,6 +12,7 @@
     -  Added world setting Spotter ping duration to set the duration the Spotter ping Image show up for
     -  Added token/tile/wall setting Spotting Message to set a chat message displayed for tokens that spot this object
     -  Added example macro to ping with a custom image
+-  Moved the Use Pf2e rules to general settings, since it now also affects the peeking feature
 
 ## v2.8.3
 - Fixed bug that sometimes cuased empty messages to be displayed when character with lingering active perception entered combat
