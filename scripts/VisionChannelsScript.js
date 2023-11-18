@@ -1,0 +1,5 @@
+class VisionChannelsManager {
+	//DECLARATIONS
+	
+	//IMPLEMENTATIONS
+}

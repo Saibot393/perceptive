@@ -571,7 +571,7 @@ class SpottingManager {
 				//chat message
 				vChatMessage = vChatMessage + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
 				
-				vChatMessage = vChatMessage	+   `<img src="${pTokens[i].texture.src}" style = "height: 2em;">`;
+				vChatMessage = vChatMessage	+   `<img src="${pTokens[i].texture.src}" style = "height: 2em;width : 2em">`;
 				
 				vChatMessage = vChatMessage + 	`<p>${TranslateandReplace("ChatMessage.LostLingeringAP", {pName : PerceptiveFlags.PerceptiveName(pTokens[i])})}</p>
 												</div>`;
