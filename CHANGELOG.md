@@ -1,3 +1,18 @@
+## v2.9.0 (unreleased)
+- Lock peeking feature:
+    -  Added world setting GM confrims peeks to set wether a GM has to confirm lock peeking actions
+    -  Added world setting Peeking formula to set the formula used when peeking a lock with a peeking DC
+    -  Added world setting Peekind default DC to set the default DC used for new peeking doors
+    -  Added wall setting Peeking DC to set the DC for peeking through this lock
+  -  Spotting feature:
+    -  Use Illumnation 3D calculation to set wether the illumination should be calculated in 3D (with elevation)
+    -  Added world setting Spotted sound volume to set the volume of the custom spotted sound
+    -  Added a test button for the custom spotted sound
+    -  Added world setting Spotter ping Image to set an image with which tokens that spot an object are pinged
+    -  Added world setting Spotter ping duration to set the duration the Spotter ping Image show up for
+    -  Added token/tile/wall setting Spotting Message to set a chat message displayed for tokens that spot this object
+    -  Added example macro to ping with a custom image
+
 ## v2.8.3
 - Fixed bug that sometimes cuased empty messages to be displayed when character with lingering active perception entered combat
 - Improved MATT actions and filter text
