@@ -391,7 +391,7 @@ class SpottingManager {
 			}
 		}
 		
-		SpottingManager.CheckTilesSpottingVisible(pIgnoreNewlyVisibleTiles);
+		//SpottingManager.CheckTilesSpottingVisible(pIgnoreNewlyVisibleTiles);
 		
 		if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
 			console.log("perceptive: New vision data:", vLocalVisionData);
