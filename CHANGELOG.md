@@ -1,3 +1,6 @@
+## v2.9.3
+- Fixed bug that caused DC to be calculated wrongly
+
 ## v2.9.2
 - Fixed bug that cause the spotting of tiles to sometimes triggers multiple times
 
