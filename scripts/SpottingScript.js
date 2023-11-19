@@ -428,7 +428,6 @@ class SpottingManager {
 			let vADC;
 			
 			let vSuccessDegree;
-			
 			for (let i = 0; i < vSpotables.length; i++) {
 				
 				let vTolerance;
@@ -470,7 +469,7 @@ class SpottingManager {
 					vInRange = SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vRangeInfo);
 				}
 				
-				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || vInRange) {		
+				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || vInRange) {	
 					vCurrentRollbehaviour = PerceptiveFlags.getAPRollBehaviour(vSpotables[i], vLocalVisionData.vlastVisionLevel);
 					
 					vCurrentRollbehaviour = PerceptiveUtils.AddRollBehaviour(vCurrentRollbehaviour, pInfos.SourceRollBehaviour);
@@ -488,14 +487,13 @@ class SpottingManager {
 						vResultBuffer = pResults[0]
 					}
 					
-					vADC = PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill) + VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
+					vADC = Number(PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill)) + Number(VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier));
 					
 					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
 						
 						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
-							
 							vSpotted.push(vSpotables[i]);
 							
 							if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"){

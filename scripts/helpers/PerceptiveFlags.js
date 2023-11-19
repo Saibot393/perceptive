@@ -1272,6 +1272,8 @@ class PerceptiveFlags {
 			vSkillValue = PerceptiveFlags.getotherSkillADC(pObject, pSkill);
 		}
 		
+		vSkillValue = Number(vSkillValue);
+		
 		if (game.settings.get(cModuleName, "UseIlluminationPDCModifierforAP")) {
 			return vSkillValue + PerceptiveFlags.getLightLevelModifier(pObject, pVisionMode);	
 		}
@@ -1366,7 +1368,7 @@ class PerceptiveFlags {
 				vModifier = 0; //if something went wrong
 			}
 			
-			return VisionUtils.LightingPDCModifier(vIlluminationLevel) + vModifier;
+			return Number(VisionUtils.LightingPDCModifier(vIlluminationLevel)) + Number(vModifier);
 		}
 	}
 	
