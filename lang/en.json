@@ -702,6 +702,20 @@
 			}
 		},
 		
+		"vision-channels-window" : {
+			"entries" : {
+				"titles" : {
+					"name"				: "Name",
+					"required"			: "Required to see",
+					"throughwalls"		: "Through walls",
+					"range"				: "Range",
+					"color"				: "Color",
+					"filter"			: "Effect filter",
+					"transparency"		: "Transparency"
+				}
+			}
+		},
+		
 		"monks-active-tiles" : {
 			"filters" : {
 				"name"						: "Filter",
