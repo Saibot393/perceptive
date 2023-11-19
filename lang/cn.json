@@ -640,6 +640,7 @@
 			
 			"otherSkillADCsFlag" : {
 				"openButtonname"		: "Other active skill DCs",
+				"confirmButtonname"		: "Confirm",
 				"Title"					: "Other active skill DCs",
 				"name"					: "The active spot DCs for other skills (-1 for impossible):",
 				"entry"					: "DC for {pSkill} checks"

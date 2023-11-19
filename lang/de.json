@@ -640,6 +640,7 @@
 			
 			"otherSkillADCsFlag" : {
 				"openButtonname"		: "Andere aktive Fähigkeits SGs",
+				"confirmButtonname"		: "Bestätigen",
 				"Title"					: "Andere aktive Fähigkeits SGs",
 				"name"					: "Die aktiven Entdeckungs SGs für andered Fähigkeiten (-1 wenn unmöglich):",
 				"entry"					: "SG für {pSkill} wurf"
