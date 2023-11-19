@@ -1,3 +1,6 @@
+## v2.9.2
+- Fixed bug that cause the spotting of tiles to sometimes triggers multiple times
+
 ## v2.9.1
 - Small ui bug fix for removed lingering ap chat message
 
