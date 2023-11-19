@@ -1,3 +1,6 @@
+## v2.9.1
+- Small ui bug fix for removed lingering ap chat message
+
 ## v2.9.0
 - Lock peeking feature:
     -  Added world setting GM confrims peeks to set wether a GM has to confirm lock peeking actions
