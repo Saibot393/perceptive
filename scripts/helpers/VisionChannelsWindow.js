@@ -1,4 +1,9 @@
-class TakeInventoryWindow extends Application {
+import { cModuleName, Translate } from "../utils/PerceptiveUtils.js";
+
+const cWindowID = "vision-channels-window";
+const cConfirmIcon = "fa-solid fa-check";
+
+class VisionChannelsWindow extends Application {
 	constructor(pOptions = {}) {
 		super(pOptions);
 		
@@ -12,7 +17,7 @@ class TakeInventoryWindow extends Application {
 			popOut: true,
 			width: 800,
 			height: 400,
-			template: `modules/${cModuleName}/templates/take-inventory-window.html`,
+			template: `modules/${cModuleName}/templates/${cWindowID}.html`,
 			jQuery: true,
 			title: Translate(cWindowID + ".titles." + "VisionChannels"),
 			resizable: true
@@ -20,30 +25,41 @@ class TakeInventoryWindow extends Application {
 	}
 	
 	getHTML(pOptions={}) {
+		let vEntriesHTML = `<table>`;
 		
-		for (let i = 0; i < vInventory.length; i++) {
-			vInventoryHTML = vInventoryHTML + 	`
-												<div class="form-group item-entry" itemid="${vInventory[i].id}" style="display:flex;flex-direction:row;align-items:center;gap:1em;border: 1px solid">
-													<img src="${vInventory[i].img}" style = "height: 2.6em;">
-													<p style="width:fit-content">${vInventory[i].name}</p>
-													<div style="flex-grow:1"></div>
-													<div style="display:flex;flex-direction:row;align-items:center;gap:0.2em;width:fit-content">
-														<input class="take-value" value="0" type="number" name="${cWindowID}.take-value.${vTokenID}.${vInventory[i].id}" style="width:2em">
-														<p class="take-maximum" style="">/${vInventory[i].quantity}</p>
-													</div>
-													<button type="button" style="width:fit-content" name="${cWindowID}.take-all.${vTokenID}.${vInventory[i].id}" 
-														onclick= "$(this).parent().find('input.take-value').val(${vInventory[i].quantity})"
-														> <i class="${cTakeIcon}"></i> </button>
-												</div>`;
+		vEntriesHTML = `<tr>
+							<th>${Translate(cWindowID + ".entries.titles." + "name")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "required")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "throughwalls")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "range")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "color")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "filter")}</th>
+							<th>${Translate(cWindowID + ".entries.titles." + "transparency")}</th>
+						</tr>`;
+		
+		for (let i = 0; i < 1; i++) {
+			vEntriesHTML = vEntriesHTML + 	`	<tr>
+													<td> <input type="text"> </td>
+													<td> <input type="checkbox"> </td>
+													<td> <input type="checkbox"> </td>
+													<td> <input type="number"> </td>
+													<td> <input type="color"> </td>
+													<td> 
+														<select> 
+														</select>
+													</td>
+													<td> <input type="number"> </td>
+												</tr>`;
 		}
 		
-		vInventoryHTML = vInventoryHTML + `</div>`;
+		vEntriesHTML = vEntriesHTML + `</table>`;
 		
 		//buttons	
 		let vButtonsHTML = 				`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em;margin-top:1em">
-											<button type="button" name="${cWindowID}.confirmchanges"> <i class="${cTransferItemsIcon}"></i> ${Translate(cWindowID + ".buttons.take.name")} </button>
-											<button type="button" style="width:fit-content" name="${cWindowID}.take-all.everything"> <i class="${cTakeIcon}"></i> </button>
+											<button type="button" name="${cWindowID}.confirmchanges"> <i class="${cConfirmIcon}"></i> ${Translate(cWindowID + ".buttons.confirm.name")} </button>
 										</div>`;
+										
+		return vEntriesHTML + vButtonsHTML;
 	}
 	
 	getData(pOptions={}) {
@@ -62,37 +78,15 @@ class TakeInventoryWindow extends Application {
 	async _updateObject(pEvent, pData) {
 	}	
 	
-	//DECLARATIONs
-	RequestItemTransfer() {} //requests the item transfer as defined
-	
-	//support
-	getTransferInfo() {} //returns the transfer info set in this window
+	//DECLARATIONS
 	
 	//IMPLEMENTATIONS
-	
-	RequestItemTransfer() {
-		if (game.user.isGM) {
-			LnKTakeInventory.ItemTransferRequest({SceneID : this.vTaker.parent.id, TokenID : this.vTaker.id}, {SceneID : this.vInventoryOwner.parent.id, TokenID : this.vInventoryOwner?.id}, this.getTransferInfo(), this.vOptions);
-		}
-		else {
-			game.socket.emit("module."+cModuleName, {pFunction : "ItemTransferRequest", pData : {pTaker : {SceneID : this.vTaker.parent.id, TokenID : this.vTaker.id}, pInventoryOwner : {SceneID : this.vInventoryOwner.parent.id, TokenID : this.vInventoryOwner?.id}, pTransferInfo : this.getTransferInfo(), pOptions : this.vOptions}});
-		}
-	}
-	
-	//support
-	getTransferInfo() {
-		let vInfo = [];
-		
-		let vEntries = this.element.find('div.item-entry');
-		
-		vEntries.each(function() {
-			vInfo.push({itemid : $(this).attr("itemid"), quantity : $(this).find(`input.take-value`).val()});
-		});
-		
-		for (let i = 0; i < vInfo.length; i++) {
-			vInfo[i].iscurrency = this.vInventoryInfo.find(vItem => vItem.id == vInfo[i].itemid)?.iscurrency;
-		}
-		
-		return vInfo;
-	}
 }
+
+function testwindow() {
+	new VisionChannelsWindow().render(true);
+}
+
+Hooks.once("ready", function() {
+	game.modules.get("perceptive").api.test = {testwindow}
+});
