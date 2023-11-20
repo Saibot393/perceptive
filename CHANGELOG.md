@@ -1,3 +1,8 @@
+## v3.0.0 (unreleased)
+- New Feature "Vision Channels"
+    - Added world setting activate Vision Channel feature
+    - Added world setting open Vision Channel Menu
+
 ## v2.9.3
 - Fixed bug that caused DC to be calculated wrongly
 
