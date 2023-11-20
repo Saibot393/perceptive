@@ -1,12 +1,6 @@
-const cDefaultChannel = {
-	Name : "Vision Channel",
-	Color : "#ffffff",
-	RequiredtoSee : false,
-	SeethroughWalls : false,
-	Range : -1,
-	EffectFilter : null,
-	Transparency : 0
-};
+import { PerceptiveUtils, cModuleName, Translate } from "./utils/PerceptiveUtils.js";
+import { PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
+import { cDefaultChannel, VisionChannelsWindow, VisionChannelsUtils } from "./helpers/VisionChannelHelper.js";
 
 class VisionChannelsManager {
 	//DECLARATIONS

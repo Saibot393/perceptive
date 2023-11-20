@@ -58,6 +58,8 @@ const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of th
 const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this object can be seen
 const cSpottingMessageF = "SpottingMessageFlag"; //Flag to store the chat message when this object is spotted
 
+const cVisionChannelsF = "VisionChannelsFlag"; //FLag to store the vision channels of object
+
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
@@ -239,6 +241,15 @@ class PerceptiveFlags {
 	static SpottingMessage(pObject) {} //returns the spotting message displayed when pObject is spotted
 	
 	static hasSpottingMessage(pObject) {} //returns wether pObject has a Spotting Message
+	
+	//Vision channels
+	static getVisionChannels(pObject, pRaw = false) {} //returns the vision channels of pObject
+	
+	static setVisionChannels(pObject, pChannels) {} //sets the vision channels of pObject
+	
+	static getEmitters(pObject) {} //returns active Emitters of pObject
+	
+	static getReceivers(pObject) {} //returns active Receivers of pObject
 		
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -742,6 +753,19 @@ class PerceptiveFlags {
 		return ""; //default if anything fails		
 	}
 	
+	static #VisionChannelsFlag (pObject) {
+	//returns content of VisionChannelsFlag of pObject ({})
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cVisionChannelsF)) {
+				return vFlag.VisionChannelsFlag;
+			}
+		}
+		
+		return {}; //default if anything fails		
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -931,6 +955,16 @@ class PerceptiveFlags {
 		//sets content of otherSkillADCsFlag (object)
 		if (pObject) {
 			await pObject.setFlag(cModuleName, cotherSkillADCsF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setVisionChannels (pObject, pContent) {
+		//sets content of VisionChannelsFlag (object)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, cVisionChannelsF, pContent); 
 			
 			return true;
 		}
@@ -1558,6 +1592,31 @@ class PerceptiveFlags {
 	
 	static hasSpottingMessage(pObject) {
 		return PerceptiveFlags.SpottingMessage(pObject).length > 0;
+	}
+	
+	//Vision channels
+	static getVisionChannels(pObject, pRaw = false) {
+		return this.#VisionChannelsFlag(pObject);
+		
+		if (!pRaw) {
+			//AD AE VCs
+		}
+	}
+	
+	static setVisionChannels(pObject, pChannels) {
+		this.#setVisionChannels(pObject, pChannels);
+	}
+	
+	static getEmitters(pObject) {
+		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		
+		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Emits);
+	}
+	
+	static getReceivers(pObject) {
+		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		
+		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
 	}
 	
 	//effects

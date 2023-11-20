@@ -705,13 +705,13 @@
 		"vision-channels-window" : {
 			"entries" : {
 				"titles" : {
-					"name"				: "Name",
-					"required"			: "Required to see",
-					"throughwalls"		: "Through walls",
-					"range"				: "Range",
-					"color"				: "Color",
-					"filter"			: "Effect filter",
-					"transparency"		: "Transparency"
+					"Name"				: "Name",
+					"RequiredtoSee"		: "Required to see",
+					"SeethroughWalls"	: "Through walls",
+					"Range"				: "Range",
+					"Color"				: "Color",
+					"EffectFilter"		: "Effect filter",
+					"Transparency"		: "Transparency"
 				}
 			}
 		},

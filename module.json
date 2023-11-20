@@ -51,13 +51,14 @@
 	"scripts/DoorMovingScript.js",
 	"scripts/StalkingScript.js",
 	"scripts/SpottingScript.js",
+	"scripts/VisionChannelsScript.js",
 	"scripts/helpers/SocketHandler.js",
 	"scripts/helpers/MacroHooks.js",
 	"scripts/helpers/WallTabInserter.js",
 	"scripts/settings/PerceptiveSheetSettings.js",
 	"scripts/compatibility/PerceptiveCompatibility.js",
 	"scripts/compatibility/APIHandler.js",
-	"scripts/helpers/VisionChannelsWindow.js"
+	"scripts/helpers/VisionChannelsHelper.js"
   ],
   "packs": [
 	{
