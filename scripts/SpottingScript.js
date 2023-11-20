@@ -1,5 +1,6 @@
 import {PerceptiveUtils, cModuleName, Translate, TranslateandReplace} from "./utils/PerceptiveUtils.js";
 import {VisionUtils, cLightLevel} from "./utils/VisionUtils.js";
+import {vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions} from "./helpers/BasicPatches.js";
 import {PerceptiveSystemUtils} from "./utils/PerceptiveSystemUtils.js";
 import {GeometricUtils } from "./utils/GeometricUtils.js";
 import {PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
@@ -1458,104 +1459,46 @@ Hooks.once("ready", function() {
 	
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {
-																											let vPrevVisible = this.visible;
-																											
-																											if (SpottingManager.DControlSpottingVisible(this)){
-																												
-																												if (!vPrevVisible) {
-																													SpottingManager.onNewlyVisible([this.wall.document], {PassivSpot : true});
-																												}
-																												
-																												return true;
-																											}
-																											else {
-																												if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
-																													return false;
-																												}
-																											}
-																											
-																											return vWrapped(args)}, "MIXED");
-		}
-		else {
-			const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
-
-			DoorControl.prototype.__defineGetter__("isVisible", function () {
-				let vPrevVisible = this.visible;
+		vDCVisionFunctions.push(function(pObject) {
+			let vPrevVisible = pObject.visible;
+			
+			if (SpottingManager.DControlSpottingVisible(pObject)){
 				
-				if (SpottingManager.DControlSpottingVisible(this)) {
-					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.wall.document], {PassivSpot : true});
-					}
-																																
-					return true;
+				if (!vPrevVisible) {
+					SpottingManager.onNewlyVisible([pObject.wall.document], {PassivSpot : true});
 				}
-				else {
-					if (game.user.isGM && (this.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
+				
+				return true;
+			}
+			else {
+				if (game.user.isGM && (pObject.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
+					return false;
+				}
+			}
+		});
+		
+		vTokenVisionFunctions.push(function(pObject) {
+			let vPrevVisible = pObject.visible;
+																															
+			let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
+			
+			if (SpottingManager.TokenSpottingVisible(pObject, vInfos)){																															
+				if (!vPrevVisible) {
+					SpottingManager.onNewlyVisible([pObject.document], vInfos);
+				}
+				
+				return true;
+			}
+			else {
+				if (PerceptiveFlags.isPerceptiveStealthing(pObject.document)) {
+					if((!pObject.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((pObject.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 						return false;
 					}
 				}
+			}
+		});
 
-				let vDControlCallBuffer = vOldDControlCall.bind(this);
-
-				return vDControlCallBuffer();
-			});
-		}
-
-		//allow tokens to be spotted
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {
-																															let vPrevVisible = this.visible;
-																															
-																															let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
-																															
-																															if (SpottingManager.TokenSpottingVisible(this, vInfos)){																															
-																																if (!vPrevVisible) {
-																																	SpottingManager.onNewlyVisible([this.document], vInfos);
-																																}
-																																
-																																return true;
-																															}
-																															else {
-																																if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-																																	if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((this.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
-																																		return false;
-																																	}
-																																}
-																															}
-					
-																															return vWrapped(args)}, "MIXED");
-		}
-		else {
-			const vOldTokenCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");
-
-			CONFIG.Token.objectClass.prototype.__defineGetter__("isVisible", function () {
-				let vPrevVisible = this.visible;
-
-				let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
-				
-				if (SpottingManager.TokenSpottingVisible(this, vInfos)) {
-					if (!vPrevVisible) {
-						SpottingManager.onNewlyVisible([this.document], vInfos);
-					}
-					
-					return true;
-				}
-				else {
-					if (PerceptiveFlags.isPerceptiveStealthing(this.document)) {
-						if((!this.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((this.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) {
-							return false;
-						}
-					}
-				}
-
-				let vTokenCallBuffer = vOldTokenCall.bind(this);
-
-				return vTokenCallBuffer();
-			});
-		}
-
+		//More hooks than the average fisher convention
 		Hooks.on("updateToken", (...args) => {SpottingManager.onTokenupdate(...args)});
 		
 		Hooks.on("createCombatant", (...args) => {SpottingManager.oncreateCombatant(...args)});

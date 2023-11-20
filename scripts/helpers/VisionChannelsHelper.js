@@ -1,5 +1,6 @@
 import { cModuleName, Translate } from "../utils/PerceptiveUtils.js";
 import { PerceptiveFlags } from "./PerceptiveFlags.js";
+import { GeometricUtils } from "../utils/GeometricUtils.js";
 
 const cWindowID = "vision-channels-window";
 
@@ -245,12 +246,14 @@ function testwindow(pObject = null) {
 
 class VisionChannelsUtils {
 	//DECLARATIONS
-	function fixVCSetting() {} //creates missing entries in cSettingName
+	static fixVCSetting() {} //creates missing entries in cSettingName
 	
-	function VCsfromNames(pNames = []) {} //returns a VCs based on a names
+	static VCsfromNames(pNames = []) {} //returns a VCs based on a names
+	
+	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], InVision : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
 	
 	//IMPLEMENTATIONS
-	function fixVCSetting() {
+	static fixVCSetting() {
 		let vChannels = game.settings.get(cModuleName, cSettingName);
 		
 		for (let vChannelKey of Object.keys(vChannels)) {
@@ -264,10 +267,58 @@ class VisionChannelsUtils {
 		game.settings.set(cModuleName, cSettingName, vChannels);
 	}
 	
-	function VCsfromNames(pNames = []) {
+	static VCsfromNames(pNames = []) {
 		let vChannels = game.settings.get(cModuleName, cSettingName);
 		
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
+	}
+	
+	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false}) {
+		if (pEmitterChannels.length && pReceiverChannels.length) {
+			pVCInfos.Report = {};
+			
+			let vChannels = game.settings.get(cModuleName, cSettingName);
+			
+			let vCommons = pEmitterChannels.filter(vChannelID => pReceiverChannels.includes(vChannelID));
+			
+			let vNotReceived = pEmitterChannels.filter(vChannelID => !vCommons.includes(vChannelID));
+			
+			if (vNotReceived.find(vChannelID => vChannels[vChannelID]?.RequiredtoSee)) {
+				//a required channel is not recived
+				pVCInfos.Report.Reason = "RequiredVCnotMatched";
+				return false;
+			}
+			
+			if (vCommons.length) {
+				//seperate ranged and not ranged 
+				let vRangeLessVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range < 0));
+				
+				if (vRangeLessVCs.length) {
+					//check range less
+					pVCInfos.Report.Reason = "RangeLessVC";
+					return vRangeLessVCs[0];
+				}
+				else {
+					if (pVCInfos.TargetPoint) {
+						//check ranged
+						let vRangedVCs = vCommons.filter(vChannelID => !vRangeLessVCs.includes(vChannelID));
+						
+						let vMaxRange = 0;
+						let vMaxVC = undefined;
+						
+						vRangedVCs.forEach(vChannelID => {if (vChannels[vChannelID]?.Range > vMaxRange){vMaxVC = vChannelID; vMaxRange = vChannels[vChannelID]?.Range}});
+						
+						if (vMaxVC) {
+							//check VC with heighest Range
+							if (pVCInfos.SourcePoints.find(vPoint => GeometricUtils.DistanceXY(vPoint, pVCInfos.TargetPoint) < vMaxRange)) {
+								pVCInfos.Report.Reason = "RangedVC";
+								return vMaxVC[0];
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -287,7 +338,7 @@ Hooks.once("init", function() {
 		default: {}
 	});
 	
-	game.modules.get("perceptive").api.test = {testwindow};
+	game.modules.get("perceptive").test = {testwindow};
 });
 
 Hooks.once("ready", () => {

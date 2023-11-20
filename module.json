@@ -58,7 +58,8 @@
 	"scripts/settings/PerceptiveSheetSettings.js",
 	"scripts/compatibility/PerceptiveCompatibility.js",
 	"scripts/compatibility/APIHandler.js",
-	"scripts/helpers/VisionChannelsHelper.js"
+	"scripts/helpers/VisionChannelsHelper.js",
+	"scripts/helpers/BasicPatches.js"
   ],
   "packs": [
 	{
