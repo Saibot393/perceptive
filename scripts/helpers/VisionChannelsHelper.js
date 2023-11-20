@@ -10,6 +10,8 @@ const cDeleteIcon = "fa-solid fa-trash";
 
 const cSettingName = "VisionChannels";
 
+const cEffectFilters = ["off", "outline", "outline_waves", "glow"];
+
 const cDefaultChannel = {
 	Name : "Vision Channel",
 	Color : "#ffffff",
@@ -17,6 +19,7 @@ const cDefaultChannel = {
 	SeethroughWalls : false,
 	Range : -1,
 	EffectFilter : null,
+	EffectFilterColor : "#000000",
 	Transparency : 1
 };
 
@@ -64,7 +67,8 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "SeethroughWalls")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Range")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Color")}</th>
-											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter.name")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilterColor")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Transparency")}</th>
 											<th style="border: 1px solid #dddddd"></th>
 										</tr>`;
@@ -77,9 +81,15 @@ class VisionChannelsWindow extends Application {
 													<td style="width:50px"> <input name="Range" type="number" value="${this.vChannels[vkey].Range}"> </td>
 													<td style="text-align: center; width:50px"> <input name="Color" type="color" value="${this.vChannels[vkey].Color}"> </td>
 													<td> 
-														<select name="EffectFilter"> 
-														</select>
+														<select name="EffectFilter">`;
+														
+			for (let vOption of cEffectFilters) {
+				vEntriesHTML = vEntriesHTML + 				`<option value = ${vOption} ${this.vChannels[vkey].EffectFilter==vOption ? "selected" : ""}> ${Translate(cWindowID + ".entries.titles.EffectFilter.options." + vOption)} </option>`;
+			}
+						
+			vEntriesHTML = vEntriesHTML + 				`</select>
 													</td>
+													<td style="text-align: center; width:100px"> <input name="EffectFilterColor" type="color" value="${this.vChannels[vkey].EffectFilterColor}"> </td>
 													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}"> </td>
 													<td style="text-align: center"> <i name="delete" class="${cDeleteIcon}"></i> </td>
 												</tr>`;
@@ -252,6 +262,18 @@ class VisionChannelsUtils {
 	
 	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], InVision : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
 	
+	//graphics
+	static ApplyFilter(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
+	
+	//Import/Export GMBH Saibot
+	static AddChannel(pChannel, pID = "") {} //adds pChannel to world under pID (or random ID if not specified)
+	
+	static AddChannels(pChannels, pOverrideDuplicates = false) {} //merges a channel object into worlds channels
+	
+	static ExportChannelsbyID(pID = undefined) {} //returns object of channels matching pID (single ID, array, undefined for all)
+	
+	static ExportChannelsbyName(pName = undefined) {} //returns object of channels matching pID (single pName, array, undefined for all)
+	
 	//IMPLEMENTATIONS
 	static fixVCSetting() {
 		let vChannels = game.settings.get(cModuleName, cSettingName);
@@ -319,6 +341,97 @@ class VisionChannelsUtils {
 				}
 			}
 		}
+	}
+	
+	//graphics
+	static ApplyFilter(pObject, pChannel) {
+		if (pObject.documentName == "Token") {
+			if (pObject.object) {
+				let vFilter;
+				
+				switch (pChannel.EffectFilter) {
+					case "outline":
+					case "waves":
+					case "outline_waves":
+						vFilter = OutlineOverlayFilter.create({
+							outlineColor : Color.fromString(pChannel.EffectFilterColor).rgb.concat([1]),
+							thickness : [1, 1],
+							knockout : false, //anti aliasing
+							wave : ["waves", "outlines_waves"].includes(pChannel.EffectFilter)
+						});
+						break;
+					case "glow" :
+						vFilter = GlowOverlayFilter.create({
+							glowColor :  Color.fromString(pChannel.EffectFilterColor).rgb.concat([1])
+						});
+						break;
+				}
+				
+				if (vFilter) {
+					pObject.object.detectionFilter = vFilter;
+				}
+				
+				pObject.object.mesh.tint = Color.from(pChannel.Color).littleEndian;
+			}
+		}
+	}
+	
+	//Import/Export GMBH Saibot
+	static AddChannel(pChannel, pID = "") {
+		let vChannels = game.settings.get(cModuleName, cSettingName);
+		
+		let vID = pID;
+		
+		if (!vID.length) {
+			vID = randomID();
+		}
+		
+		for (let vKey of Object.keys(cDefaultChannel)) {
+			if (!(typeof pChannel[vKey] == typeof cDefaultChannel[vKey])) {
+				ui.notifications.error(`${cModuleName} : Faulty Vision Channel with ID ${pID} at field ${vKey} not added to World (name : ${pChannel.Name})`);
+				return;
+			}
+		}
+		
+		vChannels[vID] = pChannel;
+	}
+	
+	static AddChannels(pChannels, pOverrideDuplicates = false) {
+		for (let vKey of Object.keys(pChannels)) {
+			VisionChannelsUtils.AddChannel(pChannels[vKey], vKey);
+		}
+	}
+	
+	static ExportChannelsbyID(pID = undefined) {
+		let vIDs = pID;
+		
+		if (typeof vID == "string") {
+			vIDs = [vID];
+		}
+		
+		let vExport = {};
+		
+		let vChannels = game.settings.get(cModuleName, cSettingName); 
+		
+		for (vID of vIDs) {
+			if (vChannels[vID]) {
+				vExport[vID] = {...vChannels[vID]}
+			}
+		}
+		
+		return vExport;
+	}
+	
+	static ExportChannelsbyName(pName = undefined) {
+		let vNames = pName;
+		
+		if (typeof vNames == "string") {
+			vNames = [vNames];
+		}
+		
+		let vChannels = game.settings.get(cModuleName, cSettingName); 
+		
+		return VisionChannelsUtils.ExportChannelsbyID(Object.keys(vChannels).filter(vID => vNames.includes(vChannels[vID].Name)));
 	}
 }
 

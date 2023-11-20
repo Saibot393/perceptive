@@ -710,7 +710,16 @@
 					"SeethroughWalls"	: "Through walls",
 					"Range"				: "Range",
 					"Color"				: "Color",
-					"EffectFilter"		: "Effect filter",
+					"EffectFilter" : {
+						"name"			: "Effect filter",
+						"options" : {
+							"off"		: "off",
+							"outline"   : "outline",
+							"outline_waves" : "outline & waves",
+							"glow"		: "glow"
+						}
+					},
+					"EffectFilterColor" : "Effect Filter Color",
 					"Transparency"		: "Transparency"
 				}
 			}
