@@ -670,6 +670,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   */   
+  //VCs
+  game.settings.register(cModuleName, "ActivateVCs", {
+	name: Translate("Settings.ActivateVCs.name"),
+	hint: Translate("Settings.ActivateVCs.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  });  
   
   //some unexposed settings for automation
   game.settings.register(cModuleName, "useSpottingLightLevels", {

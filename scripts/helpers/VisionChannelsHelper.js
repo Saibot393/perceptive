@@ -90,7 +90,7 @@ class VisionChannelsWindow extends Application {
 			vEntriesHTML = vEntriesHTML + 				`</select>
 													</td>
 													<td style="text-align: center; width:100px"> <input name="EffectFilterColor" type="color" value="${this.vChannels[vkey].EffectFilterColor}"> </td>
-													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}"> </td>
+													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>
 													<td style="text-align: center"> <i name="delete" class="${cDeleteIcon}"></i> </td>
 												</tr>`;
 		}
@@ -166,8 +166,7 @@ class VisionChannelsWindow extends Application {
 		let vAddButton = pHTML.find(`button[name="${cWindowID}.addchannel"]`);
 		
 		vAddButton.on("click", () => {	this.vChannels[randomID()] = {...cDefaultChannel};
-										this.render();
-										console.log(this)});
+										this.render();});
 											
 		let vChannelEntries = pHTML.find(`tr`);
 		
@@ -260,10 +259,12 @@ class VisionChannelsUtils {
 	
 	static VCsfromNames(pNames = []) {} //returns a VCs based on a names
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], InVision : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
+	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, returnasID : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
+	
+	static ReducedReceiverVCs(pTokens) {} //returns an array of unique vision channels active in pTokens
 	
 	//graphics
-	static ApplyFilter(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
+	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
 	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {} //adds pChannel to world under pID (or random ID if not specified)
@@ -295,8 +296,8 @@ class VisionChannelsUtils {
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
 	}
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false}) {
-		if (pEmitterChannels.length && pReceiverChannels.length) {
+	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, returnasID : false}) {
+		if (pEmitterChannels.length || pReceiverChannels.length) {
 			pVCInfos.Report = {};
 			
 			let vChannels = game.settings.get(cModuleName, cSettingName);
@@ -311,6 +312,11 @@ class VisionChannelsUtils {
 				return false;
 			}
 			
+			if (!pVCInfos.InVision) {
+				//check if see through walls is necessary for vision
+				vCommons = vCommons.filter(vChannelID => vChannels[vChannelID].SeethroughWalls);
+			}
+			
 			if (vCommons.length) {
 				//seperate ranged and not ranged 
 				let vRangeLessVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range < 0));
@@ -318,7 +324,12 @@ class VisionChannelsUtils {
 				if (vRangeLessVCs.length) {
 					//check range less
 					pVCInfos.Report.Reason = "RangeLessVC";
-					return vRangeLessVCs[0];
+					
+					if (pVCInfos.returnasID) {
+						return vRangeLessVCs[0];
+					}
+					
+					return vChannels[vRangeLessVCs[0]];
 				}
 				else {
 					if (pVCInfos.TargetPoint) {
@@ -330,11 +341,18 @@ class VisionChannelsUtils {
 						
 						vRangedVCs.forEach(vChannelID => {if (vChannels[vChannelID]?.Range > vMaxRange){vMaxVC = vChannelID; vMaxRange = vChannels[vChannelID]?.Range}});
 						
+						vMaxRange = vMaxRange * (canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+						
 						if (vMaxVC) {
 							//check VC with heighest Range
 							if (pVCInfos.SourcePoints.find(vPoint => GeometricUtils.DistanceXY(vPoint, pVCInfos.TargetPoint) < vMaxRange)) {
 								pVCInfos.Report.Reason = "RangedVC";
-								return vMaxVC[0];
+								
+								if (pVCInfos.returnasID) {
+									return vMaxVC;
+								}
+								
+								return vChannels[vMaxVC];
 							}
 						}
 					}
@@ -343,10 +361,20 @@ class VisionChannelsUtils {
 		}
 	}
 	
+	static ReducedReceiverVCs(pTokens) {
+		let vVCs = [];
+		
+		for (let i = 0; i < pTokens.length; i++) {
+			vVCs = vVCs.concat(PerceptiveFlags.getReceivers(pTokens[i]).filter(vChannelID => !vVCs.includes(vChannelID)));
+		}
+		
+		return vVCs;
+	}
+	
 	//graphics
-	static ApplyFilter(pObject, pChannel) {
-		if (pObject.documentName == "Token") {
-			if (pObject.object) {
+	static ApplyGraphics(pObject, pChannel) {
+		if (pObject) {
+			if (pObject instanceof Token) {	
 				let vFilter;
 				
 				switch (pChannel.EffectFilter) {
@@ -357,7 +385,7 @@ class VisionChannelsUtils {
 							outlineColor : Color.fromString(pChannel.EffectFilterColor).rgb.concat([1]),
 							thickness : [1, 1],
 							knockout : false, //anti aliasing
-							wave : ["waves", "outlines_waves"].includes(pChannel.EffectFilter)
+							wave : ["waves", "outline_waves"].includes(pChannel.EffectFilter)
 						});
 						break;
 					case "glow" :
@@ -367,11 +395,17 @@ class VisionChannelsUtils {
 						break;
 				}
 				
-				if (vFilter) {
-					pObject.object.detectionFilter = vFilter;
-				}
 				
-				pObject.object.mesh.tint = Color.from(pChannel.Color).littleEndian;
+				
+				if (vFilter) {
+					pObject.detectionFilter = vFilter;
+				}
+			}
+			
+			if (pObject.mesh) {
+				pObject.mesh.tint = parseInt(pChannel.Color.substr(1,7), 16);
+				
+				pObject.mesh.alpha = pChannel.Transparency;
 			}
 		}
 	}
@@ -451,7 +485,7 @@ Hooks.once("init", function() {
 		default: {}
 	});
 	
-	game.modules.get("perceptive").test = {testwindow};
+	game.modules.get("perceptive").test = {testwindow, VisionChannelsUtils};
 });
 
 Hooks.once("ready", () => {
