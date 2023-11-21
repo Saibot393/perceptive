@@ -1,6 +1,7 @@
 import { cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
 import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy} from "../compatibility/PerceptiveCompUtils.js";
+import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
 import {MoveHoveredDoor} from "../DoorMovingScript.js";
@@ -961,6 +962,11 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		 
 		pHTML.find('input[name="' + cModuleName + '.ActivateSpotting"]').closest(".form-group").before(vnewHTML);	
 		
+		//first VC setting
+		vnewHTML = `<h4 class="border"><u>${Translate("Titles.VisionChannels")}</u></h4>`;
+		 
+		pHTML.find('input[name="' + cModuleName + '.ActivateVCs"]').closest(".form-group").before(vnewHTML);
+		
 		//first client setting
 		vnewHTML = `<hr>
 					<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
@@ -1020,6 +1026,10 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		vSoundForm = pHTML.find(`div.form-group[data-setting-id="perceptive.SpottedSound"]`);
 		vSoundForm.find('div').after(`<i class="${cPlaySoundIcon} audio-preview" style="flex-grow:0"></i>`);
 		vSoundForm.find(`i`).on("click", () => {PerceptiveSound.PlaySound(vSoundForm.find("input").val(), null, {pTest : true, pVolume : pHTML.find(`input[name="perceptive.SpottedSoundVolume"]`).val()})});
+		
+		//menu button
+		pHTML.find(`div.form-group[data-setting-id="perceptive.ActivateVCs"]`).after(`<button name="OpenVCMenu"> ${Translate("Titles.OpenVCMenu")}</button>`)
+		pHTML.find(`button[name="OpenVCMenu"]`).on("click", () => {new VisionChannelsWindow().render(true);});
 	}
 });  
 

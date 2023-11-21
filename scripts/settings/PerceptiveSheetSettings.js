@@ -2,6 +2,7 @@ import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
 import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF} from "../helpers/PerceptiveFlags.js";
+import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
@@ -25,6 +26,8 @@ class PerceptiveSheetSettings {
 	
 	//standard settings
 	static AddSpottableSettings(pApp, pHTML, pData, pto) {} //adds the Spottable settings to pApp
+	
+	static AddVCSettings(pApp, pHTML, pData, pto) {} //adds the VC settings to pApp
 	
 	//support
 	static AddHTMLOption(pHTML, pInfos, pto) {} //adds a new HTML option to pto in pHTML
@@ -182,12 +185,16 @@ class PerceptiveSheetSettings {
 				
 				Hooks.call(cModuleName + ".WallSpottingSettings", pApp, pHTML, pData);
 			}
+			
+			if (game.settings.get(cModuleName, "ActivateVCs")) {
+				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+			}
 		}
 	}
 	
 	static async TokenSheetSettings(pApp, pHTML, pData) {
 		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {	
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {
 				//add new tab
 				let vTabbar = pHTML.find(`[data-group="main"].sheet-tabs`);
 				let vprevTab = pHTML.find(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
@@ -270,6 +277,10 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`);
 			
 				Hooks.call(cModuleName + ".TokenSpottingSettings", pApp, pHTML, pData);
+			}
+
+			if (game.settings.get(cModuleName, "ActivateVCs")) {
+				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 			}			
 		}
 		
@@ -312,6 +323,10 @@ class PerceptiveSheetSettings {
 				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
 				
 				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
+			}
+			
+			if (game.settings.get(cModuleName, "ActivateVCs")) {
+				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 			}
 		}
 		
@@ -434,8 +449,13 @@ class PerceptiveSheetSettings {
 									
 	}
 	
-	//support
+	static AddVCSettings(pApp, pHTML, pData, pto) {
+			let vVCMenuButton = `<button name = "${cModuleName}.openVCMenu"> ${Translate("Titles.OpenVCMenu")} </button>`;
+			pHTML.find(pto).append(vVCMenuButton);
+			pHTML.find(`button[name="${cModuleName}.openVCMenu"]`).click(function() {new VisionChannelsWindow(pApp.document).render(true);});		
+	}
 	
+	//support
 	static AddHTMLOption(pHTML, pInfos, pto) {
 		pHTML.find(pto/*`div[data-tab="${cModuleName}"]`*/).append(PerceptiveSheetSettings.createHTMLOption(pInfos))
 	}

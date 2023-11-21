@@ -407,6 +407,13 @@ class VisionChannelsUtils {
 				
 				pObject.mesh.alpha = pChannel.Transparency;
 			}
+			else {
+				if (pObject.icon) {
+					pObject.icon.tint = parseInt(pChannel.Color.substr(1,7), 16);
+					
+					pObject.icon.alpha = pChannel.Transparency;
+				}
+			}
 		}
 	}
 	
