@@ -297,7 +297,7 @@ class VisionChannelsUtils {
 	}
 	
 	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, returnasID : false}) {
-		if (pEmitterChannels.length || pReceiverChannels.length) {
+		if (pEmitterChannels.length) {
 			pVCInfos.Report = {};
 			
 			let vChannels = game.settings.get(cModuleName, cSettingName);
