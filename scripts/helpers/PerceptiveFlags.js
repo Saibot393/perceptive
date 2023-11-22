@@ -251,9 +251,15 @@ class PerceptiveFlags {
 	
 	static getVCReceivers(pObject) {} //returns active Receivers of pObject
 	
+	static hasVCEmitter(pObject) {} //returns if pObject has atleast one emitter channel
+	
 	static getVCSight(pWall) {} //returns the Sight channels of this wall
 	
 	static getVCMovement(pWall) {} //returns the Sight channels of this wall
+	
+	static AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
+	
+	static RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -1623,6 +1629,12 @@ class PerceptiveFlags {
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
 	}
 	
+	static hasVCEmitter(pObject) {
+		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		
+		return Object.keys(this.#VisionChannelsFlag(pObject)).find(vChannel => vVisionChannels[vChannel].Emits);
+	}
+	
 	static getVCSight(pWall) {
 		let vVisionChannels = this.#VisionChannelsFlag(pWall);
 		
@@ -1633,6 +1645,24 @@ class PerceptiveFlags {
 		let vVisionChannels = this.#VisionChannelsFlag(pWall);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Movement);				
+	}
+	
+	static AddChannel(pObject, pChannelID, pType) {
+		let Channels = PerceptiveFlags.getVisionChannels(pObject);
+		
+		if (!Channels[pChannelID]) {
+			Channels[pChannelID] = {};
+		}
+		
+		Channels[pChannelID][pType] = true;
+	}
+	
+	static RemoveChannel(pObject, pChannelID, pType) {
+		let Channels = PerceptiveFlags.getVisionChannels(pObject);
+		
+		if (Channels[pChannelID]) {
+			delete Channels[pChannelID][pType];	
+		}	
 	}
 	
 	//effects

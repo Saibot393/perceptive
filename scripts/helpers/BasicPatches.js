@@ -53,7 +53,7 @@ Hooks.once("ready", function() {
 	});
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {
+		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(pWrapped, ...args) {
 																										let vBuffer;
 																										
 																										for (let i = 0; i < vDCVisionFunctions.length; i++) {
@@ -64,7 +64,7 @@ Hooks.once("ready", function() {
 																											}
 																										}
 																										
-																										return vWrapped(args)}, "MIXED");
+																										return pWrapped(args)}, "MIXED");
 	}
 	else {
 		const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
@@ -87,7 +87,7 @@ Hooks.once("ready", function() {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(vWrapped, ...args) {
+		libWrapper.register(cModuleName, "CONFIG.Token.objectClass.prototype.isVisible", function(pWrapped, ...args) {
 																														let vBuffer;
 																														
 																														for (let i = 0; i < vTokenVisionFunctions.length; i++) {
@@ -98,7 +98,7 @@ Hooks.once("ready", function() {
 																															}
 																														}
 				
-																														return vWrapped(args)}, "MIXED");
+																														return pWrapped(args)}, "MIXED");
 	}
 	else {
 		const vOldTokenCall = CONFIG.Token.objectClass.prototype.__lookupGetter__("isVisible");
@@ -128,7 +128,7 @@ Hooks.once("ready", function() {
 																															return vBuffer;
 																														}
 				
-																														return vWrapped(pWall, pBounds)}, "MIXED");
+																														return pWrapped(pWall, pBounds)}, "MIXED");
 	}
 	else {
 		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;

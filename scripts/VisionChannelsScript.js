@@ -28,6 +28,8 @@ class VisionChannelsManager {
 		if (CONFIG.debug.perceptive.VCScript) {//DEBUG
 			console.log("perceptive: New vision data:", vLocalVisionData);
 		}
+		
+		VisionUtils.PrepareVCObjects();
 	}
 	
 	//ons

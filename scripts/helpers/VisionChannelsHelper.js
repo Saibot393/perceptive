@@ -109,6 +109,8 @@ class VisionChannelsWindow extends Application {
 	getHTMLObject(pOptions={}) {
 		let vEntriesHTML = `<table name = "entries">`;
 		
+		let vEmitterSetting = ["Token", "Tile"].includes(this.vSettingsSubType) || (this.vTarget.door > 0)
+		
 		let vRecieverSetting = this.vSettingsSubType == "Token";
 		
 		let vWallSetting = this.vSettingsSubType == "Wall";
@@ -280,6 +282,13 @@ class VisionChannelsUtils {
 	//graphics
 	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
 	
+	//vc managing
+	static AddChannels(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
+	
+	static RemoveChannels(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
+	
+	static ValidVCType(pObject) {} //returns valid VC types for pObject
+	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {} //adds pChannel to world under pID (or random ID if not specified)
 	
@@ -416,6 +425,13 @@ class VisionChannelsUtils {
 				}
 			}
 			
+			if (pObject instanceof Wall) {
+				if (Wall.door && !Wall.object?.doorControl) {
+					Wall.object.doorControl = canvas.controls.doors.addChild(new DoorControl(Wall.object));
+					Wall.object.doorControl.draw();
+				}
+			}
+			
 			if (pObject.mesh) {
 				pObject.mesh.tint = parseInt(pChannel.Color.substr(1,7), 16);
 				
@@ -430,6 +446,51 @@ class VisionChannelsUtils {
 			}
 		}
 	}
+	
+	//vc managing
+	static AddChannels(pObjects, pChannels, pTypes) {
+		let vValidTypes;
+		
+		for (let i = 0; i < pObjects.length; i++) {
+			vValidTypes = VisionChannelsUtils.ValidVCType(pObjects[i]).filter(vType => pTypes.includes(vType));
+			
+			for (let j = 0; j < pChannels.length; j++) {
+				for (let k = 0; k < vValidTypes.length; k++) {
+					PerceptiveFlags.AddChannel(pObjects[i], pChannels[j], vValidTypes[k]);
+				}
+			}
+		}
+	}
+	
+	static RemoveChannels(pObjects, pChannels, pTypes) {
+		let vValidTypes;
+		
+		for (let i = 0; i < pObjects.length; i++) {
+			vValidTypes = VisionChannelsUtils.ValidVCType(pObjects[i]).filter(vType => pTypes.includes(vType));
+			
+			for (let j = 0; j < pChannels.length; j++) {
+				for (let k = 0; k < vValidTypes.length; k++) {
+					PerceptiveFlags.RemoveChannel(pObjects[i], pChannels[j], vValidTypes[k]);
+				}
+			}
+		}		
+	}
+	
+	static ValidVCType(pObject) {
+		switch (pObject.documentName) {
+			case "Token" :
+				return ["Emits", "Receives"];
+				break;
+			case "Tile" :
+				return ["Emits"];
+				break;
+			case "Wall" :
+				return ["Emits", "Sight", "Movement"];
+				break;
+		}
+		
+		return [];
+	} 
 	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {

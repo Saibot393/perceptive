@@ -48,6 +48,8 @@ class VisionUtils {
 	
 	static async PreapreSpotableTile(pTile) {} //generates pTile and makes them pre visible
 	
+	static PrepareVCObjects() {} //generates VC objects and makes them pre visible
+	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
 	static VisionLevel(pToken) {} //returns the Vision level of pToken (special calc for Pf2e)
@@ -313,6 +315,19 @@ class VisionUtils {
 		if (pTile.mesh?.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) {
 			pTile.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 		}
+	}
+	
+	static PrepareVCObjects() {
+		let vDoors = canvas.walls.doors;
+		
+		for (let i = 0; i < vDoors.length; i++) {
+			//make sure all VC Doors have doorcontrols
+			if (!vDoors[i].doorControl && PerceptiveFlags.hasVCEmitter(vDoors[i].document)) {
+				vDoors[i].doorControl = canvas.controls.doors.addChild(new DoorControl(vDoors[i]));
+				vDoors[i].doorControl.draw();
+				//vDoors[i].doorControl.visible = false;
+			}
+		}		
 	}
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null}) { //adapted from foundry.js
