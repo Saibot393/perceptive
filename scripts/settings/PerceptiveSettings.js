@@ -682,6 +682,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	requiresReload: true
   });  
   
+  game.settings.register(cModuleName, "ShowVCIDs", {
+	name: Translate("Settings.ShowVCIDs.name"),
+	hint: Translate("Settings.ShowVCIDs.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   //some unexposed settings for automation
   game.settings.register(cModuleName, "useSpottingLightLevels", {
 	scope: "world",

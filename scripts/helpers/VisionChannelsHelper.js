@@ -61,7 +61,7 @@ class VisionChannelsWindow extends Application {
 	getHTMLWorld(pOptions={}) {
 		let vEntriesHTML = `<table name = "entries">`;
 		
-		vEntriesHTML = vEntriesHTML+ 	`<tr name="header" style="border: 1px solid #dddddd">
+		vEntriesHTML = vEntriesHTML + 	`<tr name="header" style="border: 1px solid #dddddd">
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Name")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "RequiredtoSee")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "SeethroughWalls")}</th>
@@ -69,8 +69,11 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Color")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter.name")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilterColor")}</th>
-											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Transparency")}</th>
-											<th style="border: 1px solid #dddddd"></th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Transparency")}</th>`
+		if (game.settings.get(cModuleName, "ShowVCIDs")) {
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "VCID")}</th>`
+		}
+		vEntriesHTML = vEntriesHTML +		`<th style="border: 1px solid #dddddd"></th>
 										</tr>`;
 		
 		for (let vkey of Object.keys(this.vChannels)) {
@@ -90,8 +93,11 @@ class VisionChannelsWindow extends Application {
 			vEntriesHTML = vEntriesHTML + 				`</select>
 													</td>
 													<td style="text-align: center; width:100px"> <input name="EffectFilterColor" type="color" value="${this.vChannels[vkey].EffectFilterColor}"> </td>
-													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>
-													<td style="text-align: center"> <i name="delete" class="${cDeleteIcon}"></i> </td>
+													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>`
+		if (game.settings.get(cModuleName, "ShowVCIDs")) {
+			vEntriesHTML = vEntriesHTML +			`<td> <input name="VCID" type="text" value="${vkey}" disabled> </td>`
+		}
+			vEntriesHTML = vEntriesHTML +			`<td style="text-align: center"> <i name="delete" class="${cDeleteIcon}"></i> </td>
 												</tr>`;
 		}
 		
