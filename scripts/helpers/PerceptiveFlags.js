@@ -247,10 +247,14 @@ class PerceptiveFlags {
 	
 	static setVisionChannels(pObject, pChannels) {} //sets the vision channels of pObject
 	
-	static getEmitters(pObject) {} //returns active Emitters of pObject
+	static getVCEmitters(pObject) {} //returns active Emitters of pObject
 	
-	static getReceivers(pObject) {} //returns active Receivers of pObject
-		
+	static getVCReceivers(pObject) {} //returns active Receivers of pObject
+	
+	static getVCSight(pWall) {} //returns the Sight channels of this wall
+	
+	static getVCMovement(pWall) {} //returns the Sight channels of this wall
+	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
 	
@@ -1607,16 +1611,28 @@ class PerceptiveFlags {
 		this.#setVisionChannels(pObject, pChannels);
 	}
 	
-	static getEmitters(pObject) {
+	static getVCEmitters(pObject) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Emits);
 	}
 	
-	static getReceivers(pObject) {
+	static getVCReceivers(pObject) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
+	}
+	
+	static getVCSight(pWall) {
+		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		
+		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Sight);				
+	}
+	
+	static getVCMovement(pWall) {
+		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		
+		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Movement);				
 	}
 	
 	//effects

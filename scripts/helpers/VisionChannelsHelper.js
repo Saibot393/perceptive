@@ -111,6 +111,8 @@ class VisionChannelsWindow extends Application {
 		
 		let vRecieverSetting = this.vSettingsSubType == "Token";
 		
+		let vWallSetting = this.vSettingsSubType == "Wall";
+		
 		let vTargetSettings = PerceptiveFlags.getVisionChannels(this.vTarget, true);
 		
 		vEntriesHTML = vEntriesHTML + 	`<tr name="header" style="border: 1px solid #dddddd">
@@ -118,6 +120,10 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Emits")}</th>`;
 		if (vRecieverSetting) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Receives")}</th>`;
+		}
+		if (vWallSetting) {
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Sight")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Movement")}</th>`;
 		}
 		vEntriesHTML = vEntriesHTML +	`</tr>`;
 		
@@ -131,6 +137,10 @@ class VisionChannelsWindow extends Application {
 													<td style="text-align: center; width:100px"> <input name="Emits" type="checkbox" ${vChannelSettings?.Emits ? "checked" : ""}> </td>`;				
 			if (vRecieverSetting) {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="Receives" type="checkbox" ${vChannelSettings?.Receives ? "checked" : ""}> </td>`;
+			}
+			if (vWallSetting) {
+				vEntriesHTML = vEntriesHTML +	`<td style="text-align: center; width:100px"> <input name="Sight" type="checkbox" ${vChannelSettings?.Sight ? "checked" : ""}> </td>
+												<td style="text-align: center; width:100px"> <input name="Movement" type="checkbox" ${vChannelSettings?.Movement ? "checked" : ""}> </td>`;
 			}
 			vEntriesHTML = vEntriesHTML + 		`</tr>`;
 		}
@@ -207,6 +217,10 @@ class VisionChannelsWindow extends Application {
 				if (this.vSettingsSubType == "Token") {
 					vSettingKeys.push("Receives");
 				}
+				if (this.vSettingsSubType == "Wall") {
+					vSettingKeys.push("Sight");
+					vSettingKeys.push("Movement");
+				}
 				break;
 		}
 		
@@ -259,7 +273,7 @@ class VisionChannelsUtils {
 	
 	static VCsfromNames(pNames = []) {} //returns a VCs based on a names
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, returnasID : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
+	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
 	
 	static ReducedReceiverVCs(pTokens) {} //returns an array of unique vision channels active in pTokens
 	
@@ -296,7 +310,7 @@ class VisionChannelsUtils {
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
 	}
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, returnasID : false}) {
+	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {
 		if (pEmitterChannels.length) {
 			pVCInfos.Report = {};
 			
@@ -312,7 +326,7 @@ class VisionChannelsUtils {
 				return false;
 			}
 			
-			if (!pVCInfos.InVision) {
+			if (!pVCInfos.WallCheck && !pVCInfos.InVision) {
 				//check if see through walls is necessary for vision
 				vCommons = vCommons.filter(vChannelID => vChannels[vChannelID].SeethroughWalls);
 			}
@@ -365,7 +379,7 @@ class VisionChannelsUtils {
 		let vVCs = [];
 		
 		for (let i = 0; i < pTokens.length; i++) {
-			vVCs = vVCs.concat(PerceptiveFlags.getReceivers(pTokens[i]).filter(vChannelID => !vVCs.includes(vChannelID)));
+			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i]).filter(vChannelID => !vVCs.includes(vChannelID)));
 		}
 		
 		return vVCs;

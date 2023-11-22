@@ -1,6 +1,6 @@
 import { PerceptiveUtils, cModuleName, Translate } from "./utils/PerceptiveUtils.js";
 import { PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
-import {vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions} from "./helpers/BasicPatches.js";
+import { vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions, vWallInclusionFunctions } from "./helpers/BasicPatches.js";
 import { cDefaultChannel, VisionChannelsWindow, VisionChannelsUtils } from "./helpers/VisionChannelsHelper.js";
 import { VisionUtils } from "./utils/VisionUtils.js";
 
@@ -81,7 +81,7 @@ Hooks.once("ready", function() {
 	
 	if (game.settings.get(cModuleName, "ActivateVCs")) {
 		vDCVisionFunctions.push(function(pObject) {
-			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, {SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels,{SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 																																					TargetPoint : pObject.center,
 																																					InVision : VisionUtils.simpletestVisibility(pObject.center)});
 																																					
@@ -93,7 +93,7 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
-			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getEmitters(pObject.document), vLocalVisionData.vReceiverChannels, 	{SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, {SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 																																				TargetPoint : pObject.center,
 																																				InVision : VisionUtils.simpletestVisibility(pObject.center)});
 			
@@ -102,6 +102,27 @@ Hooks.once("ready", function() {
 			}
 			
 			return vChannel;
+		});
+		
+		vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
+			let vWallChannels = [];
+			
+			switch (pCheck?.config?.type) {
+				case "sight":
+					vWallChannels = PerceptiveFlags.getVCSight(pWall.document);
+					break;
+				case "move":
+					vWallChannels = PerceptiveFlags.getVCMovement(pWall.document);
+					break;
+			}
+			
+			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+																												TargetPoint : pWall.center,
+																												WallCheck : true});
+
+			if (vChannel) {
+				return false;
+			}
 		});
 	}
 	

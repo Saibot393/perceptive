@@ -5,9 +5,30 @@ import {PerceptiveCompUtils, cLibWrapper } from "../compatibility/PerceptiveComp
 var vDCVisionFunctions = [];
 var vTokenVisionFunctions = [];
 var vTileVisionFunctions = [];
+var vWallInclusionFunctions = [];
 
-function CheckTilesVisibility() {
+class PatchSupport {
+	//DECLARATIONS
+	static CheckTilesVisibility() {} //tests the visibility of all tile on canvas
+
+	static WallInclusion(pWall, pBounds, pCheck) {} //returns if pWall should be included in pCheck
 	
+	//IMPLEMENTATIONS
+	static CheckTilesVisibility() {
+		
+	}
+	
+	static WallInclusion(pWall, pBounds, pCheck) {
+		let vBuffer;
+		
+		for (let i = 0; i < vWallInclusionFunctions.length; i++) {
+			vBuffer = vWallInclusionFunctions[i](pWall, pBounds, pCheck);
+			
+			if (vBuffer != undefined) {
+				return vBuffer;
+			}
+		}
+	}
 }
 
 Hooks.once("ready", function() {
@@ -78,6 +99,32 @@ Hooks.once("ready", function() {
 			return vTokenCallBuffer();
 		});
 	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pWall, pBounds) {
+																														let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+																														
+																														if (vBuffer != undefined) {
+																															return vBuffer;
+																														}
+				
+																														return vWrapped(pWall, pBounds)}, "MIXED");
+	}
+	else {
+		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
+		
+		ClockwiseSweepPolygon.prototype._testWallInclusion = function (pWall, pBounds) {
+			let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+			
+			if (vBuffer != undefined) {
+				return vBuffer;
+			}
+			
+			let vTokenCallBuffer = vOldTokenCall.bind(this);
+			
+			return vTokenCallBuffer(pWall, pBounds);
+		}
+	}	
 });
 
-export {vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions}
+export {vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions, vWallInclusionFunctions, PatchSupport}

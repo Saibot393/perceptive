@@ -4,6 +4,7 @@ import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 import {PerceptiveSound} from "./helpers/PerceptiveSound.js";
+import {vWallInclusionFunctions} from "./helpers/BasicPatches.js";
 
 class PeekingManager {
 	//DECLARATIONS
@@ -340,6 +341,7 @@ class PeekingManager {
 
 //Hooks
 Hooks.once("init", function() {
+	/*
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pwall, pbounds) {if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)){return false} return pWrapped(pwall, pbounds)}, "MIXED");
 	}
@@ -356,6 +358,12 @@ Hooks.once("init", function() {
 			return vTokenCallBuffer(pwall, pbounds);
 		}
 	}
+	*/
+	vWallInclusionFunctions.push(function(pWall, pBounds, pCheck) {
+		if (pWall && pCheck?.config?.source?.object && PeekingManager.IgnoreWall(pWall.document, pCheck.config.source.object.document)) {
+			return false;
+		}		
+	});
 });
 
 Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {

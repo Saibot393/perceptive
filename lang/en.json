@@ -722,7 +722,9 @@
 					"EffectFilterColor" : "Effect Filter Color",
 					"Transparency"		: "Transparency",
 					"Emits"				: "Emits",
-					"Receives"			: "Receives"
+					"Receives"			: "Receives",
+					"Sight"				: "Sight",
+					"Movement"			: "Movement"
 				}
 			}
 		},
