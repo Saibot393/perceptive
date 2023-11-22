@@ -12,9 +12,6 @@ class VisionChannelsManager {
 	//DECLARATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {} //updates the local vision values based on controlled tokens
 	
-	static CheckTileVCs() {} //updates the VC based vision of all tiles on canvas
-	
-	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {} //called when a token updates
 	
 	//IMPLEMENTATIONS
@@ -33,39 +30,10 @@ class VisionChannelsManager {
 		}
 	}
 	
-	static CheckTileVCs() {
-		let vTiles = canvas.tiles.placeables();
-		
-		let vEmitterVCs;
-		
-		let vChannel;
-		
-		for (let i = 0; i < vTiles.length; i++) {
-			vEmitterVCs = PerceptiveFlags.getEmitters(vTiles[i].document);
-			
-			if (vEmitterVCs.length) {
-				vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getEmitters(vTiles[i].document), vLocalVisionData.vReceiverChannels, {SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
-																																				TargetPoint : vTiles[i].center,
-																																				InVision : VisionUtils.simpletestVisibility(vTiles[i].center)});
-																																		
-				if (vChannel) {
-					vTiles[i].visible = true;
-					
-					VisionChannelsUtils.ApplyGraphics(vTiles[i], vChannel);
-				}
-				else {
-					if (vChannel == false) {
-						vTiles[i].visible = false;
-					}
-				}
-			}
-		}
-	}
-	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {
 		
-		if (pToken.isOwner && pToken.parent == canvas.scene) {
+		if (pToken.controlled) {
 			VisionChannelsManager.updateVisionValues();
 		}
 	}
@@ -104,6 +72,22 @@ Hooks.once("ready", function() {
 			return vChannel;
 		});
 		
+		vTileVisionFunctions.push(function(pObject) {
+			let vEmitterVCs = PerceptiveFlags.getVCEmitters(pObject.document);
+			
+			if (vEmitterVCs.length) {
+				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, {SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+																																					TargetPoint : pObject.center,
+																																					InVision : VisionUtils.simpletestVisibility(pObject.center)});
+				
+				if (vChannel) {
+					VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
+				}
+				
+				return vChannel;
+			}
+		});		
+		
 		vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
 			let vWallChannels = [];
 			
@@ -127,4 +111,6 @@ Hooks.once("ready", function() {
 	}
 	
 	Hooks.on("updateToken", (...args) => {VisionChannelsManager.onTokenupdate(...args)});
+	
+	Hooks.on("controlToken", () => {VisionChannelsManager.updateVisionValues()});
 });

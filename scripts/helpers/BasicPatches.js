@@ -9,13 +9,26 @@ var vWallInclusionFunctions = [];
 
 class PatchSupport {
 	//DECLARATIONS
-	static CheckTilesVisibility() {} //tests the visibility of all tile on canvas
+	static CheckTilesVisibility(pToken) {} //tests the visibility of all tile on canvas
 
 	static WallInclusion(pWall, pBounds, pCheck) {} //returns if pWall should be included in pCheck
 	
 	//IMPLEMENTATIONS
-	static CheckTilesVisibility() {
+	static CheckTilesVisibility(pToken) {
+		let vTiles = canvas.tiles.placeables;
 		
+		let vBuffer;
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			for (let j = 0; i < vTileVisionFunctions.length; i++) {
+				vBuffer = vTileVisionFunctions[j](vTiles[i]);
+				
+				if (vBuffer != undefined) {
+					vTiles[i].visible = vBuffer;
+					break;
+				}
+			}
+		}
 	}
 	
 	static WallInclusion(pWall, pBounds, pCheck) {
@@ -32,6 +45,13 @@ class PatchSupport {
 }
 
 Hooks.once("ready", function() {
+	Hooks.on("refreshToken", (pToken) => {
+		
+		if (pToken.controlled) {
+			PatchSupport.CheckTilesVisibility(pToken);
+		}
+	});
+	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {
 																										let vBuffer;
