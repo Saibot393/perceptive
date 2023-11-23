@@ -33,7 +33,8 @@ var vLocalVisionData = {
 	vUseRangeTollerance : false,
 	vPPModifiers : {},
 	vRangeDCInterval : 0,
-	vRangeDCModifier : 0
+	vRangeDCModifier : 0,
+	v3DRange : false
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -205,7 +206,13 @@ class SpottingManager {
 		
 		let vRangeInfo = {};
 		
-		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+		let vSpotPoint = pToken.center;
+		
+		if (vLocalVisionData.v3DRange) {
+			vSpotPoint = {...vSpotPoint, elevation : pToken.document.elevation}
+		}
+			
+		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 			//performance reason (vLocalVisionData.vRangeDCModifier)
 			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
 				return false;
@@ -216,7 +223,7 @@ class SpottingManager {
 		
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, vRangeDCModifier, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
-			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pToken.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -254,7 +261,13 @@ class SpottingManager {
 		
 		let vRangeInfo = {};
 		
-		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+		let vSpotPoint = pTile.center;
+		
+		if (vLocalVisionData.v3DRange) {
+			vSpotPoint = {...vSpotPoint, elevation : pTile.document.elevation}
+		}
+		
+		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 			//performance reason (vLocalVisionData.vRangeDCModifier)
 			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
 				return false;
@@ -266,7 +279,7 @@ class SpottingManager {
 		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile, vRangeDCModifier) ) {
 			// Otherwise, test visibility against current sight polygons
 			
-			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pTile.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
 			}
 				
@@ -376,7 +389,9 @@ class SpottingManager {
 			
 			if (isNaN(vLocalVisionData.vRangeDCInterval)) {
 				vLocalVisionData.vRangeDCInterval = 0;
-			}			
+			}	
+
+			vLocalVisionData.v3DRange = game.settings.get(cModuleName, "Range3DCalculation");
 		}
 		else {
 			vLocalVisionData.vlastPPvalue = Infinity;
@@ -429,6 +444,9 @@ class SpottingManager {
 			let vADC;
 			
 			let vSuccessDegree;
+			
+			let vSpotPoint;
+			
 			for (let i = 0; i < vSpotables.length; i++) {
 				
 				let vTolerance;
@@ -467,7 +485,13 @@ class SpottingManager {
 				let vInRange = false;
 				
 				if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vActiveRange || pInfos.Ranges) {
-					vInRange = SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vRangeInfo);
+					vSpotPoint = vSpotables[i].object.center;
+					
+					if (vLocalVisionData.v3DRange) {
+						vSpotPoint = {...vSpotPoint, elevation : vSpotables[i].elevation}
+					}				
+	
+					vInRange = SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vRangeInfo);
 				}
 				
 				if ((!vLocalVisionData.vActiveRange && !pInfos.Ranges) || vInRange) {	
@@ -616,6 +640,8 @@ class SpottingManager {
 			
 			let vTokenSpotted = {};
 			
+			let vSpotPoint;
+			
 			for (let i = 0; i < vSpotables.length; i++) {
 				
 				let vTolerance;
@@ -629,6 +655,12 @@ class SpottingManager {
 					}
 				}
 						
+				vSpotPoint = vSpotables[i].object.center;
+				
+				if (vLocalVisionData.v3DRange) {
+					vSpotPoint = {...vSpotPoint, elevation : vSpotables[i].elevation}
+				}
+					
 				if ((!vLocalVisionData.vActiveRange /*&& !pInfos.Ranges*/) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : undefined/*pInfos.Ranges*/, Tolerance : vTolerance})) {			
 					vSpotted.push(vSpotables[i]);
 					
@@ -1378,6 +1410,8 @@ class SpottingManager {
 		
 		//let vPrevVisible = vSpottables.map(vDocument => vDocument.object.visible);
 		
+		let vSpotPoint;
+		
 		vSpottables = vSpottables.filter(vObject => {
 			let vTolerance;
 				
@@ -1406,7 +1440,13 @@ class SpottingManager {
 
 			let vRangeInfo = {};			
 			
-			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vObject.object.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+			vSpotPoint = vObject.object.center;
+			
+			if (vLocalVisionData.v3DRange) {
+				vSpotPoint = {...vSpotPoint, elevation : vObject.elevation}
+			}
+				
+			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 				//performance reason (vLocalVisionData.vRangeDCModifier)
 				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
 					return false;

@@ -200,6 +200,12 @@ class VisionUtils {
 			return true;
 		}
 		
+		let vElevationScale = 1;
+		
+		if (pPosition.elevation != undefined) {
+			vElevationScale = pSpotters[0]?.parent.dimensions.size/pSpotters[0]?.parent.dimensions.distance;
+	    }
+		
 		return pSpotters.find((vSpotter) => {	//burst and cone range check	
 												let vTotalTolerance = 0;
 												
@@ -209,7 +215,14 @@ class VisionUtils {
 													vTotalTolerance = vTotalTolerance + pTolerance.PointTolerance;
 												}
 												
-												let vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+												let vDistance;
+												
+												if ((pPosition.elevation != undefined) && (vSpotter.elevation != pPosition.elevation)) {
+													vDistance = GeometricUtils.DistanceXYZ({...vSpotter.object.center, elevation : vSpotter.elevation}, pPosition, vElevationScale);
+												}
+												else {
+													vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+												}
 												
 												let vCalculatedDistance = vDistance - vTotalTolerance;
 												

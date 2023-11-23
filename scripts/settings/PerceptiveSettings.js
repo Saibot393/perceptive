@@ -14,6 +14,8 @@ import {PerceptiveSound} from "../helpers/PerceptiveSound.js";
 
 const cPlaySoundIcon = "fa-solid fa-play";
 
+const cVCactive = false;
+
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
   //general
@@ -563,7 +565,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: String,
 		default: "0/0"
-	  }); 	  
+	  }); 	
+
+	  game.settings.register(cModuleName, "Range3DCalculation", {
+		name: Translate("Settings.Range3DCalculation.name"),
+		hint: Translate("Settings.Range3DCalculation.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false		  
+	  });
   
 	//illumination
 	  game.settings.register(cModuleName, "IlluminationPDCModifier", {
@@ -676,7 +687,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.ActivateVCs.name"),
 	hint: Translate("Settings.ActivateVCs.descrp"),
 	scope: "world",
-	config: true,
+	config: cVCactive,
 	type: Boolean,
 	default: false,
 	requiresReload: true
@@ -686,7 +697,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	name: Translate("Settings.ShowVCIDs.name"),
 	hint: Translate("Settings.ShowVCIDs.descrp"),
 	scope: "world",
-	config: true,
+	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
 	type: Boolean,
 	default: false
   }); 
@@ -1016,7 +1027,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.ApplyRange"],
 												[data-setting-id="perceptive.UseBordertoBorderRange"],
 												[data-setting-id="perceptive.StandardVisionDirection"],
-												[data-setting-id="perceptive.RangePDCModifier"]`);
+												[data-setting-id="perceptive.RangePDCModifier"],
+												[data-setting-id="perceptive.Range3DCalculation"]`);
 		
 		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
 												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
@@ -1037,8 +1049,10 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		vSoundForm.find(`i`).on("click", () => {PerceptiveSound.PlaySound(vSoundForm.find("input").val(), null, {pTest : true, pVolume : pHTML.find(`input[name="perceptive.SpottedSoundVolume"]`).val()})});
 		
 		//menu button
-		pHTML.find(`div.form-group[data-setting-id="perceptive.ActivateVCs"]`).after(`<button name="OpenVCMenu"> ${Translate("Titles.OpenVCMenu")}</button>`)
-		pHTML.find(`button[name="OpenVCMenu"]`).on("click", () => {new VisionChannelsWindow().render(true);});
+		if (cVCactive || game.settings.get(cModuleName, "ActivateVCs")) {
+			pHTML.find(`div.form-group[data-setting-id="perceptive.ActivateVCs"]`).after(`<button name="OpenVCMenu"> ${Translate("Titles.OpenVCMenu")}</button>`)
+			pHTML.find(`button[name="OpenVCMenu"]`).on("click", () => {new VisionChannelsWindow().render(true);});
+		}
 	}
 });  
 
