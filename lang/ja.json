@@ -238,6 +238,11 @@
 				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
 			},
 			
+			"Range3DCalculation" : {
+				"name"					: "Range 3D calculation",
+				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Pf2eルールを使用",
 				"descrp"				: "パスファインダー第二版のルールを使用するかどうかを指定します。隠密と隠れ身の違いなどのルールを含みます。"

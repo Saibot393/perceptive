@@ -238,6 +238,11 @@
 				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
 			},
 			
+			"Range3DCalculation" : {
+				"name"					: "Range 3D calculation",
+				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Use Pf2e rules",
 				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"

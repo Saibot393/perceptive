@@ -238,6 +238,11 @@
 				"descrp"				: "Wahrnehmungs SG veränderung basiredn auf Distanz zu aufdeckbarem Objekt (SGInkrement/DistanzInkrement, 0/0 um es aus zu stellen)"
 			},
 			
+			"Range3DCalculation" : {
+				"name"					: "Reichweiten 3D Berechnung",
+				"descrp"				: "Ob die Sichtreichweite in 3D berechnet werden soll (anstatt 2D)"
+			},
+			
 			"UsePf2eRules" : {
 				"name"					: "Nutze Pf2e Regeln",
 				"descrp"				: "Ob die Pf2e Regeln genutzt werden sollen, einschließlich des Unterschiedes zwischen verstecken und schleichen"
