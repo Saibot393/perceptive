@@ -3,6 +3,10 @@
     - Added world setting activate Vision Channel feature
     - Added world setting open Vision Channel Menu
 
+## v2.9.4
+- Added world setting Range 3D calculation to calculate the vision range in 3D
+- Do under no circumstances enter `game.settings.set("perceptive", "ActivateVCs", true)` into the console to activate a prerelase version of the next Perceptive feature
+
 ## v2.9.3
 - Fixed bug that caused DC to be calculated wrongly
 
