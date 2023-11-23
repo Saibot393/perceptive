@@ -247,9 +247,9 @@ class PerceptiveFlags {
 	
 	static setVisionChannels(pObject, pChannels) {} //sets the vision channels of pObject
 	
-	static getVCEmitters(pObject) {} //returns active Emitters of pObject
+	static getVCEmitters(pObject, pIncludeActor = false) {} //returns active Emitters of pObject
 	
-	static getVCReceivers(pObject) {} //returns active Receivers of pObject
+	static getVCReceivers(pObject, pIncludeActor = false) {} //returns active Receivers of pObject
 	
 	static hasVCEmitter(pObject) {} //returns if pObject has atleast one emitter channel
 	
@@ -1617,14 +1617,24 @@ class PerceptiveFlags {
 		this.#setVisionChannels(pObject, pChannels);
 	}
 	
-	static getVCEmitters(pObject) {
+	static getVCEmitters(pObject, pIncludeActor = false) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		
+		if (pIncludeActor && pObject.Actor) {
+			//for AEs
+			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.Actor)};
+		}
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Emits);
 	}
 	
-	static getVCReceivers(pObject) {
+	static getVCReceivers(pObject, pIncludeActor = false) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+
+		if (pIncludeActor && pObject.Actor) {
+			//for AEs
+			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.Actor)};
+		}
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
 	}

@@ -1,5 +1,5 @@
 import { cModuleName, Translate } from "../utils/PerceptiveUtils.js";
-import { PerceptiveFlags } from "./PerceptiveFlags.js";
+import { PerceptiveFlags, cVisionChannelsF } from "./PerceptiveFlags.js";
 import { GeometricUtils } from "../utils/GeometricUtils.js";
 
 const cWindowID = "vision-channels-window";
@@ -183,7 +183,7 @@ class VisionChannelsWindow extends Application {
 		
 		let vAddButton = pHTML.find(`button[name="${cWindowID}.addchannel"]`);
 		
-		vAddButton.on("click", () => {	this.vChannels[randomID()] = {...cDefaultChannel};
+		vAddButton.on("click", () => {	this.vChannels[randomID()] = {...CONFIG[cModuleName].DefaultVC};
 										this.render();});
 											
 		let vChannelEntries = pHTML.find(`tr`);
@@ -279,11 +279,11 @@ class VisionChannelsUtils {
 	//DECLARATIONS
 	static fixVCSetting() {} //creates missing entries in cSettingName
 	
-	static VCsfromNames(pNames = []) {} //returns a VCs based on a names
+	static VCIDsfromNames(pNames = []) {} //returns a VCs based on a names
 	
 	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
 	
-	static ReducedReceiverVCs(pTokens) {} //returns an array of unique vision channels active in pTokens
+	static ReducedReceiverVCs(pTokens, pIncludeActor = false) {} //returns an array of unique vision channels active in pTokens
 	
 	//graphics
 	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
@@ -304,6 +304,11 @@ class VisionChannelsUtils {
 	
 	static ExportChannelsbyName(pName = undefined) {} //returns object of channels matching pID (single pName, array, undefined for all)
 	
+	//support
+	static AEVCAttributeKeybyID(pVCID, pType) {} //returns the appropiate AE Attribute Key to add pVCID VC as pType to a token
+	
+	static AEVCAttributeKeybyName(pVCName, pType) {} //returns the appropiate AE Attribute Key to add pVCName VC as pType to a token
+	
 	//IMPLEMENTATIONS
 	static fixVCSetting() {
 		let vChannels = game.settings.get(cModuleName, cSettingName);
@@ -319,7 +324,7 @@ class VisionChannelsUtils {
 		game.settings.set(cModuleName, cSettingName, vChannels);
 	}
 	
-	static VCsfromNames(pNames = []) {
+	static VCIDsfromNames(pNames = []) {
 		let vChannels = game.settings.get(cModuleName, cSettingName);
 		
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
@@ -374,7 +379,15 @@ class VisionChannelsUtils {
 						
 						if (vMaxVC) {
 							//check VC with heighest Range
-							if (pVCInfos.SourcePoints.find(vPoint => GeometricUtils.DistanceXY(vPoint, pVCInfos.TargetPoint) < vMaxRange)) {
+							if (pVCInfos.SourcePoints.find((pPoint) => {
+																			if (TargetPoint.elevation != undefined && TargetPoint.elevation != vPoint.elevation) {
+																				return GeometricUtils.DistanceXYZ(vPoint, pVCInfos.TargetPoint) < vMaxRange;
+																			}
+																			else {
+																				return GeometricUtils.DistanceXY(vPoint, pVCInfos.TargetPoint) < vMaxRange;
+																			}
+																		}))
+								
 								pVCInfos.Report.Reason = "RangedVC";
 								
 								if (pVCInfos.returnasID) {
@@ -390,11 +403,11 @@ class VisionChannelsUtils {
 		}
 	}
 	
-	static ReducedReceiverVCs(pTokens) {
+	static ReducedReceiverVCs(pTokens, pIncludeActor = false) {
 		let vVCs = [];
 		
 		for (let i = 0; i < pTokens.length; i++) {
-			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i]).filter(vChannelID => !vVCs.includes(vChannelID)));
+			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i], pIncludeActor).filter(vChannelID => !vVCs.includes(vChannelID)));
 		}
 		
 		return vVCs;
@@ -555,6 +568,21 @@ class VisionChannelsUtils {
 		
 		return VisionChannelsUtils.ExportChannelsbyID(Object.keys(vChannels).filter(vID => vNames.includes(vChannels[vID].Name)));
 	}
+	
+	//support
+	static AEVCAttributeKeybyID(pVCID, pType) {
+		return `flags.${cModuleName}.${cVisionChannelsF}.${pVCID}.${pType}`;
+	}
+	
+	static AEVCAttributeKeybyName(pVCName, pType) {
+		let vChannels = VisionChannelsUtils.VCIDsfromNames([pVCName]);
+		
+		if (vChannels && vChannels.length) {
+			return VisionChannelsUtils.AEVCAttributeKeybyID(vChannels[0], pType);
+		}
+		
+		return "";
+	}
 }
 
 Hooks.once("init", function() {
@@ -562,7 +590,7 @@ Hooks.once("init", function() {
 		CONFIG[cModuleName] = {};
 	}
 	
-	CONFIG[cModuleName].DefaultChannel = cDefaultChannel;
+	CONFIG[cModuleName].DefaultVC = cDefaultChannel;
 	
 	game.settings.register(cModuleName, cSettingName, {
 		name: Translate("Settings." + cSettingName + ".name"),
