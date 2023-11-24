@@ -21,6 +21,8 @@ class VisionChannelsManager {
 	
 	static CanVCSeeObject(pViewer, pObject) {} //returns if pSpotter can see pObject
 	
+	static async OnAEChange(pActor) {} //called when the AEs of an actor changes
+	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {} //called when a token updates
 	
@@ -86,6 +88,18 @@ class VisionChannelsManager {
 		}
 		
 		return VisionChannelsUtils.isVCvisible(vEmitters, VisionChannelsUtils.ReducedReceiverVCs([pViewer], true), vInfos);
+	}
+	
+	static async OnAEChange(pActor) {
+		if (canvas.tokens.controlled.find(vToken => vToken.actor == pActor)) {
+			await VisionChannelsManager.updateVisionValues();
+			
+			let vControlled = canvas.tokens.controlled;
+			
+			for (let i = 0; i < vControlled.length; i++) {
+				vControlled[i].updateVisionSource();
+			}
+		}
 	}
 	
 	//ons
@@ -196,6 +210,10 @@ Hooks.once("ready", function() {
 	Hooks.on("controlToken", () => {VisionChannelsManager.updateVisionValues()});
 	
 	Hooks.on("initializeVisionSources", () => {VisionChannelsManager.updateVisionValues()});
+	
+	Hooks.on("createActiveEffect", (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
+	
+	Hooks.on("deleteActiveEffect",  (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
 });
 
 export function CanVCSeeObject(pViewer, pObject) {return VisionChannelsManager.CanVCSeeObject(pViewer, pObject)};
