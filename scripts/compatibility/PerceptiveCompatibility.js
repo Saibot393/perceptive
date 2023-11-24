@@ -438,7 +438,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 				content: async (trigger, action) => {
 					const entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
 					const vSpotted = await pMATT.entityName(action.data?.spotted);
-					const vSpottingCondition = Translate(cMATT + ".filters." + "filter-spotted-by" + ".settings." + "filterCondition" + ".options." + action.data.filterCondition);
+					const vSpottingCondition = Translate(cMATT + ".filters." + "filter-has-spotted" + ".settings." + "filterCondition" + ".options." + action.data.filterCondition);
 					
 					return TranslateandReplace(cMATT + ".filters." + "filter-has-spotted" + ".descrp", {pEntities : entityName, pSpotted : vSpotted, pFilterCondition : vSpottingCondition});
 				}
