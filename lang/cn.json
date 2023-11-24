@@ -49,7 +49,9 @@
 			"Tile"						: "Tile",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Reset \"spotted by\"",
-			"with"						: "with"
+			"with"						: "with",
+			"VisionChannels"			: "Vision Channels",
+			"OpenVCMenu"				: "Open Vision Channels Menu"
 		},
 		
 		"ChatMessage" : {
@@ -441,6 +443,26 @@
 			"SpotterImagePingDuration" : {
 				"name"					: "Spotter ping image duration",
 				"descrp"				: "The duration for which the spotter ping image persists (in seconds)"
+			},
+
+			"ActivateVCs" : {
+				"name" 					: "Activate Vision Channels",
+				"descrp" 				: "If the perceptive Vision Channels feature should be active"
+			},	
+
+			"SimulateVCPlayerVision" : {
+				"name" 					: "Simulate player vision",
+				"descrp" 				: "If the Vision Channel based player vision of the currently selected token should be displayed"
+			},		
+			
+			"VCRange3DCalc" : {
+				"name" 					: "Vision Channel 3D range",
+				"descrp" 				: "If the Vision Channel range should be calculated in 3D"
+			},		
+
+			"ShowVCIDs" : {
+				"name" 					: "Show Vision Channel IDs",
+				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
 			},	
 			
 			"showPerceptiveWalls" : {
@@ -703,6 +725,48 @@
 					"always"			: "always",
 					"active"			: "active",
 					"passive"			: "passive"
+				}
+			}
+		},
+		
+		"vision-channels-window" : {
+			"buttons" : {
+				"OpenVCMenu" : {
+					"name"				: "Open Vision Channels"
+				},
+				"confirm" : {
+					"name"				: "Confirm"
+				},
+				"add" : {
+					"name"				: "Add channel"
+				}
+			},
+			"titles" : {
+				"VisionChannels"		: "Vision Channels"
+			},
+			"entries" : {
+				"titles" : {
+					"Name"				: "Name",
+					"RequiredtoSee"		: "Required to see",
+					"SeethroughWalls"	: "Through walls",
+					"Range"				: "Range",
+					"Color"				: "Color",
+					"EffectFilter" : {
+						"name"			: "Effect filter",
+						"options" : {
+							"off"		: "off",
+							"outline"   : "outline",
+							"outline_waves" : "outline & waves",
+							"glow"		: "glow"
+						}
+					},
+					"EffectFilterColor" : "Effect Filter Color",
+					"Transparency"		: "Transparency",
+					"VCID"				: "Internal ID",
+					"Emits"				: "Emits",
+					"Receives"			: "Receives",
+					"Sight"				: "Sight",
+					"Movement"			: "Movement"
 				}
 			}
 		},

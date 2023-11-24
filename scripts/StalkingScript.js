@@ -9,46 +9,44 @@ class StalkingManager {
 	//DECLARATIONS
 	static PanToselectedCenter(pToken, pchanges) {} //pans camera to the center of all selected tokens
 	
-	static PanwithChange(pToken, pchanges) {} //changes the camera according to pchanges
-	
 	//ons
 	static OnTokenrefresh(pToken, pchanges, pInfos) {} //called when a token is updated
 	
+	static OnTokenControl(pToken, pControl) {} //called when the token controll changes
+	
 	//IMPLEMENTATIONS
 	static PanToselectedCenter(pToken, pchanges) {
-		let cCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken)));
-		
-		let vArea = GeometricUtils.GetArea(PerceptiveUtils.selectedTokens());
-		
-		vArea = GeometricUtils.ScaleArea(vArea, cAreaScale);
-		
-		let vScreenWidth = canvas.screenDimensions[0];
-		
-		if (!ui.sidebar._collapsed) {
-			vScreenWidth = vScreenWidth - ui.sidebar.position.width;
+		if (PerceptiveUtils.selectedTokens().length) {
+			let pCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken)));
+			
+			let vArea = GeometricUtils.GetArea(PerceptiveUtils.selectedTokens());
+			
+			vArea = GeometricUtils.ScaleArea(vArea, cAreaScale);
+			
+			let vScreenWidth = canvas.screenDimensions[0];
+			
+			if (!ui.sidebar._collapsed) {
+				vScreenWidth = vScreenWidth - ui.sidebar.position.width;
+			}
+			
+			let vPanTarget = {x : pCenter[0], y : pCenter[1]}
+			
+			let vxScale = (vScreenWidth)/GeometricUtils.AreaWidth(vArea);
+			let vyScale = (canvas.screenDimensions[1])/GeometricUtils.AreaHeight(vArea);
+			
+			let vScale = Math.min(vxScale, vyScale);
+			
+			if (vScale < canvas.stage.scale.x) {
+				vPanTarget.scale = vScale;
+			}
+			else {
+				vPanTarget.scale = canvas.stage.scale.x;
+			}
+			
+			vPanTarget.x = vPanTarget.x + (canvas.screenDimensions[0] - vScreenWidth)/vPanTarget.scale/2;	
+			
+			canvas.pan(vPanTarget);
 		}
-		
-		let vPanTarget = {x : cCenter[0], y : cCenter[1]}
-		
-		let vxScale = (vScreenWidth)/GeometricUtils.AreaWidth(vArea);
-		let vyScale = (canvas.screenDimensions[1])/GeometricUtils.AreaHeight(vArea);
-		
-		let vScale = Math.min(vxScale, vyScale);
-		
-		if (vScale < canvas.stage.scale.x) {
-			vPanTarget.scale = vScale;
-		}
-		else {
-			vPanTarget.scale = canvas.stage.scale.x;
-		}
-		
-		vPanTarget.x = vPanTarget.x + (canvas.screenDimensions[0] - vScreenWidth)/vPanTarget.scale/2;	
-		
-		canvas.pan(vPanTarget);
-	}
-	
-	static PanwithChange(pToken, pchanges) {
-		
 	}
 	
 	//ons
@@ -59,6 +57,14 @@ class StalkingManager {
 			}
 		}
 	}
+	
+	static OnTokenControl(pToken, pControl) {
+		if (pControl && game.settings.get(cModuleName, "followTokens")) {
+			StalkingManager.PanToselectedCenter(pToken);
+		}		
+	} 
 }
 
 Hooks.on("refreshToken", (...args) => {StalkingManager.OnTokenrefresh(...args)});
+
+Hooks.on("controlToken", (pToken, pControl) => {StalkingManager.OnTokenControl(pToken, pControl)});

@@ -194,7 +194,7 @@ class PerceptiveSheetSettings {
 	
 	static async TokenSheetSettings(pApp, pHTML, pData) {
 		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {
+			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
 				let vTabbar = pHTML.find(`[data-group="main"].sheet-tabs`);
 				let vprevTab = pHTML.find(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
@@ -209,6 +209,9 @@ class PerceptiveSheetSettings {
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);	
+			}
+			
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {
 				
 				if (game.settings.get(cModuleName, "usePerceptiveStealthEffect") || PerceptiveFlags.isPerceptiveStealthing(pApp.document)) {
 					//if this token is perceptive stealthing
@@ -289,7 +292,7 @@ class PerceptiveSheetSettings {
 	
 	static async TileSheetSettings(pApp, pHTML, pData) {
 		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {	
+			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
 				let vTabbar = pHTML.find(`[aria-role="Form Tab Navigation"].sheet-tabs`);
 				let vprevTab = pHTML.find(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
@@ -303,8 +306,10 @@ class PerceptiveSheetSettings {
 				let vTabContentHTML = `<div class="tab" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
-				vprevTab.after(vTabContentHTML);	
-							
+				vprevTab.after(vTabContentHTML);
+			}
+			
+			if (game.settings.get(cModuleName, "ActivateSpotting")) {							
 				//Tile name for perceptive purposes (possible rideable synch)
 				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cTilePerceptiveNameF +".name"), 
 																vhint : Translate("SheetSettings."+ cTilePerceptiveNameF +".descrp"), 

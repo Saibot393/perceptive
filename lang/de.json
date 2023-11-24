@@ -49,7 +49,9 @@
 			"Tile"						: "Fliese",
 			"Triggers"					: "Triggers",
 			"ResetSpottedby"			: "Resette \"Aufgedeckt von\"",
-			"with"						: "mit"
+			"with"						: "mit",
+			"VisionChannels"			: "Vision Channels",
+			"OpenVCMenu"				: "Öffne Sicht Kanal Menü"
 		},
 		
 		"ChatMessage" : {
@@ -373,7 +375,7 @@
 				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"
 			},
 			
-			"MakeSpottedTokensVisible" : {
+			"RevealAllies" : {
 				"name"					: "Aufgedeckte verbündete Figuren sichtbar machen",
 				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)"
 			},
@@ -441,6 +443,26 @@
 			"SpotterImagePingDuration" : {
 				"name"					: "Beobachter ping Bild Dauer",
 				"descrp"				: "Die dauer für welche das Beobachter ping Bild sichtbar bleibt (in Sekunden)"
+			},
+
+			"ActivateVCs" : {
+				"name" 					: "Aktiviere Vision Channels",
+				"descrp" 				: "Ob Sicht Kanäle aktiviert werden sollen"
+			},	
+
+			"SimulateVCPlayerVision" : {
+				"name" 					: "Simuliere Spieler Sicht",
+				"descrp" 				: "Ob die Vision Channels basierende Sicht der ausgewählten Figur simuliert werden soll"
+			},		
+			
+			"VCRange3DCalc" : {
+				"name" 					: "Sicht Kanäle 3D berechnung",
+				"descrp" 				: "Ob die Reichweite von Sicht Kanälen in 3D berechnet werden soll"
+			},		
+
+			"ShowVCIDs" : {
+				"name" 					: "Zeige Sicht Kanal IDs",
+				"descrp" 				: "Ob die internen Sicht Kanal IDs im Menü angezeigt werden sollen"
 			},	
 			
 			"showPerceptiveWalls" : {
@@ -703,6 +725,48 @@
 					"always"			: "immer",
 					"failure"			: "aktiv",
 					"critfailure"		: "passiv"
+				}
+			}
+		},
+		
+		"vision-channels-window" : {
+			"buttons" : {
+				"OpenVCMenu" : {
+					"name"				: "Öffne Sicht Kanäle"
+				},
+				"confirm" : {
+					"name"				: "Bestätigen"
+				},
+				"add" : {
+					"name"				: "Kanal hinzufügen"
+				}
+			},
+			"titles" : {
+				"VisionChannels"		: "Sicht Kanäle"
+			},
+			"entries" : {
+				"titles" : {
+					"Name"				: "Name",
+					"RequiredtoSee"		: "Benötigt um zu sehen",
+					"SeethroughWalls"	: "Durch Wände",
+					"Range"				: "Reichweite",
+					"Color"				: "Farbe",
+					"EffectFilter" : {
+						"name"			: "Effekt Filter",
+						"options" : {
+							"off"		: "aus",
+							"outline"   : "Umrisse",
+							"outline_waves" : "Umrisse & Wellen",
+							"glow"		: "Leuchten"
+						}
+					},
+					"EffectFilterColor" : "Effekt FIlter Farbe",
+					"Transparency"		: "Transparenz",
+					"VCID"				: "Interne ID",
+					"Emits"				: "Sendet",
+					"Receives"			: "Empfängt",
+					"Sight"				: "Sicht",
+					"Movement"			: "Bewegung"
 				}
 			}
 		},

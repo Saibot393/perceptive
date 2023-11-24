@@ -14,7 +14,7 @@ import {PerceptiveSound} from "../helpers/PerceptiveSound.js";
 
 const cPlaySoundIcon = "fa-solid fa-play";
 
-const cVCactive = false;
+const cVCactive = true;
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   //Settings
@@ -691,7 +691,25 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	type: Boolean,
 	default: false,
 	requiresReload: true
-  });  
+  }); 
+
+  game.settings.register(cModuleName, "SimulateVCPlayerVision", {
+	name: Translate("Settings.SimulateVCPlayerVision.name"),
+	hint: Translate("Settings.SimulateVCPlayerVision.descrp"),
+	scope: "world",
+	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
+	type: Boolean,
+	default: false
+  }); 
+
+  game.settings.register(cModuleName, "VCRange3DCalc", {
+	name: Translate("Settings.VCRange3DCalc.name"),
+	hint: Translate("Settings.VCRange3DCalc.descrp"),
+	scope: "world",
+	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
+	type: Boolean,
+	default: false
+  });   
   
   game.settings.register(cModuleName, "ShowVCIDs", {
 	name: Translate("Settings.ShowVCIDs.name"),

@@ -63,7 +63,7 @@ const cVisionChannelsF = "VisionChannelsFlag"; //FLag to store the vision channe
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cVisionChannelsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -1620,9 +1620,9 @@ class PerceptiveFlags {
 	static getVCEmitters(pObject, pIncludeActor = false) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
 		
-		if (pIncludeActor && pObject.Actor) {
+		if (pIncludeActor && pObject.actor) {
 			//for AEs
-			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.Actor)};
+			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.actor)};
 		}
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Emits);
@@ -1630,10 +1630,10 @@ class PerceptiveFlags {
 	
 	static getVCReceivers(pObject, pIncludeActor = false) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
-
-		if (pIncludeActor && pObject.Actor) {
+		
+		if (pIncludeActor && pObject.actor) {
 			//for AEs
-			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.Actor)};
+			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.actor)};
 		}
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		

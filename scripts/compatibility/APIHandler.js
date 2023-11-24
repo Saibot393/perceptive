@@ -3,6 +3,7 @@ import {PeekingIgnoreWall} from "../PeekingScript.js";
 import {isSpottedby as isSpottedbyRAW} from "../SpottingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
+import {VisionChannelsUtils} from "../helpers/VisionChannelsHelper.js";
 
 function objectDocument(pObject) { //for support
 	let vObject = pObject;
@@ -96,6 +97,8 @@ function SpottablesinRange(pSpotters, pRanges = {Range : Infinity, ConeRange : 0
 
 Hooks.once("init", () => {
 	game.modules.get(cModuleName).api = {
+		PerceptiveFlags,
+		VisionChannelsUtils,
 		IgnoreWall,
 		isSpottedby,
 		LightLevel,

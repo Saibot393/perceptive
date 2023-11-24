@@ -52,6 +52,8 @@ class VisionUtils {
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
+	static WalltestVisibility(pWall, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
+	
 	static VisionLevel(pToken) {} //returns the Vision level of pToken (special calc for Pf2e)
 	
 	static LightingLevel(pPoint, pScene = null) {} //returns the lightning level at a given point in a given scene (Dark = 0, Dim = 1, Bright = 2)
@@ -355,6 +357,23 @@ class VisionUtils {
 		return points.some(p => {
 			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
 		});
+	}
+	
+	static WalltestVisibility(pWall, pInfos = {tolerance : 2, object : null}) {
+		// If no vision sources are present, the visibility is dependant of the type of user
+		const ray = pWall.toRay();
+		const [x, y] = pWall.midpoint;
+		const [dx, dy] = [-ray.dy, ray.dx];
+		const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+		const points = [
+		  {x: x + (t * dx), y: y + (t * dy)},
+		  {x: x - (t * dx), y: y - (t * dy)}
+		];
+		
+		// Test each point for visibility
+		return points.some(p => {
+			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
+		});	
 	}
 	
 	static VisionLevel(pToken) {

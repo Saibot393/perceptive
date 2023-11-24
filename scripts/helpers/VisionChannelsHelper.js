@@ -271,10 +271,6 @@ class VisionChannelsWindow extends Application {
 	} 
 }
 
-function testwindow(pObject = null) {
-	new VisionChannelsWindow(pObject).render(true);
-}
-
 class VisionChannelsUtils {
 	//DECLARATIONS
 	static fixVCSetting() {} //creates missing entries in cSettingName
@@ -331,6 +327,7 @@ class VisionChannelsUtils {
 	}
 	
 	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {
+		//the heart of this whole feature
 		if (pEmitterChannels.length) {
 			pVCInfos.Report = {};
 			
@@ -348,6 +345,12 @@ class VisionChannelsUtils {
 			
 			if (!pVCInfos.WallCheck && !pVCInfos.InVision) {
 				//check if see through walls is necessary for vision
+				if (vCommons.find(vChannelID => !vChannels[vChannelID].SeethroughWalls && vChannels[vChannelID].RequiredtoSee)) {
+					//necessary channel can't see through Wall
+					pVCInfos.Report.Reason = "RequiredVCnotSeethroughWall";
+					return false;
+				}
+				
 				vCommons = vCommons.filter(vChannelID => vChannels[vChannelID].SeethroughWalls);
 			}
 			
@@ -355,7 +358,11 @@ class VisionChannelsUtils {
 				//seperate ranged and not ranged 
 				let vRangeLessVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range < 0));
 				
-				if (vRangeLessVCs.length) {
+				let vRangedVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range >= 0));
+				
+				let vRangeCheck = vRangedVCs.find(vChannelID => (vChannels[vChannelID].RequiredtoSee))
+				
+				if (vRangeLessVCs.length && !vRangeCheck) {
 					//check range less
 					pVCInfos.Report.Reason = "RangeLessVC";
 					
@@ -368,34 +375,58 @@ class VisionChannelsUtils {
 				else {
 					if (pVCInfos.TargetPoint) {
 						//check ranged
-						let vRangedVCs = vCommons.filter(vChannelID => !vRangeLessVCs.includes(vChannelID));
 						
 						let vMaxRange = 0;
-						let vMaxVC = undefined;
+						let vRangeVC = undefined;
 						
-						vRangedVCs.forEach(vChannelID => {if (vChannels[vChannelID]?.Range > vMaxRange){vMaxVC = vChannelID; vMaxRange = vChannels[vChannelID]?.Range}});
+						let vRangeFactor = (canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 						
-						vMaxRange = vMaxRange * (canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
+						let vRangeFunction = (pPoint, pRange) => {
+							console.log(pPoint);
+							console.log(pVCInfos);
+							
+							if (pVCInfos.TargetPoint.elevation != undefined && pVCInfos.TargetPoint.elevation != pPoint.elevation) {
+								return GeometricUtils.DistanceXYZ(pPoint, pVCInfos.TargetPoint, vRangeFactor) < pRange * vRangeFactor;
+							}
+							else {
+								return GeometricUtils.DistanceXY(pPoint, pVCInfos.TargetPoint) < pRange * vRangeFactor;
+							}
+						}
 						
-						if (vMaxVC) {
-							//check VC with heighest Range
-							if (pVCInfos.SourcePoints.find((pPoint) => {
-																			if (TargetPoint.elevation != undefined && TargetPoint.elevation != vPoint.elevation) {
-																				return GeometricUtils.DistanceXYZ(vPoint, pVCInfos.TargetPoint) < vMaxRange;
-																			}
-																			else {
-																				return GeometricUtils.DistanceXY(vPoint, pVCInfos.TargetPoint) < vMaxRange;
-																			}
-																		}))
+						let vInRange = false;
+						
+						if (vRangeCheck) {
+							//filter ranged required channels
+							let vRequiredRange = vRangedVCs.filter(vChannelID => (vChannels[vChannelID].RequiredtoSee));
+							
+							vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vChannels[vChannelID].Range))).length == vRequiredRange.length);
+							
+							if (!vInRange) {
+								//a required channel is out of range
+								pVCInfos.Report.Reason = "RequiredVCoutofRange";
 								
+								return false;
+							}
+							
+							vRangeVC = vRequiredRange[0];
+						}
+						else {
+							vRangedVCs.forEach(vChannelID => {if (vChannels[vChannelID]?.Range > vMaxRange){vRangeVC = vChannelID; vMaxRange = vChannels[vChannelID]?.Range}});
+						
+							vMaxRange = vMaxRange;
+							
+							vInRange = pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vMaxRange));
+						}
+						
+						if (vInRange) {
+								//range check succesful
 								pVCInfos.Report.Reason = "RangedVC";
 								
 								if (pVCInfos.returnasID) {
-									return vMaxVC;
+									return vRangeVC;
 								}
 								
-								return vChannels[vMaxVC];
-							}
+								return vChannels[vRangeVC];
 						}
 					}
 				}
@@ -600,8 +631,6 @@ Hooks.once("init", function() {
 		type: Object,
 		default: {}
 	});
-	
-	game.modules.get("perceptive").test = {testwindow, VisionChannelsUtils};
 });
 
 Hooks.once("ready", () => {

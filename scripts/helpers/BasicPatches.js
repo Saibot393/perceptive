@@ -20,7 +20,7 @@ class PatchSupport {
 		let vBuffer;
 		
 		for (let i = 0; i < vTiles.length; i++) {
-			for (let j = 0; i < vTileVisionFunctions.length; i++) {
+			for (let j = 0; j < vTileVisionFunctions.length; j++) {
 				vBuffer = vTileVisionFunctions[j](vTiles[i]);
 				
 				if (vBuffer != undefined) {
@@ -46,10 +46,13 @@ class PatchSupport {
 
 Hooks.once("ready", function() {
 	Hooks.on("refreshToken", (pToken) => {
-		
 		if (pToken.controlled) {
 			PatchSupport.CheckTilesVisibility(pToken);
 		}
+	});
+	
+	Hooks.on("controlToken", (pToken) => {
+		PatchSupport.CheckTilesVisibility(pToken);
 	});
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {

@@ -6,6 +6,7 @@ import { VisionUtils } from "./utils/VisionUtils.js";
 
 var vLocalVisionData = {
 	vReceiverChannels : [],
+	vCompleteVision : false,
 	vRange3D : false
 }
 
@@ -18,19 +19,25 @@ class VisionChannelsManager {
 	
 	static CurrentSourcePoints() {} //returns the current vision source points
 	
+	static CanVCSeeObject(pViewer, pObject) {} //returns if pSpotter can see pObject
+	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {} //called when a token updates
 	
 	//IMPLEMENTATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
-		if (!game.user.isGM || game.settings.get(cModuleName, "SimulatePlayerVision")) {
-			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(canvas.tokens.controlled.map(vToken => vToken.document), true);		
+		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && canvas.tokens.controlled.length > 0)) {
+			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(canvas.tokens.controlled.map(vToken => vToken.document), true);	
+
+			vLocalVisionData.vCompleteVision = false;
 		}
 		else {
 			vLocalVisionData.vReceiverChannels = [];
+			
+			vLocalVisionData.vCompleteVision = true;
 		}
 		
-		//SpottingManager.CheckTilesSpottingVisible(pIgnoreNewlyVisibleTiles);
+		vLocalVisionData.vRange3D = game.settings.get(cModuleName, "VCRange3DCalc");
 		
 		if (CONFIG.debug.perceptive.VCScript) {//DEBUG
 			console.log("perceptive: New vision data:", vLocalVisionData);
@@ -42,7 +49,7 @@ class VisionChannelsManager {
 	//support
 	static VisionPoint(pObject) {
 		if (vLocalVisionData.vRange3D) {
-			return {...pObject.center, elevation : pObject.document.elevation}
+			return {...pObject.center, elevation : pObject.document.elevation};
 		}
 		else {
 			return pObject.center;
@@ -53,9 +60,36 @@ class VisionChannelsManager {
 		return canvas.tokens.controlled.map(vToken => VisionChannelsManager.VisionPoint(vToken));
 	}
 	
+	static CanVCSeeObject(pViewer, pObject) {
+		let vInfos = {	SourcePoints : pSpotter.object?.center,
+						TargetPoint : undefined,
+						InVision : undefined};
+						
+		let vEmitters = [];
+		
+		switch (pObject.documentName) {
+			case "Token":
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject.document, true);
+				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
+				vInfos.InVision = VisionUtils.WalltestVisibility(pObject.wall);
+				break;
+			case "Tile":
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject.document);
+				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
+				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
+				break;
+			case "Wall":
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject.wall.document);
+				vInfos.TargetPoint = pObject.object?.center;
+				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
+				break;
+		}
+		
+		return VisionChannelsUtils.isVCvisible(vEmitters, VisionChannelsUtils.ReducedReceiverVCs([pViewer], true), vInfos);
+	}
+	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {
-		
 		if (pToken.controlled) {
 			VisionChannelsManager.updateVisionValues();
 		}
@@ -72,9 +106,15 @@ Hooks.once("ready", function() {
 	
 	if (game.settings.get(cModuleName, "ActivateVCs")) {
 		vDCVisionFunctions.push(function(pObject) {
-			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels,{SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
-																																					TargetPoint : pObject.center,
-																																					InVision : VisionUtils.simpletestVisibility(pObject.center)});
+			if (vLocalVisionData.vCompleteVision) {return true};
+			
+			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+							TargetPoint : pObject.center,
+							InVision : VisionUtils.WalltestVisibility(pObject.wall)};
+			
+			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, vInfos);
+			
+			//console.log(vInfos);
 																																					
 			if (vChannel) {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -84,9 +124,15 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
-			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels, {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
-																																						TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-																																						InVision : VisionUtils.simpletestVisibility(pObject.center)});
+			if (vLocalVisionData.vCompleteVision || pObject.controlled) {return true};
+			
+			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
+							TargetPoint : VisionChannelsManager.VisionPoint(pObject),
+							InVision : VisionUtils.simpletestVisibility(pObject.center)};
+			
+			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels, vInfos);
+			
+			//console.log(vInfos, PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels);
 			
 			if (vChannel) {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -96,12 +142,18 @@ Hooks.once("ready", function() {
 		});
 		
 		vTileVisionFunctions.push(function(pObject) {
+			if (vLocalVisionData.vCompleteVision) {return true};
+			
 			let vEmitterVCs = PerceptiveFlags.getVCEmitters(pObject.document);
 			
 			if (vEmitterVCs.length) {
-				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, {SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
-																																					TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-																																					InVision : VisionUtils.simpletestVisibility(pObject.center)});
+				let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
+								TargetPoint : VisionChannelsManager.VisionPoint(pObject),
+								InVision : VisionUtils.simpletestVisibility(pObject.center)};
+				
+				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, vInfos);
+				
+				//console.log(vInfos, PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels);
 				
 				if (vChannel) {
 					VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -112,6 +164,8 @@ Hooks.once("ready", function() {
 		});		
 		
 		vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
+			if (vLocalVisionData.vCompleteVision) {return true};
+			
 			let vWallChannels = [];
 			
 			switch (pCheck?.config?.type) {
@@ -123,9 +177,13 @@ Hooks.once("ready", function() {
 					break;
 			}
 			
-			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
-																												TargetPoint : pWall.center,
-																												WallCheck : true});
+			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
+							TargetPoint : pWall.center,
+							WallCheck : true}
+			
+			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, vInfos);
+			
+			//console.log(vInfos);
 
 			if (vChannel) {
 				return false;
@@ -136,4 +194,8 @@ Hooks.once("ready", function() {
 	Hooks.on("updateToken", (...args) => {VisionChannelsManager.onTokenupdate(...args)});
 	
 	Hooks.on("controlToken", () => {VisionChannelsManager.updateVisionValues()});
+	
+	Hooks.on("initializeVisionSources", () => {VisionChannelsManager.updateVisionValues()});
 });
+
+export function CanVCSeeObject(pViewer, pObject) {return VisionChannelsManager.CanVCSeeObject(pViewer, pObject)};
