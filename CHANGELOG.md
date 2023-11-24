@@ -1,7 +1,23 @@
 ## v3.0.0 (unreleased)
-- New Feature "Vision Channels"
-    - Added world setting activate Vision Channel feature
-    - Added world setting open Vision Channel Menu
+- New Feature "Vision Channels" (VC)
+    - Added world setting activate Vision Channels to use the new feature
+    - Added world setting Open Vision Channels Menu to open the menu and edit the channels
+        - Name: The name of this VC
+        - Required to see: If this VC is required to see objects emitting on this VC
+        - Through walls: If object with this VC can be seen through walls
+        - Range: The range over which this VC emits (-1 for infinity)
+        - Color: The tint of object seen through this VC
+        - Effect Filter: The filter applied to tokens seen with this VC
+        - Effect Filter Color: The color of the effect filter
+        - Transparency: The transparency of objects seen with this VC (1 no transparency, 0 invisible)
+    - Added world setting Simulate player vision to have the same vision a player controlling the tokens would have as a GM
+    - Added world setting Vision Channel 3D range to calculate the vision channel range in 3D
+    - Added world setting Show Vision Channel IDs to show the internal vision channel IDs in the Vision Channels menu
+    - Added Token/Tile/Wall setting Open Vision Channels Menu
+        - Emits: If this token/tile/door control Emits on the VC and can be seen with this channel
+        - Receives: If this token/tile/door control Receives the VC and can see this channel
+        - Sigth: If this wall can be seen through with this channel
+        - Movement: If this wall can be moved through with this channel
 
 ## v2.9.4
 - Added world setting Range 3D calculation to calculate the vision range in 3D
