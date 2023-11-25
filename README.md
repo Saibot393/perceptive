@@ -164,6 +164,37 @@ The following informations will be displayed in the settings (if applicable):
 ### Issues:
 - The setting Player perspective is incompatible with Less Fogs Reveal Token settings
 
+## Vision Channels
+Vision channels allow GMs to make tokens, tiles and door controls conditionally visible and walls transparent or traversable to certain tokens. Colors or graphical filters may be applied to objects seen through these channels. The feature can be controlled via api, a few exmplae macros for this purpose are included.
+
+### Settings:
+
+#### World:
+- Activate Vision Channels: to use the new feature
+- Open Vision Channels Menu: to open the menu and edit the channels
+     - Name: The name of this VC
+     - Required to see: If this VC is required to see objects emitting on this VC
+     - Through walls: If object with this VC can be seen through walls
+     - Range: The range over which this VC emits (-1 for infinity)
+     - Color: The tint of object seen through this VC
+     - Effect Filter: The filter applied to tokens seen with this VC
+     - Effect Filter Color: The color of the effect filter
+     - Transparency: The transparency of objects seen with this VC (1 no transparency, 0 invisible)
+ - Simulate player vision: to have the same vision a player controlling the tokens would have as a GM
+ - Vision Channel 3D range: to calculate the vision channel range in 3D
+ - Show Vision Channel IDs: to show the internal vision channel IDs in the Vision Channels menu
+
+#### Walls/Tokens/Tiles:
+ - Open Vision Channels Menu: to open this objects vision channel setting menu
+      - Emits: If this token/tile/door control Emits on the VC and can be seen with this channel
+      - Receives: If this token/tile/door control Receives the VC and can see this channel
+      - Sigth: If this wall can be seen through with this channel
+      - Movement: If this wall can be moved through with this channel
+
+#### Active Effects (Actors)
+- The attribute key `flags.perceptive.VisionChannelsFlag.#VCID.Receives` can be used to set wether a token can receive the vision channel belonging to #VCID (true/false)
+- The attribute key `flags.perceptive.VisionChannelsFlag.#VCID.Emits` can be used to set wether a token emits on the vision channel belonging to #VCID (true/false)
+  
 ## General features:
 
 ### Settings:
