@@ -124,8 +124,10 @@ class VisionChannelsWindow extends Application {
 		let vTargetSettings = PerceptiveFlags.getVisionChannels(this.vTarget, true);
 		
 		vEntriesHTML = vEntriesHTML + 	`<tr name="header" style="border: 1px solid #dddddd">
-											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Name")}</th>
-											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Emits")}</th>`;
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Name")}</th>`;
+		if (vEmitterSetting) {
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Emits")}</th>`;
+		}
 		if (vRecieverSetting) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Receives")}</th>`;
 		}
@@ -141,8 +143,10 @@ class VisionChannelsWindow extends Application {
 			vChannelSettings = vTargetSettings[vkey];
 			
 			vEntriesHTML = vEntriesHTML + 	`	<tr name="${vkey}">
-													<td> ${this.vChannels[vkey].Name} </td>
-													<td style="text-align: center; width:100px"> <input name="Emits" type="checkbox" ${vChannelSettings?.Emits ? "checked" : ""}> </td>`;				
+													<td> ${this.vChannels[vkey].Name} </td>`;
+			if (vEmitterSetting) {
+				vEntriesHTML = vEntriesHTML +		`<td style="text-align: center; width:100px"> <input name="Emits" type="checkbox" ${vChannelSettings?.Emits ? "checked" : ""}> </td>`;
+			}
 			if (vRecieverSetting) {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="Receives" type="checkbox" ${vChannelSettings?.Receives ? "checked" : ""}> </td>`;
 			}

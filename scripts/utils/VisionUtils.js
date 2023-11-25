@@ -10,6 +10,8 @@ const cDimInterval = [1/4, 3/4]; //Scene darkness values between which the scene
 
 const cSpotConeAngle = 90; //in degrees
 
+const cSTDTint = 16777215;
+
 const cLightLevel = {
 					Dark : 0,
 					Dim : 1,
@@ -49,6 +51,8 @@ class VisionUtils {
 	static async PreapreSpotableTile(pTile) {} //generates pTile and makes them pre visible
 	
 	static PrepareVCObjects() {} //generates VC objects and makes them pre visible
+	
+	static ResettoGMVision() {} //resets all object to standard gm vision
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 2, object : null}) {} //simple visibility test without vision mode check
 	
@@ -343,6 +347,28 @@ class VisionUtils {
 				//vDoors[i].doorControl.visible = false;
 			}
 		}		
+	}
+	
+	static ResettoGMVision() {
+		let vTiles = canvas.tiles.placeables;
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			vTiles[i].visible = true;
+			vTiles[i].mesh.tint = cSTDTint;
+		}
+		
+		let vTokens = canvas.tokens.placeables;
+		
+		for (let i = 0; i < vTokens.length; i++) {
+			vTokens[i].mesh.tint = cSTDTint;
+			vTokens[i].detectionFilter = null;
+		}	
+
+		let vDoors = canvas.walls.doors;
+		
+		for (let i = 0; i < vDoors.length; i++) {
+			vDoors[i].doorControl.icon.tint = cSTDTint;
+		}			
 	}
 	
 	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null}) { //adapted from foundry.js

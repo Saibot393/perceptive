@@ -37,6 +37,8 @@ class VisionChannelsManager {
 			vLocalVisionData.vReceiverChannels = [];
 			
 			vLocalVisionData.vCompleteVision = true;
+			
+			VisionUtils.ResettoGMVision();
 		}
 		
 		vLocalVisionData.vRange3D = game.settings.get(cModuleName, "VCRange3DCalc");

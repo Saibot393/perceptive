@@ -5,6 +5,7 @@ import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
 import {VisionUtils} from "../utils/VisionUtils.js";
 import {VisionChannelsUtils} from "../helpers/VisionChannelsHelper.js";
 import {CanVCSeeObject} from "../VisionChannelsScript.js";
+import {PatchSupport} from "../helpers/BasicPatches.js";
 
 function objectDocument(pObject) { //for support
 	let vObject = pObject;
@@ -17,7 +18,17 @@ function objectDocument(pObject) { //for support
 }
 
 //returns if wall of pWallDoc should be ignored by Token of pTokenDoc
-export function IgnoreWall(pWallDoc, pTokenDoc) {return PeekingIgnoreWall(pWallDoc, pTokenDoc)}
+export function IgnoreWall(pWallDoc, pTokenDoc, pType = "sight") {	let vResult = PatchSupport.WallInclusion(pWallDoc.object, {}, {config : {type : pType, source : {object : pTokenDoc.object}}});
+																	if (vResult == undefined) {
+																		return false;
+																	}
+																	return !vResult}
+
+export function IncludeWall(pWall, pBounds, pChek) {let vResult = PatchSupport.WallInclusion(pWall, pBounds, pChek);
+													if (vResult == undefined) {
+														return true;
+													}
+													return vResult};
 
 //returns if pObject can be spotted by pSpotter (pCheckFOV if spotter LOS should be included in the calculations) 
 export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {	
@@ -101,6 +112,7 @@ Hooks.once("init", () => {
 		PerceptiveFlags,
 		VisionChannelsUtils,
 		CanVCSeeObject,
+		IncludeWall,
 		IgnoreWall,
 		isSpottedby,
 		LightLevel,

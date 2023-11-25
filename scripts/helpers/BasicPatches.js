@@ -27,6 +27,8 @@ class PatchSupport {
 					vTiles[i].visible = vBuffer;
 					break;
 				}
+				
+				//vTiles[i].visible = VisionUtils.simpletestVisibility(vTiles[i].center);
 			}
 		}
 	}
