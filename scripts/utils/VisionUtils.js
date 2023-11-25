@@ -354,7 +354,9 @@ class VisionUtils {
 		
 		for (let i = 0; i < vTiles.length; i++) {
 			vTiles[i].visible = true;
-			vTiles[i].mesh.tint = cSTDTint;
+			if (vTiles[i].mesh) {
+				vTiles[i].mesh.tint = cSTDTint;
+			}
 		}
 		
 		let vTokens = canvas.tokens.placeables;
