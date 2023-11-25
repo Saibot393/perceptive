@@ -1,3 +1,6 @@
+## v3.0.2
+- Added icons for some macros
+
 ## v3.0.1
 - Fixed small bug
 
