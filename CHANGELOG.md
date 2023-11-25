@@ -1,3 +1,6 @@
+## v3.0.1
+- Fixed small bug
+
 ## v3.0.0
 - New Feature "Vision Channels" (VC)
     - Added world setting activate Vision Channels to use the new feature
