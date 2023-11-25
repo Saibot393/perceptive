@@ -289,9 +289,9 @@ class VisionChannelsUtils {
 	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
 	
 	//vc managing
-	static AddChannels(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
+	static AddChannelstoObject(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
 	
-	static RemoveChannels(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
+	static RemoveChannelsfromObject(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
 	
 	static ValidVCType(pObject) {} //returns valid VC types for pObject
 	
@@ -386,9 +386,6 @@ class VisionChannelsUtils {
 						let vRangeFactor = (canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 						
 						let vRangeFunction = (pPoint, pRange) => {
-							console.log(pPoint);
-							console.log(pVCInfos);
-							
 							if (pVCInfos.TargetPoint.elevation != undefined && pVCInfos.TargetPoint.elevation != pPoint.elevation) {
 								return GeometricUtils.DistanceXYZ(pPoint, pVCInfos.TargetPoint, vRangeFactor) < pRange * vRangeFactor;
 							}
@@ -502,7 +499,7 @@ class VisionChannelsUtils {
 	}
 	
 	//vc managing
-	static AddChannels(pObjects, pChannels, pTypes) {
+	static AddChannelstoObject(pObjects, pChannels, pTypes) {
 		let vValidTypes;
 		
 		for (let i = 0; i < pObjects.length; i++) {
@@ -516,7 +513,7 @@ class VisionChannelsUtils {
 		}
 	}
 	
-	static RemoveChannels(pObjects, pChannels, pTypes) {
+	static RemoveChannelsfromObject(pObjects, pChannels, pTypes) {
 		let vValidTypes;
 		
 		for (let i = 0; i < pObjects.length; i++) {
@@ -583,7 +580,11 @@ class VisionChannelsUtils {
 		
 		let vChannels = game.settings.get(cModuleName, cSettingName); 
 		
-		for (vID of vIDs) {
+		if (vIDs == undefined) {
+			vIDs = Object.keys(vChannels);
+		}
+		
+		for (let vID of vIDs) {
 			if (vChannels[vID]) {
 				vExport[vID] = {...vChannels[vID]}
 			}
@@ -593,6 +594,10 @@ class VisionChannelsUtils {
 	}
 	
 	static ExportChannelsbyName(pName = undefined) {
+		if (pName == undefined) {
+			return VisionChannelsUtils.ExportChannelsbyID();
+		}
+		
 		let vNames = pName;
 		
 		if (typeof vNames == "string") {

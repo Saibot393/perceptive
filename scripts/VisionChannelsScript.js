@@ -65,27 +65,27 @@ class VisionChannelsManager {
 	}
 	
 	static CanVCSeeObject(pViewer, pObject) {
-		let vInfos = {	SourcePoints : pSpotter.object?.center,
+		let vInfos = {	SourcePoints : pViewer.object?.center,
 						TargetPoint : undefined,
 						InVision : undefined};
 						
-		let vEmitters = [];
+		let vEmitters = [pObject];
 		
 		switch (pObject.documentName) {
 			case "Token":
-				vEmitters = PerceptiveFlags.getVCEmitters(pObject.document, true);
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject, true);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
-				vInfos.InVision = VisionUtils.WalltestVisibility(pObject.wall);
+				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
 				break;
 			case "Tile":
-				vEmitters = PerceptiveFlags.getVCEmitters(pObject.document);
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
 				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
 				break;
 			case "Wall":
-				vEmitters = PerceptiveFlags.getVCEmitters(pObject.wall.document);
+				vEmitters = PerceptiveFlags.getVCEmitters(pObject);
 				vInfos.TargetPoint = pObject.object?.center;
-				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
+				vInfos.InVision = VisionUtils.WalltestVisibility(pObject.object);
 				break;
 		}
 		
