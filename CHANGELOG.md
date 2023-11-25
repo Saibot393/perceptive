@@ -1,4 +1,4 @@
-## v3.0.0 (unreleased)
+## v3.0.0
 - New Feature "Vision Channels" (VC)
     - Added world setting activate Vision Channels to use the new feature
     - Added world setting Open Vision Channels Menu to open the menu and edit the channels
@@ -18,6 +18,10 @@
         - Receives: If this token/tile/door control Receives the VC and can see this channel
         - Sigth: If this wall can be seen through with this channel
         - Movement: If this wall can be moved through with this channel
+    - Added a few example macros for vision channels to demo the api
+    - Active effects can be used to give tokens channels (both as receiver/emitter), see example macro `Generate AE attribute key by Name` for further information
+- Improvements to Token following feature
+    - The camera will now pan whenever a new token is selected
 
 ## v2.9.4
 - Added world setting Range 3D calculation to calculate the vision range in 3D
