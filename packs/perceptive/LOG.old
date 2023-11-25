@@ -1,48 +1,53 @@
-2023/11/25-13:03:24.665 5904 Recovering log #2511
-2023/11/25-13:03:24.670 5904 Delete type=0 #3
-2023/11/25-13:03:24.670 5904 Delete type=0 #4
-2023/11/25-13:03:24.670 5904 Delete type=2 #5
-2023/11/25-13:03:24.670 5904 Delete type=0 #30
-2023/11/25-13:03:24.671 5904 Delete type=2 #32
-2023/11/25-13:03:24.671 5904 Delete type=0 #105
-2023/11/25-13:03:24.671 5904 Delete type=0 #106
-2023/11/25-13:03:24.671 5904 Delete type=0 #150
-2023/11/25-13:03:24.671 5904 Delete type=2 #151
-2023/11/25-13:03:24.671 5904 Delete type=0 #832
-2023/11/25-13:03:24.671 5904 Delete type=2 #834
-2023/11/25-13:03:24.671 5904 Delete type=0 #2269
-2023/11/25-13:03:24.672 5904 Delete type=2 #2271
-2023/11/25-13:03:24.672 5904 Delete type=0 #2495
-2023/11/25-13:03:24.672 5904 Delete type=0 #2496
-2023/11/25-13:03:24.672 5904 Delete type=2 #2498
-2023/11/25-13:03:24.672 5904 Delete type=0 #2501
-2023/11/25-13:03:24.672 5904 Delete type=2 #2503
-2023/11/25-13:03:24.673 5904 Delete type=0 #2506
-2023/11/25-13:03:24.673 5904 Delete type=2 #2508
-2023/11/25-13:03:24.673 5904 Delete type=0 #2511
-2023/11/25-13:03:24.673 5904 Delete type=3 #2
-2023/11/25-13:03:24.673 5904 Delete type=3 #28
-2023/11/25-13:03:24.673 5904 Delete type=3 #104
-2023/11/25-13:03:24.673 5904 Delete type=3 #108
-2023/11/25-13:03:24.673 5904 Delete type=3 #112
-2023/11/25-13:03:24.674 5904 Delete type=3 #152
-2023/11/25-13:03:24.674 5904 Delete type=3 #824
-2023/11/25-13:03:24.674 5904 Delete type=3 #835
-2023/11/25-13:03:24.674 5904 Delete type=3 #2245
-2023/11/25-13:03:24.674 5904 Delete type=3 #2272
-2023/11/25-13:03:24.674 5904 Delete type=3 #2490
-2023/11/25-13:03:24.674 5904 Delete type=3 #2499
-2023/11/25-13:03:24.674 5904 Delete type=3 #2504
-2023/11/25-13:03:24.674 5904 Delete type=3 #2509
-2023/11/25-13:08:19.478 6134 Level-0 table #2517: started
-2023/11/25-13:08:19.497 6134 Level-0 table #2517: 1775 bytes OK
-2023/11/25-13:08:19.500 6134 Delete type=0 #2515
-2023/11/25-13:08:19.505 6134 Manual compaction at level-0 from '!folders!1hikAKTArHlXoeK0' @ 72057594037927935 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at (end)
-2023/11/25-13:08:19.505 6134 Manual compaction at level-1 from '!folders!1hikAKTArHlXoeK0' @ 72057594037927935 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at '!macros!bocBZ5HHYTolR1nh' @ 50 : 1
-2023/11/25-13:08:19.505 6134 Compacting 1@1 + 1@2 files
-2023/11/25-13:08:19.513 6134 Generated table #2518@1: 18 keys, 5042 bytes
-2023/11/25-13:08:19.513 6134 Compacted 1@1 + 1@2 files => 5042 bytes
-2023/11/25-13:08:19.518 6134 compacted to: files[ 0 0 2 0 0 0 0 ]
-2023/11/25-13:08:19.518 6134 Delete type=2 #2513
-2023/11/25-13:08:19.519 6134 Delete type=2 #2517
-2023/11/25-13:08:19.519 6134 Manual compaction at level-1 from '!macros!bocBZ5HHYTolR1nh' @ 50 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at (end)
+2023/11/25-13:12:43.485 3ae8 Recovering log #2516
+2023/11/25-13:12:43.485 3ae8 Recovering log #2521
+2023/11/25-13:12:43.490 3ae8 Delete type=0 #3
+2023/11/25-13:12:43.490 3ae8 Delete type=0 #4
+2023/11/25-13:12:43.490 3ae8 Delete type=2 #5
+2023/11/25-13:12:43.490 3ae8 Delete type=0 #30
+2023/11/25-13:12:43.490 3ae8 Delete type=2 #32
+2023/11/25-13:12:43.490 3ae8 Delete type=0 #105
+2023/11/25-13:12:43.491 3ae8 Delete type=0 #106
+2023/11/25-13:12:43.491 3ae8 Delete type=0 #150
+2023/11/25-13:12:43.491 3ae8 Delete type=2 #151
+2023/11/25-13:12:43.491 3ae8 Delete type=0 #832
+2023/11/25-13:12:43.491 3ae8 Delete type=2 #834
+2023/11/25-13:12:43.491 3ae8 Delete type=0 #2269
+2023/11/25-13:12:43.491 3ae8 Delete type=2 #2271
+2023/11/25-13:12:43.492 3ae8 Delete type=0 #2495
+2023/11/25-13:12:43.492 3ae8 Delete type=0 #2496
+2023/11/25-13:12:43.492 3ae8 Delete type=2 #2498
+2023/11/25-13:12:43.492 3ae8 Delete type=0 #2501
+2023/11/25-13:12:43.492 3ae8 Delete type=2 #2503
+2023/11/25-13:12:43.492 3ae8 Delete type=0 #2506
+2023/11/25-13:12:43.492 3ae8 Delete type=2 #2508
+2023/11/25-13:12:43.493 3ae8 Delete type=0 #2511
+2023/11/25-13:12:43.493 3ae8 Delete type=2 #2513
+2023/11/25-13:12:43.493 3ae8 Delete type=0 #2516
+2023/11/25-13:12:43.493 3ae8 Delete type=0 #2521
+2023/11/25-13:12:43.493 3ae8 Delete type=3 #2
+2023/11/25-13:12:43.493 3ae8 Delete type=3 #28
+2023/11/25-13:12:43.493 3ae8 Delete type=3 #104
+2023/11/25-13:12:43.493 3ae8 Delete type=3 #108
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #112
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #152
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #824
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #835
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #2245
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #2272
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #2490
+2023/11/25-13:12:43.494 3ae8 Delete type=3 #2499
+2023/11/25-13:12:43.495 3ae8 Delete type=3 #2504
+2023/11/25-13:12:43.495 3ae8 Delete type=3 #2509
+2023/11/25-13:12:43.495 3ae8 Delete type=3 #2514
+2023/11/25-13:24:58.839 6134 Level-0 table #2524: started
+2023/11/25-13:24:58.895 6134 Level-0 table #2524: 2320 bytes OK
+2023/11/25-13:24:58.898 6134 Delete type=0 #2522
+2023/11/25-13:24:58.901 6134 Manual compaction at level-0 from '!folders!1hikAKTArHlXoeK0' @ 72057594037927935 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at (end)
+2023/11/25-13:24:58.901 6134 Manual compaction at level-1 from '!folders!1hikAKTArHlXoeK0' @ 72057594037927935 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at '!macros!jGtJWXmpj4IMTips' @ 63 : 1
+2023/11/25-13:24:58.901 6134 Compacting 1@1 + 1@2 files
+2023/11/25-13:24:58.905 6134 Generated table #2525@1: 20 keys, 5957 bytes
+2023/11/25-13:24:58.905 6134 Compacted 1@1 + 1@2 files => 5957 bytes
+2023/11/25-13:24:58.907 6134 compacted to: files[ 0 0 2 0 0 0 0 ]
+2023/11/25-13:24:58.908 6134 Delete type=2 #2518
+2023/11/25-13:24:58.908 6134 Delete type=2 #2524
+2023/11/25-13:24:58.908 6134 Manual compaction at level-1 from '!macros!jGtJWXmpj4IMTips' @ 63 : 1 .. '!macros!yMe154PWJOQ4hxsC' @ 0 : 0; will stop at (end)
