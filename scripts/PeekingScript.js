@@ -359,7 +359,7 @@ Hooks.once("init", function() {
 		}
 	}
 	*/
-	vWallInclusionFunctions.push(function(pWall, pBounds, pCheck) {
+	vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
 		if (pWall && pCheck?.config?.source?.object && PeekingManager.IgnoreWall(pWall.document, pCheck.config.source.object.document)) {
 			return false;
 		}		

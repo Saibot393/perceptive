@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -6,6 +6,7 @@ import {IgnoreWall} from "./APIHandler.js";
 import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
 import {PerceptiveSheetSettings} from "../settings/PerceptiveSheetSettings.js";
 import {SpottingManager} from "../SpottingScript.js";
+import {PatchSupport} from "../helpers/BasicPatches.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 const cTriggersIcon = "fa-running";
@@ -210,6 +211,24 @@ Hooks.once("init", () => {
 		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
+	}
+});
+
+Hooks.once("ready", () => {
+	if (PerceptiveCompUtils.isactiveModule(cATV)) {
+		const vOldWallCall = game.modules.get("tokenvisibility").api.Area3d._testWallInclusion;
+		
+		game.modules.get("tokenvisibility").api.Area3d._testWallInclusion = function (pWall, pBounds, pInfos) {
+			let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, {config : {type : pInfos.type, source : {object : canvas.tokens.controlled[0]}}});
+			
+			if (vBuffer != undefined) {
+				return vBuffer;
+			}
+			
+			let vWallCallBuffer = vOldWallCall.bind(this);
+			
+			return vWallCallBuffer(pWall, pBounds, pInfos);
+		}
 	}
 });
 

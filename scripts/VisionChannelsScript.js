@@ -179,8 +179,8 @@ Hooks.once("ready", function() {
 			}
 		});		
 		
-		vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
-			if (vLocalVisionData.vCompleteVision) {return true};
+		vWallInclusionFunctions.push(function(pWall, pBounds, pCheck) {
+			if (vLocalVisionData.vCompleteVision) {return};
 			
 			let vWallChannels = [];
 			

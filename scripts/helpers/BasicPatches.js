@@ -127,16 +127,16 @@ Hooks.once("ready", function() {
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pWall, pBounds) {
-																														let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+																																	let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
 																														
-																														if (vBuffer != undefined) {
-																															return vBuffer;
-																														}
+																																	if (vBuffer != undefined) {
+																																		return vBuffer;
+																																	}
 				
-																														return pWrapped(pWall, pBounds)}, "MIXED");
+																																	return pWrapped(pWall, pBounds)}, "MIXED");
 	}
 	else {
-		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
+		const vOldWallCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
 		
 		ClockwiseSweepPolygon.prototype._testWallInclusion = function (pWall, pBounds) {
 			let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
@@ -145,9 +145,9 @@ Hooks.once("ready", function() {
 				return vBuffer;
 			}
 			
-			let vTokenCallBuffer = vOldTokenCall.bind(this);
+			let vWallCallBuffer = vOldWallCall.bind(this);
 			
-			return vTokenCallBuffer(pWall, pBounds);
+			return vWallCallBuffer(pWall, pBounds);
 		}
 	}	
 });
