@@ -59,7 +59,16 @@
 				"content"				: "You were able to spot <b>{pDoors}</b> secret doors and these hidden tokens:",
 				"unknown"				: "???"
 			},
-			"LostLingeringAP" 			: "{pName} has lost lingering active perception"
+			"LostLingeringAP" 			: "{pName} has lost lingering active perception",
+			"Peeking"					: "{pName} tried to peek a lock",
+			"PeekingSuccess" : {
+				"default"				: "{pName} succeeded at peeking a lock",
+				"crit"					: "{pName} critically succeeded at peeking a lock"
+			},
+			"PeekingFail" : {
+				"default"				: "{pName} failed at peeking a lock",
+				"crit"					: "{pName} critically failed at peeking a lock"
+			}
 		},
 		
 		"Warnings" : {

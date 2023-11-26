@@ -59,7 +59,16 @@
 				"content"				: "Du hast es geschafft <b>{pDoors}</b> geheime Türen and folgende Figuren aufzudecken:",
 				"unknown"				: "???"
 			},
-			"LostLingeringAP" 			: "{pName} hat bleibende aktive Wahrnehmung verloren"
+			"LostLingeringAP" 			: "{pName} hat bleibende aktive Wahrnehmung verloren",
+			"Peeking"					: "{pName} hat versucht ein Schloss zu durchschauen",
+			"PeekingSuccess" : {
+				"default"				: "{pName} hatte einen Erfolg beim durchschauen eines Schlosses",
+				"crit"					: "{pName} hatte einen kritischen Erfolg beim durchschauen eines Schlosses"
+			},
+			"PeekingFail" : {
+				"default"				: "{pName} hatte einen Misserfolg beim durchschauen eines Schlosses",
+				"crit"					: "{pName} hatte einen kritischen Misserfolg beim durchschauen eines Schlosses"
+			}
 		},
 		
 		"Warnings" : {

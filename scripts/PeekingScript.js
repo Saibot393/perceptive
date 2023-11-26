@@ -1,4 +1,4 @@
-import {PerceptiveUtils, cModuleName, Translate} from "./utils/PerceptiveUtils.js";
+import {PerceptiveUtils, cModuleName, Translate, TranslateandReplace} from "./utils/PerceptiveUtils.js";
 import {WallUtils} from "./utils/WallUtils.js";
 import {PerceptiveFlags} from "./helpers/PerceptiveFlags.js";
 import {PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
@@ -131,7 +131,7 @@ class PeekingManager {
 				if (vSuccessDegree > 0) {
 					//success		
 					if (pChatMessages) {
-						ChatMessage.create({user: pInfos.PlayerID, content : Translate("ChatMessage.PeekingSuccess"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
+						ChatMessage.create({user: pInfos.PlayerID, content : TranslateandReplace("ChatMessage.PeekingSuccess"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
 					}	
 					
 					return true;
@@ -139,7 +139,7 @@ class PeekingManager {
 				else {
 					//failure
 					if (pChatMessages) {
-						ChatMessage.create({user: pInfos.PlayerID, content : Translate("ChatMessage.PeekingFail"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
+						ChatMessage.create({user: pInfos.PlayerID, content : TranslateandReplace("ChatMessage.PeekingFail"+vCritMessagesuffix, {pName : pCharacter.name})}); //CHAT MESSAGE
 					}
 					
 					return false
@@ -179,7 +179,7 @@ class PeekingManager {
 					
 				await vRoll.evaluate();
 					
-				await ChatMessage.create({user: game.user.id, flavor : Translate("ChatMessage.Peeking", {pName : vCharacter?.name}),rolls : [vRoll], type : 5}); //CHAT MESSAGE
+				await ChatMessage.create({user: game.user.id, flavor : TranslateandReplace("ChatMessage.Peeking", {pName : vCharacter?.name}),rolls : [vRoll], type : 5}); //CHAT MESSAGE
 					
 				vInfos.pData = {Rollresult : vRoll.total, Diceresult : vRoll.dice[0].results.map(vDie => vDie.result)};
 				
