@@ -1,3 +1,10 @@
+## v3.1.0
+- Prototype token vision channel settings can now be set
+- Added world VC option Range formula to set a calculation based range (formulas similar to roll formulas)
+- Added token vc option Receiver filter to temporarily turn on/off a receiver VC (can be toggle via macro, see "Toggle VC receiver filter of selected Token" macro)
+- Added token vc option Custom range to override the default and the calculated range for the VC
+- Added token vc option Calculated range to see the result of the Range formula for this token
+
 ## v3.0.5
 - Small bug fix
 
