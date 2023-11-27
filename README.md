@@ -176,6 +176,7 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
      - Required to see: If this VC is required to see objects emitting on this VC
      - Through walls: If object with this VC can be seen through walls
      - Range: The range over which this VC emits (-1 for infinity)
+     - Range formula: A formula based range (formulas similar to roll formulas)
      - Color: The tint of object seen through this VC
      - Effect Filter: The filter applied to tokens seen with this VC
      - Effect Filter Color: The color of the effect filter
@@ -188,6 +189,9 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
  - Open Vision Channels Menu: to open this objects vision channel setting menu
       - Emits: If this token/tile/door control Emits on the VC and can be seen with this channel
       - Receives: If this token/tile/door control Receives the VC and can see this channel
+      - Receiver filter: to temporarily turn on/off a receiver VC (can be toggle via macro, see "Toggle VC receiver filter of selected Token" macro)
+      - Custom range: a range that overrides all other ranges for this VC on this token
+      - Calculated range: the range based on on the set range formula
       - Sigth: If this wall can be seen through with this channel
       - Movement: If this wall can be moved through with this channel
 
