@@ -1,3 +1,6 @@
+## v3.0.5
+- Small bug fix
+
 ## v3.0.4
 - Added missing translation for lock peeking checks
 
