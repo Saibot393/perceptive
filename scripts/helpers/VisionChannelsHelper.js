@@ -339,6 +339,8 @@ class VisionChannelsUtils {
 			
 			let vCommons = pEmitterChannels.filter(vChannelID => pReceiverChannels.includes(vChannelID));
 			
+			vCommons = vCommons.filter(vChannelID => vChannels[vChannelID]); //filter valid channel IDs
+			
 			let vNotReceived = pEmitterChannels.filter(vChannelID => !vCommons.includes(vChannelID));
 			
 			if (vNotReceived.find(vChannelID => vChannels[vChannelID]?.RequiredtoSee)) {
