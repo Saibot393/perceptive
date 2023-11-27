@@ -1,3 +1,6 @@
+## v3.0.4
+- Added missing translation for lock peeking checks
+
 ## v3.0.3
 - Improved compatibility with [Alternative Token Visibility](https://foundryvtt.com/packages/tokenvisibility#:~:text=By%20measuring%20the%20precise%20token,they%20partially%20overlap%20a%20wall.), the Line of Sight Algorithm "Token area 3d" should now work correctly with perceptive
 
