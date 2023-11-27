@@ -59,6 +59,7 @@ const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this
 const cSpottingMessageF = "SpottingMessageFlag"; //Flag to store the chat message when this object is spotted
 
 const cVisionChannelsF = "VisionChannelsFlag"; //FLag to store the vision channels of object
+const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
 
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
@@ -249,7 +250,9 @@ class PerceptiveFlags {
 	
 	static getVCEmitters(pObject, pIncludeActor = false) {} //returns active Emitters of pObject
 	
-	static getVCReceivers(pObject, pIncludeActor = false) {} //returns active Receivers of pObject
+	static getVCReceivers(pObject, pIncludeActor = false, pFilter = false) {} //returns active Receivers of pObject
+	
+	static getReceiverRanges(pObject) {} //returns a list of all Receive Ranges of pObject
 	
 	static hasVCEmitter(pObject) {} //returns if pObject has atleast one emitter channel
 	
@@ -260,6 +263,16 @@ class PerceptiveFlags {
 	static AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
 	
 	static RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
+	
+	static getReceiverFilters(pObject) {} //returns the receiver filters of pObject
+	
+	static setReceiverFilters(pObject, pFilters) {} //sets the receiver filters of pObject to pFilters
+	
+	static AddReceiverFilter(pObject, pChannelID) {} //adds a filters for pObject with id pID
+	
+	static RemoveReceiverFilter(pObject, pChannelID) {} //removes a filters for pObject with id pID
+	
+	static ToggleReceiverFilter(pObject, pChannelID) {} //toggles a filters for pObject with id pID
 	
 	//effects
 	static async MarkasPerceptiveEffect(pEffect, pInfos = {}) {} //marks pEffect as perceptive Effects
@@ -776,6 +789,19 @@ class PerceptiveFlags {
 		return {}; //default if anything fails		
 	}
 	
+	static #ReceiverFilterFlag (pObject) {
+	//returns content of ReceiverFilterFlag of pObject ({})
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cReceiverFilterF)) {
+				return vFlag.ReceiverFilterFlag;
+			}
+		}
+		
+		return {}; //default if anything fails		
+	}
+	
 	static #resetSpottedbyMoveFlag (pObject) { 
 	//returns content of resetSpottedbyMoveFlag of object (boolean)
 		let vFlag = this.#PerceptiveFlags(pObject);
@@ -975,6 +1001,16 @@ class PerceptiveFlags {
 		//sets content of VisionChannelsFlag (object)
 		if (pObject) {
 			await pObject.setFlag(cModuleName, cVisionChannelsF, pContent); 
+			
+			return true;
+		}
+		return false;					
+	}
+	
+	static async #setReceiverFilters (pObject, pContent) {
+		//sets content of VisionChannelsFlag (object)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, cReceiverFilterF, pContent); 
 			
 			return true;
 		}
@@ -1615,6 +1651,8 @@ class PerceptiveFlags {
 	
 	static setVisionChannels(pObject, pChannels) {
 		this.#setVisionChannels(pObject, pChannels);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
 	}
 	
 	static getVCEmitters(pObject, pIncludeActor = false) {
@@ -1628,7 +1666,7 @@ class PerceptiveFlags {
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Emits);
 	}
 	
-	static getVCReceivers(pObject, pIncludeActor = false) {
+	static getVCReceivers(pObject, pIncludeActor = false, pFilter = false) {
 		let vVisionChannels = this.#VisionChannelsFlag(pObject);
 		
 		if (pIncludeActor && pObject.actor) {
@@ -1636,7 +1674,27 @@ class PerceptiveFlags {
 			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.actor)};
 		}
 		
+		let vFilters = {};
+		
+		if (pFilter) {
+			vFilters = PerceptiveFlags.getReceiverFilters(pObject);
+			
+			return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives && !vFilters[vChannel]);	
+		}
+		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
+	}
+	
+	static getReceiverRanges(pObject) {
+		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		
+		let vRangeList = {};
+		
+		for (let vKey of Object.keys(vVisionChannels)) {
+			vRangeList[vKey] = vVisionChannels[vKey].ReceiveRange;
+		}
+		
+		return vRangeList;	
 	}
 	
 	static hasVCEmitter(pObject) {
@@ -1665,6 +1723,10 @@ class PerceptiveFlags {
 		}
 		
 		Channels[pChannelID][pType] = true;
+		
+		this.#setVisionChannels(pObject, Channels);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
 	}
 	
 	static RemoveChannel(pObject, pChannelID, pType) {
@@ -1672,7 +1734,55 @@ class PerceptiveFlags {
 		
 		if (Channels[pChannelID]) {
 			delete Channels[pChannelID][pType];	
+		}
+
+		this.#setVisionChannels(pObject, Channels);	
+
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));		
+	}
+
+	static getReceiverFilters(pObject) {
+		return this.#ReceiverFilterFlag(pObject);
+	}
+	
+	static setReceiverFilters(pObject, pFilters) {
+		return this.#setReceiverFilters(pObject, pFilters);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
+	}
+	
+	static AddReceiverFilter(pObject, pChannelID) {
+		let vFilters = this.#ReceiverFilterFlag(pObject);
+		
+		vFilters[pChannelID] = true;
+		
+		this.#setReceiverFilters(pObject, vFilters);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
+	}
+	
+	static RemoveReceiverFilter(pObject, pChannelID) {
+		let vFilters = this.#ReceiverFilterFlag(pObject);
+		
+		if (vFilters[pChannelID]) {
+			delete Channels[pChannelID];	
 		}	
+		
+		this.#setReceiverFilters(pObject, vFilters);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
+	}
+	
+	static ToggleReceiverFilter(pObject, pChannelID) {
+		let vFilters = this.#ReceiverFilterFlag(pObject);
+		
+		vFilters[pChannelID] = !vFilters[pChannelID];
+		
+		this.#setReceiverFilters(pObject, vFilters);
+		
+		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
+		
+		return vFilters[pChannelID];
 	}
 	
 	//effects

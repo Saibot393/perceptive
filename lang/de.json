@@ -759,6 +759,7 @@
 					"RequiredtoSee"		: "Benötigt um zu sehen",
 					"SeethroughWalls"	: "Durch Wände",
 					"Range"				: "Reichweite",
+					"RangeFormula"		: "Reichweiten Formel",
 					"Color"				: "Farbe",
 					"EffectFilter" : {
 						"name"			: "Effekt Filter",
@@ -774,6 +775,9 @@
 					"VCID"				: "Interne ID",
 					"Emits"				: "Sendet",
 					"Receives"			: "Empfängt",
+					"ReceiveFiltered"	: "Empfang Filter",
+					"ReceiveRange"		: "Eigene Reichweite",
+					"CalculatedRange"	: "Errechnete Reichweite",
 					"Sight"				: "Sicht",
 					"Movement"			: "Bewegung"
 				}

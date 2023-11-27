@@ -759,6 +759,7 @@
 					"RequiredtoSee"		: "Required to see",
 					"SeethroughWalls"	: "Through walls",
 					"Range"				: "Range",
+					"RangeFormula"		: "Range formula",
 					"Color"				: "Color",
 					"EffectFilter" : {
 						"name"			: "Effect filter",
@@ -774,6 +775,9 @@
 					"VCID"				: "Internal ID",
 					"Emits"				: "Emits",
 					"Receives"			: "Receives",
+					"ReceiveFiltered"	: "Reciver filter",
+					"ReceiveRange"		: "Custom range",
+					"CalculatedRange"	: "Calculated range",
 					"Sight"				: "Sight",
 					"Movement"			: "Movement"
 				}

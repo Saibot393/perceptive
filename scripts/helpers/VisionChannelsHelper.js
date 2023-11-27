@@ -18,6 +18,7 @@ const cDefaultChannel = {
 	RequiredtoSee : false,
 	SeethroughWalls : false,
 	Range : -1,
+	RangeFormula : "",
 	EffectFilter : null,
 	EffectFilterColor : "#000000",
 	Transparency : 1
@@ -35,6 +36,12 @@ class VisionChannelsWindow extends Application {
 			this.vSettingsType = "object";
 			
 			this.vSettingsSubType = pTargetObject.documentName;
+			
+			if (this.vSettingsSubType == undefined) {
+				if (pTargetObject.actor?.prototypeToken == pTargetObject) {
+					this.vSettingsSubType = "Token";
+				}
+			}
 			
 			this.vTarget = pTargetObject;
 		}
@@ -58,7 +65,7 @@ class VisionChannelsWindow extends Application {
 		});
 	}
 	
-	getHTMLWorld(pOptions={}) {
+	async getHTMLWorld(pOptions={}) {
 		let vEntriesHTML = `<table name = "entries">`;
 		
 		vEntriesHTML = vEntriesHTML + 	`<tr name="header" style="border: 1px solid #dddddd">
@@ -66,6 +73,7 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "RequiredtoSee")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "SeethroughWalls")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Range")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "RangeFormula")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Color")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter.name")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilterColor")}</th>
@@ -82,8 +90,9 @@ class VisionChannelsWindow extends Application {
 													<td style="text-align: center; width:100px"> <input name="RequiredtoSee" type="checkbox" ${this.vChannels[vkey].RequiredtoSee ? "checked" : ""}> </td>
 													<td style="text-align: center; width:100px"> <input name="SeethroughWalls" type="checkbox" ${this.vChannels[vkey].SeethroughWalls ? "checked" : ""}> </td>
 													<td style="width:50px"> <input name="Range" type="number" value="${this.vChannels[vkey].Range}"> </td>
+													<td> <input name="RangeFormula" type="text" value="${this.vChannels[vkey].RangeFormula}"> </td>
 													<td style="text-align: center; width:50px"> <input name="Color" type="color" value="${this.vChannels[vkey].Color}"> </td>
-													<td> 
+													<td style="width:100px"> 
 														<select name="EffectFilter">`;
 														
 			for (let vOption of cEffectFilters) {
@@ -112,7 +121,7 @@ class VisionChannelsWindow extends Application {
 		return vEntriesHTML + vButtonsHTML;
 	}
 	
-	getHTMLObject(pOptions={}) {
+	async getHTMLObject(pOptions={}) {
 		let vEntriesHTML = `<table name = "entries">`;
 		
 		let vEmitterSetting = ["Token", "Tile"].includes(this.vSettingsSubType) || (this.vTarget.door > 0)
@@ -123,6 +132,8 @@ class VisionChannelsWindow extends Application {
 		
 		let vTargetSettings = PerceptiveFlags.getVisionChannels(this.vTarget, true);
 		
+		let vReceiverFilters = PerceptiveFlags.getReceiverFilters(this.vTarget);
+		
 		vEntriesHTML = vEntriesHTML + 	`<tr name="header" style="border: 1px solid #dddddd">
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Name")}</th>`;
 		if (vEmitterSetting) {
@@ -130,6 +141,9 @@ class VisionChannelsWindow extends Application {
 		}
 		if (vRecieverSetting) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Receives")}</th>`;
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "ReceiveFiltered")}</th>`;
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "ReceiveRange")}</th>`;
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "CalculatedRange")}</th>`;
 		}
 		if (vWallSetting) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Sight")}</th>
@@ -141,6 +155,9 @@ class VisionChannelsWindow extends Application {
 		
 		for (let vkey of Object.keys(this.vChannels)) {
 			vChannelSettings = vTargetSettings[vkey];
+			if (vChannelSettings) {
+				vChannelSettings.ReceiveFiltered = vReceiverFilters[vkey];
+			}
 			
 			vEntriesHTML = vEntriesHTML + 	`	<tr name="${vkey}">
 													<td> ${this.vChannels[vkey].Name} </td>`;
@@ -149,6 +166,9 @@ class VisionChannelsWindow extends Application {
 			}
 			if (vRecieverSetting) {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="Receives" type="checkbox" ${vChannelSettings?.Receives ? "checked" : ""}> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveFiltered" type="checkbox" ${vChannelSettings?.ReceiveFiltered ? "checked" : ""}> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRange" type="number" value=${vChannelSettings?.ReceiveRange}> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${await VisionChannelsUtils.CalculateRange(vkey, this.vTarget)} disabled> </td>`;
 			}
 			if (vWallSetting) {
 				vEntriesHTML = vEntriesHTML +	`<td style="text-align: center; width:100px"> <input name="Sight" type="checkbox" ${vChannelSettings?.Sight ? "checked" : ""}> </td>
@@ -167,16 +187,16 @@ class VisionChannelsWindow extends Application {
 		return vEntriesHTML + vButtonsHTML;
 	}
 	
-	getData(pOptions={}) {
+	async getData(pOptions={}) {
 		switch (this.vSettingsType) {
 			case "world":
 				return {
-					content: this.getHTMLWorld(pOptions)
+					content: await this.getHTMLWorld(pOptions)
 				};
 				break;
 			case "object":
 				return {
-					content: this.getHTMLObject(pOptions)
+					content: await this.getHTMLObject(pOptions)
 				};
 				break;
 		}
@@ -216,6 +236,8 @@ class VisionChannelsWindow extends Application {
 		
 		let vChannelSettings = {};
 		
+		let vReceiverFilters = {};
+		
 		let vChannelEntries = vHTML.find(`table`).find(`tr`);
 		
 		let vSettingKeys;
@@ -227,7 +249,7 @@ class VisionChannelsWindow extends Application {
 			case "object" : 
 				vSettingKeys = ["Emits"];
 				if (this.vSettingsSubType == "Token") {
-					vSettingKeys.push("Receives");
+					vSettingKeys.push("Receives", "ReceiveFiltered", "ReceiveRange");
 				}
 				if (this.vSettingsSubType == "Wall") {
 					vSettingKeys.push("Sight");
@@ -247,7 +269,12 @@ class VisionChannelsWindow extends Application {
 				for (let vKey of vSettingKeys) {
 					vInputObject = $(vElement).find(`[name="${vKey}"]`);
 					
-					vChannelSettings[vID][vKey] = VisionChannelsWindow.ValueofInput(vInputObject);	
+					if (vKey == "ReceiveFiltered") {
+						vReceiverFilters[vID] = VisionChannelsWindow.ValueofInput(vInputObject);
+					}
+					else {
+						vChannelSettings[vID][vKey] = VisionChannelsWindow.ValueofInput(vInputObject);
+					}
 				}
 			}
 		});
@@ -258,6 +285,10 @@ class VisionChannelsWindow extends Application {
 				break;
 			case "object" :
 				PerceptiveFlags.setVisionChannels(this.vTarget, vChannelSettings);
+				
+				if (vSettingKeys.includes("ReceiveFiltered")) {
+					PerceptiveFlags.setReceiverFilters(this.vTarget, vReceiverFilters);
+				}
 				break;
 		}
 		
@@ -281,9 +312,9 @@ class VisionChannelsUtils {
 	
 	static VCIDsfromNames(pNames = []) {} //returns a VCs based on a names
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
+	static isVCvisible(pEmitterChannels, pReceiverChannels,  pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false, RangeList : {}}) {} //returns if an object with pEmitterChannels is visible to vision source with pReceiverChannels and pVCInfos (which will also include additional infos to this
 	
-	static ReducedReceiverVCs(pTokens, pIncludeActor = false) {} //returns an array of unique vision channels active in pTokens
+	static ReducedReceiverVCs(pTokens, pIncludeActor = false, pFilter = false) {} //returns an array of unique vision channels active in pTokens
 	
 	//graphics
 	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
@@ -294,6 +325,15 @@ class VisionChannelsUtils {
 	static RemoveChannelsfromObject(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
 	
 	static ValidVCType(pObject) {} //returns valid VC types for pObject
+	
+	//ranges
+	static async CalculateRange(pChannelID, pToken) {} //returns the range pToken has on pChannel based on the channels range formuala
+	
+	static async CalculateRanges(pChannelID, pTokens) {} //returns the maximum range between pTokens on pChannel based on the channels range formuala
+	
+	static async CalculateRangeList(pChannelIDs, pTokens) {} //returns the maximum ranges between pTokens on pChannels based on the channels range formuala
+	
+	static GetinherentRangeList(pTokens) {} //returns a list of the maximum of pTokens inherent ranges
 	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {} //adds pChannel to world under pID (or random ID if not specified)
@@ -330,7 +370,7 @@ class VisionChannelsUtils {
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
 	}
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false}) {
+	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false, RangeList : {}}) {
 		//the heart of this whole feature
 		if (pEmitterChannels.length) {
 			pVCInfos.Report = {};
@@ -362,9 +402,20 @@ class VisionChannelsUtils {
 			
 			if (vCommons.length) {
 				//seperate ranged and not ranged 
-				let vRangeLessVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range < 0));
+				let vRanges = {};
 				
-				let vRangedVCs = vCommons.filter(vChannelID => (vChannels[vChannelID]?.Range >= 0));
+				for (let i = 0; i < vCommons.length; i++) {
+					if (!isNaN(pVCInfos.RangeList[vCommons[i]])) {
+						vRanges[vCommons[i]] = pVCInfos.RangeList[vCommons[i]];
+					}
+					else {
+						vRanges[vCommons[i]] = vChannels[vCommons[i]]?.Range;
+					}
+				}
+				
+				let vRangeLessVCs = vCommons.filter(vChannelID => (vRanges[vChannelID] < 0));
+				
+				let vRangedVCs = vCommons.filter(vChannelID => (vRanges[vChannelID] >= 0));
 				
 				let vRangeCheck = vRangedVCs.find(vChannelID => (vChannels[vChannelID].RequiredtoSee))
 				
@@ -402,7 +453,7 @@ class VisionChannelsUtils {
 							//filter ranged required channels
 							let vRequiredRange = vRangedVCs.filter(vChannelID => (vChannels[vChannelID].RequiredtoSee));
 							
-							vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vChannels[vChannelID].Range))).length == vRequiredRange.length);
+							vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID]))).length == vRequiredRange.length);
 							
 							if (!vInRange) {
 								//a required channel is out of range
@@ -414,7 +465,7 @@ class VisionChannelsUtils {
 							vRangeVC = vRequiredRange[0];
 						}
 						else {
-							vRangedVCs.forEach(vChannelID => {if (vChannels[vChannelID]?.Range > vMaxRange){vRangeVC = vChannelID; vMaxRange = vChannels[vChannelID]?.Range}});
+							vRangedVCs.forEach(vChannelID => {if (vRanges[vChannelID] > vMaxRange){vRangeVC = vChannelID; vMaxRange = vRanges[vChannelID]}});
 						
 							vMaxRange = vMaxRange;
 							
@@ -437,11 +488,11 @@ class VisionChannelsUtils {
 		}
 	}
 	
-	static ReducedReceiverVCs(pTokens, pIncludeActor = false) {
+	static ReducedReceiverVCs(pTokens, pIncludeActor = false, pFilter = false) {
 		let vVCs = [];
 		
 		for (let i = 0; i < pTokens.length; i++) {
-			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i], pIncludeActor).filter(vChannelID => !vVCs.includes(vChannelID)));
+			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i], pIncludeActor, pFilter).filter(vChannelID => !vVCs.includes(vChannelID)));
 		}
 		
 		return vVCs;
@@ -544,6 +595,70 @@ class VisionChannelsUtils {
 		
 		return [];
 	} 
+	
+	//ranges
+	static async CalculateRange(pChannelID, pToken) {
+		let vChannel = game.settings.get(cModuleName, cSettingName)[pChannelID];
+		
+		if (vChannel && pToken?.actor) {
+			let vFormula = vChannel.RangeFormula;
+			
+			if (vFormula) {
+				let vRollData = {actor : pToken.actor};
+				
+				let vRoll =  new Roll(vFormula, vRollData);
+				
+				try {
+					await vRoll.evaluate();
+					
+					return vRoll.total;
+				}
+				catch {
+					ui.notifications.error(`${cModuleName} : Faulty Vision Channel range calculation ID ${pChannelID} (name : ${vChannel.Name})`);
+				}
+			}
+		}
+	} 
+	
+	static async CalculateRanges(pChannelID, pTokens) {
+		let vRanges = [];
+		
+		for (let i = 0; i < pTokens.length; i++) {
+			vRanges[i] = await VisionChannelsUtils.CalculateRange(pChannelID, pTokens[i]);
+		}
+		
+		vRanges = vRanges.filter(vRange => !isNaN(vRange));
+		
+		return Math.max(...vRanges);
+	}
+	
+	static async CalculateRangeList(pChannelIDs, pTokens) {
+		let vRanges = {};
+		
+		for (let i = 0; i < pChannelIDs.length; i++) {
+			vRanges[pChannelIDs[i]] = await VisionChannelsUtils.CalculateRanges(pChannelIDs[i], pTokens);
+		}
+		
+		return vRanges;
+	}
+	
+	static GetinherentRangeList(pTokens) {
+		let vRangeList = {};
+		
+		let vBuffer;
+		
+		for (let i = 0; i < pTokens.length; i++) {
+			vBuffer = PerceptiveFlags.getReceiverRanges(pTokens[i]);
+			
+			for (let vkey of Object.keys(vBuffer)) {
+				if (!isNaN(vBuffer[vkey]) && (vBuffer[vkey] != "") && (isNaN(vRangeList[vkey]) || vBuffer[vkey] > vRangeList[vkey])) {
+					vRangeList[vkey] = vBuffer[vkey];
+				}
+			}
+		}
+		
+		return vRangeList;
+	}
 	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {

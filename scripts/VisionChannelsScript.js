@@ -7,7 +7,9 @@ import { VisionUtils } from "./utils/VisionUtils.js";
 var vLocalVisionData = {
 	vReceiverChannels : [],
 	vCompleteVision : false,
-	vRange3D : false
+	vRange3D : false,
+	vRequiredOrBehaviour : false,
+	vRangeList : {}
 }
 
 class VisionChannelsManager {
@@ -29,9 +31,15 @@ class VisionChannelsManager {
 	//IMPLEMENTATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
 		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && canvas.tokens.controlled.length > 0)) {
-			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(canvas.tokens.controlled.map(vToken => vToken.document), true);	
+			let vTokens = canvas.tokens.controlled.map(vToken => vToken.document);
+			
+			vLocalVisionData.vReceiverChannels = VisionChannelsUtils.ReducedReceiverVCs(vTokens, true, true);	
 
 			vLocalVisionData.vCompleteVision = false;
+			
+			vLocalVisionData.vRangeList = await VisionChannelsUtils.CalculateRangeList(vLocalVisionData.vReceiverChannels, vTokens);
+			
+			vLocalVisionData.vRangeList = {...vLocalVisionData.vRangeList, ...VisionChannelsUtils.GetinherentRangeList(vTokens)};
 		}
 		else {
 			vLocalVisionData.vReceiverChannels = [];
@@ -89,7 +97,7 @@ class VisionChannelsManager {
 				break;
 		}
 		
-		return VisionChannelsUtils.isVCvisible(vEmitters, VisionChannelsUtils.ReducedReceiverVCs([pViewer], true), vInfos);
+		return VisionChannelsUtils.isVCvisible(vEmitters, VisionChannelsUtils.ReducedReceiverVCs([pViewer], true, true), vInfos);
 	}
 	
 	static async OnAEChange(pActor) {
@@ -126,7 +134,8 @@ Hooks.once("ready", function() {
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : pObject.center,
-							InVision : VisionUtils.WalltestVisibility(pObject.wall)};
+							InVision : VisionUtils.WalltestVisibility(pObject.wall),
+							RangeList : vLocalVisionData.vRangeList};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, vInfos);
 			
@@ -144,7 +153,8 @@ Hooks.once("ready", function() {
 			
 			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-							InVision : VisionUtils.simpletestVisibility(pObject.center)};
+							InVision : VisionUtils.simpletestVisibility(pObject.center),
+							RangeList : vLocalVisionData.vRangeList};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels, vInfos);
 			
@@ -165,7 +175,8 @@ Hooks.once("ready", function() {
 			if (vEmitterVCs.length) {
 				let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 								TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-								InVision : VisionUtils.simpletestVisibility(pObject.center)};
+								InVision : VisionUtils.simpletestVisibility(pObject.center),
+								RangeList : vLocalVisionData.vRangeList};
 				
 				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, vInfos);
 				
@@ -195,7 +206,8 @@ Hooks.once("ready", function() {
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : pWall.center,
-							WallCheck : true}
+							WallCheck : true,
+							RangeList : vLocalVisionData.vRangeList}
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, vInfos);
 			
@@ -216,6 +228,23 @@ Hooks.once("ready", function() {
 	Hooks.on("createActiveEffect", (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
 	
 	Hooks.on("deleteActiveEffect",  (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
+	
+	Hooks.on(cModuleName+".updateVCVision", async (pObject) => {
+		console.log(pObject);
+		
+		console.log(pObject.object);
+		
+		console.log(pObject.documentName);
+		
+		console.log(pObject.object?.controlled);
+		if (pObject.object?.controlled && pObject.documentName == 'Token') {
+			await VisionChannelsManager.updateVisionValues();
+			
+			console.log("check");
+			
+			pObject.object.updateVisionSource();
+		}
+	});
 });
 
 export function CanVCSeeObject(pViewer, pObject) {return VisionChannelsManager.CanVCSeeObject(pViewer, pObject)};
