@@ -11,7 +11,7 @@ const cDeleteIcon = "fa-solid fa-trash";
 
 const cSettingName = "VisionChannels";
 
-const cEffectFilters = ["off", "outline", "outline_waves" /*, "glow", "TMfog"*/]; /*"TMtransform", "TMdistortion"*/
+const cEffectFilters = ["off", "outline", "outline_waves" , "glow" /*, "TMfog"*/]; /*"TMtransform", "TMdistortion"*/
 
 const cDefaultChannel = {
 	Name : "Vision Channel",
