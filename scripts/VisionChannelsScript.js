@@ -230,13 +230,6 @@ Hooks.once("ready", function() {
 	Hooks.on("deleteActiveEffect",  (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
 	
 	Hooks.on(cModuleName+".updateVCVision", async (pObject) => {
-		console.log(pObject);
-		
-		console.log(pObject.object);
-		
-		console.log(pObject.documentName);
-		
-		console.log(pObject.object?.controlled);
 		if (pObject.object?.controlled && pObject.documentName == 'Token') {
 			await VisionChannelsManager.updateVisionValues();
 			

@@ -593,6 +593,10 @@ class VisionChannelsUtils {
 				break;
 		}
 		
+		if (pObject.actor?.prototypeToken == pObject) {
+			return ["Emits", "Receives"];
+		}
+		
 		return [];
 	} 
 	
