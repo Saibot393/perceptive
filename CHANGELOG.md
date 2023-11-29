@@ -1,5 +1,5 @@
 ## v3.1.2
--Fixed bug that caused tile and tokens to be displayed with the wrong color tint
+- Fixed bug that caused tile and tokens to be displayed with the wrong color tint
 
 ## v3.1.1
 - Improved prototype compatibility
