@@ -1,3 +1,6 @@
+## v3.1.1
+- Improved prototype compatibility
+
 ## v3.1.0
 - Prototype token vision channel settings can now be set
 - Added world VC option Range formula to set a calculation based range (formulas similar to roll formulas)
