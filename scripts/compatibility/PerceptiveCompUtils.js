@@ -16,6 +16,7 @@ const cZnPOptions = "zoom-pan-options";
 const cRideable = "Rideable";
 const cMATT = "monks-active-tiles";
 const cATV = "tokenvisibility";
+const cTokenMagic = "tokenmagic";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -274,6 +275,190 @@ class PerceptiveCompUtils {
 		return false;
 	}
 	*/
+	
+	//Special TM
+	static async CreateTMEffect(pEffectID, pColor, pTarget) {
+		let vFilter = null;
+		
+		if (PerceptiveCompUtils.isactiveModule(cTokenMagic) && TokenMagic.filterTypes && pTarget?.mesh) {
+			let vParams = { color: pColor };
+			
+			let vEffectClass = TokenMagic.filterTypes[pEffectID];
+			
+			if (vEffectClass) {
+				let vDefaultPara = {};
+				
+				switch (pEffectID) {
+					case "distortion" :
+						vDefaultPara = {
+							animated:
+								{
+									maskSpriteX: { active: true, speed: 0.05, animType: "move" },
+									maskSpriteY: { active: true, speed: 0.07, animType: "move" }
+								}	
+						}		
+						break;
+					case "transform" :
+						vDefaultPara = {
+							twRadiusPercent: 70,
+							padding: 10,
+							animated:
+							{
+								twRotation:
+								{
+									animType: "sinOscillation",
+									val1: -90,
+									val2: +90,
+									loopDuration: 5000,
+								}
+							}
+						}
+						break;
+					case "fog" :
+						vDefaultPara = {
+							density: 0.65,
+							time: 0,
+							dimX: 1,
+							dimY: 1,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 2.2, 
+									animType: "move" 
+								}
+							}
+						}
+						break;
+					case "wave":
+						vDefaultPara = {
+							time: 0,
+							strength: 0.03,
+							frequency: 15,
+							maxIntensity: 4.0,
+							minIntensity: 0.5,
+							padding:25,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0180,
+									animType: "move",
+								}
+							}
+						}
+						break;	
+					case "electric":
+						vDefaultPara = {
+							color: 0xFFFFFF,
+							time: 0,
+							blend: 1,
+							intensity: 5,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0020, 
+									animType: "move" 
+								}
+							}
+						}
+						break;
+					case "fire":
+						vDefaultPara = {
+							intensity: 1,
+							color: 0xFFFFFF,
+							amplitude: 1,
+							time: 0,
+							blend: 2,
+							fireBlend : 1,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: -0.0024, 
+									animType: "move" 
+								},
+								intensity:
+								{
+									active:true,
+									loopDuration: 15000,
+									val1: 0.8,
+									val2: 2,
+									animType: "syncCosOscillation"
+								},
+								amplitude:
+								{
+									active:true,
+									loopDuration: 4400,
+									val1: 1,
+									val2: 1.4,
+									animType: "syncCosOscillation"
+								}
+							  
+							}
+						}
+						break;
+					case "smoke":
+						vDefaultPara = {
+							color: 0x50FFAA,
+							time: 0,
+							blend: 2,
+							dimX: 1,
+							dimY: 1,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0015, 
+									animType: "move"
+								}
+							}
+						}
+						break;						
+				}
+				
+				vParams = {...vDefaultPara, ...vParams};
+				
+				vFilter = new vEffectClass(vParams);
+				
+				vFilter.targetPlaceable = pTarget;
+				
+				vFilter.placeableImg = pTarget.mesh;
+				
+				vFilter.anime.puppet.enabled = true;
+				
+				
+				//prevent animations from restarting on recreate
+				vFilter.uniforms.__defineGetter__("time", () => {return canvas.app.ticker.lastTime});
+				vFilter.uniforms.__defineSetter__("time", () => {});
+				
+				/*
+				if (vFilter.anime.loopElapsedTime) {
+					console.log(vFilter.anime);
+					console.log(vFilter.anime.animated);
+					console.log(vFilter.anime.animated.maskSpriteX);
+					console.log(vFilter.anime.animated.maskSpriteX.loopDuration);
+					vFilter.anime.loopElapsedTime.__defineGetter__("maskSpriteX", () => {return (canvas.app.ticker.lastTime % vFilter.anime.animated.maskSpriteY.loopDuration)});
+					vFilter.anime.loopElapsedTime.__defineSetter__("maskSpriteX", () => {});
+					vFilter.anime.loopElapsedTime.__defineGetter__("maskSpriteY", () => {return (canvas.app.ticker.lastTime % vFilter.anime.animated.maskSpriteY.loopDuration)});
+					vFilter.anime.loopElapsedTime.__defineSetter__("maskSpriteY", () => {});
+					vFilter.anime.elapsedTime.__defineGetter__("maskSpriteX", () => {return (canvas.app.ticker.lastTime)});
+					vFilter.anime.elapsedTime.__defineSetter__("maskSpriteX", () => {});
+					vFilter.anime.elapsedTime.__defineGetter__("maskSpriteY", () => {return (canvas.app.ticker.lastTime)});
+					vFilter.anime.elapsedTime.__defineSetter__("maskSpriteY", () => {});
+				}
+				*/
+			}
+		}
+		
+		return vFilter;
+	}
 }
 
 export { PerceptiveCompUtils };

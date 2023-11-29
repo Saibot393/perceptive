@@ -355,14 +355,25 @@ class VisionUtils {
 		for (let i = 0; i < vTiles.length; i++) {
 			vTiles[i].visible = true;
 			if (vTiles[i].mesh) {
-				vTiles[i].mesh.tint = cSTDTint;
+				if (vTiles[i].document?.texture?.tint != undefined) {
+					vTiles[i].mesh.tint = parseInt(vTiles[i].document.texture.tint.substr(1,7), 16);
+				}
+				else {
+					vTiles[i].mesh.tint = cSTDTint;
+				}
 			}
 		}
 		
 		let vTokens = canvas.tokens.placeables;
 		
 		for (let i = 0; i < vTokens.length; i++) {
-			vTokens[i].mesh.tint = cSTDTint;
+			if (vTokens[i].document?.texture?.tint != undefined) {
+				vTokens[i].mesh.tint = parseInt(vTokens[i].document.texture.tint.substr(1,7), 16);
+			}
+			else {
+				vTokens[i].mesh.tint = cSTDTint;
+			}
+			
 			vTokens[i].detectionFilter = null;
 		}	
 

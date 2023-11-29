@@ -1,6 +1,7 @@
 import { cModuleName, Translate } from "../utils/PerceptiveUtils.js";
 import { PerceptiveFlags, cVisionChannelsF } from "./PerceptiveFlags.js";
 import { GeometricUtils } from "../utils/GeometricUtils.js";
+import { PerceptiveCompUtils } from "../compatibility/PerceptiveCompUtils.js";
 
 const cWindowID = "vision-channels-window";
 
@@ -10,7 +11,7 @@ const cDeleteIcon = "fa-solid fa-trash";
 
 const cSettingName = "VisionChannels";
 
-const cEffectFilters = ["off", "outline", "outline_waves", "glow"];
+const cEffectFilters = ["off", "outline", "outline_waves" /*, "glow", "TMfog"*/]; /*"TMtransform", "TMdistortion"*/
 
 const cDefaultChannel = {
 	Name : "Vision Channel",
@@ -317,7 +318,7 @@ class VisionChannelsUtils {
 	static ReducedReceiverVCs(pTokens, pIncludeActor = false, pFilter = false) {} //returns an array of unique vision channels active in pTokens
 	
 	//graphics
-	static ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
+	static async ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
 	
 	//vc managing
 	static AddChannelstoObject(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
@@ -499,7 +500,7 @@ class VisionChannelsUtils {
 	}
 	
 	//graphics
-	static ApplyGraphics(pObject, pChannel) {
+	static async ApplyGraphics(pObject, pChannel) {
 		if (pObject) {
 			if (pObject instanceof Token) {	
 				let vFilter;
@@ -519,6 +520,11 @@ class VisionChannelsUtils {
 						vFilter = GlowOverlayFilter.create({
 							glowColor :  Color.fromString(pChannel.EffectFilterColor).rgb.concat([1])
 						});
+						break;
+					default :
+						if (pChannel.EffectFilter.substr(0,2) == "TM") {
+							vFilter = await PerceptiveCompUtils.CreateTMEffect(pChannel.EffectFilter.substr(2), pChannel.EffectFilterColor, pObject);
+						}
 						break;
 				}
 				
@@ -682,6 +688,10 @@ class VisionChannelsUtils {
 		}
 		
 		vChannels[vID] = pChannel;
+		
+		game.settings.set(cModuleName, cSettingName, vChannels);
+		
+		VisionChannelsUtils.fixVCSetting();
 	}
 	
 	static AddChannels(pChannels, pOverrideDuplicates = false) {
