@@ -767,7 +767,13 @@
 							"off"		: "off",
 							"outline"   : "outline",
 							"outline_waves" : "outline & waves",
-							"glow"		: "glow"
+							"glow"		: "glow",
+							"TMfog"		: "fog",
+							"TMelectric": "electricity",
+							"TMtransform": "swirly",
+							"TMflood"	: "flood",
+							"TMadjustment" : "fading",
+							"TMblur"	: "blur"
 						}
 					},
 					"EffectFilterColor" : "Effect Filter Color",

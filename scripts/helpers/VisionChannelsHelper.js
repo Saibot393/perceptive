@@ -1,7 +1,7 @@
 import { cModuleName, Translate } from "../utils/PerceptiveUtils.js";
 import { PerceptiveFlags, cVisionChannelsF } from "./PerceptiveFlags.js";
 import { GeometricUtils } from "../utils/GeometricUtils.js";
-import { PerceptiveCompUtils } from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cTokenMagic } from "../compatibility/PerceptiveCompUtils.js";
 
 const cWindowID = "vision-channels-window";
 
@@ -11,7 +11,7 @@ const cDeleteIcon = "fa-solid fa-trash";
 
 const cSettingName = "VisionChannels";
 
-const cEffectFilters = ["off", "outline", "outline_waves" , "glow" /*, "TMfog"*/]; /*"TMtransform", "TMdistortion"*/
+var cEffectFilters = ["off", "outline", "outline_waves" , "glow"]; /**/
 
 const cDefaultChannel = {
 	Name : "Vision Channel",
@@ -533,6 +533,9 @@ class VisionChannelsUtils {
 				if (vFilter) {
 					pObject.detectionFilter = vFilter;
 				}
+				else {
+					pObject.detectionFilter = null;
+				}
 			}
 			
 			if (pObject instanceof Wall) {
@@ -757,6 +760,10 @@ class VisionChannelsUtils {
 }
 
 Hooks.once("init", function() {
+	if (PerceptiveCompUtils.isactiveModule(cTokenMagic)) {
+		cEffectFilters = cEffectFilters.concat(["TMfog", "TMelectric", "TMtransform", "TMflood", "TMadjustment", "TMblur"]);
+	}
+	
 	if (!CONFIG[cModuleName]) {
 		CONFIG[cModuleName] = {};
 	}

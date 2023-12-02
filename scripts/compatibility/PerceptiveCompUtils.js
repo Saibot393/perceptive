@@ -38,7 +38,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -420,7 +420,148 @@ class PerceptiveCompUtils {
 								}
 							}
 						}
-						break;						
+						break;		
+					case "shockwave":
+						vDefaultPara = {
+							time: 0,
+							strength: 0.03,
+							frequency: 15,
+							maxIntensity: 4.0,
+							minIntensity: 0.5,
+							padding:25,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0180,
+									animType: "move",
+								}
+							}
+						}
+						break;	
+					case "flood":
+						vDefaultPara = {
+							time: 0,
+							color: 0x0020BB,
+							billowy: 0.43,
+							tintIntensity: 0.72,
+							glint: 0.31,
+							scale: 70,
+							padding: 10,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0006, 
+									animType: "move"
+								}
+							}
+						}
+						break;
+					case "fire":
+						vDefaultPara = {
+							intensity: 1,
+							color: 0xFFFFFF,
+							amplitude: 1,
+							time: 0,
+							blend: 2,
+							fireBlend : 1,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: -0.0024, 
+									animType: "move" 
+								},
+								intensity:
+								{
+									active:true,
+									loopDuration: 15000,
+									val1: 0.8,
+									val2: 2,
+									animType: "syncCosOscillation"
+								},
+								amplitude:
+								{
+									active:true,
+									loopDuration: 4400,
+									val1: 1,
+									val2: 1.4,
+									animType: "syncCosOscillation"
+								}
+							}
+						}
+						break;
+					case "adjustment":
+						vDefaultPara = {
+							saturation: 1,
+							brightness: 1,
+							contrast: 1,
+							gamma: 1,
+							red: 0.2,
+							green: 0.2,
+							blue: 0.2,
+							alpha: 1,
+							animated:
+							{
+								alpha: 
+								{ 
+									active: true, 
+								    loopDuration: 2000, 
+								    animType: "syncCosOscillation",
+								    val1: 0.35,
+								    val2: 0.75 
+								}
+							}
+						}
+						break;
+					case "ripples":
+						vDefaultPara = {
+							filterType: "ripples",
+							color: 0xCC9000,
+							time: 0,
+							alphaDiscard: false,
+							animated :
+							{
+								time : 
+								{ 
+									active: true, 
+									speed: 0.0009, 
+									animType: "move" 
+								}
+							}
+						};
+						break;
+					case "blur":
+						vDefaultPara = {
+							padding: 10,
+							quality: 4.0,
+							blur: 0,
+							blurX: 0,
+							blurY: 0,
+							animated:
+							{
+								blurX: 
+								{ 
+								   active: true, 
+								   animType: "syncCosOscillation", 
+								   loopDuration: 500, 
+								   val1: 0, 
+								   val2: 6
+								},
+								blurY: 
+								{ 
+								   active: true, 
+								   animType: "syncCosOscillation", 
+								   loopDuration: 750, 
+								   val1: 0, 
+								   val2: 6}
+							}
+						};
+						break;
 				}
 				
 				vParams = {...vDefaultPara, ...vParams};
@@ -438,6 +579,19 @@ class PerceptiveCompUtils {
 				vFilter.uniforms.__defineGetter__("time", () => {return canvas.app.ticker.lastTime});
 				vFilter.uniforms.__defineSetter__("time", () => {});
 				
+				console.log(Object.keys(vFilter.anime.elapsedTime));
+				
+				for (let key of Object.keys(vFilter.anime.elapsedTime)) {
+					vFilter.anime.elapsedTime.__defineGetter__(key, () => {return canvas.app.ticker.lastTime});
+					vFilter.anime.elapsedTime.__defineSetter__(key, () => {});
+				}
+				
+				for (let key of Object.keys(vFilter.anime.elapsedTime)) {
+					vFilter.anime.loopElapsedTime.__defineGetter__(key, () => {return canvas.app.ticker.lastTime});
+					vFilter.anime.loopElapsedTime.__defineSetter__(key, () => {});
+				}
+				
+				console.log(vFilter);
 				/*
 				if (vFilter.anime.loopElapsedTime) {
 					console.log(vFilter.anime);

@@ -97,6 +97,9 @@ class PerceptiveSystemUtils {
 						
 							return vSystemInfo.subject?.skill == "per";
 							break;
+						default : 
+							return pMessage.flavor.includes(game.settings.get(cModuleName, "PerceptionKeyWord"));
+							break;
 					}
 				}
 			}

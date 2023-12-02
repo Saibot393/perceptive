@@ -767,7 +767,13 @@
 							"off"		: "aus",
 							"outline"   : "Umrisse",
 							"outline_waves" : "Umrisse & Wellen",
-							"glow"		: "Leuchten"
+							"glow"		: "Leuchten",
+							"TMfog"		: "Nebel",
+							"TMelectric": "Elektrizität",
+							"TMtransform": "Drehen",
+							"TMflood"	: "Flut",
+							"TMadjustment" : "Verblassen",
+							"TMblur"	: "Verwischen"
 						}
 					},
 					"EffectFilterColor" : "Effekt FIlter Farbe",
