@@ -1,3 +1,8 @@
+## v3.1.3
+- Added compatibility with [Token Magic FX](https://foundryvtt.com/packages/tokenmagic/)
+    - Several Token Magic FX effects are available as Vision Channel effect filters
+    - Not all Token Magic FX filters are included yet, let me know if you have specific wishes (not all filters are compatible)
+
 ## v3.1.2
 - Fixed bug that caused tile and tokens to be displayed with the wrong color tint
 

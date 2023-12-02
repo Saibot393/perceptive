@@ -240,7 +240,10 @@ The module should be compatible with all game systems and most modules on Foundr
   - Adds additional Actions & Filters:
     - Action Spot object to spot specified objects
     - Filter Filter objects spotted by to filter objects (not) spotted by specified tokens
-    - Filter Filter tokens having spotted to filter tokens (not) having spotted a specified token 
+    - Filter Filter tokens having spotted to filter tokens (not) having spotted a specified token
+- [Token Magic FX](https://foundryvtt.com/packages/tokenmagic/)
+  - Adds several Token Magic FX effects as Vision Channel effect filters
+  - Not all Token Magic FX filters are included yet, let me know if you have specific wishes (not all filters are compatible)
 
 ### Languages:
 
