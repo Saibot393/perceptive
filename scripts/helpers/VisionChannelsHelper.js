@@ -683,14 +683,14 @@ class VisionChannelsUtils {
 			vID = randomID();
 		}
 		
+		vChannels[vID] = pChannel;
+		
 		for (let vKey of Object.keys(cDefaultChannel)) {
-			if (!(typeof pChannel[vKey] == typeof cDefaultChannel[vKey])) {
-				ui.notifications.error(`${cModuleName} : Faulty Vision Channel with ID ${pID} at field ${vKey} not added to World (name : ${pChannel.Name})`);
-				return;
+			if (!(typeof vChannels[vID][vKey] == typeof cDefaultChannel[vKey]) && (cDefaultChannel[vKey] != null)) {
+				//ui.notifications.error(`${cModuleName} : Faulty Vision Channel with ID ${pID} at field ${vKey} not added to World (name : ${pChannel.Name})`);
+				vChannels[vID][vKey] = cDefaultChannel[vKey];
 			}
 		}
-		
-		vChannels[vID] = pChannel;
 		
 		game.settings.set(cModuleName, cSettingName, vChannels);
 		
