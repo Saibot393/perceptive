@@ -1,3 +1,6 @@
+## v3.1.5
+- Fixed compatibility issue with [Levels module](https://foundryvtt.com/packages/levels)
+
 ## v3.1.4
 - Fixed bug that caused errors when creating VCs via code
 
