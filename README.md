@@ -178,7 +178,7 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
      - Range: The range over which this VC emits (-1 for infinity)
      - Range formula: A formula based range (formulas similar to roll formulas)
      - Color: The tint of object seen through this VC
-     - Effect Filter: The filter applied to tokens seen with this VC
+     - Effect Filter (Tokens only!): The filter applied to tokens seen with this VC
      - Effect Filter Color: The color of the effect filter
      - Transparency: The transparency of objects seen with this VC (1 no transparency, 0 invisible)
  - Simulate player vision: to have the same vision a player controlling the tokens would have as a GM

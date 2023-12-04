@@ -1,3 +1,6 @@
+## v3.1.4
+- Fixed bug that caused errors when creating VCs via code
+
 ## v3.1.3
 - Added compatibility with [Token Magic FX](https://foundryvtt.com/packages/tokenmagic/)
     - Several Token Magic FX effects are available as Vision Channel effect filters
