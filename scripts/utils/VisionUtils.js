@@ -1,7 +1,7 @@
 import {GeometricUtils} from "./GeometricUtils.js";
 import { PerceptiveUtils, cModuleName } from "./PerceptiveUtils.js";
 import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cVision5e, cLevels } from "../compatibility/PerceptiveCompUtils.js";
 import {PerceptiveSystemUtils} from "./PerceptiveSystemUtils.js";
 
 //const cTransparentalpha = 0.5;
@@ -353,7 +353,10 @@ class VisionUtils {
 		let vTiles = canvas.tiles.placeables;
 		
 		for (let i = 0; i < vTiles.length; i++) {
-			vTiles[i].visible = true;
+			if (!PerceptiveCompUtils.isactiveModule(cLevels)) {
+				//Levels takes care of this, if active (leads to strange blink ins otherwise)
+				vTiles[i].visible = true;
+			}
 			if (vTiles[i].mesh) {
 				if (vTiles[i].document?.texture?.tint != undefined) {
 					vTiles[i].mesh.tint = parseInt(vTiles[i].document.texture.tint.substr(1,7), 16);

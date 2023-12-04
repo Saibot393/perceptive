@@ -579,8 +579,6 @@ class PerceptiveCompUtils {
 				vFilter.uniforms.__defineGetter__("time", () => {return canvas.app.ticker.lastTime});
 				vFilter.uniforms.__defineSetter__("time", () => {});
 				
-				console.log(Object.keys(vFilter.anime.elapsedTime));
-				
 				for (let key of Object.keys(vFilter.anime.elapsedTime)) {
 					vFilter.anime.elapsedTime.__defineGetter__(key, () => {return canvas.app.ticker.lastTime});
 					vFilter.anime.elapsedTime.__defineSetter__(key, () => {});
@@ -590,8 +588,6 @@ class PerceptiveCompUtils {
 					vFilter.anime.loopElapsedTime.__defineGetter__(key, () => {return canvas.app.ticker.lastTime});
 					vFilter.anime.loopElapsedTime.__defineSetter__(key, () => {});
 				}
-				
-				console.log(vFilter);
 				/*
 				if (vFilter.anime.loopElapsedTime) {
 					console.log(vFilter.anime);
