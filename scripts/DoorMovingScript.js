@@ -48,11 +48,12 @@ class DoorMovingManager {
 							
 				if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
 					await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+					
+					DoorMovingManager.onDoorClose(pDoor);
 				}
+				else {
+					await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
 				
-				await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
-				
-				if (!PerceptiveFlags.DoorStateisClosed(pDoor)) {
 					if (!WallUtils.isOpened(pDoor)) {	
 						WallUtils.openDoor(pDoor);
 					}				
@@ -102,23 +103,14 @@ class DoorMovingManager {
 			}
 			
 			if (vreplacementWall) {
-				if (!(WallUtils.isOpened(pDoor) || pDoorisOpened)) {
+				let vTargetPosition = PerceptiveFlags.getDoorPosition(pDoor);
+				if (vTargetPosition.length == 0) {
 					WallUtils.hidewall(vreplacementWall);
 				}
 				else {
 					await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
-				}
-				
-				let vTargetPosition = PerceptiveFlags.getDoorPosition(pDoor);
-				
-				if (vTargetPosition.length == 0) {
-					await WallUtils.deletewall(vreplacementWall);
-				}
-				else {
 					await vreplacementWall.update({c : vTargetPosition});
 				}
-				
-				//await DoorMovingManager.placeDoorControl(pDoor);
 			}	
 		}
 		else {
@@ -188,7 +180,11 @@ class DoorMovingManager {
 	static async onDoorClose(pDoor) {
 		await PerceptiveFlags.resetDoorMovement(pDoor);
 		
-		DoorMovingManager.updateDoorMovementWall(pDoor);
+		let vreplacementWall = PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent);
+		
+		if (vreplacementWall) {
+			WallUtils.hidewall(vreplacementWall);
+		}
 	}
 	
 	static onPreupdateWall(pWall, pchanges, pinfos) {
@@ -238,8 +234,6 @@ Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
 Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 	if (game.user.isGM) {
 		if (!pinfos.PerceptiveChange) {		
-			await DoorMovingManager.updateDoorMovementWall(pWall);
-			
 			if (pchanges.hasOwnProperty("ds")) {
 				if (WallUtils.isOpened(pWall)) {
 					DoorMovingManager.onDoorOpen(pWall);
@@ -247,6 +241,9 @@ Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
 				else {
 					await DoorMovingManager.onDoorClose(pWall);
 				}
+			}
+			else {
+				await DoorMovingManager.updateDoorMovementWall(pWall);
 			}
 		}
 	}
