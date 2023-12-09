@@ -159,7 +159,7 @@ class PerceptiveFlags {
 	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
@@ -1278,10 +1278,10 @@ class PerceptiveFlags {
 		this.#setcanbeSpotted(pObject, true);
 	}
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false}) {
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {
 		if (pInfos.Pf2eRules) {
 			//only Pf2e
-			if (PerceptiveFlags.canbeSpotted(pObject)) {
+			if (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) {
 				let vSuccessDegree = 0;
 				
 				
@@ -1301,7 +1301,7 @@ class PerceptiveFlags {
 			return false;
 		}
 		
-		return PerceptiveFlags.canbeSpotted(pObject) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
+		return (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {

@@ -31,7 +31,7 @@ export function IncludeWall(pWall, pBounds, pChek) {let vResult = PatchSupport.W
 													return vResult};
 
 //returns if pObject can be spotted by pSpotter (pCheckFOV if spotter LOS should be included in the calculations) 
-export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true}) {	
+export function isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true, Effects : true, canbeSpotted : true}) {	
 	return isSpottedbyRAW(objectDocument(pObject), objectDocument(pSpotter), pChecks);
 }
 
@@ -75,7 +75,7 @@ function setPerceptiveStealthing(pToken, pStealthing) {
 
 //sets perceptive stealthing on pToken
 function isPerceptiveStealthing(pToken) {
-	return PerceptiveFlags.setPerceptiveStealthing(objectDocument(pToken));
+	return PerceptiveFlags.isPerceptiveStealthing(objectDocument(pToken));
 }
 
 //
