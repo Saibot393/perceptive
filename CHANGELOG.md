@@ -1,3 +1,6 @@
+## v3.1.6
+- Reworked door moving logic to prevent flickering when opening a door (should also slightly improve performance)
+
 ## v3.1.5
 - Fixed compatibility issue with [Levels module](https://foundryvtt.com/packages/levels)
 
