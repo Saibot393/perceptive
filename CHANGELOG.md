@@ -1,3 +1,6 @@
+## v3.1.7
+- Improved api function `isSpottedby`
+
 ## v3.1.6
 - Reworked door moving logic to prevent flickering when opening a door (should also slightly improve performance)
 
