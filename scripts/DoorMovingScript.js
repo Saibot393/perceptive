@@ -52,7 +52,7 @@ class DoorMovingManager {
 					DoorMovingManager.onDoorClose(pDoor);
 				}
 				else {
-					await DoorMovingManager.updateDoorMovementWall(pDoor, !PerceptiveFlags.DoorStateisClosed(pDoor));
+					await DoorMovingManager.updateDoorMovementWall(pDoor, true);
 				
 					if (!WallUtils.isOpened(pDoor)) {	
 						WallUtils.openDoor(pDoor);
@@ -110,6 +110,10 @@ class DoorMovingManager {
 				else {
 					await WallUtils.syncWallfromDoor(pDoor, vreplacementWall, false);
 					await vreplacementWall.update({c : vTargetPosition});
+					
+					if (pDoor.ds == 0 && !pDoorisOpened) {
+						WallUtils.hidewall(vreplacementWall);
+					}
 				}
 			}	
 		}

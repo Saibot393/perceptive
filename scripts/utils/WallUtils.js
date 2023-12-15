@@ -21,6 +21,8 @@ class WallUtils {
 	
 	static deletewall(pWall) {} //deletes pWall (only if it is a perceptive wall)
 	
+	static deletewalls(pWallIDs) {} //deletes walls belonging to ids in pWallIDs
+	
 	static hidewall(pWall) {} //makes sure, that pWall has no restrictions
 	
 	static makewalltransparent(pWall) {} //sets wall to be transparent for light, sound and vision
@@ -65,13 +67,23 @@ class WallUtils {
 	}
 	
 	static deletewall(pWall) {
-		if (pWall.flags && pWall.flags[cModuleName] && pWall.flags[cModuleName][cisPerceptiveWall]) {
+		if (pWall?.flags[cModuleName] && pWall.flags[cModuleName][cisPerceptiveWall]) {
 			pWall.delete();
 		}
 	}
 	
+	static deletewalls(pWallIDs, pScene) {
+		for (let vID of pWallIDs) {
+			let vWall = pScene.walls.get(vID);
+			
+			WallUtils.deletewall(vWall);
+		}
+	}
+	
 	static hidewall(pWall) {
-		pWall.update({move : 0, sight : 0, light : 0, sound : 0});
+		if (pWall) {
+			pWall.update({move : 0, sight : 0, light : 0, sound : 0});
+		}
 	} 
 	
 	static makewalltransparent(pWall) {
@@ -101,16 +113,18 @@ class WallUtils {
 	}
 	
 	static async syncWallfromDoor(pDoor, pWall, pincludeposition = true) {
-		let vData = {...pDoor};
-		
-		if (!pincludeposition) {
-			delete vData.c;
+		if (pWall) {
+			let vData = {...pDoor};
+			
+			if (!pincludeposition) {
+				delete vData.c;
+			}
+			
+			vData.door = 0;
+			vData.flags = {};
+			
+			await pWall.update(vData, {PerceptiveChange : true});
 		}
-		
-		vData.door = 0;
-		vData.flags = {};
-		
-		await pWall.update(vData, {PerceptiveChange : true});
 	}
 	
 	static isWithinRange(pToken, pWall, pMode = "default") {

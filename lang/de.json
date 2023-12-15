@@ -790,6 +790,11 @@
 			}
 		},
 		
+		"PeekingConfirm" : {
+			"name" 						: "Durschauen bestätigen",
+			"descrp" 					: "Nutzer {pUserName} möchte ein Schloss durchschauen, erlauben?"
+		},
+		
 		"monks-active-tiles" : {
 			"filters" : {
 				"name"						: "Filter",

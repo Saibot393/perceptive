@@ -77,7 +77,7 @@ class PeekingManager {
 				else {
 					Dialog.confirm({
 					  title: Translate("PeekingConfirm.name"),
-					  content: Translate("PeekingConfirm.descrp", {pUserName : game.users.get(pInfos?.PlayerID).name}),
+					  content: TranslateandReplace("PeekingConfirm.descrp", {pUserName : game.users.get(pInfos?.PlayerID).name}),
 					  yes: () => {vAction()},
 					  no: () => {vAction(true)},
 					  defaultYes: false
@@ -236,9 +236,9 @@ class PeekingManager {
 	
 	static async updateDoorPeekingWall(pDoor) {
 		if (PerceptiveFlags.canbeLockpeeked(pDoor)) {
-			let vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor), pDoor.parent);
+			let vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor), pDoor.parent).filter(vWall => vWall);
 			
-			if (!vLockPeekingWalls.length) {
+			if (vLockPeekingWalls.length < 3) {
 				await PerceptiveFlags.createLockpeekingWalls(pDoor);
 				
 				vLockPeekingWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor), pDoor.parent);
@@ -250,14 +250,16 @@ class PeekingManager {
 						WallUtils.hidewall(vLockPeekingWalls[i]);
 					}
 					else {
-						await WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
-						
-						if (i >= 0 && i <= 1) {
-							vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, PerceptiveFlags.DoorMinMax(i+(1-2*i)*PerceptiveFlags.LockPeekingPosition(pDoor)-PerceptiveFlags.LockPeekingSize(pDoor)/2), i).map(vvalue => Math.round(vvalue))});
-						}
-						
-						if (i > 1) {
-							WallUtils.makewalltransparent(vLockPeekingWalls[i]);
+						if (vLockPeekingWalls[i]) {
+							await WallUtils.syncWallfromDoor(pDoor, vLockPeekingWalls[i]);
+							
+							if (i >= 0 && i <= 1) {
+								vLockPeekingWalls[i].update({c : WallUtils.calculateSlide(pDoor.c, PerceptiveFlags.DoorMinMax(i+(1-2*i)*PerceptiveFlags.LockPeekingPosition(pDoor)-PerceptiveFlags.LockPeekingSize(pDoor)/2), i).map(vvalue => Math.round(vvalue))});
+							}
+							
+							if (i > 1) {
+								WallUtils.makewalltransparent(vLockPeekingWalls[i]);
+							}
 						}
 					}
 				}

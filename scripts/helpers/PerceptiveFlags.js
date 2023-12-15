@@ -1036,7 +1036,10 @@ class PerceptiveFlags {
 	}
 	
 	static async createLockpeekingWalls(pDoor) {
-		if (!PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor)).length) {
+		if ((PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor)).filter(vWall => vWall).length < 3) && PerceptiveFlags.getLockpeekingWallIDs(pDoor)[0] != "creating") {
+			let vOldIDs = PerceptiveFlags.getLockpeekingWallIDs(pDoor);
+			
+			await this.#setLockPeekingWallIDs(pDoor, ["creating"]);
 			
 			let vWalls = [];
 
@@ -1049,6 +1052,8 @@ class PerceptiveFlags {
 			}
 			
 			await this.#setLockPeekingWallIDs(pDoor, PerceptiveUtils.IDsfromWalls(vWalls));
+			
+			WallUtils.deletewalls(vOldIDs, pDoor.parent); //clean up mess
 		}
 	}
 	

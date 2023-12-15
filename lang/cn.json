@@ -790,6 +790,11 @@
 			}
 		},
 		
+		"PeekingConfirm" : {
+			"name" 						: "Peeking confirm",
+			"descrp" 					: "User {pUserName} want to lock peek a door, confirm?"
+		},
+		
 		"monks-active-tiles" : {
 			"filters" : {
 				"name"						: "Filter",

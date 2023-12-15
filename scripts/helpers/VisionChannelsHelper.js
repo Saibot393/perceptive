@@ -104,9 +104,9 @@ class VisionChannelsWindow extends Application {
 													</td>
 													<td style="text-align: center; width:100px"> <input name="EffectFilterColor" type="color" value="${this.vChannels[vkey].EffectFilterColor}"> </td>
 													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>`
-		if (game.settings.get(cModuleName, "ShowVCIDs")) {
-			vEntriesHTML = vEntriesHTML +			`<td> <input name="VCID" type="text" value="${vkey}" disabled> </td>`
-		}
+			if (game.settings.get(cModuleName, "ShowVCIDs")) {
+				vEntriesHTML = vEntriesHTML +			`<td> <input name="VCID" type="text" value="${vkey}" disabled> </td>`
+			}
 			vEntriesHTML = vEntriesHTML +			`<td style="text-align: center"> <i name="delete" class="${cDeleteIcon}"></i> </td>
 												</tr>`;
 		}
