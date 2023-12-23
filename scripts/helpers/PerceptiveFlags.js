@@ -1186,7 +1186,9 @@ class PerceptiveFlags {
 	}
 	
 	static async createMovingWall(pDoor) {
-		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent)) {
+		if (!PerceptiveUtils.WallfromID(PerceptiveFlags.getmovingWallID(pDoor), pDoor.parent) && (PerceptiveFlags.getmovingWallID(pDoor) != "creating")) {
+			await this.#setDoormovingWallIDFlag(pDoor, "creating");
+			
 			let vWall = await WallUtils.clonedoorasWall(pDoor);
 			
 			await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
