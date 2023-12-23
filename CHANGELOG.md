@@ -1,3 +1,7 @@
+## v3.1.8
+- Added missing translation
+- Improved Lock peeking stability and fixed bugs
+
 ## v3.1.7
 - Improved api function `isSpottedby`
 
