@@ -31,9 +31,9 @@
 			},
 			"SpottingConfirm" : {
 				"name"					: "発見結果",
-				"content"				: "プレイヤー <b>{pPlayer}</b> は{pSkillName}判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 シークレットドアとこれらの不可視コマ: <br>",
+				"content"				: "プレイヤー <b>{pPlayer}</b> は{pSkillName}判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 隠し扉とこれらの不可視コマ: <br>",
 				"defaultSkill"			: "知覚",
-				"forcecontent"			: "Player <b>{pPlayer}</b> has requested for <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens <b>without</b> a perception roll: <br>",
+				"forcecontent"			: "プレイヤー <b>{pPlayer}</b> に <b>{pSpotters}</b> が欲求され、シーン <b>{pScene}</b> で <b>{pDoors}</b> 枚の隠し扉と以下の不可視コマを〈知覚〉ロールの <b>必要なしに</b> 見つけた: <br>",
 				"Behaviour"				: " <b>{pBehaviour}</b> 判定で <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "隠密開始",
@@ -44,14 +44,14 @@
 			"RollFormulas"				: "ロール & ロール式",
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
-			"Sound"						: "Sound",
-			"SoundnImages"				: "Geräusche & Bilder",
-			"Tile"						: "Tile",
-			"Triggers"					: "Triggers",
-			"ResetSpottedby"			: "Reset \"spotted by\"",
+			"Sound"						: "音声",
+			"SoundnImages"				: "音声と画像",
+			"Tile"						: "タイル",
+			"Triggers"					: "トリガー",
+			"ResetSpottedby"			: "\"発見された\"をリセット",
 			"with"						: "with",
 			"VisionChannels"			: "Vision Channels",
-			"OpenVCMenu"				: "Open Vision Channels Menu"
+			"OpenVCMenu"				: "Vision Channels メニューを開く"
 		},
 		
 		"ChatMessage" : {
@@ -59,15 +59,15 @@
 				"content"				: "あなたは <b>{pDoors}</b> のシークレットドアとこれらの不可視コマを見つけた:",
 				"unknown"				: "???"
 			},
-			"LostLingeringAP" 			: "{pName} has lost lingering active perception",
-			"Peeking"					: "{pName} tried to peek a lock",
+			"LostLingeringAP" 			: "{pName} は継続的な能動知覚を失った",
+			"Peeking"					: "{pName} は鍵穴を覗こうとした",
 			"PeekingSuccess" : {
-				"default"				: "{pName} succeeded at peeking a lock",
-				"crit"					: "{pName} critically succeeded at peeking a lock"
+				"default"				: "{pName} は鍵穴覗きに成功した",
+				"crit"					: "{pName} は鍵穴覗きにクリティカル成功した"
 			},
 			"PeekingFail" : {
-				"default"				: "{pName} failed at peeking a lock",
-				"crit"					: "{pName} critically failed at peeking a lock"
+				"default"				: "{pName} は鍵穴覗きに失敗した",
+				"crit"					: "{pName} は鍵穴覗きに致命的失敗した"
 			}
 		},
 		
@@ -76,12 +76,12 @@
 		},
 		
 		"Popups" : {
-			"OutofRange"				: "Out of range",
-			"CantbePeeked"				: "Cant be peeked",
-			"DoorisLocked"				: "Locked",
-			"CantbeMoved"				: "Cant be moved",
-			"GainedLingeringAP"			: "Lingering active perception gained",
-			"RemovedLingeringAP"		: "Lingering active perception lost"
+			"OutofRange"				: "範囲外",
+			"CantbePeeked"				: "覗けない",
+			"DoorisLocked"				: "鍵がかかっている",
+			"CantbeMoved"				: "動かせない",
+			"GainedLingeringAP"			: "継続的な能動知覚を得た",
+			"RemovedLingeringAP"		: "継続的な能動知覚を失った"
 		},
 		
 		"Settings" : {
@@ -141,18 +141,18 @@
 			}, 
 			
 			"GMConfirmPeeking" : {
-				"name"					: "GM confrims peeks",
-				"descrp"				: "If the GM has to confirm every peek action"
+				"name"					: "GMが鍵穴覗きを確認",
+				"descrp"				: "GMが各鍵穴覗きを確認するか設定します。"
 			},
 			
 			"PeekingFormula" : {
-				"name"					: "Peeking formula",
-				"descrp"				: "Formalu used for peeking through locks (leave empty to deactivate)"
+				"name"					: "鍵穴覗きのダイス式",
+				"descrp"				: "鍵穴を覗く時に使用するダイス式 (空白で無効化)"
 			},
 			
 			"PeekingDefaultDC" : {
-				"name"					: "Peeking default DC",
-				"descrp"				: "Default DC for peeking through newly created walls"
+				"name"					: "鍵穴覗きの初期難易度（DC）",
+				"descrp"				: "新規で作成された壁を覗き通す初期難易度を設定します"
 			},
 			
 			"DoorstandardMove" : {
@@ -224,7 +224,7 @@
 					"activeonly"		: "能動的な判定のみ",
 					"passiveonly"		: "受動的な判定のみ",
 					"incombatonly"		: "戦闘時のみ (両方の判定)",
-					"outcombatonly"		: "out of combat only (both checks)"
+					"outcombatonly"		: "戦闘外のみ (両方の判定)"
 				}
 			},	
 
@@ -245,13 +245,13 @@
 			},
 			
 			"RangePDCModifier" : {
-				"name"					: "Range perception DC modifier",
-				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
+				"name"					: "範囲知覚の難易度修正値",
+				"descrp"				: "発見可能な物体までの距離に基づいた〈知覚〉の難易度 (難易度インクリメント/範囲インクリメント、0/0 で無効化)"
 			},
 			
 			"Range3DCalculation" : {
-				"name"					: "Range 3D calculation",
-				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
+				"name"					: "範囲を３Dで計算",
+				"descrp"				: "視界の範囲を3Dで計算するか設定します (2Dの代わりに)"
 			},
 			
 			"UsePf2eRules" : {
@@ -355,8 +355,8 @@
 			},
 			
 			"Light3Dcalc" : {
-				"name"					: "Illumination 3D calculation",
-				"descrp"				: "If the token illumination should be calculated in 3D (instead of 2D)"
+				"name"					: "照明3D計算",
+				"descrp"				: "コマの照明が3Dで計算されるか設定します (2Dの代わりに)"
 			},
 			
 			"GMSpotconfirmDialog" : {
@@ -375,7 +375,7 @@
 			}, 
 			
 			"ShowfailuresinGMconfirm" : {
-				"name"					: "Show failures in GM confirm dialog",
+				"name"					: "GM確認ダイアログに失敗を表示",
 				"descrp"				: "Shows tokens for which the perception check failed as unchecked entries in the GM confirm dialog"
 			},
 			
@@ -385,8 +385,8 @@
 			},
 			
 			"RevealAllies" : {
-				"name"					: "Make allied tokens visible",
-				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+				"name"					: "仲間のコマを可視化",
+				"descrp"				: "能動的・受動的に発見された仲間のコマが可視化されるかどうか設定します (上記設定とだけ動作します)"
 			},
 
 			"LingeringAP" : {
@@ -435,18 +435,18 @@
 			},
 			
 			"SpottedSound" : {
-				"name"					: "Spotted Sound",
+				"name"					: "発見音",
 				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
 			},	
 			
 			"SpottedSoundVolume" : {
-				"name"					: "Spotted Sound volume",
+				"name"					: "発見音の音量",
 				"descrp"				: "Volume of the spotted sound"
 			},	
 
 			"SpotterImagePing" : {
-				"name"					: "Spotter ping image",
-				"descrp"				: "The image with which spotters of hidden objects are pinged"
+				"name"					: "発見者ping 画像",
+				"descrp"				: "隠れた物体の発見者を強調する時の画像"
 			},		
 
 			"SpotterImagePingDuration" : {
@@ -455,7 +455,7 @@
 			},
 
 			"ActivateVCs" : {
-				"name" 					: "Activate Vision Channels",
+				"name" 					: "Vision Channelsを起動",
 				"descrp" 				: "If the perceptive Vision Channels feature should be active"
 			},	
 
@@ -496,7 +496,7 @@
 			
 			"SpeedDoorMovefactor" : {
 				"name" 					: "ドアの開閉速度",
-				"descrp" 				: "alt+mouse-wheelでドアを開閉する時の速度"
+				"descrp" 				: "alt+マウススクロールでドアを開閉する時の速度"
 			},
 			
 			"IlluminationIconPosition" : {
@@ -510,8 +510,8 @@
 			},
 			
 			"LingeringAPIconPosition" : {
-				"name" 					: "Position of active perception indicator",
-				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"name" 					: "能動的知覚インジケーターの位置",
+				"descrp" 				: "Wコマの HUDのどこに継続する能動的知覚インジケーターを配置させるか",
 				"options" : {
 					"none"				: "なし",
 					"left"				: "左",
@@ -595,8 +595,8 @@
 			},
 			
 			"PeekingDCFlag" : {
-				"name" 					: "Peeking DC",
-				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
+				"name" 					: "鍵穴覗き難易度",
+				"descrp"				: "この鍵穴を覗くための難易度 (0でロール停止)"
 			},
 			
 			"LockPeekSizeFlag" : {
@@ -636,7 +636,7 @@
 			
 			"DoorSwingSpeedFlag" : {
 				"name" 					: "開閉速度",
-				"descrp"				: "The swing speed of the door in degrees°"
+				"descrp"				: "角度°で扉が開く速さ"
 			},		
 			
 			"DoorSwingRangeFlag" : {
@@ -670,14 +670,14 @@
 			},
 			
 			"SpottingRangeFlag" : {
-				"name"					: "Spotting Range",
-				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
+				"name"					: "発見範囲",
+				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 で無効化)"
 			},
 			
 			"otherSkillADCsFlag" : {
-				"openButtonname"		: "Other active skill DCs",
-				"confirmmButtonname"	: "Confirm",
-				"Title"					: "Other active skill DCs",
+				"openButtonname"		: "その他の能動的技能の難易度",
+				"confirmmButtonname"	: "決定",
+				"Title"					: "他のOther active skill DCs",
 				"name"					: "The active spot DCs for other skills (-1 for impossible):",
 				"entry"					: "DC for {pSkill} checks"
 			},
@@ -836,11 +836,11 @@
 			
 			"actions" : {
 				"spot-object" : {
-					"name"					: "Spot object",
+					"name"					: "物体を発見",
 					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> with <span class=\"entity-style\">{pEntities}</span>",
 					"settings" : {
 						"target" : {
-							"name"			: "Target"
+							"name"			: "目標"
 						}
 					}
 				}
