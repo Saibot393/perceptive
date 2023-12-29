@@ -1,5 +1,6 @@
 import {PerceptiveFlags} from "./PerceptiveFlags.js";
 import {cModuleName} from "../utils/PerceptiveUtils.js";
+import {WallUtils} from "../utils/WallUtils.js";
 
 //hooks
 Hooks.on("deactivateWallsLayer", () => {
@@ -33,3 +34,27 @@ Hooks.on("refreshWall", (pWall) => {
 		}
 	}
 });
+
+Hooks.on("canvasReady", async (pCanvas) => { //precreate walls to prevent lag bugs
+	if (game.user == game.users.find(user => user.isGM && user.active)) {
+		let vWalls = pCanvas.walls.placeables.map(vWall => vWall?.document);
+		
+		vWalls = vWalls.filter(vWall => vWall);
+		
+		for (let vWall of vWalls) {
+			if (PerceptiveFlags.isPerceptiveWall(vWall)) {
+				await WallUtils.deletewall(vWall);
+			}
+		}
+		
+		for (let vWall of vWalls) {
+			if (PerceptiveFlags.canbeLockpeeked(vWall)) {
+				await PerceptiveFlags.createLockpeekingWalls(vWall);
+			}
+			
+			if (PerceptiveFlags.Doorcanbemoved(vWall)) {
+				await PerceptiveFlags.createMovingWall(vWall);
+			}
+		}
+	}
+})

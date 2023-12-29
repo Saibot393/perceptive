@@ -81,6 +81,8 @@ class PerceptiveFlags {
 	
 	static async createLockpeekingWalls(pDoor) {} //creates the appropiate perceptive walls of pDoor
 	
+	static async hideLockpeekingWalls(pDoor) {} //hides the lockpeeking walls of pDoor
+	
 	static async deleteLockpeekingWalls(pDoor, pSelfDelete = false) {} //creates the appropiate perceptive walls of pDoor
 	
 	static async setLockpeekedby(pWall, pIDs) {} //set the Lockppekedby Flag of pWall
@@ -1057,6 +1059,14 @@ class PerceptiveFlags {
 		}
 	}
 	
+	static async hideLockpeekingWalls(pDoor) {
+		let vWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor)).filter(vWall => vWall);
+		
+		for (vWall of vWalls) {
+			WallUtils.hidewall(vWall);
+		}
+	}
+	
 	static async deleteLockpeekingWalls(pDoor, pSelfDelete = false) {
 		let vIDs = PerceptiveFlags.getLockpeekingWallIDs(pDoor);
 		
@@ -1192,6 +1202,10 @@ class PerceptiveFlags {
 			let vWall = await WallUtils.clonedoorasWall(pDoor);
 			
 			await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
+			
+			if (!WallUtils.isOpened(pDoor)) {
+				WallUtils.hidewall(vWall);
+			}
 		}
 	}
 	

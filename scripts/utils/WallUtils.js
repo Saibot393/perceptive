@@ -66,9 +66,9 @@ class WallUtils {
 		await pDoor.update({ds : 1}, {PerceptiveChange : true});
 	}
 	
-	static deletewall(pWall) {
+	static async deletewall(pWall) {
 		if (pWall?.flags[cModuleName] && pWall.flags[cModuleName][cisPerceptiveWall]) {
-			pWall.delete();
+			await pWall.delete();
 		}
 	}
 	

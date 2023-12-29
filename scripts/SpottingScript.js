@@ -737,10 +737,12 @@ class SpottingManager {
 	static async PlayerMakeTempVisible(pPlayerID, pObjectIDs, pInfos = {}) {
 		if (game.user.id == pPlayerID) {
 			let vSpotables = VisionUtils.spotablesinVision();
+			
+			let vControlled = canvas.tokens.controlled.map(vtoken => vtoken.document);
 
 			vSpotables = vSpotables.filter(vObject => pObjectIDs.includes(vObject.id));
 			
-			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => pInfos.overrideVFilter || (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !((vObject?.object?.visible && (vObject.documentName == "Token" || vObject.documentName == "Tile")) || vObject?.object?.doorControl?.visible)), pInfos);
+			await SpottingManager.onNewlyVisible(vSpotables.filter(vObject => pInfos.overrideVFilter || (pInfos.GMspotting && game.user.isGM && !vObject?.object?.controlled) || !vControlled.find(vSpotter => PerceptiveFlags.isSpottedby(vObject, vSpotter)) || !((vObject?.object?.visible && (vObject.documentName == "Token" || vObject.documentName == "Tile")) || vObject?.object?.doorControl?.visible)), pInfos);
 		
 			VisionUtils.MaketempVisible(vSpotables);
 		}
