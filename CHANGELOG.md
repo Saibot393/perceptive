@@ -1,3 +1,6 @@
+## v3.1.9
+- Fix to prevent lag related bugs with door moving
+
 ## v3.1.8
 - Added missing translation
 - Improved Lock peeking stability and fixed bugs
