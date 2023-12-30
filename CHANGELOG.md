@@ -1,3 +1,7 @@
+## v3.1.10
+- Walls accidentally created due to lag will now be automatically be removed on map load and walls will be preloaded to decrease the probability of walls being created due to lag
+- Visible objects actively spotted for the first time will now trigger the spotted by features
+
 ## v3.1.9
 - Fix to prevent lag related bugs with door moving
 
