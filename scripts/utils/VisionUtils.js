@@ -74,6 +74,8 @@ class VisionUtils {
 	
 	static RangeDCModifier(pRangeInfo, pRangeInterval, pRangeDC) {} //return the range dependetn DC modifier (per complete pRangeInterval increase by pRangeDC)
 	
+	static objectelevation(pObject) {} //returns the elevation of pObject
+	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true, Tiles : true}) {
 		let vSpotables = [];
@@ -581,6 +583,16 @@ class VisionUtils {
 		}
 		
 		return 0;
+	}
+	
+	static objectelevation(pObject) {
+		let vElevation = PerceptiveCompUtils.WHLelevation(pObject);
+		
+		if (vElevation == undefined) {
+			vElevation = pObject.elevation;
+		}
+		
+		return vElevation;
 	}
 }
 

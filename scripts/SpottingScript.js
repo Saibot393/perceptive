@@ -34,7 +34,8 @@ var vLocalVisionData = {
 	vPPModifiers : {},
 	vRangeDCInterval : 0,
 	vRangeDCModifier : 0,
-	v3DRange : false
+	v3DRange : false,
+	vGMVision : false
 }
 
 var vPingIgnoreVisionCycles = 2;
@@ -140,7 +141,13 @@ class SpottingManager {
 			
 			let vRangeInfo = {};
 			
-			if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
+			let vSpotPoint = pDoorControl.center;
+			
+			if (vLocalVisionData.v3DRange) {
+				vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(vWallObject.document)}
+			}
+			
+			if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 				//performance reason (vLocalVisionData.vRangeDCModifier)
 				if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
 					return false;
@@ -154,7 +161,7 @@ class SpottingManager {
 				const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
 				
-				if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), pDoorControl.center, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
+				if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 					return false;
 				}
 
@@ -209,7 +216,7 @@ class SpottingManager {
 		let vSpotPoint = pToken.center;
 		
 		if (vLocalVisionData.v3DRange) {
-			vSpotPoint = {...vSpotPoint, elevation : pToken.document.elevation}
+			vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(pToken.document)}
 		}
 			
 		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
@@ -264,7 +271,7 @@ class SpottingManager {
 		let vSpotPoint = pTile.center;
 		
 		if (vLocalVisionData.v3DRange) {
-			vSpotPoint = {...vSpotPoint, elevation : pTile.document.elevation}
+			vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(pTile.document)}
 		}
 		
 		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
@@ -324,6 +331,8 @@ class SpottingManager {
 
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
 		if (!game.user.isGM || game.settings.get(cModuleName, "SimulatePlayerVision")) {
+			vLocalVisionData.vGMVision = false;
+			
 			let vTokens = PerceptiveUtils.selectedTokens();
 
 			let vBuffer;
@@ -394,6 +403,8 @@ class SpottingManager {
 			vLocalVisionData.v3DRange = game.settings.get(cModuleName, "Range3DCalculation");
 		}
 		else {
+			vLocalVisionData.vGMVision = true;
+			
 			vLocalVisionData.vlastPPvalue = Infinity;
 
 			vLocalVisionData.vlastVisionLevel = 3;
@@ -488,7 +499,7 @@ class SpottingManager {
 					vSpotPoint = vSpotables[i].object.center;
 					
 					if (vLocalVisionData.v3DRange) {
-						vSpotPoint = {...vSpotPoint, elevation : vSpotables[i].elevation}
+						vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(vSpotables[i])}
 					}				
 	
 					vInRange = SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vRangeInfo);
@@ -658,7 +669,7 @@ class SpottingManager {
 				vSpotPoint = vSpotables[i].object.center;
 				
 				if (vLocalVisionData.v3DRange) {
-					vSpotPoint = {...vSpotPoint, elevation : vSpotables[i].elevation}
+					vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(vSpotables[i])}
 				}
 					
 				if ((!vLocalVisionData.vActiveRange /*&& !pInfos.Ranges*/) || SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotables[i].object.center, {RangeReplacement : undefined/*pInfos.Ranges*/, Tolerance : vTolerance})) {			
@@ -1434,6 +1445,8 @@ class SpottingManager {
 	}
 
 	static async initializeVisionSources(pData) {
+		if (vLocalVisionData.vGMVision) return; //let core foundry or walls height take care
+		
 		VisionUtils.PrepareSpotables();
 
 		vPingIgnoreVisionCycles = 1;
@@ -1477,7 +1490,7 @@ class SpottingManager {
 			vSpotPoint = vObject.object.center;
 			
 			if (vLocalVisionData.v3DRange) {
-				vSpotPoint = {...vSpotPoint, elevation : vObject.elevation}
+				vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(vObject)}
 			}
 				
 			if ((vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
@@ -1534,6 +1547,8 @@ Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		vDCVisionFunctions.push(function(pObject) {
+			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
+			
 			let vPrevVisible = pObject.visible;
 			
 			if (SpottingManager.DControlSpottingVisible(pObject)){
@@ -1552,6 +1567,8 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
+			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
+			
 			let vPrevVisible = pObject.visible;
 																															
 			let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};

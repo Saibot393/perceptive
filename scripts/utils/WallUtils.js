@@ -95,7 +95,7 @@ class WallUtils {
 		
 		vSettings["c"] = pPosition;
 		
-		vSettings["flags"] = cisPerceptiveWallData;
+		vSettings["flags"] = {...vSettings.flags, ...cisPerceptiveWallData};
 		
 		vSettings["renderable"] = pRenderable;
 		
@@ -107,7 +107,7 @@ class WallUtils {
 	static async clonedoorasWall(pDoor, pRenderable = true) {
 		let vData = {...pDoor};
 		
-		vData["door"] = 0;
+		vData.door = 0;
 		
 		return (await WallUtils.createperceptivewall(pDoor.parent, pDoor.c, vData, pRenderable))[0];
 	}
@@ -121,7 +121,9 @@ class WallUtils {
 			}
 			
 			vData.door = 0;
-			vData.flags = {};
+			if (vData.flags) {
+				vData.flags[cModuleName] = {};
+			}
 			
 			await pWall.update(vData, {PerceptiveChange : true});
 		}

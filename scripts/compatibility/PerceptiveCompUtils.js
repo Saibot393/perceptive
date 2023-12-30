@@ -70,6 +70,9 @@ class PerceptiveCompUtils {
 	
 	static MATTTriggered(pObject, pType, pOutcome) {} //returns if a triiger of pType with pOutcome triggers the MATT tile of pObject
 	
+	//specific: wall-height & levels
+	static WHLelevation(pObject) {} //returns a calculated middle elevation of pObject
+	
 	//specific: Rideable
 	//static compatibilityName(pTile) {} //returns the rideable tile name of pTile, false otherwise
 	
@@ -264,6 +267,45 @@ class PerceptiveCompUtils {
 				break;
 		}
 	}
+	
+	//specific: wall-height & levels
+	static WHLelevation(pObject) {
+		if (PerceptiveCompUtils.isactiveModule(cWallHeight)) {
+			if (pObject?.flags[cWallHeight]) {
+				if (pObject.flags[cWallHeight].hasOwnProperty("top") || pObject.flags[cWallHeight].hasOwnProperty("bottom")) {
+					if (isFinite(pObject.flags[cWallHeight].top) && isFinite(pObject.flags[cWallHeight].bottom)) {
+						return (pObject.flags[cWallHeight].top + pObject.flags[cWallHeight].bottom)/2;
+					}
+					else {
+						if (isFinite(pObject.flags[cWallHeight].top)) {
+							return pObject.flags[cWallHeight].top;
+						}
+						
+						if (isFinite(pObject.flags[cWallHeight].bottom)) {
+							return pObject.flags[cWallHeight].bottom;
+						}
+					}
+				}
+			}
+			
+			if (pObject?.flags[cLevels]) {
+				if (pObject.flags[cLevels].hasOwnProperty("top") || pObject.flags[cLevels].hasOwnProperty("bottom")) {
+					if (isFinite(pObject.flags[cLevels].top) && isFinite(pObject.flags[cLevels].bottom)) {
+						return (pObject.flags[cLevels].top + pObject.flags[cLevels].bottom)/2;
+					}
+					else {
+						if (isFinite(pObject.flags[cLevels].top)) {
+							return pObject.flags[cLevels].top;
+						}
+						
+						if (isFinite(pObject.flags[cLevels].bottom)) {
+							return pObject.flags[cLevels].bottom;
+						}
+					}
+				}
+			}
+		}
+	} 
 	
 	//specific: Rideable
 	/*
