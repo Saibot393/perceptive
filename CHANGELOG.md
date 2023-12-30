@@ -1,3 +1,9 @@
+## v3.1.11
+- Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility
+    - Wall Height and Tile level will now be included in 3D range calculations
+    - Peekable and Movable doors will no longer cause "phantom" walls to appear above or below them
+    - Door icons will no longer be displayed on the wrong level for GMs
+
 ## v3.1.10
 - Walls accidentally created due to lag will now be automatically be removed on map load and walls will be preloaded to decrease the probability of walls being created due to lag
 - Visible objects actively spotted for the first time will now trigger the spotted by features
