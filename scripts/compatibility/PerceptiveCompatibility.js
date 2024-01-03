@@ -75,6 +75,24 @@ class PerceptiveCompatibility {
 		}
 	}
 	
+	//specific: Levels
+	static insertLevelsWallVisibility() {
+		let vOldCall = CONFIG.Levels.handlers.UIHandler.UIVisible;
+		
+		CONFIG.Levels.handlers.UIHandler.UIVisible = (vplaceable) => {
+			if (PerceptiveFlags.isPerceptiveWall(vplaceable.document)) {
+				if (!game.settings.get(cModuleName, "showPerceptiveWalls")) {
+					//make sure that perceptive walls remain invisible, overwrite levels logic
+					vplaceable.visible = false;
+					
+					return;
+				}
+			}
+			
+			return vOldCall(vplaceable);
+		}
+	}
+	
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {
 		let vAddBasics = pAddBasics && !pHTML.find(`a[data-tab="triggers"]`).length;
@@ -212,6 +230,10 @@ Hooks.once("init", () => {
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
 	}
+});
+
+Hooks.once("levelsInit", () => {
+	PerceptiveCompatibility.insertLevelsWallVisibility();
 });
 
 Hooks.once("ready", () => {
