@@ -476,7 +476,12 @@
 			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
-				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
+				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (für debuggen)"
+			},
+			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Erzeuge Perceptive Wände bei laden neu [DEBUG]",
+				"descrp" 				: "Ob Perceptive Wände beim laden von Scenen neu erzeugt werden sollen (für debuggen)"
 			},
 			
 			"followTokens" : {

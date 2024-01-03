@@ -41,13 +41,13 @@ Hooks.on("canvasReady", async (pCanvas) => { //precreate walls to prevent lag bu
 		
 		vWalls = vWalls.filter(vWall => vWall);
 		
-		/*
-		for (let vWall of vWalls) {
-			if (PerceptiveFlags.isPerceptiveWall(vWall)) {
-				await WallUtils.deletewall(vWall);
+		if (game.settings.get(cModuleName, "recreatePerceptiveWalls")) {
+			for (let vWall of vWalls) {
+				if (PerceptiveFlags.isPerceptiveWall(vWall)) {
+					await WallUtils.deletewall(vWall);
+				}
 			}
 		}
-		*/
 		
 		for (let vWall of vWalls) {
 			if (PerceptiveFlags.canbeLockpeeked(vWall)) {

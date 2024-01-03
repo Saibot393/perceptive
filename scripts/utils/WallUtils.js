@@ -122,7 +122,7 @@ class WallUtils {
 			
 			vData.door = 0;
 			if (vData.flags) {
-				vData.flags[cModuleName] = {};
+				vData.flags = {...vData.flags[cModuleName], [cModuleName] : {}};
 			}
 			
 			await pWall.update(vData, {PerceptiveChange : true});

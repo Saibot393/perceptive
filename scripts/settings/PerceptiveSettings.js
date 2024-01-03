@@ -746,6 +746,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "recreatePerceptiveWalls", {
+	name: Translate("Settings.recreatePerceptiveWalls.name"),
+	hint: Translate("Settings.recreatePerceptiveWalls.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   //client
   game.settings.register(cModuleName, "followTokens", {
 	name: Translate("Settings.followTokens.name"),

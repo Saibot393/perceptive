@@ -479,6 +479,11 @@
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
 			},
 			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Recreate Perceptive walls on scene load [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be recreated when a scene is reloaded (for debug purposes)"
+			},
+			
 			"followTokens" : {
 				"name" 					: "跟随指示物",
 				"descrp" 				: "是否让画面跟随选择的指示物移动"
