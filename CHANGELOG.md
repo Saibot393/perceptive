@@ -1,3 +1,7 @@
+## v3.1.12
+- Fixed visual bug that caused walls that were supossed to be hidden to show up on the wall layer ui when levels was active
+- Improved performance on scene load when a large amount of moveable or peekable doors are placed
+
 ## v3.1.11
 - Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility
     - Wall Height and Tile level will now be included in 3D range calculations
