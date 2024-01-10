@@ -1,3 +1,7 @@
+## v3.1.13
+- Fixed bug that caused additional walls to be created
+- Added debug setting Recreate Perceptive walls on scene load
+
 ## v3.1.12
 - Fixed visual bug that caused walls that were supossed to be hidden to show up on the wall layer ui when levels was active
 - Improved performance on scene load when a large amount of moveable or peekable doors are placed
