@@ -1251,19 +1251,19 @@ class SpottingManager {
 			let vContent = TranslateandReplace("ChatMessage.SpottingReport.content", {pDoors : vDoors.length});
 			
 			if (vTokens.length > 0) {
-			for (let i = 0; i < vTokens.length; i++) {
-				vContent = vContent + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
-				
-				if (vTokens[i].isOwner || (cVisibleNameModes.includes(vTokens[i].displayName)) || vTokens[i].documentName == "Tile") {
-					vContent = vContent + 	`<p>${PerceptiveFlags.PerceptiveName(vTokens[i])}</p>`;
-				}	
-				else {
-					vContent = vContent + 	`<p>${Translate("ChatMessage.SpottingReport.unknown")}</p>`;
+				for (let i = 0; i < vTokens.length; i++) {
+					vContent = vContent + 	`<div class="form-group" style="display:flex;flex-direction:row;align-items:center;gap:1em"> `
+					
+					if (vTokens[i].isOwner || (cVisibleNameModes.includes(vTokens[i].displayName)) || vTokens[i].documentName == "Tile") {
+						vContent = vContent + 	`<p>${PerceptiveFlags.PerceptiveName(vTokens[i])}</p>`;
+					}	
+					else {
+						vContent = vContent + 	`<p>${Translate("ChatMessage.SpottingReport.unknown")}</p>`;
+					}
+												
+					vContent = vContent	+   	`<img src="${vTokens[i].texture.src}" style = "height: 2em;">
+											 </div>`;
 				}
-											
-				vContent = vContent	+   	`<img src="${vTokens[i].texture.src}" style = "height: 2em;">
-										 </div>`;
-			}
 			}
 			else {
 				vContent = vContent + "-";// + "- <br>";
@@ -1312,9 +1312,11 @@ class SpottingManager {
 		}
 		
 		//chat message
-		for (let i = 0; i < pObjects.length; i++) {
-			if (PerceptiveFlags.hasSpottingMessage(pObjects[i])) {
-				ChatMessage.create({user: game.user.id, flavor : PerceptiveFlags.SpottingMessage(pObjects[i]), type : 5, whisper : [game.user.id]}); //CHAT MESSAGE
+		if (vPingIgnoreVisionCycles <= 0) {
+			for (let i = 0; i < pObjects.length; i++) {
+				if (PerceptiveFlags.hasSpottingMessage(pObjects[i])) {
+					ChatMessage.create({user: game.user.id, flavor : PerceptiveFlags.SpottingMessage(pObjects[i]), type : 5, whisper : [game.user.id]}); //CHAT MESSAGE
+				}
 			}
 		}
 		
