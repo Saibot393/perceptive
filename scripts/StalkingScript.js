@@ -17,7 +17,7 @@ class StalkingManager {
 	//IMPLEMENTATIONS
 	static PanToselectedCenter(pToken, pchanges) {
 		if (PerceptiveUtils.selectedTokens().length) {
-			let pCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken)));
+			let pCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.liveCenterPosition(vToken)));
 			
 			let vArea = GeometricUtils.GetArea(PerceptiveUtils.selectedTokens());
 			
