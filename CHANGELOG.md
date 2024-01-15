@@ -1,3 +1,7 @@
+## v3.1.14
+- Small bug fix to prevent spotting message spam
+- Small bug fix to prevent moving door from being opened again when being closed by scrolling (and scrolling to fast)
+
 ## v3.1.13
 - Fixed bug that caused additional walls to be created
 - Added debug setting Recreate Perceptive walls on scene load
