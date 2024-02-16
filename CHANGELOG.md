@@ -1,3 +1,6 @@
+## v3.1.15
+- Improved camera pan smoothness of "Follow tokens" feature
+
 ## v3.1.14
 - Small bug fix to prevent spotting message spam
 - Small bug fix to prevent moving door from being opened again when being closed by scrolling (and scrolling to fast)
