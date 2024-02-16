@@ -158,7 +158,7 @@ class SpottingManager {
 			
 			if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall, vRangeDCModifier)) {
 				// Hide secret doors from players
-				const w = vWallObject;
+				//const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
 				
 				if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
@@ -166,6 +166,7 @@ class SpottingManager {
 				}
 
 				// Test two points which are perpendicular to the door midpoint
+				/*
 				const ray = w.toRay();
 				const [x, y] = w.midpoint;
 				const [dx, dy] = [-ray.dy, ray.dx];
@@ -177,8 +178,11 @@ class SpottingManager {
 
 				// Test each point for visibility
 				return points.some(p => {
-				  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
+					return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
 				});
+				*/
+				
+				return VisionUtils.simpletestVisibility(vWallObject.midpoint, {tolerance: 0, object: pDoorControl, ray : true});
 			}
 		}
 

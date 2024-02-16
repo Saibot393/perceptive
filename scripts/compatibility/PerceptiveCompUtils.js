@@ -73,6 +73,10 @@ class PerceptiveCompUtils {
 	//specific: wall-height & levels
 	static WHLelevation(pObject) {} //returns a calculated middle elevation of pObject
 	
+	static LVLLOStest(pPoint) {} //returns if is in line of sight
+	
+	static WHLVLzmiddle(pObject) {} //returns the calculated z middle of pObject
+	
 	//specific: Rideable
 	//static compatibilityName(pTile) {} //returns the rideable tile name of pTile, false otherwise
 	
@@ -306,6 +310,61 @@ class PerceptiveCompUtils {
 			}
 		}
 	} 
+	
+	static LVLLOStest(pPoint) {
+		let vtokens = canvas.tokens.controlled.filter(vtoken => vtoken.vision);
+		
+		if (!vtokens.length && !game.user.isGM && game.user.character) {
+			vtokens.push(...canvas.tokens.placeables.filter(vtoken => vtoken.vision && vtoken.actor == game.user.character));
+		}
+		
+		let vpoints = vtokens.map((vtoken) => {return {...vtoken.center, z : vtoken.losHeight}});
+		
+		if (game.user.isGM && !vpoints.length) {
+			let vlosHeight = Infinity;
+			if (CONFIG.Levels.UI.rangeEnabled) {
+				vlosHeight = CONFIG.Levels.UI.range[1];
+			}
+			
+			vpoints.push({...pPoint, z : vlosHeight})
+		}
+		
+		console.log(pPoint);
+		console.log(vpoints);
+		return vpoints.some((vpoint) => {
+			let collision = CONFIG.Levels.handlers.SightHandler.testCollision(vpoint, pPoint);
+			
+			if (!collision || (collision.x == pPoint.x && collision.y == pPoint.y && collision.z == pPoint.z)) return true;
+		})
+	}
+	
+	static WHLVLzmiddle(pObject) {
+		if (!pObject) return;
+		
+		if (pObject.hasOwnProperty("losHeight")) {
+			return pObject.losHeight;
+		}
+		
+		let vdocument = pObject.document ?? pObject.wall?.document;
+		
+		if (vdocument) {
+			let vmiddle;
+			
+			if (vdocument.flags[cWallHeight]) {
+				vmiddle = (vdocument.flags[cWallHeight].bottom + vdocument.flags[cWallHeight].top)/2;
+			}
+			
+			if (isNaN(vmiddle) && vdocument.flags[cLevels]) {
+				vmiddle = (vdocument.flags[cWallHeight].rangeBottom + vdocument.flags[cWallHeight].rangeTop)/2;
+			}
+			
+			if (!isNaN(vmiddle)) {
+				return vmiddle;
+			}
+		}
+		
+		return undefined;
+	}
 	
 	//specific: Rideable
 	/*

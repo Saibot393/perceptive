@@ -389,18 +389,46 @@ class VisionUtils {
 		}			
 	}
 	
-	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null}) { //adapted from foundry.js
+	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null, ray : false}) { //adapted from foundry.js
 		// If no vision sources are present, the visibility is dependant of the type of user
 		if ( !canvas.effects.visionSources.some(s => s.active) ) return game.user.isGM;
 
 		// Prepare an array of test points depending on the requested tolerance
-		const t = pInfos.tolerance;
-		const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
-		const points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+		let points = [];
+		
+		if (pInfos.ray && pInfos.object?.wall) {
+			const wallobject = pInfos.object.wall;
+			const ray = wallobject.toRay();
+			const [x, y] = ppoint;
+			const [dx, dy] = [-ray.dy, ray.dx];
+			const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+			points = [
+				{x: x + (t * dx), y: y + (t * dy)},
+				{x: x - (t * dx), y: y - (t * dy)}
+			];
+		}
+		else {
+			const t = pInfos.tolerance;
+			const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
+			points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+		}
 
-		return points.some(p => {
-			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
-		});
+		if (PerceptiveCompUtils.isactiveModule(cLevels)) {
+			let vz = PerceptiveCompUtils.WHLVLzmiddle(pInfos.object);
+			
+			points = points.map(p => {
+				return {x : p.x, y : p.y, z : vz};
+			});
+			
+			return points.some(p => {
+				return PerceptiveCompUtils.LVLLOStest(p);
+			});
+		}
+		else {
+			return points.some(p => {
+				return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+			});
+		}
 	}
 	
 	static WalltestVisibility(pWall, pInfos = {tolerance : 2, object : null}) {
