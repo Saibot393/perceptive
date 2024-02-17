@@ -472,6 +472,11 @@
 			"VCRange3DCalc" : {
 				"name" 					: "Sicht Kanäle 3D berechnung",
 				"descrp" 				: "Ob die Reichweite von Sicht Kanälen in 3D berechnet werden soll"
+			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Nutze logische ODER",
+				"descrp"				: "Ob benötigte Sicht Kanäle ein logisches ODER anstatt eines logischen UND benutzen sollen"
 			},		
 
 			"ShowVCIDs" : {

@@ -478,6 +478,11 @@
 				"name" 					: "Show Vision Channel IDs",
 				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
 			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Use logical OR mode",
+				"descrp"				: "If required Vision Channels should operate on a logical OR instead of a logical AND"
+			},			
 			
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
