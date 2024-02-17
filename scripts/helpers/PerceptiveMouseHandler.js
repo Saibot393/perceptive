@@ -67,28 +67,41 @@ class PerceptiveMouseHandler {
 		if (FCore.Fversion() > 10) {
 			const vOldDoorCall = DoorControl.prototype.onclick;
 			
-			DoorControl.prototype.onclick = function (pEvent) {
-				PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall);
-				
-				if (vOldDoorCall) {
-					let vDoorCallBuffer = vOldDoorCall.bind(this);
-					vDoorCallBuffer(pEvent);
+			DoorControl.prototype.onclick = async function (pEvent) {
+				if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
+					console.log("ohoh");
+					if (vOldDoorCall) {
+						let vDoorCallBuffer = vOldDoorCall.bind(this);
+						vDoorCallBuffer(pEvent);
+					}
 				}
-			}			
+			}		
+
+			const vOldDoorCallMD = DoorControl.prototype.onmousedown;
+			
+			DoorControl.prototype.onmousedown = async function (pEvent) {
+				if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
+					if (vOldDoorCallMD) {
+						let vDoorCallBuffer = vOldDoorCallMD.bind(this);
+						vDoorCallBuffer(pEvent);
+					}
+				}
+			}				
 		}
 		else {
 			if (LnKCompUtils.isactiveModule(cLibWrapper)) {
-				libWrapper.register(cModuleName, "DoorControl.prototype._onMouseDown", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorLeftClick(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+				libWrapper.register(cModuleName, "DoorControl.prototype._onMouseDown", async function(vWrapped, ...args) {if (await PerceptiveMouseHandler.onDoorLeftClick(...args, this.wall)){ return vWrapped(...args)}}, "MIXED");
 			}
 			else {
 				const vOldDoorCall = DoorControl.prototype._onMouseDown;
 				
-				DoorControl.prototype._onMouseDown = function (pEvent) {
-					PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall);
+				DoorControl.prototype._onMouseDown = async function (pEvent) {
+					if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
 					
-					if (vOldDoorCall) {
-						let vDoorCallBuffer = vOldDoorCall.bind(this);
-						vDoorCallBuffer(pEvent);
+						if (vOldDoorCall) {
+							let vDoorCallBuffer = vOldDoorCall.bind(this);
+							vDoorCallBuffer(pEvent);
+						}
 					}
 				}
 			}
@@ -152,8 +165,10 @@ class PerceptiveMouseHandler {
 	}
 	
 	//ons	
-	static onDoorLeftClick(pDoorEvent, pWall) {
-		Hooks.callAll(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
+	static async onDoorLeftClick(pDoorEvent, pWall) {
+		let vOldCall = await Hooks.call(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
+		console.log(vOldCall);
+		return vOldCall;
 	} 
 	
 	static async onDoorRightClick(pDoorEvent, pWall) {

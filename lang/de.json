@@ -409,6 +409,11 @@
 				"descrp"				: "Die Dauer für welche die Aktive-Wahrnehmungs verbleibt in Sekunden (-1 für unbegrenzt)"
 			},				
 			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Audgedeckte Türen beim anklicken sichtbar machen",
+				"descrp"				: "Ob aufgedeckte Geheimtüren beim anklicken zu normalen Türen werden sollen"
+			},
+			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Erzwinge \"Wurf Ignorieren\" Tasten invertierung",
 				"descrp" 				: "Invertiere die \"Wurf Ignorieren\" Taste für alle Spieler und entferne die Spieler Einstellung"				

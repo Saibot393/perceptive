@@ -407,7 +407,12 @@
 			"LingeringAPDuration" : {
 				"name"					: "Lingering active perception duration",
 				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
-			},			
+			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Make spotted door visible on click",
+				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
+			},		
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",

@@ -329,8 +329,6 @@ class PerceptiveCompUtils {
 			vpoints.push({...pPoint, z : vlosHeight})
 		}
 		
-		console.log(pPoint);
-		console.log(vpoints);
 		return vpoints.some((vpoint) => {
 			let collision = CONFIG.Levels.handlers.SightHandler.testCollision(vpoint, pPoint);
 			

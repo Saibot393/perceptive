@@ -408,7 +408,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: Number,
 		default: -1
-	  }); 		  
+	  }); 
+
+	  game.settings.register(cModuleName, "RevealSpottedDooronClick", {
+		name: Translate("Settings.RevealSpottedDooronClick.name"),
+		hint: Translate("Settings.RevealSpottedDooronClick.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 	  
  
 	//formulas
 	  game.settings.register(cModuleName, "PassivePerceptionFormula", {
@@ -1045,7 +1054,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.RevealAllies"],
 												[data-setting-id="perceptive.LingeringAP"],
 												[data-setting-id="perceptive.LingeringAPRadius"],
-												[data-setting-id="perceptive.LingeringAPDuration"]`);
+												[data-setting-id="perceptive.LingeringAPDuration"],
+												[data-setting-id="perceptive.RevealSpottedDooronClick"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],

@@ -75,6 +75,12 @@ class SpottingManager {
 	static resetStealthRequest(pObjectID, pSceneID, pInfos) {} //answers a request to reset stealth
 
 	static resetStealthDataSelected() {} //resets the stealth data of selected tokens (if owned)
+	
+	static toggleDoorState(pWalls, pInfos) {} //opens/closses specified door
+	
+	static RequestToggleDoorState(pWalls, pInfos) {} //request to toggle pWalls door state
+	
+	static toggleDoorStateRequest(pObjectID, pSceneID, pInfos) {} //answers a request for toggeling the doorstate
 
 	static isSpottedby(pObject, pSpotter,  pChecks = {LOS : false, Range : true, Effects : true, canbeSpotted : true}) {} //returns of pObject is spotted by pSpotter
 	
@@ -858,6 +864,29 @@ class SpottingManager {
 		SpottingManager.resetStealthData(vTokens);
 	}
 	
+	static toggleDoorState(pWalls, pInfos) {
+		for (let vwall of pWalls) {
+			vwall.update({ds : (vwall.ds + 1) % 2});
+		}
+	} 
+	
+	static RequestToggleDoorState(pWalls, pInfos) {
+		if (game.user.isGM) {
+			SpottingManager.toggleDoorState(pWalls, pInfos);
+		}
+		else {
+			let vObjectIDs = {};
+			
+			game.socket.emit("module." + cModuleName, {pFunction : "toggleDoorState", pData : {pObjectIDs : pWalls.map(vwall => vwall.id), pSceneID : canvas.scene.id, pInfos : pInfos}});
+		}
+	}
+	
+	static toggleDoorStateRequest(pObjectID, pSceneID, pInfos) {
+		if (game.user.isGM) {
+			SpottingManager.resetStealthData(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)), pInfos);
+		}
+	}
+	
 	static async isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true, Effects : true, canbeSpotted : true}) {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
 			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall.document.parent.id == pSpotter.parent.id))) {
@@ -1408,6 +1437,7 @@ class SpottingManager {
 	}
 
 	static onWallUpdate(pWall, pChanges, pInfos, pSender) {
+		/*
 		if (game.user.isGM) {
 			if (!game.users.get(pSender).isGM) {
 				if (pWall.door == 2 && pChanges.hasOwnProperty("ds")) {
@@ -1416,6 +1446,7 @@ class SpottingManager {
 				}
 			}
 		}
+		*/
 	}
 
 	static onrefreshToken(pToken, pInfos) {	
@@ -1439,9 +1470,21 @@ class SpottingManager {
 	}
 
 	static onDoorLClick(pWall, pKeyInfo) {
-		if (!game.user.isGM) {
-			SpottingManager.RequestresetStealth([pWall], {DoorClicked : true});
+		if (!(PerceptiveFlags.canbeSpotted(pWall) && pWall.door == 2)) {
+			//door is not secret or not spottable, spotting has no business in handling this
+						console.log(true);
+			return true;
 		}
+		
+		if (game.settings.get(cModuleName, "RevealSpottedDooronClick")) {
+			if (!game.user.isGM) {
+				SpottingManager.RequestresetStealth([pWall], {DoorClicked : true});
+			}
+		}
+		else {
+			//SpottingManager.RequestToggleDoorState([pWall], {DoorClicked : true});
+		}
+		return false;
 	}
 
 	static onCanvasReady(pCanvas) {
@@ -1614,7 +1657,7 @@ Hooks.once("ready", function() {
 		
 		Hooks.on("sightRefresh", (pToken, pInfos) => {SpottingManager.onsightRefresh()});
 		
-		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {SpottingManager.onDoorLClick(pWall, pKeyInfo)});
+		Hooks.on(cModuleName + "." + "DoorLClick", (pWall, pKeyInfo) => {return SpottingManager.onDoorLClick(pWall, pKeyInfo)});
 
 		Hooks.on("canvasReady", (pCanvas) => {SpottingManager.onCanvasReady(pCanvas)});
 
@@ -1622,7 +1665,7 @@ Hooks.once("ready", function() {
 
 		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args));
 
-		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor))
+		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
 	}
 });
 
@@ -1632,6 +1675,8 @@ export {SpottingManager}
 export function SpotObjectsRequest({pObjectIDs, pSpotterIDs, pSceneID, pInfos} = {}) {return SpottingManager.SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos)};
 
 export function resetStealthRequest({pObjectIDs, pSceneID, pInfos} = {}) {return SpottingManager.resetStealthRequest(pObjectIDs, pSceneID, pInfos)};
+
+export function toggleDoorStateRequest({pObjectIDs, pSceneID, pInfos} = {}) {return SpottingManager.toggleDoorStateRequest(pObjectIDs, pSceneID, pInfos)};
 
 export function PlayerMakeTempVisible({pPlayerID, pObjectIDs, pInfos} = {}) {return SpottingManager.PlayerMakeTempVisible(pPlayerID, pObjectIDs, pInfos)};
 
