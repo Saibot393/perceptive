@@ -87,6 +87,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Active perception lingers: to continue using the active perception until manually removed in the token HUD
   - Lingering active perception radius: to limit the range in which the active perception remains
   - Lingering active perception duration: to limit the duration for which the active perception remains
+  - Make spotted door visible on click: to make spotted secret doors become normal doors on click
 - Rolls & Formulas
   - Passive perception formula: to set the formula used for passive perception (if not automated)
   - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
@@ -183,6 +184,7 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
      - Transparency: The transparency of objects seen with this VC (1 no transparency, 0 invisible)
  - Simulate player vision: to have the same vision a player controlling the tokens would have as a GM
  - Vision Channel 3D range: to calculate the vision channel range in 3D
+ - Use logical OR mode: to use a logical OR for required vision channels instead of a logical AND
  - Show Vision Channel IDs: to show the internal vision channel IDs in the Vision Channels menu
 
 #### Walls/Tokens/Tiles:
