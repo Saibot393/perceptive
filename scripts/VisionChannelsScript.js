@@ -51,6 +51,8 @@ class VisionChannelsManager {
 		
 		vLocalVisionData.vRange3D = game.settings.get(cModuleName, "VCRange3DCalc");
 		
+		vLocalVisionData.vRequiredOrBehaviour = game.settings.get(cModuleName, "vRequiredOrBehaviour")
+		
 		if (CONFIG.debug.perceptive.VCScript) {//DEBUG
 			console.log("perceptive: New vision data:", vLocalVisionData);
 		}
@@ -75,7 +77,9 @@ class VisionChannelsManager {
 	static CanVCSeeObject(pViewer, pObject) {
 		let vInfos = {	SourcePoints : pViewer.object?.center,
 						TargetPoint : undefined,
-						InVision : undefined};
+						InVision : undefined,
+						logicalOR : game.settings.get(cModuleName, "vRequiredOrBehaviour")
+					};
 						
 		let vEmitters = [pObject];
 		
@@ -135,7 +139,9 @@ Hooks.once("ready", function() {
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : pObject.center,
 							InVision : VisionUtils.WalltestVisibility(pObject.wall),
-							RangeList : vLocalVisionData.vRangeList};
+							RangeList : vLocalVisionData.vRangeList,
+							logicalOR : vLocalVisionData.vRequiredOrBehaviour
+						};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, vInfos);
 			
@@ -154,7 +160,9 @@ Hooks.once("ready", function() {
 			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : VisionChannelsManager.VisionPoint(pObject),
 							InVision : VisionUtils.simpletestVisibility(pObject.center),
-							RangeList : vLocalVisionData.vRangeList};
+							RangeList : vLocalVisionData.vRangeList,
+							logicalOR : vLocalVisionData.vRequiredOrBehaviour
+						};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels, vInfos);
 			
@@ -176,7 +184,9 @@ Hooks.once("ready", function() {
 				let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 								TargetPoint : VisionChannelsManager.VisionPoint(pObject),
 								InVision : VisionUtils.simpletestVisibility(pObject.center),
-								RangeList : vLocalVisionData.vRangeList};
+								RangeList : vLocalVisionData.vRangeList,
+								logicalOR : vLocalVisionData.vRequiredOrBehaviour
+							};
 				
 				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, vInfos);
 				
@@ -207,7 +217,9 @@ Hooks.once("ready", function() {
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : pWall.center,
 							WallCheck : true,
-							RangeList : vLocalVisionData.vRangeList}
+							RangeList : vLocalVisionData.vRangeList,
+							logicalOR : vLocalVisionData.vRequiredOrBehaviour
+						};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, vInfos);
 			

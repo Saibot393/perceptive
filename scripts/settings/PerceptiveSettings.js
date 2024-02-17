@@ -711,6 +711,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });   
   
+  game.settings.register(cModuleName, "vRequiredOrBehaviour", {
+	name: Translate("Settings.vRequiredOrBehaviour.name"),
+	hint: Translate("Settings.vRequiredOrBehaviour.descrp"),
+	scope: "world",
+	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
+	type: Boolean,
+	default: false
+  });   
+  
   game.settings.register(cModuleName, "ShowVCIDs", {
 	name: Translate("Settings.ShowVCIDs.name"),
 	hint: Translate("Settings.ShowVCIDs.descrp"),

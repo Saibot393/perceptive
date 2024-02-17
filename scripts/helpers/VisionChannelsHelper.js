@@ -371,10 +371,12 @@ class VisionChannelsUtils {
 		return Object.keys(vChannels).filter(vKey => pNames.includes(vChannels[vKey].Name));
 	}
 	
-	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false, RangeList : {}}) {
+	static isVCvisible(pEmitterChannels, pReceiverChannels, pVCInfos = {SourcePoints : [], TargetPoint : undefined, InVision : false, WallCheck : false, returnasID : false, RangeList : {}, logicalOR : false}) {
 		//the heart of this whole feature
 		if (pEmitterChannels.length) {
 			pVCInfos.Report = {};
+			
+			let vrequirednotReceived = false; //if atleast one required channel is not received (only relevant for OR mode)
 			
 			let vChannels = game.settings.get(cModuleName, cSettingName);
 			
@@ -385,17 +387,37 @@ class VisionChannelsUtils {
 			let vNotReceived = pEmitterChannels.filter(vChannelID => !vCommons.includes(vChannelID));
 			
 			if (vNotReceived.find(vChannelID => vChannels[vChannelID]?.RequiredtoSee)) {
-				//a required channel is not recived
-				pVCInfos.Report.Reason = "RequiredVCnotMatched";
-				return false;
+				vrequirednotReceived = true;
+				
+				if (pVCInfos.logicalOR) {
+					if (!vCommons.find(vChannelID => vChannels[vChannelID]?.RequiredtoSee)) {
+						//none of the required channels is recieved
+						pVCInfos.Report.Reason = "NoRequiredVDMatched";
+						return false;
+					}
+				}
+				else {
+					//a required channel is not recieved
+					pVCInfos.Report.Reason = "RequiredVCnotMatched";
+					return false;
+				}
 			}
 			
 			if (!pVCInfos.WallCheck && !pVCInfos.InVision) {
 				//check if see through walls is necessary for vision
-				if (vCommons.find(vChannelID => !vChannels[vChannelID].SeethroughWalls && vChannels[vChannelID].RequiredtoSee)) {
-					//necessary channel can't see through Wall
-					pVCInfos.Report.Reason = "RequiredVCnotSeethroughWall";
-					return false;
+				if (pVCInfos.logicalOR) {
+					if (!vCommons.find(vChannelID => vChannels[vChannelID].SeethroughWalls && (!vrequirednotReceived || vChannels[vChannelID].RequiredtoSee))) {
+						//none of the necessary common channels cen see through Wall
+						pVCInfos.Report.Reason = "noRequiredVCSeethroughWall";
+						return false;
+					}
+				}
+				else {
+					if (vCommons.find(vChannelID => !vChannels[vChannelID].SeethroughWalls && vChannels[vChannelID].RequiredtoSee)) {
+						//necessary channel can't see through Wall
+						pVCInfos.Report.Reason = "RequiredVCnotSeethroughWall";
+						return false;
+					}
 				}
 				
 				vCommons = vCommons.filter(vChannelID => vChannels[vChannelID].SeethroughWalls);
@@ -419,6 +441,11 @@ class VisionChannelsUtils {
 				let vRangedVCs = vCommons.filter(vChannelID => (vRanges[vChannelID] >= 0));
 				
 				let vRangeCheck = vRangedVCs.find(vChannelID => (vChannels[vChannelID].RequiredtoSee))
+				
+				if (pVCInfos.logicalOR) {
+					//in OR mode one rangeless required VC is enough to skip range check
+					vRangeCheck = vRangeCheck && !vRangeLessVCs.find(vChannelID => vChannels[vChannelID].RequiredtoSee);
+				}
 				
 				if (vRangeLessVCs.length && !vRangeCheck) {
 					//check range less
@@ -454,11 +481,22 @@ class VisionChannelsUtils {
 							//filter ranged required channels
 							let vRequiredRange = vRangedVCs.filter(vChannelID => (vChannels[vChannelID].RequiredtoSee));
 							
-							vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID]))).length == vRequiredRange.length);
+							if (pVCInfos.logicalOR) {
+								vInRange = vRequiredRange.find(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID])));
+							}
+							else {
+								vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID]))).length == vRequiredRange.length);
+							}
 							
 							if (!vInRange) {
-								//a required channel is out of range
-								pVCInfos.Report.Reason = "RequiredVCoutofRange";
+								if (pVCInfos.logicalOR) {
+									//not even one required channel is in range
+									pVCInfos.Report.Reason = "NoRequiredVCinRange";
+								}
+								else {
+									//a required channel is out of range
+									pVCInfos.Report.Reason = "RequiredVCoutofRange";
+								}
 								
 								return false;
 							}
