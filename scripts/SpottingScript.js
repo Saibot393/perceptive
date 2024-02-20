@@ -887,16 +887,18 @@ class SpottingManager {
 		}
 	}
 	
-	static async isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true, Effects : true, canbeSpotted : true}) {
+	static async isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true, Effects : true, Hidden : true, canbeSpotted : true}) {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
 			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall.document.parent.id == pSpotter.parent.id))) {
 				//different scenes
+				console.log(1);
 				return false;
 			}
 			
 			if (pChecks.Effects) {
-				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && !pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible"))) {
+				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && !pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible")) && !(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden")))) {
 					//no invisibility
+					console.log(2);
 					return true;
 				}
 			}
@@ -904,6 +906,7 @@ class SpottingManager {
 			if (pChecks.LOS) {
 				if (!pSpotter.object?.los?.contains(pObject.center.x, pObject.center.y)) {
 					//not in FOV
+					console.log(3);
 					return false;
 				}
 			}
@@ -923,6 +926,10 @@ class SpottingManager {
 					vRange = game.settings.get(cModuleName, "SpottingRange")*cRangeFactor
 				}
 				
+				if (vRange < 0) {
+					vRange = Infinity;
+				}
+				
 				let vSpotPoint = pObject.object.center;
 				if (game.settings.get(cModuleName, "Range3DCalculation") && pObject.elevation != undefined) {
 					vSpotPoint = {...vSpotPoint, elevation : pObject.elevation}
@@ -931,7 +938,11 @@ class SpottingManager {
 				const cRangeDCModifier = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[0]);
 				const cRangeDCInterval = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[1])*cRangeFactor;
 			
+				console.log(vRange);
+				console.log(game.settings.get(cModuleName, "SpottingConeRange"));
+				console.log(pSpotter.rotation);
 				if (!VisionUtils.inVisionRange([pSpotter], vSpotPoint, vRange, game.settings.get(cModuleName, "SpottingConeRange")*cRangeFactor, pSpotter.rotation, 0, vRangeInfo)) {
+					console.log(4);
 					return false;
 				}
 				
@@ -944,6 +955,7 @@ class SpottingManager {
 			//await PerceptiveFlags.CheckLightLevel(pObject);
 			
 			//check if pObject can currently be spotted by pSpotter
+			console.log(5);
 			return Boolean(PerceptiveFlags.canbeSpottedwith(pObject, [pSpotter], VisionUtils.VisionLevel(pSpotter), await VisionUtils.PassivPerception(pSpotter), vRangeModifier, {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : !pChecks.canbeSpotted}));
 		}
 		
@@ -1683,7 +1695,7 @@ export function PlayerMakeTempVisible({pPlayerID, pObjectIDs, pInfos} = {}) {ret
 export function resetStealthDataSelected() {SpottingManager.resetStealthDataSelected()};
 
 //API and Macros
-export function isSpottedby(pObject, pSpotter,  pChecks = {LOS : false, Range : true, Effects : true, canbeSpotted : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}
+export function isSpottedby(pObject, pSpotter,  pChecks = {LOS : false, Range : true, Effects : true, Hidden : true, canbeSpotted : true}) {return SpottingManager.isSpottedby(pObject, pSpotter, pChecks)}
 
 export function CheckAPerception(pSpotters, pResults, pInfos = {isLingeringAP : false}) {return SpottingManager.CheckAPerception(pSpotters, pResults, pInfos)}
 
