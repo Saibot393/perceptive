@@ -1,3 +1,9 @@
+## v3.2.0
+- Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility (included LOS check)
+- Spotted secret doors will no longer become normal doors when clicked
+    - Added world setting "Make spotted door visible on click" to make spotted secret doors become normal doors on click
+- Added world setting "Use logical OR mode" to use a logical OR for required vision channels instead of a logical AND
+
 ## v3.1.15
 - Improved camera pan smoothness of "Follow tokens" feature
 
