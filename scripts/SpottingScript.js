@@ -554,7 +554,8 @@ class SpottingManager {
 				}
 			}
 			
-			if (!pInfos.isLingeringAP) {
+			console.log(pInfos.Skill);
+			if (!pInfos.isLingeringAP && !pInfos.Skill) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
 						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges,

@@ -232,7 +232,7 @@ class VisionUtils {
 												
 												let vPosition = vSpotter.object.center;
 												
-												if (pInfos.visionPoint) {
+												if (pInfos?.visionPoint) {
 													vPosition = pInfos.visionPoint;
 												}
 												
