@@ -108,6 +108,7 @@ class VisionUtils {
 			vinVision = false;
 			
 			if (PerceptiveFlags.canbeSpotted(vDoors[i].document)) {//partly modified from foundry.js
+				/*
 				const ray = vDoors[i].toRay();
 				const [x, y] = vDoors[i].midpoint;
 				const [dx, dy] = [-ray.dy, ray.dx];
@@ -116,11 +117,15 @@ class VisionUtils {
 				  {x: x + (t * dx), y: y + (t * dy)},
 				  {x: x - (t * dx), y: y - (t * dy)}
 				];
+				*/
 				
 				// Test each point for visibility
+				vinVision = VisionUtils.simpletestVisibility(vDoors[i].midpoint, {tolerance: 0, object: vDoors[i].doorControl, ray : true});
+				/*
 				vinVision = points.some(p => {
-				  return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
-				});				
+				  return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)
+				});		
+				*/			
 			}
 			
 			if (vinVision) {
@@ -225,11 +230,17 @@ class VisionUtils {
 												
 												let vDistance;
 												
+												let vPosition = vSpotter.object.center;
+												
+												if (pInfos.visionPoint) {
+													vPosition = pInfos.visionPoint;
+												}
+												
 												if ((pPosition.elevation != undefined) && (vSpotter.elevation != pPosition.elevation)) {
-													vDistance = GeometricUtils.DistanceXYZ({...vSpotter.object.center, elevation : vSpotter.elevation}, pPosition, vElevationScale);
+													vDistance = GeometricUtils.DistanceXYZ({...vPosition, elevation : vSpotter.elevation}, pPosition, vElevationScale);
 												}
 												else {
-													vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+													vDistance = GeometricUtils.DistanceXY(vPosition, pPosition);
 												}
 												
 												let vCalculatedDistance = vDistance - vTotalTolerance;
@@ -245,7 +256,7 @@ class VisionUtils {
 												
 												if ((vCalculatedDistance) <= pConeRange) {
 													//is in cone range, check angle
-													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - (vSpotter.rotation + pConeRotation)%360;
+													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vPosition)) - (vSpotter.rotation + pConeRotation)%360;
 													
 													return Math.min(Math.abs(vAngleDiff), Math.abs(vAngleDiff-360)) < cSpotConeAngle/2;
 												}
@@ -256,7 +267,7 @@ class VisionUtils {
 	static async PassivPerception(pToken) {
 		if (pToken && pToken.actor) {
 			if (PerceptiveUtils.isPf2e()) {
-				return await pToken.actor.system.attributes.perception?.dc;
+				return await pToken.actor.system.perception?.dc;
 			}
 			else {
 				let vRollData = {actor : pToken.actor};
@@ -451,8 +462,8 @@ class VisionUtils {
 	static VisionLevel(pToken) {
 		let vVLevel = cVisionLevel.Normal;
 		
-		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.traits?.senses?.length) {
-			let vsenses = pToken.actor.system.traits.senses;
+		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.perception?.senses?.length) {
+			let vsenses = pToken.actor.system.perception.senses;
 			
 			if (vsenses.find(vsense => (vsense.type == "darkvision") && (vsense.range > 0))) {
 				vVLevel = cVisionLevel.TotalDark;

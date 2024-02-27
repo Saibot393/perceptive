@@ -7,7 +7,7 @@
     "name": "saibot"
     }
   ],
-  "version": "3.2.1",
+  "version": "3.2.2",
   "compatibility": {
     "minimum": "11",
     "verified": "11"
@@ -70,7 +70,7 @@
 	}
   ],
   "url": "https://github.com/Saibot393/perceptive",
-  "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v3.2.1.zip",
+  "download": "https://github.com/Saibot393/perceptive/archive/refs/tags/v3.2.2.zip",
   "manifest": "https://github.com/Saibot393/perceptive/releases/latest/download/module.json",
   "readme": "https://github.com/Saibot393/perceptive/blob/main/README.md",
   "changelog": "https://github.com/Saibot393/perceptive/blob/main/CHANGELOG.md",

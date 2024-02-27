@@ -606,6 +606,9 @@ class PerceptiveSheetSettings {
 			case "numberinterval":
 				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}" ${vlockedstate}><label>${vNumberSeperator}</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}" ${vlockedstate}>`;
 				break;
+			case "numberxy":
+				vnewHTML = vnewHTML + `<label>x:</label><input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}" ${vlockedstate}><label>y:</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}" ${vlockedstate}>`;
+				break;
 		}
 			
 		vnewHTML = vnewHTML + `</div>`;

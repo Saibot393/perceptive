@@ -69,7 +69,6 @@ class PerceptiveMouseHandler {
 			
 			DoorControl.prototype.onclick = async function (pEvent) {
 				if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
-					console.log("ohoh");
 					if (vOldDoorCall) {
 						let vDoorCallBuffer = vOldDoorCall.bind(this);
 						vDoorCallBuffer(pEvent);
@@ -167,7 +166,7 @@ class PerceptiveMouseHandler {
 	//ons	
 	static async onDoorLeftClick(pDoorEvent, pWall) {
 		let vOldCall = await Hooks.call(cModuleName + "." + "DoorLClick", pWall.document, FCore.keysofevent(pDoorEvent));
-		console.log(vOldCall);
+		
 		return vOldCall;
 	} 
 	

@@ -183,6 +183,10 @@ class PerceptiveSystemUtils {
 	}
 	
 	static StealthDCPf2e(pActor) {
+		if (pActor?.system.skills.stealth) {
+			//special case for NPCs
+			return pActor?.system.skills.stealth.dc;
+		}
 		return pActor?.system.skills.ste.dc;
 	}
 	

@@ -297,7 +297,7 @@ class PerceptiveFlags {
 	static #PerceptiveFlags (pObject) {	
 	//returns all Module Flags of pObject (if any)
 		if (pObject) {
-			if (pObject.flags.hasOwnProperty(cModuleName)) {
+			if (pObject.flags?.hasOwnProperty(cModuleName)) {
 				return pObject.flags[cModuleName];
 			}
 		}

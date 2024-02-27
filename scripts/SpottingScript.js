@@ -501,7 +501,7 @@ class SpottingManager {
 					console.log("perceptive: Range Check AP:", vSpotables[i].object.center, {RangeReplacement : pInfos.Ranges, Tolerance : vTolerance}, vLocalVisionData);
 				}
 		
-				let vRangeInfo = {};
+				let vRangeInfo = {visionPoint : pInfos.visionPoint};
 				
 				let vInRange = false;
 				
@@ -782,7 +782,6 @@ class SpottingManager {
 								let vPreviousState = PerceptiveSystemUtils.StealthStatePf2e(pObjects[i], vEffectInfos);
 								
 								let vPreviousFormula = PerceptiveFlags.EffectInfos(vEffectInfos.sneakEffect)?.RollFormula;
-								
 								if ((vPreviousState == "sneak") && ((!pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 1) || (pInfos.PassivSpot && pInfos.TokenSuccessDegrees[pObjects[i].id] == 0))) {
 									//only normal failure/success, replace sneak with stealth
 									vResetallStealthValues = false;
@@ -891,14 +890,12 @@ class SpottingManager {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
 			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall.document.parent.id == pSpotter.parent.id))) {
 				//different scenes
-				console.log(1);
 				return false;
 			}
 			
 			if (pChecks.Effects) {
 				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && !pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible")) && !(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden")))) {
 					//no invisibility
-					console.log(2);
 					return true;
 				}
 			}
@@ -906,7 +903,6 @@ class SpottingManager {
 			if (pChecks.LOS) {
 				if (!pSpotter.object?.los?.contains(pObject.center.x, pObject.center.y)) {
 					//not in FOV
-					console.log(3);
 					return false;
 				}
 			}
@@ -937,12 +933,8 @@ class SpottingManager {
 				
 				const cRangeDCModifier = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[0]);
 				const cRangeDCInterval = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[1])*cRangeFactor;
-			
-				console.log(vRange);
-				console.log(game.settings.get(cModuleName, "SpottingConeRange"));
-				console.log(pSpotter.rotation);
+
 				if (!VisionUtils.inVisionRange([pSpotter], vSpotPoint, vRange, game.settings.get(cModuleName, "SpottingConeRange")*cRangeFactor, pSpotter.rotation, 0, vRangeInfo)) {
-					console.log(4);
 					return false;
 				}
 				
@@ -955,7 +947,6 @@ class SpottingManager {
 			//await PerceptiveFlags.CheckLightLevel(pObject);
 			
 			//check if pObject can currently be spotted by pSpotter
-			console.log(5);
 			return Boolean(PerceptiveFlags.canbeSpottedwith(pObject, [pSpotter], VisionUtils.VisionLevel(pSpotter), await VisionUtils.PassivPerception(pSpotter), vRangeModifier, {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : !pChecks.canbeSpotted}));
 		}
 		
@@ -1484,7 +1475,6 @@ class SpottingManager {
 	static onDoorLClick(pWall, pKeyInfo) {
 		if (!(PerceptiveFlags.canbeSpotted(pWall) && pWall.door == 2)) {
 			//door is not secret or not spottable, spotting has no business in handling this
-						console.log(true);
 			return true;
 		}
 		
