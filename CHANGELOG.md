@@ -1,3 +1,8 @@
+## v3.2.2
+- Improved levels compatibility
+- Fixed some bugs
+- Updated PF2e compatibility
+
 ## v3.2.1
 - Bug fix and improvement for `isspottedby` api 
 
