@@ -1,3 +1,6 @@
+## v3.2.1
+- Bug fix and improvement for `isspottedby` api 
+
 ## v3.2.0
 - Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility (included LOS check)
 - Spotted secret doors will no longer become normal doors when clicked
