@@ -1,3 +1,6 @@
+## v3.2.3
+- Small bug fix
+
 ## v3.2.2
 - Improved levels compatibility
 - Fixed some bugs
