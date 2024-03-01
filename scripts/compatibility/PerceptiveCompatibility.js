@@ -229,6 +229,38 @@ Hooks.once("init", () => {
 		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
+		
+		Hooks.once("ready", () => {
+			let vprevrunActions = TileDocument.prototype.runActions;
+			
+			let vnewrunActions = async function (context, start = 0, resume = null, stopCallback = null) {
+				if (!resume && game.settings.get(cModuleName, "disableSpottableMATTTiles")) {
+					let vSpottingFunction = game.modules.get(cModuleName).api.isSpottedby;
+					
+					if (PerceptiveFlags.canbeSpotted(this)) {
+						let vFound = false;
+					
+						for (let i = 0; i < context.tokens.length; i++) {
+							vFound = vFound || await vSpottingFunction(this, context.tokens[i], { LOS: false, Range: true, Effects: true, canbeSpotted: true })
+						}
+						
+						if (context.tokens.length == 0 && game.user.isGM) {
+							vFound = true;
+						}
+						
+						if (!vFound) {
+							return false;
+						}
+					}
+				}
+				
+				let vCall = vprevrunActions.bind(this);
+				
+				vCall(context, start, resume, stopCallback);
+			};
+			
+			TileDocument.prototype.runActions = vnewrunActions;
+		});
 	}
 });
 

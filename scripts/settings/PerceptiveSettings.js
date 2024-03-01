@@ -1,6 +1,6 @@
 import { cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy, cMATT} from "../compatibility/PerceptiveCompUtils.js";
 import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
@@ -418,6 +418,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		type: Boolean,
 		default: false
 	  }); 	  
+	  
+	  game.settings.register(cModuleName, "disableSpottableMATTTiles", {
+		name: Translate("Settings.disableSpottableMATTTiles.name"),
+		hint: Translate("Settings.disableSpottableMATTTiles.descrp"),
+		scope: "world",
+		config: PerceptiveCompUtils.isactiveModule(cMATT),
+		type: Boolean,
+		default: false
+	  }); 
  
 	//formulas
 	  game.settings.register(cModuleName, "PassivePerceptionFormula", {

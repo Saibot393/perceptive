@@ -554,7 +554,6 @@ class SpottingManager {
 				}
 			}
 			
-			console.log(pInfos.Skill);
 			if (!pInfos.isLingeringAP && !pInfos.Skill) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
@@ -941,8 +940,6 @@ class SpottingManager {
 				
 				vRangeModifier = VisionUtils.RangeDCModifier(vRangeInfo, cRangeDCInterval, cRangeDCModifier);
 			}
-			
-
 			
 			//check illumination of pObject
 			//await PerceptiveFlags.CheckLightLevel(pObject);

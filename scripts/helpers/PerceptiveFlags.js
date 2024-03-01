@@ -1321,7 +1321,7 @@ class PerceptiveFlags {
 			
 			return false;
 		}
-		
+
 		return (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
