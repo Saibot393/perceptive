@@ -96,6 +96,9 @@ class PerceptiveUtils {
 	
 	static OwnerIDs(pToken) {} //returns IDs of owners of this token
 	
+	//versions
+	static versionCompare(pVersion, pCompare) {}
+	
 	//IMPLEMENTATIONS
 	
 	//Identification	
@@ -606,6 +609,24 @@ class PerceptiveUtils {
 	static OwnerIDs(pToken) {
 		
 	} 
+	
+	//versions
+	static versionCompare(pVersion, pCompare) {
+		let vVersionNumbers = pVersion.split(".");
+		let vCompareNumbers = pCompare.split(".");
+		
+		for (let i = 0; i < Math.min(vVersionNumbers.length, vCompareNumbers.length); i++) {
+			if (vVersionNumbers[i] < vCompareNumbers[i]) {
+				return -1;
+			}
+			
+			if (vVersionNumbers[i] > vCompareNumbers[i]) {
+				return 1;
+			}
+		}
+		
+		return 0;
+	}
 }
 
 function Translate(pName, pWithModuleTag = true){

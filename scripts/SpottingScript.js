@@ -827,30 +827,42 @@ class SpottingManager {
 	}
 	
 	static RequestresetStealth(pObjects, pInfos) {
+		let vObjectIDs = {};
+		
+		vObjectIDs.Tokens = pObjects.filter(vObject => vObject?.documentName == "Token").map(vToken => vToken.id);
+		
+		vObjectIDs.Walls = pObjects.filter(vObject => vObject?.documentName == "Wall").map(vWall => vWall.id);
+		
+		vObjectIDs.Tiles = pObjects.filter(vObject => vObject?.documentName == "Tile").map(vTile => vTile.id);
+		
 		if (game.user.isGM) {
-			SpottingManager.resetStealthData(pObjects, pInfos);
+			//SpottingManager.resetStealthData(pObjects, pInfos);
+			SpottingManager.resetStealthRequest(vObjectIDs, canvas.scene.id, pInfos);
 		}
 		else {
-			let vObjectIDs = {};
-			
-			vObjectIDs.Tokens = pObjects.filter(vObject => vObject?.documentName == "Token").map(vToken => vToken.id);
-			
-			vObjectIDs.Walls = pObjects.filter(vObject => vObject?.documentName == "Wall").map(vWall => vWall.id);
-			
-			vObjectIDs.Tiles = pObjects.filter(vObject => vObject?.documentName == "Tile").map(vTile => vTile.id);
-			
 			game.socket.emit("module." + cModuleName, {pFunction : "resetStealthRequest", pData : {pObjectIDs : vObjectIDs, pSceneID : canvas.scene.id, pInfos : pInfos}});
 		}
 	}
 	
 	static resetStealthRequest(pObjectIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			if ((pInfos.Spotted && game.settings.get(cModuleName, "MakeSpottedTokensVisible")) || (pInfos.DoorClicked)) {
-				let vObjects = [];
+			let vSettingPossible = game.settings.get(cModuleName, "MakeSpottedTokensVisible") == "always" || (pInfos.inCombat && game.settings.get(cModuleName, "MakeSpottedTokensVisible") == "incombatonly") || (!pInfos.inCombat && game.settings.get(cModuleName, "MakeSpottedTokensVisible") == "outcombatonly")
+
+			let vObjects = [];
+			
+			vObjects = vObjects.concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), game.scenes.get(pSceneID)));
+			
+			vObjects = vObjects.concat(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)));
+
+			let vIndividualReveals = vObjects.filter(vObject => PerceptiveFlags.RevealwhenSpotted(vObject));
+
+			console.log(vIndividualReveals);
+			if ((pInfos.Spotted && (vSettingPossible || vIndividualReveals.length > 0)) || (pInfos.DoorClicked)) {
+				if (!vSettingPossible && !pInfos.DoorClicked) {
+					vObjects = vIndividualReveals;
+				}
 				
-				vObjects = vObjects.concat(PerceptiveUtils.TokensfromIDs(pObjectIDs.Tokens.concat(pObjectIDs.Tiles), game.scenes.get(pSceneID)));
-				
-				vObjects = vObjects.concat(PerceptiveUtils.WallsfromIDs(pObjectIDs.Walls, game.scenes.get(pSceneID)));
+				console.log(vObjects);
 				
 				SpottingManager.resetStealthData(vObjects, pInfos);
 			}
@@ -1319,12 +1331,14 @@ class SpottingManager {
 		}
 		
 		//effect resets
-		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible")) {
+		if (game.settings.get(cModuleName, "MakeSpottedTokensVisible") != "never" || pObjects.find(vObject => PerceptiveFlags.RevealwhenSpotted(vObject))) {
 			pInfos.Spotted = true;
+			pInfos.inCombat = pSpotters.find(vToken => vToken.inCombat);
 			
 			let vUnstealthObjects = pObjects;
-			
-			if (!game.settings.get(cModuleName, "RevealAllies")) {
+			console.log(vUnstealthObjects);
+			let vSettingPossible = game.settings.get(cModuleName, "RevealAllies") == "always" || (pInfos.inCombat && game.settings.get(cModuleName, "RevealAllies") == "incombatonly") || (!pInfos.inCombat && game.settings.get(cModuleName, "RevealAllies") == "outcombatonly")
+			if (!vSettingPossible) {
 				vUnstealthObjects = vUnstealthObjects.filter(vObject => vObject.disposition != vLocalVisionData.vlastDisposition)
 			}
 			

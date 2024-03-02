@@ -381,12 +381,24 @@
 			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Aufgedeckte Figuren sichtbar machen",
-				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"incombatonly"		: "Nur in Kämpfen",
+					"outcombatonly"		: "Nur außerhalb von Kämpfen"
+				}
 			},
 			
 			"RevealAllies" : {
 				"name"					: "Aufgedeckte verbündete Figuren sichtbar machen",
-				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)"
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"incombatonly"		: "Nur in Kämpfen",
+					"outcombatonly"		: "Nur außerhalb von Kämpfen"
+				}
 			},
 
 			"LingeringAP" : {
@@ -412,6 +424,11 @@
 			"RevealSpottedDooronClick" : {
 				"name"					: "Audgedeckte Türen beim anklicken sichtbar machen",
 				"descrp"				: "Ob aufgedeckte Geheimtüren beim anklicken zu normalen Türen werden sollen"
+			},
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Unsichtbare MATT Fliesen deaktivieren",
+				"descrp"				: "Ob aufdeckbare Fliesen welche nicht entdeckt wurden für MATT Zwecke deaktiviert werden sollen"
 			},
 			
 			"ForceInvertIgnoreRollKey" : {
@@ -672,6 +689,11 @@
 			"canbeSpottedFlag" : {
 				"name" 					: "Kann aufgedeckt werden",
 				"descrp"				: "Ob diese Tür aufgedeckt werden kann (Passiv order Aktiv)"
+			},
+			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Aufdecken wenn entdeckt",
+				"descrp"				: "Ob dieses Objekt aufgedeckt werden soll wenn es entdeckt wird (überschreibt Welteinstellungen wenn aktiv)"
 			},
 			
 			"PPDCFlag" : {

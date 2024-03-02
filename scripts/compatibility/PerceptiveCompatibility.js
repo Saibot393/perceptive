@@ -231,6 +231,7 @@ Hooks.once("init", () => {
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
 		
 		Hooks.once("ready", () => {
+			//ugly? yes, but the only way i found, so it stays
 			let vprevrunActions = TileDocument.prototype.runActions;
 			
 			let vnewrunActions = async function (context, start = 0, resume = null, stopCallback = null) {

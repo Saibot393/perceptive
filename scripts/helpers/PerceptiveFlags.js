@@ -57,6 +57,7 @@ const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DC
 const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of the perceptive tile
 const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this object can be seen
 const cSpottingMessageF = "SpottingMessageFlag"; //Flag to store the chat message when this object is spotted
+const cRevealwhenSpottedF = "RevealwhenSpottedFlag"; //Flag to make object visible when spotted
 
 const cVisionChannelsF = "VisionChannelsFlag"; //FLag to store the vision channels of object
 const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
@@ -64,7 +65,7 @@ const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cVisionChannelsF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF, cVisionChannelsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -244,6 +245,8 @@ class PerceptiveFlags {
 	static SpottingMessage(pObject) {} //returns the spotting message displayed when pObject is spotted
 	
 	static hasSpottingMessage(pObject) {} //returns wether pObject has a Spotting Message
+	
+	static RevealwhenSpotted(pObject) {} //returns if pObject should be revealed when spotted
 	
 	//Vision channels
 	static getVisionChannels(pObject, pRaw = false) {} //returns the vision channels of pObject
@@ -776,6 +779,19 @@ class PerceptiveFlags {
 		}
 		
 		return ""; //default if anything fails		
+	}
+	
+	static #RevealwhenSpottedFlag (pObject) {
+	//returns content of RevealwhenSpottedFlag of pObject (boolean)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cRevealwhenSpottedF)) {
+				return vFlag.RevealwhenSpottedFlag;
+			}
+		}
+		
+		return false; //default if anything fails		
 	}
 	
 	static #VisionChannelsFlag (pObject) {
@@ -1659,6 +1675,10 @@ class PerceptiveFlags {
 	
 	static hasSpottingMessage(pObject) {
 		return PerceptiveFlags.SpottingMessage(pObject).length > 0;
+	}
+	
+	static RevealwhenSpotted(pObject) {
+		return this.#RevealwhenSpottedFlag(pObject);
 	}
 	
 	//Vision channels

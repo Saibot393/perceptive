@@ -381,12 +381,24 @@
 			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Make spotted tokens visible",
-				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone"
+				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
 			},
 			
 			"RevealAllies" : {
 				"name"					: "Make allied tokens visible",
-				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
 			},
 
 			"LingeringAP" : {
@@ -413,6 +425,11 @@
 				"name"					: "Make spotted door visible on click",
 				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
 			},				
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Disable invisible MATT tiles",
+				"descrp"				: "If spottable tiles that have not been spotted should become inactive for MATT purposes"
+			},	
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
@@ -643,9 +660,9 @@
 				"name" 					: "Door hinge position",
 				"descrp"				: "The position a which the doors hinge is located",
 				"options" : {
-					"0"				: "Left",
-					"1"				: "Right",
-					"2"				: "Center"
+					"0"					: "Left",
+					"1"					: "Right",
+					"2"					: "Center"
 				}
 			},
 			
@@ -672,6 +689,11 @@
 			"canbeSpottedFlag" : {
 				"name" 					: "Can be spotted",
 				"descrp"				: "If this door can be spotted with perception (passive or active)"
+			},
+			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Reveal when spotted",
+				"descrp"				: "If this object should be revealed when spotted (overrides game settings when active)"
 			},
 			
 			"PPDCFlag" : {

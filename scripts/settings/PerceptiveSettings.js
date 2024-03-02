@@ -17,6 +17,13 @@ const cPlaySoundIcon = "fa-solid fa-play";
 const cVCactive = true;
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
+  game.settings.register(cModuleName, "lastVersion", {
+	scope: "world",
+	config: true,
+	type: String,
+	default: "0.0.0"
+  }); 
+
   //Settings
   //general
   game.settings.register(cModuleName, "SplitInteractionDistances", {
@@ -365,8 +372,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
 		scope: "world",
 		config: true,
-		type: Boolean,
-		default: false
+		type: String,
+		choices: {
+			"never": Translate("Settings.MakeSpottedTokensVisible.options.never"),
+			"always": Translate("Settings.MakeSpottedTokensVisible.options.always"),
+			"incombatonly": Translate("Settings.MakeSpottedTokensVisible.options.incombatonly"),
+			"outcombatonly": Translate("Settings.MakeSpottedTokensVisible.options.outcombatonly")	
+		},
+		default: "never"
 	  }); 
 	  
 	  game.settings.register(cModuleName, "RevealAllies", {
@@ -374,8 +387,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.RevealAllies.descrp"),
 		scope: "world",
 		config: true,
-		type: Boolean,
-		default: false
+		type: String,
+		choices: {
+			"never": Translate("Settings.RevealAllies.options.never"),
+			"always": Translate("Settings.RevealAllies.options.always"),
+			"incombatonly": Translate("Settings.RevealAllies.options.incombatonly"),
+			"outcombatonly": Translate("Settings.RevealAllies.options.outcombatonly")	
+		},
+		default: "never"
 	  }); 
 
 	  game.settings.register(cModuleName, "LingeringAP", {
@@ -1064,7 +1083,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.LingeringAP"],
 												[data-setting-id="perceptive.LingeringAPRadius"],
 												[data-setting-id="perceptive.LingeringAPDuration"],
-												[data-setting-id="perceptive.RevealSpottedDooronClick"]`);
+												[data-setting-id="perceptive.RevealSpottedDooronClick"],
+												[data-setting-id="perceptive.disableSpottableMATTTiles"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],
@@ -1118,4 +1138,15 @@ Hooks.on("ready", function() {
 		game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="]),
 		game.settings.set(cModuleName, "CritMethod", "CritMethod-natCritpm10")
 	}
+	
+	/*
+	//version setting fixing
+	let vCurrentVersion = game.modules.get(cModuleName).version;
+	let vLastVersion = game.settings.get(cModuleName, "lastVersion");
+	
+	if (PerceptiveUtils.versionCompare(vLastVersion, vCurrentVersion) < 0) {
+	}
+	
+	game.settings.set(cModuleName, "lastVersion", vCurrentVersion);
+	*/
 });

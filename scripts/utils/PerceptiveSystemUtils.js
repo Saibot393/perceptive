@@ -264,8 +264,8 @@ class PerceptiveSystemUtils {
 						canvas.templates.activate();
 						
 						vTemplate.object.controlIcon.onclick = function() {
-																			canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [vTemplate.id]);
-																			vMacro(((vTemplate.rotation + (360 - cConeRotCorrection) - vControlled.document.rotation))%360);
+							canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [vTemplate.id]);
+							vMacro(((vTemplate.rotation + (360 - cConeRotCorrection) - vControlled.document.rotation))%360);
 						};
 					}
 					else {
