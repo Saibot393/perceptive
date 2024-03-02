@@ -120,6 +120,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
 
 #### Walls/Tokens/Tiles:
 - Can be spotted: to activate the spotting feature on this wall
+- Reveal when spotted: to make specific objects visible when spotted (overrides game settings when active)
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
 - Spotting Range: to set a specific range in which this object can be spotted
@@ -238,6 +239,7 @@ The module should be compatible with all game systems and most modules on Foundr
 - [Monk's Active Tile Triggers](https://foundryvtt.com/packages/monks-active-tiles)
   - Adds additional Perceptive related trigger for spottable objects (adds a new triggers tab to spottable tokens)
   - Adds a textbox to enter the tile which should be triggered for spottable tokens
+  - Adds setting Disable invisible MATT tiles to disable spottable invisible MATT Tiles
   - The following landings can be optionally used to differentiate between the different Perceptive trigger conditions: `PassiveSpot`, `ActiveSpot`
   - Adds additional Actions & Filters:
     - Action Spot object to spot specified objects
