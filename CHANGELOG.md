@@ -1,3 +1,8 @@
+## v3.3.0
+- Added options "in combat only" and "out of combat only" to "Make spotted tokens visible" and "Make allied tokens visible"
+- Added setting Disable invisible MATT tiles to disable spottable invisible MATT Tiles
+- Added object setting Reveal when spotted to make specific objects visible when spotted (overrides game settings when active)
+
 ## v3.2.3
 - Small bug fix
 
