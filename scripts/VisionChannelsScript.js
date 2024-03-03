@@ -1,5 +1,5 @@
 import { PerceptiveUtils, cModuleName, Translate } from "./utils/PerceptiveUtils.js";
-import { PerceptiveFlags } from "./helpers/PerceptiveFlags.js";
+import { PerceptiveFlags, cVisionChannelsF } from "./helpers/PerceptiveFlags.js";
 import { vDCVisionFunctions, vTokenVisionFunctions, vTileVisionFunctions, vWallInclusionFunctions } from "./helpers/BasicPatches.js";
 import { cDefaultChannel, VisionChannelsWindow, VisionChannelsUtils } from "./helpers/VisionChannelsHelper.js";
 import { VisionUtils } from "./utils/VisionUtils.js";
@@ -118,8 +118,12 @@ class VisionChannelsManager {
 	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {
-		if (pToken.controlled) {
+		if (pToken.object?.controlled) {
 			VisionChannelsManager.updateVisionValues();
+			
+			if (pchanges?.flags?.perceptive?.hasOwnProperty(cVisionChannelsF)) {
+				pToken.object.updateVisionSource();
+			}
 		}
 	}
 }
@@ -244,8 +248,6 @@ Hooks.once("ready", function() {
 	Hooks.on(cModuleName+".updateVCVision", async (pObject) => {
 		if (pObject.object?.controlled && pObject.documentName == 'Token') {
 			await VisionChannelsManager.updateVisionValues();
-			
-			console.log("check");
 			
 			pObject.object.updateVisionSource();
 		}

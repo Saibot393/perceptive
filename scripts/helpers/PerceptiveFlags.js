@@ -265,9 +265,9 @@ class PerceptiveFlags {
 	
 	static getVCMovement(pWall) {} //returns the Sight channels of this wall
 	
-	static AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
+	static async AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
 	
-	static RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
+	static async RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
 	
 	static getReceiverFilters(pObject) {} //returns the receiver filters of pObject
 	
@@ -1756,7 +1756,7 @@ class PerceptiveFlags {
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Movement);				
 	}
 	
-	static AddChannel(pObject, pChannelID, pType) {
+	static async AddChannel(pObject, pChannelID, pType) {
 		let Channels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (!Channels[pChannelID]) {
@@ -1765,19 +1765,19 @@ class PerceptiveFlags {
 		
 		Channels[pChannelID][pType] = true;
 		
-		this.#setVisionChannels(pObject, Channels);
+		await this.#setVisionChannels(pObject, Channels);
 		
 		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
 	}
 	
-	static RemoveChannel(pObject, pChannelID, pType) {
+	static async RemoveChannel(pObject, pChannelID, pType) {
 		let Channels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (Channels[pChannelID]) {
-			delete Channels[pChannelID][pType];	
+			Channels[pChannelID][pType] = false;	
 		}
 
-		this.#setVisionChannels(pObject, Channels);	
+		await this.#setVisionChannels(pObject, Channels);	
 
 		Hooks.callAll(cModuleName+".updateVCVision", (pObject));		
 	}
