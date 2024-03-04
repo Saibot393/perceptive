@@ -353,7 +353,7 @@ class PerceptiveCompUtils {
 			}
 			
 			if (isNaN(vmiddle) && vdocument.flags[cLevels]) {
-				vmiddle = (vdocument.flags[cWallHeight].rangeBottom + vdocument.flags[cWallHeight].rangeTop)/2;
+				vmiddle = (vdocument.flags[cLevels].rangeBottom + vdocument.flags[cLevels].rangeTop)/2;
 			}
 			
 			if (!isNaN(vmiddle)) {
