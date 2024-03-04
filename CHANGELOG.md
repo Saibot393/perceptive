@@ -1,3 +1,10 @@
+## v3.3.2
+- Small bug fix for levels compatibility
+
+## v3.3.1
+- Fixed bug with VC macros
+- Improved VC updates
+
 ## v3.3.0
 - Added options "in combat only" and "out of combat only" to "Make spotted tokens visible" and "Make allied tokens visible"
 - Added setting Disable invisible MATT tiles to disable spottable invisible MATT Tiles
