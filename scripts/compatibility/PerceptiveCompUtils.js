@@ -339,7 +339,7 @@ class PerceptiveCompUtils {
 	static WHLVLzmiddle(pObject) {
 		if (!pObject) return;
 		
-		if (pObject.hasOwnProperty("losHeight")) {
+		if (pObject.losHeight != undefined) {
 			return pObject.losHeight;
 		}
 		
@@ -352,8 +352,14 @@ class PerceptiveCompUtils {
 				vmiddle = (vdocument.flags[cWallHeight].bottom + vdocument.flags[cWallHeight].top)/2;
 			}
 			
-			if (isNaN(vmiddle) && vdocument.flags[cLevels]) {
-				vmiddle = (vdocument.flags[cLevels].rangeBottom + vdocument.flags[cLevels].rangeTop)/2;
+			if (isNaN(vmiddle) && CONFIG.Levels) {
+				let range = CONFIG.Levels.helpers.getRangeForDocument(vdocument);
+				
+				vmiddle = (range.rangeBottom + range.rangeTop)/2;
+				
+				if (isNaN(vmiddle) && range.rangeBottom != undefined && range.rangeTop != undefined) {
+					vmiddle = 0;
+				}
 			}
 			
 			if (!isNaN(vmiddle)) {

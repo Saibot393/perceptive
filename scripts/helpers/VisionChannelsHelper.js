@@ -58,7 +58,7 @@ class VisionChannelsWindow extends Application {
 			classes: [cWindowID],
 			popOut: true,
 			width: 800,
-			height: 400,
+			height: 600,
 			template: `modules/${cModuleName}/templates/${cWindowID}.html`,
 			jQuery: true,
 			title: Translate(cWindowID + ".titles." + "VisionChannels"),
