@@ -138,7 +138,7 @@ Hooks.once("ready", function() {
 	
 	if (game.settings.get(cModuleName, "ActivateVCs")) {
 		vDCVisionFunctions.push(function(pObject) {
-			if (vLocalVisionData.vCompleteVision) {return true};
+			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : pObject.center,
@@ -159,7 +159,7 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
-			if (vLocalVisionData.vCompleteVision || pObject.controlled) {return true};
+			if (vLocalVisionData.vCompleteVision || pObject.controlled) {return undefined};
 			
 			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : VisionChannelsManager.VisionPoint(pObject),
@@ -180,7 +180,7 @@ Hooks.once("ready", function() {
 		});
 		
 		vTileVisionFunctions.push(function(pObject) {
-			if (vLocalVisionData.vCompleteVision) {return true};
+			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
 			let vEmitterVCs = PerceptiveFlags.getVCEmitters(pObject.document);
 			
@@ -205,7 +205,7 @@ Hooks.once("ready", function() {
 		});		
 		
 		vWallInclusionFunctions.push(function(pWall, pBounds, pCheck) {
-			if (vLocalVisionData.vCompleteVision) {return};
+			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
 			let vWallChannels = [];
 			

@@ -880,6 +880,67 @@
 							"name"			: "Target"
 						}
 					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Give vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> to <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Give as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Remove vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> from <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Remove as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Reset \"spotted by\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Set \"can be spotted\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span> to <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Toggle \"can be spotted\"</span> of <span class=\"entity-style\">{pEntities}</span>"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Set to",
+							"options" : {
+								"true"		: "True",
+								"false"		: "False",
+								"toggle"	: "Toggle value"
+							}
+						}
+					}
 				}
 			}
 		}

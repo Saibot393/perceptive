@@ -160,6 +160,10 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
 	
+	static async setcanbeSpotted(pObject, pStatus) {} //sets pObject to can be spotted status to pStatus
+	
+	static async togglecanbeSpotted(pObject) {} //toggles the can be spotted state of pObject
+	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
@@ -908,6 +912,16 @@ class PerceptiveFlags {
 		return false;
 	}
 	
+	static async #setcanbeSpotted (pObject, pContent) {
+		//sets content of isSpottedbyFlag (boolean)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, ccanbeSpottedF, Boolean(pContent)); 
+			
+			return true;
+		}
+		return false;		
+	}
+	
 	static async #setSpottedby (pObject, pContent) {
 		//sets content of isSpottedbyFlag (array of IDs)
 		if (pObject) {
@@ -973,16 +987,6 @@ class PerceptiveFlags {
 			return true;
 		}
 		return false;
-	}
-	
-	static async #setcanbeSpotted (pObject, pContent) {
-		//sets content of canbeSpottedFlag (Boolean)
-		if (pObject) {
-			await pObject.setFlag(cModuleName, ccanbeSpottedF, Boolean(pContent)); 
-			
-			return true;
-		}
-		return false;					
 	}
 	
 	static async #setLingeringAP (pObject, pContent) {
@@ -1309,6 +1313,14 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {
 		return PerceptiveFlags.#canbeSpottedFlag(pObject);
+	}
+	
+	static async setcanbeSpotted(pObject, pStatus) {
+		return await PerceptiveFlags.#setcanbeSpotted(pObject, pStatus);
+	} 
+	
+	static async togglecanbeSpotted(pObject) {
+		return await PerceptiveFlags.setcanbeSpotted(pObject, !PerceptiveFlags.canbeSpotted(pObject));
 	}
 	
 	static async MakeSpottable(pObject) {

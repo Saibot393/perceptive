@@ -321,11 +321,13 @@ class VisionChannelsUtils {
 	static async ApplyGraphics(pObject, pChannel) {} //applies the effect of pChannel to the mesh of pObject
 	
 	//vc managing
-	static AddChannelstoObject(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
+	static async AddChannelstoObject(pObjects, pChannels, pTypes) {} //adds pChannels to pObjects
 	
-	static RemoveChannelsfromObject(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
+	static async RemoveChannelsfromObject(pObjects, pChannels, pTypes) {} //removes pChannels from pObjects
 	
 	static ValidVCType(pObject) {} //returns valid VC types for pObject
+	
+	static VCNames() {} //returns an object containing ids and names of all currently available VCs
 	
 	//ranges
 	static async CalculateRange(pChannelID, pToken) {} //returns the range pToken has on pChannel based on the channels range formuala
@@ -599,7 +601,7 @@ class VisionChannelsUtils {
 	}
 	
 	//vc managing
-	static AddChannelstoObject(pObjects, pChannels, pTypes) {
+	static async AddChannelstoObject(pObjects, pChannels, pTypes) {
 		let vValidTypes;
 		
 		for (let i = 0; i < pObjects.length; i++) {
@@ -607,13 +609,13 @@ class VisionChannelsUtils {
 			
 			for (let j = 0; j < pChannels.length; j++) {
 				for (let k = 0; k < vValidTypes.length; k++) {
-					PerceptiveFlags.AddChannel(pObjects[i], pChannels[j], vValidTypes[k]);
+					await PerceptiveFlags.AddChannel(pObjects[i], pChannels[j], vValidTypes[k]);
 				}
 			}
 		}
 	}
 	
-	static RemoveChannelsfromObject(pObjects, pChannels, pTypes) {
+	static async RemoveChannelsfromObject(pObjects, pChannels, pTypes) {
 		let vValidTypes;
 		
 		for (let i = 0; i < pObjects.length; i++) {
@@ -621,7 +623,7 @@ class VisionChannelsUtils {
 			
 			for (let j = 0; j < pChannels.length; j++) {
 				for (let k = 0; k < vValidTypes.length; k++) {
-					PerceptiveFlags.RemoveChannel(pObjects[i], pChannels[j], vValidTypes[k]);
+					await PerceptiveFlags.RemoveChannel(pObjects[i], pChannels[j], vValidTypes[k]);
 				}
 			}
 		}		
@@ -646,6 +648,17 @@ class VisionChannelsUtils {
 		
 		return [];
 	} 
+	
+	static VCNames() {
+		let vChannels = game.settings.get(cModuleName, cSettingName);
+		let vCNames = {};
+		
+		for (let vChannelsKey of Object.keys(vChannels)) {
+			vCNames[vChannelsKey] = vChannels[vChannelsKey].Name;
+		}
+		
+		return vCNames;
+	}
 	
 	//ranges
 	static async CalculateRange(pChannelID, pToken) {

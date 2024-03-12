@@ -880,6 +880,67 @@
 							"name"			: "Ziel"
 						}
 					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Gebe Sichtkanal",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> an <span class=\"entity-style\">{pEntities}</span> als <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanal"
+						},
+						"type" : {
+							"name"			: "Gebe als",
+							"options" : {
+								"Emits"		: "Sendet",
+								"Receives"	: "Empfängt",
+								"Sight"		: "Sicht (nur Wände)",
+								"Movement"	: "Bewegung (nur Wände)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Entferne Sichtkanal",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> von <span class=\"entity-style\">{pEntities}</span> als <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanal"
+						},
+						"type" : {
+							"name"			: "Entferne als",
+							"options" : {
+								"Emits"		: "Sendet",
+								"Receives"	: "Empfängt",
+								"Sight"		: "Sicht (nur Wände)",
+								"Movement"	: "Bewegung (nur Wände)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Resette \"Aufgedeckt von\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> bei <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Setze \"Kann aufgedeckt werden\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> von <span class=\"entity-style\">{pEntities}</span> auf <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Schalte \"Kann aufgedeckt werden\"</span> von <span class=\"entity-style\">{pEntities}</span> um"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Setze auf",
+							"options" : {
+								"true"		: "Wahr",
+								"false"		: "Falsch",
+								"toggle"	: "umschalten"
+							}
+						}
+					}
 				}
 			}
 		}
