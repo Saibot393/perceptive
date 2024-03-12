@@ -243,6 +243,10 @@ The module should be compatible with all game systems and most modules on Foundr
   - The following landings can be optionally used to differentiate between the different Perceptive trigger conditions: `PassiveSpot`, `ActiveSpot`
   - Adds additional Actions & Filters:
     - Action Spot object to spot specified objects
+    - Action Give vision channel to give a specified action chanel as a defined type to the target(s)
+    - Action Remove vision channel to remove a specified action chanel as a defined type from the target(s)
+    - Action Reset \"spotted by\" to reset the tokens list that has actively spotted this target
+    - Action Set \"can be spotted\" to set the can be spotted setting to a specific value or toggle it
     - Filter Filter objects spotted by to filter objects (not) spotted by specified tokens
     - Filter Filter tokens having spotted to filter tokens (not) having spotted a specified token
 - [Token Magic FX](https://foundryvtt.com/packages/tokenmagic/)
