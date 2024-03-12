@@ -1,3 +1,10 @@
+## v3.4.0
+- Added [MATT](https://foundryvtt.com/packages/monks-active-tiles) actions:
+    - Give vision channel to give a specified action chanel as a defined type to the target(s)
+    - Remove vision channel to remove a specified action chanel as a defined type from the target(s)
+    - Reset \"spotted by\" to reset the tokens list that has actively spotted this target
+    - Set \"can be spotted\" to set the can be spotted setting to a specific value or toggle it
+
 ## v3.3.3
 - Fixed levels related bug
 
