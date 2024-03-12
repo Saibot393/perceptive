@@ -1,3 +1,6 @@
+## v3.3.3
+- Fixed levels related bug
+
 ## v3.3.2
 - Small bug fix for levels compatibility
 
