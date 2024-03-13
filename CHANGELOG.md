@@ -1,3 +1,6 @@
+## v3.4.1
+- Added explicit support for [Level Up: Advanced 5th Edition (Official)](https://foundryvtt.com/packages/a5e)
+
 ## v3.4.0
 - Added [MATT](https://foundryvtt.com/packages/monks-active-tiles) actions:
     - Give vision channel to give a specified action chanel as a defined type to the target(s)
