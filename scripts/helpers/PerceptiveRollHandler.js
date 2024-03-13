@@ -24,6 +24,9 @@ class PerceptiveRollHandler {
 			if ((!keyboard.downKeys.has(game.keybindings.get(cModuleName, "IgnoreRoll")[0]?.key)) ^ (game.settings.get(cModuleName, "InvertIgnoreRollKey") || game.settings.get(cModuleName, "ForceInvertIgnoreRollKey"))) {
 				if ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "never") || ((game.settings.get(cModuleName, "MacroSeekBehaviour") == "incombatonly") && (!pMessage.actor?.inCombat))) {
 					if (PerceptiveSystemUtils.isSystemPerceptionRoll(pMessage, pRollInfos)) {
+						console.log(vActorID);
+						console.log( pMessage.rolls[0]);
+						console.log(pSenderID);
 						Hooks.call(cModuleName + ".PerceptionRoll", vActorID, pMessage.rolls[0], pSenderID);
 					}
 					else {

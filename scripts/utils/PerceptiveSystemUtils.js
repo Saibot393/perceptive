@@ -92,6 +92,9 @@ class PerceptiveSystemUtils {
 						
 							return vSystemInfo.roll.skillId == "prc";
 							break;
+						case cAdvanced5e:
+							return vSystemInfo.rollData?.find(vRoll => vRoll.label.includes(CONFIG.A5E.skills.prc));
+							break;
 						case cPf1eName:
 							pInfos["skill"] = vSystemInfo.subject?.skill;
 						
@@ -136,6 +139,9 @@ class PerceptiveSystemUtils {
 						case cDnD5e:
 							return vSystemInfo.roll?.type == "skill" && vSystemInfo.roll.skillId == "ste";
 							break;
+						case cAdvanced5e:
+							return vSystemInfo.rollData?.find(vRoll => vRoll.label.includes(CONFIG.A5E.skills.ste));
+							break;
 						case cPf1eName:
 							return vSystemInfo.subject?.skill == "ste";
 							break;
@@ -157,6 +163,7 @@ class PerceptiveSystemUtils {
 		switch (game.system.id) {
 			case cPf2eName:
 			case cDnD5e:
+			case cAdvanced5e:
 			case cPf1eName:
 				return true;
 				break;	
@@ -310,6 +317,9 @@ class PerceptiveSystemUtils {
 	static SystemdefaultPPformula() {
 		switch (game.system.id) {
 			case cDnD5e:
+				return "@actor.system.skills.prc.passive";
+				break;
+			case cAdvanced5e:
 				return "@actor.system.skills.prc.passive";
 				break;
 			default:
