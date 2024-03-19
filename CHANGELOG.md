@@ -1,3 +1,7 @@
+## v3.4.2
+- Fixed bug that prevented the "other dcs" menu from appearing
+- Hid accidentally exposed setting
+
 ## v3.4.1
 - Added explicit support for [Level Up: Advanced 5th Edition (Official)](https://foundryvtt.com/packages/a5e)
 
