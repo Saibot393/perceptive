@@ -367,8 +367,10 @@ class PerceptiveSheetSettings {
 	
 	//dialogs
 	static OpenotherSkillDCs(pApp) {
-		if (game.system?.model?.Actor?.character?.skills) {
-			let vSkills = Object.keys(game.system.model.Actor.character.skills);
+		let vSkillsObject = game.system?.model?.Actor?.character?.skills || CONFIG[game.system.id.toUpperCase()].skills;
+		
+		if (vSkillsObject) {
+			let vSkills = Object.keys(vSkillsObject);
 			
 			let vContent = `<p> ${Translate("SheetSettings."+ cotherSkillADCsF +".name")} </p>`;
 			
