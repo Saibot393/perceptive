@@ -19,7 +19,7 @@ const cVCactive = true;
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   game.settings.register(cModuleName, "lastVersion", {
 	scope: "world",
-	config: true,
+	config: false,
 	type: String,
 	default: "0.0.0"
   }); 
