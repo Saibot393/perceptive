@@ -1,3 +1,6 @@
+## v3.4.3
+- Small bug fix
+
 ## v3.4.2
 - Fixed bug that prevented the "other dcs" menu from appearing
 - Hid accidentally exposed setting
