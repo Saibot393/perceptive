@@ -1336,7 +1336,6 @@ class SpottingManager {
 			pInfos.inCombat = pSpotters.find(vToken => vToken.inCombat);
 			
 			let vUnstealthObjects = pObjects;
-			console.log(vUnstealthObjects);
 			let vSettingPossible = game.settings.get(cModuleName, "RevealAllies") == "always" || (pInfos.inCombat && game.settings.get(cModuleName, "RevealAllies") == "incombatonly") || (!pInfos.inCombat && game.settings.get(cModuleName, "RevealAllies") == "outcombatonly")
 			if (!vSettingPossible) {
 				vUnstealthObjects = vUnstealthObjects.filter(vObject => vObject.disposition != vLocalVisionData.vlastDisposition)

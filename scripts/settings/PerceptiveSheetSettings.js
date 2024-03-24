@@ -294,7 +294,7 @@ class PerceptiveSheetSettings {
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
-				let vTabbar = pHTML.find(`[aria-role="Form Tab Navigation"].sheet-tabs`);
+				let vTabbar = pHTML.find(`nav.sheet-tabs:first`);
 				let vprevTab = pHTML.find(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
 				
 				let vTabButtonHTML = 	`
@@ -336,7 +336,7 @@ class PerceptiveSheetSettings {
 		}
 		
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs[aria-role="Form Tab Navigation"]`);
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs:first`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
