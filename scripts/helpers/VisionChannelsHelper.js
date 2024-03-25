@@ -19,6 +19,7 @@ const cDefaultChannel = {
 	RequiredtoSee : false,
 	SeethroughWalls : false,
 	Range : -1,
+	RangeMin : 0,
 	RangeFormula : "",
 	EffectFilter : null,
 	EffectFilterColor : "#000000",
@@ -75,6 +76,7 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "SeethroughWalls")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Range")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "RangeFormula")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "RangeMin")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Color")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter.name")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilterColor")}</th>
@@ -92,6 +94,7 @@ class VisionChannelsWindow extends Application {
 													<td style="text-align: center; width:100px"> <input name="SeethroughWalls" type="checkbox" ${this.vChannels[vkey].SeethroughWalls ? "checked" : ""}> </td>
 													<td style="width:50px"> <input name="Range" type="number" value="${this.vChannels[vkey].Range}"> </td>
 													<td> <input name="RangeFormula" type="text" value="${this.vChannels[vkey].RangeFormula}"> </td>
+													<td style="width:50px"> <input name="RangeMin" type="number" value="${this.vChannels[vkey].RangeMin}"> </td>
 													<td style="text-align: center; width:50px"> <input name="Color" type="color" value="${this.vChannels[vkey].Color}"> </td>
 													<td style="width:100px"> 
 														<select name="EffectFilter">`;
@@ -145,6 +148,7 @@ class VisionChannelsWindow extends Application {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "ReceiveFiltered")}</th>`;
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "ReceiveRange")}</th>`;
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "CalculatedRange")}</th>`;
+			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "ReceiveRangeMin")}</th>`;
 		}
 		if (vWallSetting) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Sight")}</th>
@@ -170,6 +174,7 @@ class VisionChannelsWindow extends Application {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveFiltered" type="checkbox" ${vChannelSettings?.ReceiveFiltered ? "checked" : ""}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRange" type="number" value=${vChannelSettings?.ReceiveRange}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${await VisionChannelsUtils.CalculateRange(vkey, this.vTarget)} disabled> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRangeMin" type="number" value=${vChannelSettings?.ReceiveRangeMin}> </td>`;
 			}
 			if (vWallSetting) {
 				vEntriesHTML = vEntriesHTML +	`<td style="text-align: center; width:100px"> <input name="Sight" type="checkbox" ${vChannelSettings?.Sight ? "checked" : ""}> </td>
@@ -250,7 +255,7 @@ class VisionChannelsWindow extends Application {
 			case "object" : 
 				vSettingKeys = ["Emits"];
 				if (this.vSettingsSubType == "Token") {
-					vSettingKeys.push("Receives", "ReceiveFiltered", "ReceiveRange");
+					vSettingKeys.push("Receives", "ReceiveFiltered", "ReceiveRange", "ReceiveRangeMin");
 				}
 				if (this.vSettingsSubType == "Wall") {
 					vSettingKeys.push("Sight");
@@ -336,7 +341,7 @@ class VisionChannelsUtils {
 	
 	static async CalculateRangeList(pChannelIDs, pTokens) {} //returns the maximum ranges between pTokens on pChannels based on the channels range formuala
 	
-	static GetinherentRangeList(pTokens) {} //returns a list of the maximum of pTokens inherent ranges
+	static GetinherentRangeList(pTokens, pStartList = {}) {} //returns a list of the maximum of pTokens inherent ranges
 	
 	//Import/Export GMBH Saibot
 	static AddChannel(pChannel, pID = "") {} //adds pChannel to world under pID (or random ID if not specified)
@@ -430,17 +435,26 @@ class VisionChannelsUtils {
 				let vRanges = {};
 				
 				for (let i = 0; i < vCommons.length; i++) {
-					if (!isNaN(pVCInfos.RangeList[vCommons[i]])) {
-						vRanges[vCommons[i]] = pVCInfos.RangeList[vCommons[i]];
+					vRanges[vCommons[i]] = {};
+					
+					if (!isNaN(pVCInfos.RangeList[vCommons[i]].max)) {
+						vRanges[vCommons[i]].max = pVCInfos.RangeList[vCommons[i]].max;
 					}
 					else {
-						vRanges[vCommons[i]] = vChannels[vCommons[i]]?.Range;
+						vRanges[vCommons[i]].max = vChannels[vCommons[i]]?.Range;
+					}
+					
+					if (!isNaN(pVCInfos.RangeList[vCommons[i]].min)) {
+						vRanges[vCommons[i]].min = pVCInfos.RangeList[vCommons[i]].min;
+					}
+					else {
+						vRanges[vCommons[i]].min = vChannels[vCommons[i]]?.RangeMin;
 					}
 				}
 				
-				let vRangeLessVCs = vCommons.filter(vChannelID => (vRanges[vChannelID] < 0));
+				let vRangeLessVCs = vCommons.filter(vChannelID => (vRanges[vChannelID].max < 0 && vRanges[vChannelID].min <= 0));
 				
-				let vRangedVCs = vCommons.filter(vChannelID => (vRanges[vChannelID] >= 0));
+				let vRangedVCs = vCommons.filter(vChannelID => !vRangeLessVCs.includes(vChannelID));
 				
 				let vRangeCheck = vRangedVCs.find(vChannelID => (vChannels[vChannelID].RequiredtoSee))
 				
@@ -463,18 +477,41 @@ class VisionChannelsUtils {
 					if (pVCInfos.TargetPoint) {
 						//check ranged
 						
-						let vMaxRange = 0;
 						let vRangeVC = undefined;
 						
 						let vRangeFactor = (canvas.scene.dimensions.size)/(canvas.scene.dimensions.distance);
 						
-						let vRangeFunction = (pPoint, pRange) => {
+						let vRangeFunction = (pPoint, pRangeMax, pRangeMin = 0) => {
+							let vinRange = true;
+							
+							let vDistance; //improve performance by preventing distance from being recalculated too often
+							
 							if (pVCInfos.TargetPoint.elevation != undefined && pVCInfos.TargetPoint.elevation != pPoint.elevation) {
-								return GeometricUtils.DistanceXYZ(pPoint, pVCInfos.TargetPoint, vRangeFactor) < pRange * vRangeFactor;
+								vDistance = GeometricUtils.DistanceXYZ(pPoint, pVCInfos.TargetPoint, vRangeFactor);
 							}
 							else {
-								return GeometricUtils.DistanceXY(pPoint, pVCInfos.TargetPoint) < pRange * vRangeFactor;
+								vDistance = GeometricUtils.DistanceXY(pPoint, pVCInfos.TargetPoint);
 							}
+							
+							if (pRangeMax >= 0) {
+								if (pVCInfos.TargetPoint.elevation != undefined && pVCInfos.TargetPoint.elevation != pPoint.elevation) {
+									vinRange = vDistance < pRangeMax * vRangeFactor;
+								}
+								else {
+									vinRange = vDistance < pRangeMax * vRangeFactor;
+								}
+							}
+							
+							if (pRangeMin > 0 && vinRange) {
+								if (pVCInfos.TargetPoint.elevation != undefined && pVCInfos.TargetPoint.elevation != pPoint.elevation) {
+									vinRange = vDistance >= pRangeMin * vRangeFactor;
+								}
+								else {
+									vinRange = vDistance >= pRangeMin * vRangeFactor;
+								}
+							}
+							
+							return vinRange;
 						}
 						
 						let vInRange = false;
@@ -484,10 +521,11 @@ class VisionChannelsUtils {
 							let vRequiredRange = vRangedVCs.filter(vChannelID => (vChannels[vChannelID].RequiredtoSee));
 							
 							if (pVCInfos.logicalOR) {
-								vInRange = vRequiredRange.find(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID])));
+								vInRange = vRequiredRange.find(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID].max, vRanges[vChannelID].min)));
 							}
 							else {
-								vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID]))).length == vRequiredRange.length);
+								vInRange = (vRequiredRange.filter(vChannelID => pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vRanges[vChannelID].max, vRanges[vChannelID].min))).length == vRequiredRange.length);
+								vInRange = vInRange ? vRequiredRange[0] : false;
 							}
 							
 							if (!vInRange) {
@@ -503,14 +541,16 @@ class VisionChannelsUtils {
 								return false;
 							}
 							
-							vRangeVC = vRequiredRange[0];
+							vRangeVC = vInRange;
 						}
 						else {
-							vRangedVCs.forEach(vChannelID => {if (vRanges[vChannelID] > vMaxRange){vRangeVC = vChannelID; vMaxRange = vRanges[vChannelID]}});
-						
-							vMaxRange = vMaxRange;
+							let vMaxRange = 0;
+							let vMinRange = Infinity;
 							
-							vInRange = pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vMaxRange));
+							vRangedVCs.forEach(vChannelID => {if (vRanges[vChannelID].max > vMaxRange){vRangeVC = vChannelID; vMaxRange = vRanges[vChannelID].max}});
+							vRangedVCs.forEach(vChannelID => {if (vRanges[vChannelID].min < vMinRange){vMinRange = vRanges[vChannelID].min}});
+							
+							vInRange = pVCInfos.SourcePoints.find(vPoint => vRangeFunction(vPoint, vMaxRange, vMinRange));
 						}
 						
 						if (vInRange) {
@@ -665,6 +705,8 @@ class VisionChannelsUtils {
 		let vChannel = game.settings.get(cModuleName, cSettingName)[pChannelID];
 		
 		if (vChannel && pToken?.actor) {
+			let vRange = {min : vChannel.RangeMin};
+			
 			let vFormula = vChannel.RangeFormula;
 			
 			if (vFormula) {
@@ -675,12 +717,17 @@ class VisionChannelsUtils {
 				try {
 					await vRoll.evaluate();
 					
-					return vRoll.total;
+					vRange.max = vRoll.total;
 				}
 				catch {
 					ui.notifications.error(`${cModuleName} : Faulty Vision Channel range calculation ID ${pChannelID} (name : ${vChannel.Name})`);
 				}
 			}
+			else {
+				vRange.max = vChannel.Range;
+			}
+			
+			return vRange;
 		}
 	} 
 	
@@ -691,9 +738,9 @@ class VisionChannelsUtils {
 			vRanges[i] = await VisionChannelsUtils.CalculateRange(pChannelID, pTokens[i]);
 		}
 		
-		vRanges = vRanges.filter(vRange => !isNaN(vRange));
+		vRanges = vRanges.filter(vRange => !isNaN(vRange?.max) && !isNaN(vRange?.min));
 		
-		return Math.max(...vRanges);
+		return {max : Math.max(...vRanges.map(vRange => vRange.max)), min : Math.min(...vRanges.map(vRange => vRange.min))};
 	}
 	
 	static async CalculateRangeList(pChannelIDs, pTokens) {
@@ -706,8 +753,8 @@ class VisionChannelsUtils {
 		return vRanges;
 	}
 	
-	static GetinherentRangeList(pTokens) {
-		let vRangeList = {};
+	static GetinherentRangeList(pTokens, pStartList = {}) {
+		let vRangeList = {...pStartList};
 		
 		let vBuffer;
 		
@@ -715,8 +762,16 @@ class VisionChannelsUtils {
 			vBuffer = PerceptiveFlags.getReceiverRanges(pTokens[i]);
 			
 			for (let vkey of Object.keys(vBuffer)) {
-				if (!isNaN(vBuffer[vkey]) && (vBuffer[vkey] != "") && (isNaN(vRangeList[vkey]) || vBuffer[vkey] > vRangeList[vkey])) {
-					vRangeList[vkey] = vBuffer[vkey];
+				if (!vRangeList[vkey]) {
+					vRangeList[vkey] = {};
+				}
+				
+				if (!isNaN(vBuffer[vkey].max) && (vBuffer[vkey].max != "") && (isNaN(vRangeList[vkey].max) || vBuffer[vkey].max > vRangeList[vkey].max)) {
+					vRangeList[vkey].max = vBuffer[vkey].max;
+				}
+				
+				if (!isNaN(vBuffer[vkey].min) && (vBuffer[vkey].min != "") && (isNaN(vRangeList[vkey].min) || vBuffer[vkey].min < vRangeList[vkey].min)) {
+					vRangeList[vkey].min = vBuffer[vkey].min;
 				}
 			}
 		}

@@ -1744,7 +1744,7 @@ class PerceptiveFlags {
 		let vRangeList = {};
 		
 		for (let vKey of Object.keys(vVisionChannels)) {
-			vRangeList[vKey] = vVisionChannels[vKey].ReceiveRange;
+			vRangeList[vKey] = {max : vVisionChannels[vKey].ReceiveRange, min : vVisionChannels[vKey].ReceiveRangeMin};
 		}
 		
 		return vRangeList;	

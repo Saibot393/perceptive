@@ -39,7 +39,7 @@ class VisionChannelsManager {
 			
 			vLocalVisionData.vRangeList = await VisionChannelsUtils.CalculateRangeList(vLocalVisionData.vReceiverChannels, vTokens);
 			
-			vLocalVisionData.vRangeList = {...vLocalVisionData.vRangeList, ...VisionChannelsUtils.GetinherentRangeList(vTokens)};
+			vLocalVisionData.vRangeList = {...vLocalVisionData.vRangeList, ...VisionChannelsUtils.GetinherentRangeList(vTokens, vLocalVisionData.vRangeList)};
 		}
 		else {
 			vLocalVisionData.vReceiverChannels = [];

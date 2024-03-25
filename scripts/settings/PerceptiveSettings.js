@@ -811,6 +811,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "followonControl", {
+	name: Translate("Settings.followonControl.name"),
+	hint: Translate("Settings.followonControl.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: true
+  }); 
+  
   game.settings.register(cModuleName, "MessagePopUps", {
 	name: Translate("Settings.MessagePopUps.name"),
 	hint: Translate("Settings.MessagePopUps.descrp"),
