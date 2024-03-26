@@ -883,6 +883,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	},
 	default: "none"
   }); 
+  
+  game.settings.register(cModuleName, "PDCInputPosition", {
+	name: Translate("Settings.PDCInputPosition.name"),
+	hint: Translate("Settings.PDCInputPosition.descrp"),
+	scope: "client",
+	config: true,
+	type: String,
+	choices: {
+		"none": Translate("Settings.PDCInputPosition.options.none"),
+		"left": Translate("Settings.PDCInputPosition.options.left"),
+		"right": Translate("Settings.PDCInputPosition.options.right")
+	},
+	default: "none"
+  }); 
 
   game.settings.register(cModuleName, "SpottingPingDuration", {
 	name: Translate("Settings.SpottingPingDuration.name"),

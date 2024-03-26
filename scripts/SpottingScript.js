@@ -856,13 +856,10 @@ class SpottingManager {
 
 			let vIndividualReveals = vObjects.filter(vObject => PerceptiveFlags.RevealwhenSpotted(vObject));
 
-			console.log(vIndividualReveals);
 			if ((pInfos.Spotted && (vSettingPossible || vIndividualReveals.length > 0)) || (pInfos.DoorClicked)) {
 				if (!vSettingPossible && !pInfos.DoorClicked) {
 					vObjects = vIndividualReveals;
 				}
-				
-				console.log(vObjects);
 				
 				SpottingManager.resetStealthData(vObjects, pInfos);
 			}
@@ -1037,6 +1034,64 @@ class SpottingManager {
 					
 					vButton.click((pEvent) => {SpottingManager.RemoveLingeringAP([vToken])});
 				}
+			}
+		}
+		
+		if (PerceptiveFlags.canbeSpotted(vToken)) {
+			let vDCPosition = game.settings.get(cModuleName, "PDCInputPosition");
+			
+			if (vDCPosition != "none") {
+				console.log(pHTML);
+				let vPositionDIV = pHTML[0].querySelector("div.col."+vDCPosition);
+				
+				let vPerceptionDCDIV = document.createElement("div");
+				vPerceptionDCDIV.classList.add("control-icon");
+				vPerceptionDCDIV.setAttribute("data-action", `${cModuleName}-PassiveDC`);
+				
+				let vDCPassiveInput = document.createElement("input");
+				vDCPassiveInput.type = "number";
+				vDCPassiveInput.value = PerceptiveFlags.getPPDC(vToken, true);
+				vDCPassiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {PPDC : vDCPassiveInput.value})};
+				vDCPassiveInput.style.color = "white";
+				vDCPassiveInput.style.border = "0px";
+				vDCPassiveInput.title = Translate("Titles.SpottingInfos.PassiveDC");
+				
+				let vDCActiveInput;
+				if (!["", null, undefined].includes(PerceptiveFlags.getAPDC(vToken, true))) {
+					vDCActiveInput = document.createElement("input");
+					vDCActiveInput.type = "number";
+					vDCActiveInput.value = PerceptiveFlags.getAPDC(vToken, true);
+					vDCActiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {APDC : vDCActiveInput.value})};
+					vDCActiveInput.style.color = "white";
+					vDCActiveInput.style.border = "0px";
+					vDCActiveInput.title = Translate("Titles.SpottingInfos.ActiveDC");
+				}
+				
+				vPerceptionDCDIV.appendChild(vDCPassiveInput);
+				if (vDCActiveInput) vPerceptionDCDIV.appendChild(vDCActiveInput);
+				
+				vPositionDIV.appendChild(vPerceptionDCDIV);
+				
+				/*
+				vPositionDIV = ;
+				switch (vDCPosition) {
+					case "left":
+					case "right":
+						vPositionDIV = pHTML.find("div.col."+vDCPosition);
+						break;
+					case "top":
+					case "bottom":
+						vPositionDIV = pHTML.find("div.col."+"middle");
+						switch (vDCPosition) {
+							case "top":
+								
+								break;
+							case "bottom":
+								break;
+						}
+						break;
+				}
+				*/
 			}
 		}
 	}
