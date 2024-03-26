@@ -23,7 +23,8 @@ const cDefaultChannel = {
 	RangeFormula : "",
 	EffectFilter : null,
 	EffectFilterColor : "#000000",
-	Transparency : 1
+	Transparency : 1,
+	defaultReceiver : false
 };
 
 class VisionChannelsWindow extends Application {
@@ -80,7 +81,8 @@ class VisionChannelsWindow extends Application {
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Color")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilter.name")}</th>
 											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "EffectFilterColor")}</th>
-											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Transparency")}</th>`
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "Transparency")}</th>
+											<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "defaultReceiver")}</th>`
 		if (game.settings.get(cModuleName, "ShowVCIDs")) {
 			vEntriesHTML = vEntriesHTML +	`<th style="border: 1px solid #dddddd">${Translate(cWindowID + ".entries.titles." + "VCID")}</th>`
 		}
@@ -106,7 +108,8 @@ class VisionChannelsWindow extends Application {
 			vEntriesHTML = vEntriesHTML + 				`</select>
 													</td>
 													<td style="text-align: center; width:100px"> <input name="EffectFilterColor" type="color" value="${this.vChannels[vkey].EffectFilterColor}"> </td>
-													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>`
+													<td style="width:50px"> <input name="Transparency" type="number" value="${this.vChannels[vkey].Transparency}" min="0" max="1" step="0.05"> </td>
+													<td style="text-align: center; width:100px"> <input name="defaultReceiver" type="checkbox" ${this.vChannels[vkey].defaultReceiver ? "checked" : ""}> </td>`
 			if (game.settings.get(cModuleName, "ShowVCIDs")) {
 				vEntriesHTML = vEntriesHTML +			`<td> <input name="VCID" type="text" value="${vkey}" disabled> </td>`
 			}
@@ -158,8 +161,10 @@ class VisionChannelsWindow extends Application {
 		
 		let vChannelSettings;
 		
+		let vDefaultReceivers = VisionChannelsUtils.defaultReceivers();
+		
 		for (let vkey of Object.keys(this.vChannels)) {
-			vChannelSettings = vTargetSettings[vkey];
+			vChannelSettings = vTargetSettings[vkey] || {Receives : vDefaultReceivers.includes(vkey)};
 			if (vChannelSettings) {
 				vChannelSettings.ReceiveFiltered = vReceiverFilters[vkey];
 			}
@@ -335,6 +340,8 @@ class VisionChannelsUtils {
 	static VCNames() {} //returns an object containing ids and names of all currently available VCs
 	
 	static ValidIDs() {} //returns array of valid ids
+	
+	static defaultReceivers() {} //returns IDs of default receivers
 	
 	//ranges
 	static async CalculateRange(pChannelID, pToken) {} //returns the range pToken has on pChannel based on the channels range formula
@@ -708,6 +715,12 @@ class VisionChannelsUtils {
 	
 	static ValidIDs() {
 		return Object.keys(game.settings.get(cModuleName, cSettingName));
+	}
+	
+	static defaultReceivers() {
+		let vChannels = game.settings.get(cModuleName, cSettingName);
+		
+		return Object.keys(vChannels).filter(vID => vChannels[vID].defaultReceiver);
 	}
 	
 	//ranges

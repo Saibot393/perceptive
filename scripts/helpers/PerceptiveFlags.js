@@ -4,6 +4,7 @@ import {cModuleName, PerceptiveUtils, Translate} from "../utils/PerceptiveUtils.
 import {VisionUtils} from "../utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import { PerceptiveCompUtils} from "../compatibility/PerceptiveCompUtils.js";
+import {VisionChannelsUtils} from "./VisionChannelsHelper.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
@@ -1709,7 +1710,7 @@ class PerceptiveFlags {
 	}
 	
 	static getVCEmitters(pObject, pIncludeActor = false) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (pIncludeActor && pObject.actor) {
 			//for AEs
@@ -1720,26 +1721,28 @@ class PerceptiveFlags {
 	}
 	
 	static getVCReceivers(pObject, pIncludeActor = false, pFilter = false) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (pIncludeActor && pObject.actor) {
 			//for AEs
 			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.actor)};
 		}
 		
-		let vFilters = {};
+		let vReceivers = Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel]?.Receives);
+		
+		vReceivers.push(...VisionChannelsUtils.defaultReceivers().filter(vChannel => vVisionChannels[vChannel] == undefined || vVisionChannels[vChannel].Receives == undefined));
 		
 		if (pFilter) {
-			vFilters = PerceptiveFlags.getReceiverFilters(pObject);
+			let vFilters = PerceptiveFlags.getReceiverFilters(pObject);
 			
-			return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives && !vFilters[vChannel]);	
+			vReceivers =  vReceivers.filter(vChannel => !vFilters[vChannel]);	
 		}
 		
-		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
+		return vReceivers;		
 	}
 	
 	static getReceiverRanges(pObject) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		let vRangeList = {};
 		
@@ -1751,19 +1754,19 @@ class PerceptiveFlags {
 	}
 	
 	static hasVCEmitter(pObject) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
-		return Object.keys(this.#VisionChannelsFlag(pObject)).find(vChannel => vVisionChannels[vChannel].Emits);
+		return Object.keys(vVisionChannels).find(vChannel => vVisionChannels[vChannel].Emits);
 	}
 	
 	static getVCSight(pWall) {
-		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pWall);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Sight);				
 	}
 	
 	static getVCMovement(pWall) {
-		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pWall);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Movement);				
 	}
