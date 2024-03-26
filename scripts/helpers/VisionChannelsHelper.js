@@ -173,7 +173,7 @@ class VisionChannelsWindow extends Application {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="Receives" type="checkbox" ${vChannelSettings?.Receives ? "checked" : ""}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveFiltered" type="checkbox" ${vChannelSettings?.ReceiveFiltered ? "checked" : ""}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRange" type="number" value=${vChannelSettings?.ReceiveRange}> </td>`;
-				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${await VisionChannelsUtils.CalculateRange(vkey, this.vTarget)} disabled> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${(await VisionChannelsUtils.CalculateRange(vkey, this.vTarget))?.max} disabled> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRangeMin" type="number" value=${vChannelSettings?.ReceiveRangeMin}> </td>`;
 			}
 			if (vWallSetting) {
@@ -334,12 +334,14 @@ class VisionChannelsUtils {
 	
 	static VCNames() {} //returns an object containing ids and names of all currently available VCs
 	
+	static ValidIDs() {} //returns array of valid ids
+	
 	//ranges
-	static async CalculateRange(pChannelID, pToken) {} //returns the range pToken has on pChannel based on the channels range formuala
+	static async CalculateRange(pChannelID, pToken) {} //returns the range pToken has on pChannel based on the channels range formula
 	
-	static async CalculateRanges(pChannelID, pTokens) {} //returns the maximum range between pTokens on pChannel based on the channels range formuala
+	static async CalculateRanges(pChannelID, pTokens) {} //returns the maximum range between pTokens on pChannel based on the channels range formula
 	
-	static async CalculateRangeList(pChannelIDs, pTokens) {} //returns the maximum ranges between pTokens on pChannels based on the channels range formuala
+	static async CalculateRangeList(pChannelIDs, pTokens) {} //returns the maximum ranges between pTokens on pChannels based on the channels range formula
 	
 	static GetinherentRangeList(pTokens, pStartList = {}) {} //returns a list of the maximum of pTokens inherent ranges
 	
@@ -576,6 +578,10 @@ class VisionChannelsUtils {
 			vVCs = vVCs.concat(PerceptiveFlags.getVCReceivers(pTokens[i], pIncludeActor, pFilter).filter(vChannelID => !vVCs.includes(vChannelID)));
 		}
 		
+		let vValidIDs = VisionChannelsUtils.ValidIDs();
+		
+		vVCs = vVCs.filter(vChannelID => vValidIDs.includes(vChannelID))
+		
 		return vVCs;
 	}
 	
@@ -700,12 +706,18 @@ class VisionChannelsUtils {
 		return vCNames;
 	}
 	
+	static ValidIDs() {
+		return Object.keys(game.settings.get(cModuleName, cSettingName));
+	}
+	
 	//ranges
 	static async CalculateRange(pChannelID, pToken) {
 		let vChannel = game.settings.get(cModuleName, cSettingName)[pChannelID];
 		
+		let vRange = {};
+		
 		if (vChannel && pToken?.actor) {
-			let vRange = {min : vChannel.RangeMin};
+			vRange.min = vChannel.RangeMin || 0;
 			
 			let vFormula = vChannel.RangeFormula;
 			
@@ -726,9 +738,9 @@ class VisionChannelsUtils {
 			else {
 				vRange.max = vChannel.Range;
 			}
-			
-			return vRange;
 		}
+		
+		return vRange;
 	} 
 	
 	static async CalculateRanges(pChannelID, pTokens) {
@@ -738,9 +750,10 @@ class VisionChannelsUtils {
 			vRanges[i] = await VisionChannelsUtils.CalculateRange(pChannelID, pTokens[i]);
 		}
 		
-		vRanges = vRanges.filter(vRange => !isNaN(vRange?.max) && !isNaN(vRange?.min));
-		
-		return {max : Math.max(...vRanges.map(vRange => vRange.max)), min : Math.min(...vRanges.map(vRange => vRange.min))};
+		let vChannel = game.settings.get(cModuleName, cSettingName)[pChannelID];
+
+		return {max : Math.max(...(vRanges.filter(vRange => !isNaN(vRange?.max)).map(vRange => vRange.max))), 
+				min : Math.min(...(vRanges.filter(vRange => !isNaN(vRange?.min)).map(vRange => vRange.min)))};
 	}
 	
 	static async CalculateRangeList(pChannelIDs, pTokens) {
@@ -766,11 +779,11 @@ class VisionChannelsUtils {
 					vRangeList[vkey] = {};
 				}
 				
-				if (!isNaN(vBuffer[vkey].max) && (vBuffer[vkey].max != "") && (isNaN(vRangeList[vkey].max) || vBuffer[vkey].max > vRangeList[vkey].max)) {
+				if (!isNaN(vBuffer[vkey]?.max) && (vBuffer[vkey].max != "")) { // && (isNaN(vRangeList[vkey]?.max) || vBuffer[vkey].max > vRangeList[vkey].max)
 					vRangeList[vkey].max = vBuffer[vkey].max;
 				}
 				
-				if (!isNaN(vBuffer[vkey].min) && (vBuffer[vkey].min != "") && (isNaN(vRangeList[vkey].min) || vBuffer[vkey].min < vRangeList[vkey].min)) {
+				if (!isNaN(vBuffer[vkey]?.min) && (vBuffer[vkey].min != "")) { // && (isNaN(vRangeList[vkey]?.min) || vBuffer[vkey].min < vRangeList[vkey].min)
 					vRangeList[vkey].min = vBuffer[vkey].min;
 				}
 			}

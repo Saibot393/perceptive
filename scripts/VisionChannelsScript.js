@@ -40,6 +40,11 @@ class VisionChannelsManager {
 			vLocalVisionData.vRangeList = await VisionChannelsUtils.CalculateRangeList(vLocalVisionData.vReceiverChannels, vTokens);
 			
 			vLocalVisionData.vRangeList = {...vLocalVisionData.vRangeList, ...VisionChannelsUtils.GetinherentRangeList(vTokens, vLocalVisionData.vRangeList)};
+			
+			for (let vID of vLocalVisionData.vReceiverChannels) {
+				console.log(vLocalVisionData.vRangeList[vID]);
+			}
+			
 		}
 		else {
 			vLocalVisionData.vReceiverChannels = [];
