@@ -27,7 +27,9 @@
 					"value1"			: "Dim",
 					"value2"			: "Bright"
 				},
-				"LingeringAP"				: "Lingering active perception"
+				"LingeringAP"			: "Lingering active perception",
+				"PassiveDC"				: "Passive perception DC",
+				"ActiveDC"				: "Active perception DC"
 			},
 			"SpottingConfirm" : {
 				"name"					: "Confirm Spotting",
@@ -551,6 +553,16 @@
 				}
 			},
 			
+			"PDCInputPosition" : {
+				"name" 					: "Position of perception DC input",
+				"descrp" 				: "Where on the token HUD the perception DC indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
 			"SpottingPingDuration" : {
 				"name" 					: "Spotting ping duration",
 				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
@@ -797,6 +809,7 @@
 					"SeethroughWalls"	: "Through walls",
 					"Range"				: "Range",
 					"RangeFormula"		: "Range formula",
+					"RangeMin"			: "Minimum range",
 					"Color"				: "Color",
 					"EffectFilter" : {
 						"name"			: "Effect filter",
@@ -815,12 +828,14 @@
 					},
 					"EffectFilterColor" : "Effect Filter Color",
 					"Transparency"		: "Transparency",
+					"defaultReceiver"	: "Receive default",
 					"VCID"				: "Internal ID",
 					"Emits"				: "Emits",
 					"Receives"			: "Receives",
 					"ReceiveFiltered"	: "Reciver filter",
 					"ReceiveRange"		: "Custom range",
 					"CalculatedRange"	: "Calculated range",
+					"ReceiveRangeMin"	: "Custom range minimum",
 					"Sight"				: "Sight",
 					"Movement"			: "Movement"
 				}

@@ -27,7 +27,9 @@
 					"value1"			: "Düster",
 					"value2"			: "Hell"
 				},
-				"LingeringAP"			: "Verbleibende aktive Wahrnehmung"
+				"LingeringAP"			: "Verbleibende aktive Wahrnehmung",
+				"PassiveDC"				: "Passiver Wahrnehmungs SG",
+				"ActiveDC"				: "Aktiver Wahrnehmungs "
 			},
 			"SpottingConfirm" : {
 				"name"					: "Aufdecken bestätigen",
@@ -551,6 +553,16 @@
 				}
 			},
 			
+			"PDCInputPosition" : {
+				"name" 					: "Positions des Indikators für Wahrnehmungs SG",
+				"descrp" 				: "Wo im Figur HUD der Indikator für Wahrnehmungs SG angezeigt wird",
+				"options" : {
+					"none"				: "garnicht",
+					"left"				: "links",
+					"right"				: "rechts"
+				}
+			},
+			
 			"SpottingPingDuration" : {
 				"name" 					: "Aufdecken Ping Dauer",
 				"descrp" 				: "Wie lange Objekte welche durch einen Wahrnehmungswurf aufgedeckt werden gepingt werden sollen (in Sekunden, 0 um die Pings auszuschalten)"
@@ -797,6 +809,7 @@
 					"SeethroughWalls"	: "Durch Wände",
 					"Range"				: "Reichweite",
 					"RangeFormula"		: "Reichweiten Formel",
+					"RangeMin"			: "Minimal Reichweite",
 					"Color"				: "Farbe",
 					"EffectFilter" : {
 						"name"			: "Effekt Filter",
@@ -815,12 +828,14 @@
 					},
 					"EffectFilterColor" : "Effekt FIlter Farbe",
 					"Transparency"		: "Transparenz",
+					"defaultReceiver"	: "Empfänger Standard",
 					"VCID"				: "Interne ID",
 					"Emits"				: "Sendet",
 					"Receives"			: "Empfängt",
 					"ReceiveFiltered"	: "Empfang Filter",
 					"ReceiveRange"		: "Eigene Reichweite",
 					"CalculatedRange"	: "Errechnete Reichweite",
+					"ReceiveRangeMin"	: "Eigenes Reichweiten Minimum",
 					"Sight"				: "Sicht",
 					"Movement"			: "Bewegung"
 				}
