@@ -9,7 +9,7 @@ import {VisionChannelsUtils} from "./VisionChannelsHelper.js";
 const cangleepsilon = 1; //epsilon around zero for angles
 
 const cDoorMoveTypes = ["none", "swing", "slide"];
-const cHingePositions = [0, 1, 2];
+const cHingePositions = [0, 1, 2, 3];
 
 const cSwingSpeedRange = [-180, 180];
 const cSlideSpeedRange = [-1, 1];
@@ -228,6 +228,8 @@ class PerceptiveFlags {
 	static async resetLingeringAP(pToken) {} //resets the Lingering AP of pToken
 	
 	static LingeringAP(pToken) {} //returns the Lingering AP of pToken (undefined if not set)
+	
+	static async setPrimaryLingeringAP(pToken, pValue) {} //specifically sets the primarey value of the lingering ap without changing the info
 	
 	static LingeringAPInfo(pToken) {} //returns the Lingering AP info of pToken
 	
@@ -1573,6 +1575,16 @@ class PerceptiveFlags {
 	
 	static LingeringAP(pToken) {
 		return this.#LingeringAPFlag(pToken);
+	}
+	
+	static async setPrimaryLingeringAP(pToken, pValue) {
+		let vOld = PerceptiveFlags.LingeringAP(pToken);
+		
+		let vNew = deepClone(vOld);
+		console.log(vNew);
+		vNew[0][0] = pValue;
+		
+		await this.#setLingeringAP(pToken, vNew);
 	}
 	
 	static LingeringAPInfo(pToken) {

@@ -488,13 +488,16 @@ class SpottingManager {
 							vTolerance = {PointTolerance : 0};
 					}
 				}
-				
+					
 				if (PerceptiveFlags.HasSpottingRange(vSpotables[i])) {
 					if(!pInfos.Ranges) {
 						pInfos.Ranges = {};
 					}
 					
 					pInfos.Ranges.Range = PerceptiveFlags.SpottingRange(vSpotables[i]);
+				}
+				else {
+					pInfos.Ranges = undefined;
 				}
 						
 				if (CONFIG.debug.perceptive.SpottingScript) {//DEBUG
@@ -534,11 +537,11 @@ class SpottingManager {
 					}
 					
 					vADC = Number(PerceptiveFlags.getAPDCModified(vSpotables[i], vLocalVisionData.vlastVisionLevel, pInfos.Skill)) + Number(VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier));
-					
+
 					if (vADC < Infinity || !(pInfos.Skill?.length > 0)) {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
-						
+
 						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							vSpotted.push(vSpotables[i]);
 							
@@ -557,7 +560,7 @@ class SpottingManager {
 			if (!pInfos.isLingeringAP && !pInfos.Skill) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					if (game.settings.get(cModuleName, "LingeringAP") == "always" || (game.settings.get(cModuleName, "LingeringAP") == "outofcombatonly" && !pSpotters[i].inCombat)) {
-						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : pInfos.Ranges,
+						PerceptiveFlags.setLingeringAP(pSpotters[i], pResults, {Ranges : {...pInfos.Ranges},
 																				SourceRollBehaviour : pInfos.SourceRollBehaviour,
 																				Skill : pInfos.Skill,
 																				RollPosition : {x : pSpotters[i].x, y : pSpotters[i].y},
@@ -1022,17 +1025,27 @@ class SpottingManager {
 			let vLingeringAPPosition = game.settings.get(cModuleName, "LingeringAPIconPosition");
 
 			if (vLingeringAPPosition != "none") {
+				let vPositionDIV = pHTML[0].querySelector("div.col."+vLingeringAPPosition);
+				
+				let vLingeringDIV = document.createElement("div");
+				vLingeringDIV.classList.add("control-icon");
+				vLingeringDIV.setAttribute("data-action", `${cModuleName}-LingeringAP`);
+				vLingeringDIV.title = Translate("Titles.SpottingInfos.LingeringAP");
+				
+				let vLingeringInput = document.createElement("input");
+				vLingeringInput.type = "number";
+				vLingeringInput.value = PerceptiveFlags.LingeringAP(pToken)[0][0];
+				vLingeringInput.onchange = (pEvent) => {PerceptiveFlags.setPrimaryLingeringAP(vToken, Number(vLingeringInput.value))};
+				vLingeringInput.style.color = "white";
+				vLingeringInput.style.border = "0px";
+				vLingeringInput.title = vLingeringDIV.title;
 
-				let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-LingeringAP" title="${Translate("Titles.SpottingInfos.LingeringAP")}">
-										${PerceptiveFlags.LingeringAP(pToken)[0][0]}
-								  </div>`;
+				vLingeringDIV.appendChild(vLingeringInput);
 
-				pHTML.find("div.col."+vLingeringAPPosition).append(vButtonHTML);
+				vPositionDIV.appendChild(vLingeringDIV);
 
 				if (vToken.isOwner) {
-					let vButton = pHTML.find(`div[data-action="${cModuleName}-LingeringAP"]`);
-					
-					vButton.click((pEvent) => {SpottingManager.RemoveLingeringAP([vToken])});
+					vLingeringDIV.oncontextmenu = (pEvent) => {SpottingManager.RemoveLingeringAP([vToken])};
 				}
 			}
 		}
@@ -1041,7 +1054,6 @@ class SpottingManager {
 			let vDCPosition = game.settings.get(cModuleName, "PDCInputPosition");
 			
 			if (vDCPosition != "none") {
-				console.log(pHTML);
 				let vPositionDIV = pHTML[0].querySelector("div.col."+vDCPosition);
 				
 				let vPerceptionDCDIV = document.createElement("div");

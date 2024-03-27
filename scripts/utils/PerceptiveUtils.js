@@ -381,10 +381,8 @@ class PerceptiveUtils {
 	static successDegree(pRollresult, pDC, pCritMode = -1, pRollBonus = 0) {
 		let vsuccessDegree;
 		let vCritMode = pCritMode;
-		
 		let vTotalResult = pRollresult[0] + pRollBonus;
 		let vDiceResult = pRollresult[1];
-		
 		if (vCritMode < 0) {
 			vCritMode = 0;
 			
