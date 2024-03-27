@@ -63,6 +63,7 @@ Allow players to automatically follow selected tokens with the camera. Can also 
 
 #### Client:
 - Follow tokens: to follow the selected tokens when they move
+- Follow on control: to follow tokens the moment they are controlled
 
 ## Spot Invisible
 Allows for player to either passively or actively spot secret doors and hidden tokens and make secret doors visible to other players by left clicking them. GMs can set seperate passiv and active DCs for spotting (or synch them).
@@ -158,6 +159,7 @@ The following informations will be displayed in the settings (if applicable):
 - Invert "Ignore Roll" key: to only recognise rolls WHEN they key is pressed
 - Position of illumination indicator: to show a indicator for the current illumination level in the token HUD
 - Position of active perception indicator: to set the position of the indicator for the lingering active perception
+- Position of perception DC input: to set the position of the perception DC input in the token HUD
 - Spotting ping duration: to ping new objects that are spotted with an active roll for a certain duration
 - Show perception results: to show the result of own perception rolls in the chat
 - Notify on lingering AP removal: to notify the user when a lingering active perception is removed from an owned token
@@ -179,10 +181,12 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
      - Through walls: If object with this VC can be seen through walls
      - Range: The range over which this VC emits (-1 for infinity)
      - Range formula: A formula based range (formulas similar to roll formulas)
+     - Minimum range: The minimum range at which a VC becomes active
      - Color: The tint of object seen through this VC
      - Effect Filter (Tokens only!): The filter applied to tokens seen with this VC
      - Effect Filter Color: The color of the effect filter
      - Transparency: The transparency of objects seen with this VC (1 no transparency, 0 invisible)
+     - Receive default: To set the vision channel as being received by default
  - Simulate player vision: to have the same vision a player controlling the tokens would have as a GM
  - Vision Channel 3D range: to calculate the vision channel range in 3D
  - Use logical OR mode: to use a logical OR for required vision channels instead of a logical AND
@@ -195,6 +199,7 @@ Vision channels allow GMs to make tokens, tiles and door controls conditionally 
       - Receiver filter: to temporarily turn on/off a receiver VC (can be toggle via macro, see "Toggle VC receiver filter of selected Token" macro)
       - Custom range: a range that overrides all other ranges for this VC on this token
       - Calculated range: the range based on on the set range formula
+      - Custom range minimum: a minimum range overriding the the world setting for this receiver
       - Sigth: If this wall can be seen through with this channel
       - Movement: If this wall can be moved through with this channel
 
