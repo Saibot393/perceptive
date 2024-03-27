@@ -518,6 +518,11 @@
 				"descrp" 				: "If the camera should follow the selected token when they move"
 			},
 			
+			"followonControl" : {
+				"name" 					: "Follow on control",
+				"descrp" 				: "If the camera should change the moment a token is selected"
+			},
+			
 			"MessagePopUps" : {
 				"name" 					: "Message popups",
 				"descrp" 				: "If messages popups for moving doors and peeking locks should be shown"

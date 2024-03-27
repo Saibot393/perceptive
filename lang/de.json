@@ -518,6 +518,11 @@
 				"descrp" 				: "Ob die Kamera den ausgewählten Figuren bei Bewegungen folgen soll"
 			},
 			
+			"followonControl" : {
+				"name" 					: "Bei Kontrolle folgen",
+				"descrp" 				: "Ob die Kamera im Moment der Kontrolle bewegt werden soll"
+			},
+			
 			"MessagePopUps" : {
 				"name" 					: "Popups Meldungen",
 				"descrp" 				: "Ob Popup Meldungen für Tür Bewegungen und Schloss durschauen angezeigt werden sollen"
