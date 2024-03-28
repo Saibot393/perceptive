@@ -1,3 +1,10 @@
+## v3.5.0
+- Added setting Follow on control to follow tokens the moment they are controlled
+- Added setting Position of perception DC input to set the position of the perception DC input in the token HUD
+- The lingering active perception indicator can now be used to change the lingering perception value
+- Added vision channel option Minimum range to set the minimum range at which a VC becomes active
+- Added vision channel option Receive default to set the vision channel as being received by default
+
 ## v3.4.3
 - Small bug fix
 
