@@ -1367,7 +1367,7 @@ class PerceptiveFlags {
 	static getPPDC(pObject, praw = false) {
 		let vDC = this.#PPDCFlag(pObject);
 		
-		if ((vDC <= 0) && !praw) {
+		if ((vDC < 0) && !praw) {
 			return Infinity;
 		}
 		else {
@@ -1383,11 +1383,14 @@ class PerceptiveFlags {
 		let vDC = this.#APDCFlag(pObject);
 		
 		if ((vDC == null) && !praw) {
-			return PerceptiveFlags.getPPDC(pObject);
+			vDC = PerceptiveFlags.getPPDC(pObject);
 		}
-		else {
-			return vDC;
-		}		
+		
+		if ((vDC < 0) && !praw) {
+			return Infinity;
+		}
+		
+		return vDC;	
 	}
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {
