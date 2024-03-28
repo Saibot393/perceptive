@@ -1,3 +1,6 @@
+## v3.5.1
+- Fixed small error that prevented 0 from being a valid stealth DC
+
 ## v3.5.0
 - Added setting Follow on control to follow tokens the moment they are controlled
 - Added setting Position of perception DC input to set the position of the perception DC input in the token HUD
