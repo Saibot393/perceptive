@@ -1171,9 +1171,15 @@ class SpottingManager {
 				title: Translate("Titles.SpottingConfirm.name"),
 				content: vContent,
 				yes: (pHTML) => {
+								/*
 								for (let i = 0; i < pObjectIDs.Tokens.length; i++) {
 									pInfos.TokenSpotted[pObjectIDs.Tokens[i]] = pHTML.find(`input[id=${pObjectIDs.Tokens[i]}]`).prop("checked");
 								}
+								*/
+								
+								for (let vID of pObjectIDs.Tokens.concat(pObjectIDs.Tiles)) {
+									pInfos.TokenSpotted[vID] = pHTML.find(`input[id=${vID}]`).prop("checked");
+								};
 					
 								//let vCheckedTokens = pObjectIDs.Tokens.filter(vID => pHTML.find(`input[id=${vID}]`).prop("checked"));
 								
