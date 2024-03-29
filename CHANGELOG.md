@@ -1,3 +1,6 @@
+## v3.5.2
+- Fixed bug that caused tiles to become visible even if not checked in the GM spotting confirmation menu
+
 ## v3.5.1
 - Fixed small error that prevented 0 from being a valid stealth DC
 
