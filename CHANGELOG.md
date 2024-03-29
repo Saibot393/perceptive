@@ -1,3 +1,6 @@
+## v3.5.3
+- Possible fix for VC range bug
+
 ## v3.5.2
 - Fixed bug that caused tiles to become visible even if not checked in the GM spotting confirmation menu
 
