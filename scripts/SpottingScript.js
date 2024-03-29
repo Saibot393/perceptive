@@ -1063,7 +1063,7 @@ class SpottingManager {
 				let vDCPassiveInput = document.createElement("input");
 				vDCPassiveInput.type = "number";
 				vDCPassiveInput.value = PerceptiveFlags.getPPDC(vToken, true);
-				vDCPassiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {PPDC : vDCPassiveInput.value})};
+				vDCPassiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {PPDC : Number(vDCPassiveInput.value)})};
 				vDCPassiveInput.style.color = "white";
 				vDCPassiveInput.style.border = "0px";
 				vDCPassiveInput.title = Translate("Titles.SpottingInfos.PassiveDC");
@@ -1073,7 +1073,7 @@ class SpottingManager {
 					vDCActiveInput = document.createElement("input");
 					vDCActiveInput.type = "number";
 					vDCActiveInput.value = PerceptiveFlags.getAPDC(vToken, true);
-					vDCActiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {APDC : vDCActiveInput.value})};
+					vDCActiveInput.onchange = (pEvent) => {PerceptiveFlags.setSpottingDCs(vToken, {APDC : Number(vDCActiveInput.value)})};
 					vDCActiveInput.style.color = "white";
 					vDCActiveInput.style.border = "0px";
 					vDCActiveInput.title = Translate("Titles.SpottingInfos.ActiveDC");
