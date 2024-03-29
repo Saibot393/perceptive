@@ -174,11 +174,18 @@ class VisionChannelsWindow extends Application {
 			if (vEmitterSetting) {
 				vEntriesHTML = vEntriesHTML +		`<td style="text-align: center; width:100px"> <input name="Emits" type="checkbox" ${vChannelSettings?.Emits ? "checked" : ""}> </td>`;
 			}
+			
+			let vCalculatedRange = (await VisionChannelsUtils.CalculateRange(vkey, this.vTarget))?.max;
+			
+			if (vCalculatedRange == Infinity) {
+				vCalculatedRange = -1;
+			}
+			
 			if (vRecieverSetting) {
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="Receives" type="checkbox" ${vChannelSettings?.Receives ? "checked" : ""}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveFiltered" type="checkbox" ${vChannelSettings?.ReceiveFiltered ? "checked" : ""}> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRange" type="number" value=${vChannelSettings?.ReceiveRange}> </td>`;
-				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${(await VisionChannelsUtils.CalculateRange(vkey, this.vTarget))?.max} disabled> </td>`;
+				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="CalculatedRange" type="number" value=${vCalculatedRange} disabled> </td>`;
 				vEntriesHTML = vEntriesHTML + 		`<td style="text-align: center; width:100px"> <input name="ReceiveRangeMin" type="number" value=${vChannelSettings?.ReceiveRangeMin}> </td>`;
 			}
 			if (vWallSetting) {
@@ -401,7 +408,7 @@ class VisionChannelsUtils {
 			vCommons = vCommons.filter(vChannelID => vChannels[vChannelID]); //filter valid channel IDs
 			
 			let vNotReceived = pEmitterChannels.filter(vChannelID => !vCommons.includes(vChannelID));
-			
+
 			if (vNotReceived.find(vChannelID => vChannels[vChannelID]?.RequiredtoSee)) {
 				vrequirednotReceived = true;
 				
@@ -750,6 +757,10 @@ class VisionChannelsUtils {
 			}
 			else {
 				vRange.max = vChannel.Range;
+				
+				if (vRange.max < 0) {
+					vRange.max = Infinity;
+				}
 			}
 		}
 		
@@ -794,6 +805,10 @@ class VisionChannelsUtils {
 				
 				if (!isNaN(vBuffer[vkey]?.max) && (vBuffer[vkey].max != "")) { // && (isNaN(vRangeList[vkey]?.max) || vBuffer[vkey].max > vRangeList[vkey].max)
 					vRangeList[vkey].max = vBuffer[vkey].max;
+				}
+				
+				if (vRangeList[vkey].max < 0) {
+					vRangeList[vkey].max = Infinity;
 				}
 				
 				if (!isNaN(vBuffer[vkey]?.min) && (vBuffer[vkey].min != "")) { // && (isNaN(vRangeList[vkey]?.min) || vBuffer[vkey].min < vRangeList[vkey].min)

@@ -155,6 +155,10 @@ Hooks.once("ready", function() {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
 			}
 			
+			if (CONFIG.debug.perceptive.VCScript) {
+				console.log(vInfos);
+			}
+			
 			return vChannel;
 		});
 		
@@ -174,6 +178,10 @@ Hooks.once("ready", function() {
 			
 			if (vChannel) {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
+			}
+		
+			if (CONFIG.debug.perceptive.VCScript) {
+				console.log(vInfos);
 			}
 			
 			return vChannel;
@@ -198,6 +206,10 @@ Hooks.once("ready", function() {
 				
 				if (vChannel) {
 					VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
+				}
+				
+				if (CONFIG.debug.perceptive.VCScript) {
+					console.log(vInfos);
 				}
 				
 				return vChannel;
@@ -228,6 +240,10 @@ Hooks.once("ready", function() {
 			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, vInfos);
 			
 			//console.log(vInfos);
+			
+			if (CONFIG.debug.perceptive.VCScript) {
+				console.log(vInfos);
+			}
 
 			if (vChannel) {
 				return false;

@@ -804,7 +804,7 @@ class PerceptiveFlags {
 	static #VisionChannelsFlag (pObject) {
 	//returns content of VisionChannelsFlag of pObject ({})
 		let vFlag = this.#PerceptiveFlags(pObject);
-		
+
 		if (vFlag) {
 			if (vFlag.hasOwnProperty(cVisionChannelsF)) {
 				return vFlag.VisionChannelsFlag;
@@ -1584,7 +1584,7 @@ class PerceptiveFlags {
 		let vOld = PerceptiveFlags.LingeringAP(pToken);
 		
 		let vNew = deepClone(vOld);
-		console.log(vNew);
+		
 		vNew[0][0] = pValue;
 		
 		await this.#setLingeringAP(pToken, vNew);
