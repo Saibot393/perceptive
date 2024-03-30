@@ -1,3 +1,7 @@
+## v3.5.5
+- Fixed some bugs in regards to spotting pings and sounds
+- Stealth checks that have a result below zero will now count as zero
+
 ## v3.5.4
 - Fixed small bug connected to the token HUD perception DC inputs
 
