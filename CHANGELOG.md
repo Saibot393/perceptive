@@ -1,3 +1,6 @@
+## v3.5.4
+- Fixed small bug connected to the token HUD perception DC inputs
+
 ## v3.5.3
 - Possible fix for VC range bug
 
