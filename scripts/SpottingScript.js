@@ -446,7 +446,9 @@ class SpottingManager {
 			}
 			else {
 				vSpotables = vSpotables.filter(vObject => !PerceptiveFlags.isSpottedbyone(vObject, pSpotters));
-			}			
+			}	
+
+			vSpotables = vSpotables.filter(vSpottable => !pSpotters.includes(vSpottable));
 					
 			//prepare data
 			let vSpotted = [];
@@ -1418,12 +1420,15 @@ class SpottingManager {
 		}
 		
 		//sound
+		console.log(vPingIgnoreVisionCycles);
+		console.log(pObjects);
+		console.log(game.settings.get(cModuleName, "SpotterImagePing").length);
 		if (vPingIgnoreVisionCycles <= 0) {
 			PerceptiveSound.PlaySpottedSound(pObjects.filter(vObject => vObject.documentName == "Token"));
 		}
 		
 		//image popup
-		if (game.settings.get(cModuleName, "SpotterImagePing").length > 0) {
+		if (game.settings.get(cModuleName, "SpotterImagePing").length > 0 && pObjects.length > 0) {
 			if (vPingIgnoreVisionCycles <= 0) {
 				for (let i = 0; i < pSpotters.length; i++) {
 					canvas.ping(pSpotters[i].object?.center, {style : "CustomPing", duration :  1000 * game.settings.get(cModuleName, "SpotterImagePingDuration"), Image : game.settings.get(cModuleName, "SpotterImagePing")});
@@ -1481,7 +1486,7 @@ class SpottingManager {
 		if (game.settings.get(cModuleName, "AutoStealthDCbehaviour") != "off") {
 			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
 				case "both":
-					vNewDCs.PPDC = vStealthResult;
+					vNewDCs.PPDC = Math.max(0, vStealthResult);
 					vNewDCs.PPDice = pRoll.dice[0].total;
 					break;
 			}
@@ -1489,7 +1494,7 @@ class SpottingManager {
 			switch(game.settings.get(cModuleName, "AutoStealthDCbehaviour")) {
 				case "both":
 				case "activeonly":
-					vNewDCs.APDC = vStealthResult;
+					vNewDCs.APDC = Math.max(0, vStealthResult);
 					break;
 			}
 
@@ -1514,7 +1519,7 @@ class SpottingManager {
 			EffectManager.applyStealthEffects(vRelevantTokens[i], {Type : pType, EffectInfos : {RollFormula : pRoll.formula}});
 		}
 
-		vNewDCs.PPDC = vStealthResult;
+		vNewDCs.PPDC = Math.max(vStealthResult, 0);
 		vNewDCs.PPDice = pRoll.dice[0].total;
 		vNewDCs.APDC = PerceptiveSystemUtils.StealthDCPf2e(vRelevantTokens[0].actor); //al tokens should have the same actor
 		
@@ -1554,6 +1559,8 @@ class SpottingManager {
 	
 	static onsightRefresh() {
 		vPingIgnoreVisionCycles = vPingIgnoreVisionCycles - 1;
+		
+		console.log(vPingIgnoreVisionCycles);
 	}
 
 	static onDoorLClick(pWall, pKeyInfo) {
@@ -1580,6 +1587,8 @@ class SpottingManager {
 	}
 
 	static async initializeVisionSources(pData) {
+		console.log(pData);
+		
 		if (vLocalVisionData.vGMVision) return; //let core foundry or walls height take care
 		
 		VisionUtils.PrepareSpotables();
@@ -1640,7 +1649,7 @@ class SpottingManager {
 			return PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers[vObject.documentName], vRangeDCModifier);
 		});
 		
-		vPingIgnoreVisionCycles = 1;
+		//vPingIgnoreVisionCycles = 1;
 		
 		//if bug, search here
 		//SpottingManager.onNewlyVisible(vSpottables, {PassivSpot : true});
