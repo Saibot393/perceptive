@@ -1,3 +1,6 @@
+## v3.5.6
+- Small fix concerning effects
+
 ## v3.5.5
 - Fixed some bugs in regards to spotting pings and sounds
 - Stealth checks that have a result below zero will now count as zero
