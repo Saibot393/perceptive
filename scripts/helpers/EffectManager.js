@@ -15,6 +15,8 @@ class EffectManager {
 	
 	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as Rideable effect
 	
+	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
+	
 	//IMPLEMENTATION
 	static async applyStealthEffects(pHider, pInfos = {}) {
 		let vEffectDocuments;
@@ -77,7 +79,7 @@ class EffectManager {
 		}
 		
 		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
-			PerceptiveFlags.setPerceptiveStealthing(pHider, true);
+			await PerceptiveFlags.setPerceptiveStealthing(pHider, true);
 		}
 	}
 	
@@ -91,7 +93,24 @@ class EffectManager {
 		}
 		
 		if (!pApplyReset) {
+			
 			await PerceptiveFlags.setPerceptiveStealthing(pHider, false);
+		}
+	}
+	
+	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
+		if (game.user.isGM) {
+			if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
+				
+				for (let i = 0; i < vActiveScenes.length; i++) {
+					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+					
+					for (let j = 0; j < vrelevantTokens.length; j++) {	
+						PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
+					}
+				}			
+			}
 		}
 	}
 }
@@ -99,5 +118,7 @@ class EffectManager {
 Hooks.on("deleteActiveEffect", (pEffect, pInfos, pUserID) => {if (PerceptiveCompUtils.isPercpetiveEffect(pEffect)) {Hooks.call(cModuleName + ".PerceptiveEffectdeletion", pEffect, pInfos, pUserID, pEffect.parent)}});
 
 Hooks.on("deleteItem", (pEffect, pInfos, pUserID) => {if (PerceptiveUtils.isPf2e() && PerceptiveFlags.isPerceptiveEffect(pEffect)) {Hooks.call(cModuleName + ".PerceptiveEffectdeletion", pEffect, pInfos, pUserID, pEffect.parent)}});
+
+Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => EffectManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
 
 export { EffectManager }

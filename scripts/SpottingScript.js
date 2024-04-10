@@ -102,7 +102,7 @@ class SpottingManager {
 
 	static onNewlyVisible(pObjects, pInfos = {PassivSpot : false}, pSpotters = canvas.tokens.controlled.map(vToken => vToken.document)) {} //called when a new object is revealed
 	
-	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
+	//static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 
 	static async onStealthRoll(pActor, pRoll) {} //called when a stealth roll is rolled
 	
@@ -1420,9 +1420,6 @@ class SpottingManager {
 		}
 		
 		//sound
-		console.log(vPingIgnoreVisionCycles);
-		console.log(pObjects);
-		console.log(game.settings.get(cModuleName, "SpotterImagePing").length);
 		if (vPingIgnoreVisionCycles <= 0) {
 			PerceptiveSound.PlaySpottedSound(pObjects.filter(vObject => vObject.documentName == "Token"));
 		}
@@ -1452,6 +1449,7 @@ class SpottingManager {
 		}
 	}
 	
+/*
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
@@ -1460,13 +1458,14 @@ class SpottingManager {
 				for (let i = 0; i < vActiveScenes.length; i++) {
 					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
 					
-					for (let j = 0; j < vrelevantTokens.length; j++) {				
+					for (let j = 0; j < vrelevantTokens.length; j++) {	
 						PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
 					}
 				}			
 			}
 		}
 	}
+*/
 
 	static async onStealthRoll(pActor, pRoll) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
@@ -1559,8 +1558,6 @@ class SpottingManager {
 	
 	static onsightRefresh() {
 		vPingIgnoreVisionCycles = vPingIgnoreVisionCycles - 1;
-		
-		console.log(vPingIgnoreVisionCycles);
 	}
 
 	static onDoorLClick(pWall, pKeyInfo) {
@@ -1587,8 +1584,6 @@ class SpottingManager {
 	}
 
 	static async initializeVisionSources(pData) {
-		console.log(pData);
-		
 		if (vLocalVisionData.vGMVision) return; //let core foundry or walls height take care
 		
 		VisionUtils.PrepareSpotables();
@@ -1760,7 +1755,7 @@ Hooks.once("ready", function() {
 
 		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args));
 
-		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
+		//Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
 	}
 });
 

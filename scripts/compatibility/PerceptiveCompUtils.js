@@ -155,7 +155,7 @@ class PerceptiveCompUtils {
 		let vBuffer;
 		
 		for (let i = 0; i < pNameIDs.length; i++) {
-			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] || vEffect.label == pNameIDs[i]);
+			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
 			
 			if (vBuffer) {
 				vNameIDs.push(vBuffer);
