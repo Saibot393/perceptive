@@ -1440,6 +1440,18 @@ class PerceptiveFlags {
 	}
 	
 	static async setSpottingDCs(pObject, pDCs) {
+		//reduce update cycles
+		let vUpdates = {flags : {[cModuleName] : {}}}
+		
+		for (let vKey of ["PPDC", "APDC", "PPDice"]) {
+			if (pDCs.hasOwnProperty(vKey)) {
+				vUpdates.flags[cModuleName][`${vKey}Flag`] = pDCs[vKey];
+			}
+		}
+		
+		pObject.update(vUpdates);
+		
+		/*
 		if (pDCs.hasOwnProperty("PPDC")) {
 			await PerceptiveFlags.#setPPDC(pObject, pDCs.PPDC)
 		}
@@ -1451,6 +1463,8 @@ class PerceptiveFlags {
 		if (pDCs.hasOwnProperty("PPDice")) {
 			await PerceptiveFlags.#setPPDice(pObject, pDCs.PPDice)
 		}
+		*/
+		
 	}
 	
 	static resetSpottedbyMove(pToken) {

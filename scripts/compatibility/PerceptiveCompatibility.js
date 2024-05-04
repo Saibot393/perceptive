@@ -18,9 +18,9 @@ class PerceptiveCompatibility {
 	static addPeekingButton(pButtons, pLockObject, pLockType, pCharacter, pShowall) {} //adds an appropiate peeking button to pButtons
 	
 	//specific: stealthy
-	static onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
+	static async onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
 	
-	static onEffectupdate(pEffect, pchanges, pInfos) {}//called when a token is updated
+	static async onEffectupdate(pEffect, pchanges, pInfos) {}//called when a token is updated
 	
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {} //adds the Lock & Key Trigger settings to pApp
@@ -43,36 +43,37 @@ class PerceptiveCompatibility {
 	}
 	
 	//specific: stealthy
-	static onTokenupdate(pToken, pchanges, pInfos) {
+	static async onTokenupdate(pToken, pchanges, pInfos) {
 		if (game.settings.get(cModuleName, "StealthyIntegration")) {
 			if (pchanges.flags?.perceptive?.hasOwnProperty("PPDCFlag") || pchanges.flags?.perceptive?.hasOwnProperty("APDCFlag")) {
 				let vMaxResult = Math.max(PerceptiveFlags.getPPDC(pToken, true), PerceptiveFlags.getAPDC(pToken, true));
 				
 				if ((vMaxResult >= 0) && (vMaxResult < Infinity)) {
+					await stealthy.bankStealth(pToken, vMaxResult)
+					/*
 					let vStealthyEffects = pToken.actor.effects.filter(vEffect => vEffect.flags?.stealthy?.hidden);
 					
 					for (let i = 0; i < vStealthyEffects.length; i++) {
 						vStealthyEffects[i].flags.stealthy.hidden = vMaxResult;
 					}
+					*/
 				}
 			}
 		}
 	}
 
-	static onEffectupdate(pEffect, pchanges, pInfos) {
+	static async onEffectupdate(pEffect, pchanges, pInfos) {
 		if (game.settings.get(cModuleName, "StealthyIntegration")) {
-			if (pchanges.flags?.stealthy?.hasOwnProperty("hidden")) {
-				let vStealthValue = pchanges.flags.stealthy.hidden;
-				
+			if (pchanges.flags?.stealthy?.hasOwnProperty("stealth")) {
+				let vStealthValue = pchanges.flags.stealthy.stealth;
 				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
-				
 				let vNewDCs = {PPDC : vStealthValue, APDC : vStealthValue};
 				
 				for (let i = 0; i < vActiveScenes.length; i++) {
 					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pEffect.parent.id);
 					
 					for (let j = 0; j < vrelevantTokens.length; j++) {
-						PerceptiveFlags.setSpottingDCs(vrelevantTokens[j], vNewDCs);
+						await PerceptiveFlags.setSpottingDCs(vrelevantTokens[j], vNewDCs);
 					}
 				}
 			}	
