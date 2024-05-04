@@ -1,3 +1,6 @@
+## v3.5.7
+- Fixed bug that caused mistake with VC when levels was active
+
 ## v3.5.6
 - Small fix concerning effects
 
