@@ -1,3 +1,109 @@
+## v3.5.8
+- Restored compatibility with Stealthy (compatible with Stealthy v4.0.4 and upwards) (thanks to [Eligarf](https://github.com/Eligarf))
+
+## v3.5.7
+- Fixed bug that caused mistake with VC when levels was active
+
+## v3.5.6
+- Small fix concerning effects
+
+## v3.5.5
+- Fixed some bugs in regards to spotting pings and sounds
+- Stealth checks that have a result below zero will now count as zero
+
+## v3.5.4
+- Fixed small bug connected to the token HUD perception DC inputs
+
+## v3.5.3
+- Possible fix for VC range bug
+
+## v3.5.2
+- Fixed bug that caused tiles to become visible even if not checked in the GM spotting confirmation menu
+
+## v3.5.1
+- Fixed small error that prevented 0 from being a valid stealth DC
+
+## v3.5.0
+- Added setting Follow on control to follow tokens the moment they are controlled
+- Added setting Position of perception DC input to set the position of the perception DC input in the token HUD
+- The lingering active perception indicator can now be used to change the lingering perception value
+- Added vision channel option Minimum range to set the minimum range at which a VC becomes active
+- Added vision channel option Receive default to set the vision channel as being received by default
+
+## v3.4.3
+- Small bug fix
+
+## v3.4.2
+- Fixed bug that prevented the "other dcs" menu from appearing
+- Hid accidentally exposed setting
+
+## v3.4.1
+- Added explicit support for [Level Up: Advanced 5th Edition (Official)](https://foundryvtt.com/packages/a5e)
+
+## v3.4.0
+- Added [MATT](https://foundryvtt.com/packages/monks-active-tiles) actions:
+    - Give vision channel to give a specified action chanel as a defined type to the target(s)
+    - Remove vision channel to remove a specified action chanel as a defined type from the target(s)
+    - Reset \"spotted by\" to reset the tokens list that has actively spotted this target
+    - Set \"can be spotted\" to set the can be spotted setting to a specific value or toggle it
+
+## v3.3.3
+- Fixed levels related bug
+
+## v3.3.2
+- Small bug fix for levels compatibility
+
+## v3.3.1
+- Fixed bug with VC macros
+- Improved VC updates
+
+## v3.3.0
+- Added options "in combat only" and "out of combat only" to "Make spotted tokens visible" and "Make allied tokens visible"
+- Added setting Disable invisible MATT tiles to disable spottable invisible MATT Tiles
+- Added object setting Reveal when spotted to make specific objects visible when spotted (overrides game settings when active)
+
+## v3.2.3
+- Small bug fix
+
+## v3.2.2
+- Improved levels compatibility
+- Fixed some bugs
+- Updated PF2e compatibility
+
+## v3.2.1
+- Bug fix and improvement for `isspottedby` api 
+
+## v3.2.0
+- Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility (included LOS check)
+- Spotted secret doors will no longer become normal doors when clicked
+    - Added world setting "Make spotted door visible on click" to make spotted secret doors become normal doors on click
+- Added world setting "Use logical OR mode" to use a logical OR for required vision channels instead of a logical AND
+
+## v3.1.15
+- Improved camera pan smoothness of "Follow tokens" feature
+
+## v3.1.14
+- Small bug fix to prevent spotting message spam
+- Small bug fix to prevent moving door from being opened again when being closed by scrolling (and scrolling to fast)
+
+## v3.1.13
+- Fixed bug that caused additional walls to be created
+- Added debug setting Recreate Perceptive walls on scene load
+
+## v3.1.12
+- Fixed visual bug that caused walls that were supossed to be hidden to show up on the wall layer ui when levels was active
+- Improved performance on scene load when a large amount of moveable or peekable doors are placed
+
+## v3.1.11
+- Improved [Wall Height](https://foundryvtt.com/packages/wall-height) & [Levels](https://foundryvtt.com/packages/levels) compatibility
+    - Wall Height and Tile level will now be included in 3D range calculations
+    - Peekable and Movable doors will no longer cause "phantom" walls to appear above or below them
+    - Door icons will no longer be displayed on the wrong level for GMs
+
+## v3.1.10
+- Walls accidentally created due to lag will now be automatically be removed on map load and walls will be preloaded to decrease the probability of walls being created due to lag
+- Visible objects actively spotted for the first time will now trigger the spotted by features
+
 ## v3.1.9
 - Fix to prevent lag related bugs with door moving
 

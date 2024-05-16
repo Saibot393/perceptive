@@ -4,11 +4,12 @@ import {cModuleName, PerceptiveUtils, Translate} from "../utils/PerceptiveUtils.
 import {VisionUtils} from "../utils/VisionUtils.js";
 import {PerceptiveSystemUtils} from "../utils/PerceptiveSystemUtils.js";
 import { PerceptiveCompUtils} from "../compatibility/PerceptiveCompUtils.js";
+import {VisionChannelsUtils} from "./VisionChannelsHelper.js";
 
 const cangleepsilon = 1; //epsilon around zero for angles
 
 const cDoorMoveTypes = ["none", "swing", "slide"];
-const cHingePositions = [0, 1, 2];
+const cHingePositions = [0, 1, 2, 3];
 
 const cSwingSpeedRange = [-180, 180];
 const cSlideSpeedRange = [-1, 1];
@@ -57,6 +58,7 @@ const cotherSkillADCsF = "otherSkillADCsFlag"; //Flag that stores other skill DC
 const cTilePerceptiveNameF = "TilePerceptiveNameFlag"; //Flag for the name of the perceptive tile
 const cSpottingRangeF = "SpottingRangeFlag"; //FLag to store in which range this object can be seen
 const cSpottingMessageF = "SpottingMessageFlag"; //Flag to store the chat message when this object is spotted
+const cRevealwhenSpottedF = "RevealwhenSpottedFlag"; //Flag to make object visible when spotted
 
 const cVisionChannelsF = "VisionChannelsFlag"; //FLag to store the vision channels of object
 const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
@@ -64,7 +66,7 @@ const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
 const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cVisionChannelsF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF, cVisionChannelsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -80,6 +82,8 @@ class PerceptiveFlags {
 	static LockPeekingPosition(pWall) {} //returns the LockpeekingPosition of pWall
 	
 	static async createLockpeekingWalls(pDoor) {} //creates the appropiate perceptive walls of pDoor
+	
+	static async hideLockpeekingWalls(pDoor) {} //hides the lockpeeking walls of pDoor
 	
 	static async deleteLockpeekingWalls(pDoor, pSelfDelete = false) {} //creates the appropiate perceptive walls of pDoor
 	
@@ -157,6 +161,10 @@ class PerceptiveFlags {
 	//spotting
 	static canbeSpotted(pObject) {} //returns if this object can be spotted by any means
 	
+	static async setcanbeSpotted(pObject, pStatus) {} //sets pObject to can be spotted status to pStatus
+	
+	static async togglecanbeSpotted(pObject) {} //toggles the can be spotted state of pObject
+	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
 	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
@@ -221,6 +229,8 @@ class PerceptiveFlags {
 	
 	static LingeringAP(pToken) {} //returns the Lingering AP of pToken (undefined if not set)
 	
+	static async setPrimaryLingeringAP(pToken, pValue) {} //specifically sets the primarey value of the lingering ap without changing the info
+	
 	static LingeringAPInfo(pToken) {} //returns the Lingering AP info of pToken
 	
 	static hasLingeringAP(pToken) {} //returns if pToken has a lingering ap set
@@ -243,6 +253,8 @@ class PerceptiveFlags {
 	
 	static hasSpottingMessage(pObject) {} //returns wether pObject has a Spotting Message
 	
+	static RevealwhenSpotted(pObject) {} //returns if pObject should be revealed when spotted
+	
 	//Vision channels
 	static getVisionChannels(pObject, pRaw = false) {} //returns the vision channels of pObject
 	
@@ -260,9 +272,9 @@ class PerceptiveFlags {
 	
 	static getVCMovement(pWall) {} //returns the Sight channels of this wall
 	
-	static AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
+	static async AddChannel(pObject, pChannelID, pType) {} //adds pType of pChannelID to true
 	
-	static RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
+	static async RemoveChannel(pObject, pChannelID, pType) {} //removes pType of pChannelID to true
 	
 	static getReceiverFilters(pObject) {} //returns the receiver filters of pObject
 	
@@ -295,7 +307,7 @@ class PerceptiveFlags {
 	static #PerceptiveFlags (pObject) {	
 	//returns all Module Flags of pObject (if any)
 		if (pObject) {
-			if (pObject.flags.hasOwnProperty(cModuleName)) {
+			if (pObject.flags?.hasOwnProperty(cModuleName)) {
 				return pObject.flags[cModuleName];
 			}
 		}
@@ -776,10 +788,23 @@ class PerceptiveFlags {
 		return ""; //default if anything fails		
 	}
 	
+	static #RevealwhenSpottedFlag (pObject) {
+	//returns content of RevealwhenSpottedFlag of pObject (boolean)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cRevealwhenSpottedF)) {
+				return vFlag.RevealwhenSpottedFlag;
+			}
+		}
+		
+		return false; //default if anything fails		
+	}
+	
 	static #VisionChannelsFlag (pObject) {
 	//returns content of VisionChannelsFlag of pObject ({})
 		let vFlag = this.#PerceptiveFlags(pObject);
-		
+
 		if (vFlag) {
 			if (vFlag.hasOwnProperty(cVisionChannelsF)) {
 				return vFlag.VisionChannelsFlag;
@@ -890,6 +915,16 @@ class PerceptiveFlags {
 		return false;
 	}
 	
+	static async #setcanbeSpotted (pObject, pContent) {
+		//sets content of isSpottedbyFlag (boolean)
+		if (pObject) {
+			await pObject.setFlag(cModuleName, ccanbeSpottedF, Boolean(pContent)); 
+			
+			return true;
+		}
+		return false;		
+	}
+	
 	static async #setSpottedby (pObject, pContent) {
 		//sets content of isSpottedbyFlag (array of IDs)
 		if (pObject) {
@@ -955,16 +990,6 @@ class PerceptiveFlags {
 			return true;
 		}
 		return false;
-	}
-	
-	static async #setcanbeSpotted (pObject, pContent) {
-		//sets content of canbeSpottedFlag (Boolean)
-		if (pObject) {
-			await pObject.setFlag(cModuleName, ccanbeSpottedF, Boolean(pContent)); 
-			
-			return true;
-		}
-		return false;					
 	}
 	
 	static async #setLingeringAP (pObject, pContent) {
@@ -1054,6 +1079,14 @@ class PerceptiveFlags {
 			await this.#setLockPeekingWallIDs(pDoor, PerceptiveUtils.IDsfromWalls(vWalls));
 			
 			WallUtils.deletewalls(vOldIDs, pDoor.parent); //clean up mess
+		}
+	}
+	
+	static async hideLockpeekingWalls(pDoor) {
+		let vWalls = PerceptiveUtils.WallsfromIDs(PerceptiveFlags.getLockpeekingWallIDs(pDoor)).filter(vWall => vWall);
+		
+		for (vWall of vWalls) {
+			WallUtils.hidewall(vWall);
 		}
 	}
 	
@@ -1192,6 +1225,10 @@ class PerceptiveFlags {
 			let vWall = await WallUtils.clonedoorasWall(pDoor);
 			
 			await this.#setDoormovingWallIDFlag(pDoor, vWall.id);
+			
+			if (!WallUtils.isOpened(pDoor)) {
+				WallUtils.hidewall(vWall);
+			}
 		}
 	}
 	
@@ -1281,6 +1318,14 @@ class PerceptiveFlags {
 		return PerceptiveFlags.#canbeSpottedFlag(pObject);
 	}
 	
+	static async setcanbeSpotted(pObject, pStatus) {
+		return await PerceptiveFlags.#setcanbeSpotted(pObject, pStatus);
+	} 
+	
+	static async togglecanbeSpotted(pObject) {
+		return await PerceptiveFlags.setcanbeSpotted(pObject, !PerceptiveFlags.canbeSpotted(pObject));
+	}
+	
 	static async MakeSpottable(pObject) {
 		this.#setcanbeSpotted(pObject, true);
 	}
@@ -1307,7 +1352,7 @@ class PerceptiveFlags {
 			
 			return false;
 		}
-		
+
 		return (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
@@ -1322,7 +1367,7 @@ class PerceptiveFlags {
 	static getPPDC(pObject, praw = false) {
 		let vDC = this.#PPDCFlag(pObject);
 		
-		if ((vDC <= 0) && !praw) {
+		if ((vDC < 0) && !praw) {
 			return Infinity;
 		}
 		else {
@@ -1338,11 +1383,14 @@ class PerceptiveFlags {
 		let vDC = this.#APDCFlag(pObject);
 		
 		if ((vDC == null) && !praw) {
-			return PerceptiveFlags.getPPDC(pObject);
+			vDC = PerceptiveFlags.getPPDC(pObject);
 		}
-		else {
-			return vDC;
-		}		
+		
+		if ((vDC < 0) && !praw) {
+			return Infinity;
+		}
+		
+		return vDC;	
 	}
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {
@@ -1392,6 +1440,18 @@ class PerceptiveFlags {
 	}
 	
 	static async setSpottingDCs(pObject, pDCs) {
+		//reduce update cycles
+		let vUpdates = {flags : {[cModuleName] : {}}}
+		
+		for (let vKey of ["PPDC", "APDC", "PPDice"]) {
+			if (pDCs.hasOwnProperty(vKey)) {
+				vUpdates.flags[cModuleName][`${vKey}Flag`] = pDCs[vKey];
+			}
+		}
+		
+		pObject.update(vUpdates);
+		
+		/*
 		if (pDCs.hasOwnProperty("PPDC")) {
 			await PerceptiveFlags.#setPPDC(pObject, pDCs.PPDC)
 		}
@@ -1403,6 +1463,8 @@ class PerceptiveFlags {
 		if (pDCs.hasOwnProperty("PPDice")) {
 			await PerceptiveFlags.#setPPDice(pObject, pDCs.PPDice)
 		}
+		*/
+		
 	}
 	
 	static resetSpottedbyMove(pToken) {
@@ -1532,6 +1594,16 @@ class PerceptiveFlags {
 		return this.#LingeringAPFlag(pToken);
 	}
 	
+	static async setPrimaryLingeringAP(pToken, pValue) {
+		let vOld = PerceptiveFlags.LingeringAP(pToken);
+		
+		let vNew = deepClone(vOld);
+		
+		vNew[0][0] = pValue;
+		
+		await this.#setLingeringAP(pToken, vNew);
+	}
+	
 	static LingeringAPInfo(pToken) {
 		return this.#LingeringAPInfoFlag(pToken);
 	} 
@@ -1647,6 +1719,10 @@ class PerceptiveFlags {
 		return PerceptiveFlags.SpottingMessage(pObject).length > 0;
 	}
 	
+	static RevealwhenSpotted(pObject) {
+		return this.#RevealwhenSpottedFlag(pObject);
+	}
+	
 	//Vision channels
 	static getVisionChannels(pObject, pRaw = false) {
 		return this.#VisionChannelsFlag(pObject);
@@ -1663,7 +1739,7 @@ class PerceptiveFlags {
 	}
 	
 	static getVCEmitters(pObject, pIncludeActor = false) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (pIncludeActor && pObject.actor) {
 			//for AEs
@@ -1674,55 +1750,57 @@ class PerceptiveFlags {
 	}
 	
 	static getVCReceivers(pObject, pIncludeActor = false, pFilter = false) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (pIncludeActor && pObject.actor) {
 			//for AEs
 			vVisionChannels = {...vVisionChannels, ...this.#VisionChannelsFlag(pObject.actor)};
 		}
 		
-		let vFilters = {};
+		let vReceivers = Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel]?.Receives);
+		
+		vReceivers.push(...VisionChannelsUtils.defaultReceivers().filter(vChannel => vVisionChannels[vChannel] == undefined || vVisionChannels[vChannel].Receives == undefined));
 		
 		if (pFilter) {
-			vFilters = PerceptiveFlags.getReceiverFilters(pObject);
+			let vFilters = PerceptiveFlags.getReceiverFilters(pObject);
 			
-			return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives && !vFilters[vChannel]);	
+			vReceivers =  vReceivers.filter(vChannel => !vFilters[vChannel]);	
 		}
 		
-		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Receives);		
+		return vReceivers;		
 	}
 	
 	static getReceiverRanges(pObject) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		let vRangeList = {};
 		
 		for (let vKey of Object.keys(vVisionChannels)) {
-			vRangeList[vKey] = vVisionChannels[vKey].ReceiveRange;
+			vRangeList[vKey] = {max : vVisionChannels[vKey].ReceiveRange, min : vVisionChannels[vKey].ReceiveRangeMin};
 		}
 		
 		return vRangeList;	
 	}
 	
 	static hasVCEmitter(pObject) {
-		let vVisionChannels = this.#VisionChannelsFlag(pObject);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pObject);
 		
-		return Object.keys(this.#VisionChannelsFlag(pObject)).find(vChannel => vVisionChannels[vChannel].Emits);
+		return Object.keys(vVisionChannels).find(vChannel => vVisionChannels[vChannel].Emits);
 	}
 	
 	static getVCSight(pWall) {
-		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pWall);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Sight);				
 	}
 	
 	static getVCMovement(pWall) {
-		let vVisionChannels = this.#VisionChannelsFlag(pWall);
+		let vVisionChannels = PerceptiveFlags.getVisionChannels(pWall);
 		
 		return Object.keys(vVisionChannels).filter(vChannel => vVisionChannels[vChannel].Movement);				
 	}
 	
-	static AddChannel(pObject, pChannelID, pType) {
+	static async AddChannel(pObject, pChannelID, pType) {
 		let Channels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (!Channels[pChannelID]) {
@@ -1731,19 +1809,19 @@ class PerceptiveFlags {
 		
 		Channels[pChannelID][pType] = true;
 		
-		this.#setVisionChannels(pObject, Channels);
+		await this.#setVisionChannels(pObject, Channels);
 		
 		Hooks.callAll(cModuleName+".updateVCVision", (pObject));
 	}
 	
-	static RemoveChannel(pObject, pChannelID, pType) {
+	static async RemoveChannel(pObject, pChannelID, pType) {
 		let Channels = PerceptiveFlags.getVisionChannels(pObject);
 		
 		if (Channels[pChannelID]) {
-			delete Channels[pChannelID][pType];	
+			Channels[pChannelID][pType] = false;	
 		}
 
-		this.#setVisionChannels(pObject, Channels);	
+		await this.#setVisionChannels(pObject, Channels);	
 
 		Hooks.callAll(cModuleName+".updateVCVision", (pObject));		
 	}

@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF} from "../helpers/PerceptiveFlags.js";
 import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
@@ -294,7 +294,7 @@ class PerceptiveSheetSettings {
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
-				let vTabbar = pHTML.find(`[aria-role="Form Tab Navigation"].sheet-tabs`);
+				let vTabbar = pHTML.find(`nav.sheet-tabs:first`);
 				let vprevTab = pHTML.find(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
 				
 				let vTabButtonHTML = 	`
@@ -336,7 +336,7 @@ class PerceptiveSheetSettings {
 		}
 		
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs[aria-role="Form Tab Navigation"]`);
+		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs:first`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -367,8 +367,10 @@ class PerceptiveSheetSettings {
 	
 	//dialogs
 	static OpenotherSkillDCs(pApp) {
-		if (game.system?.model?.Actor?.character?.skills) {
-			let vSkills = Object.keys(game.system.model.Actor.character.skills);
+		let vSkillsObject = game.system?.model?.Actor?.character?.skills || CONFIG[game.system.id.toUpperCase()].skills;
+		
+		if (vSkillsObject) {
+			let vSkills = Object.keys(vSkillsObject);
 			
 			let vContent = `<p> ${Translate("SheetSettings."+ cotherSkillADCsF +".name")} </p>`;
 			
@@ -405,6 +407,14 @@ class PerceptiveSheetSettings {
 													vtype : "checkbox", 
 													vvalue : PerceptiveFlags.canbeSpotted(pApp.document), 
 													vflagname : ccanbeSpottedF
+													}, pto);
+													
+		//reveal when spotted
+		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cRevealwhenSpottedF +".name"), 
+													vhint : Translate("SheetSettings."+ cRevealwhenSpottedF +".descrp"), 
+													vtype : "checkbox", 
+													vvalue : PerceptiveFlags.RevealwhenSpotted(pApp.document), 
+													vflagname : cRevealwhenSpottedF
 													}, pto);
 													
 		//passive perception dc
@@ -605,6 +615,9 @@ class PerceptiveSheetSettings {
 			case "numberpart":
 			case "numberinterval":
 				vnewHTML = vnewHTML + `<input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}" ${vlockedstate}><label>${vNumberSeperator}</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}" ${vlockedstate}>`;
+				break;
+			case "numberxy":
+				vnewHTML = vnewHTML + `<label>x:</label><input type=number name="flags.${cModuleName}.${vflagname[0]}" id=${vID} value="${vvalue[0]}" ${vlockedstate}><label>y:</label><input type=number name="flags.${cModuleName}.${vflagname[1]}" id=${vID} value="${vvalue[1]}" ${vlockedstate}>`;
 				break;
 		}
 			

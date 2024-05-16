@@ -17,6 +17,7 @@ const cRideable = "Rideable";
 const cMATT = "monks-active-tiles";
 const cATV = "tokenvisibility";
 const cTokenMagic = "tokenmagic";
+const cEpicRolls = "epic-rolls-5e";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -38,7 +39,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -69,6 +70,13 @@ class PerceptiveCompUtils {
 	static MattTriggerCondition(pObject, pType) {} //returns the MATT trigger condition of pObject for pType
 	
 	static MATTTriggered(pObject, pType, pOutcome) {} //returns if a triiger of pType with pOutcome triggers the MATT tile of pObject
+	
+	//specific: wall-height & levels
+	static WHLelevation(pObject) {} //returns a calculated middle elevation of pObject
+	
+	static LVLLOStest(pPoint) {} //returns if is in line of sight
+	
+	static WHLVLzmiddle(pObject) {} //returns the calculated z middle of pObject
 	
 	//specific: Rideable
 	//static compatibilityName(pTile) {} //returns the rideable tile name of pTile, false otherwise
@@ -147,16 +155,16 @@ class PerceptiveCompUtils {
 		let vBuffer;
 		
 		for (let i = 0; i < pNameIDs.length; i++) {
-			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] || vEffect.label == pNameIDs[i]);
+			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
 			
 			if (vBuffer) {
 				vNameIDs.push(vBuffer);
 			}
 			else {
-				vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem().effects.get(pNameIDs[i]);
+				vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem()?.effects.get(pNameIDs[i]);
 				
 				if (!vBuffer) {
-					vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem().effects.find(v => v.name == pNameIDs[i]);
+					vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem()?.effects.find(v => v.name == pNameIDs[i]);
 				}
 				
 				if (vBuffer) {
@@ -263,6 +271,104 @@ class PerceptiveCompUtils {
 				return false;
 				break;
 		}
+	}
+	
+	//specific: wall-height & levels
+	static WHLelevation(pObject) {
+		if (PerceptiveCompUtils.isactiveModule(cWallHeight)) {
+			if (pObject?.flags[cWallHeight]) {
+				if (pObject.flags[cWallHeight].hasOwnProperty("top") || pObject.flags[cWallHeight].hasOwnProperty("bottom")) {
+					if (isFinite(pObject.flags[cWallHeight].top) && isFinite(pObject.flags[cWallHeight].bottom)) {
+						return (pObject.flags[cWallHeight].top + pObject.flags[cWallHeight].bottom)/2;
+					}
+					else {
+						if (isFinite(pObject.flags[cWallHeight].top)) {
+							return pObject.flags[cWallHeight].top;
+						}
+						
+						if (isFinite(pObject.flags[cWallHeight].bottom)) {
+							return pObject.flags[cWallHeight].bottom;
+						}
+					}
+				}
+			}
+			
+			if (pObject?.flags[cLevels]) {
+				if (pObject.flags[cLevels].hasOwnProperty("top") || pObject.flags[cLevels].hasOwnProperty("bottom")) {
+					if (isFinite(pObject.flags[cLevels].top) && isFinite(pObject.flags[cLevels].bottom)) {
+						return (pObject.flags[cLevels].top + pObject.flags[cLevels].bottom)/2;
+					}
+					else {
+						if (isFinite(pObject.flags[cLevels].top)) {
+							return pObject.flags[cLevels].top;
+						}
+						
+						if (isFinite(pObject.flags[cLevels].bottom)) {
+							return pObject.flags[cLevels].bottom;
+						}
+					}
+				}
+			}
+		}
+	} 
+	
+	static LVLLOStest(pPoint) {
+		let vtokens = canvas.tokens.controlled.filter(vtoken => vtoken.vision);
+		
+		if (!vtokens.length && !game.user.isGM && game.user.character) {
+			vtokens.push(...canvas.tokens.placeables.filter(vtoken => vtoken.vision && vtoken.actor == game.user.character));
+		}
+		
+		let vpoints = vtokens.map((vtoken) => {return {...vtoken.center, z : vtoken.losHeight}});
+		
+		if (game.user.isGM && !vpoints.length) {
+			let vlosHeight = Infinity;
+			if (CONFIG.Levels.UI.rangeEnabled) {
+				vlosHeight = CONFIG.Levels.UI.range[1];
+			}
+			
+			vpoints.push({...pPoint, z : vlosHeight})
+		}
+		
+		return vpoints.some((vpoint) => {
+			let collision = CONFIG.Levels.handlers.SightHandler.testCollision(vpoint, pPoint);
+			
+			if (!collision || (collision.x == pPoint.x && collision.y == pPoint.y && collision.z == pPoint.z)) return true;
+		})
+	}
+	
+	static WHLVLzmiddle(pObject) {
+		if (!pObject) return;
+		
+		if (pObject.losHeight != undefined) {
+			return pObject.losHeight;
+		}
+		
+		let vdocument = pObject.document ?? pObject.wall?.document;
+		
+		if (vdocument) {
+			let vmiddle;
+			
+			if (vdocument.flags[cWallHeight]) {
+				vmiddle = (vdocument.flags[cWallHeight].bottom + vdocument.flags[cWallHeight].top)/2;
+			}
+			
+			if (isNaN(vmiddle) && CONFIG.Levels) {
+				let range = CONFIG.Levels.helpers.getRangeForDocument(vdocument);
+				
+				vmiddle = (range.rangeBottom + range.rangeTop)/2;
+				
+				if (isNaN(vmiddle) && range.rangeBottom != undefined && range.rangeTop != undefined) {
+					vmiddle = 0;
+				}
+			}
+			
+			if (!isNaN(vmiddle)) {
+				return vmiddle;
+			}
+		}
+		
+		return undefined;
 	}
 	
 	//specific: Rideable

@@ -97,7 +97,6 @@ Hooks.once("ready", function() {
 																														
 																														for (let i = 0; i < vTokenVisionFunctions.length; i++) {
 																															vBuffer = vTokenVisionFunctions[i](this);
-																															
 																															if (vBuffer != undefined) {
 																																return vBuffer;
 																															}

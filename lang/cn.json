@@ -407,7 +407,12 @@
 			"LingeringAPDuration" : {
 				"name"					: "Lingering active perception duration",
 				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
-			},			
+			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Make spotted door visible on click",
+				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
+			},		
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
@@ -473,10 +478,20 @@
 				"name" 					: "Show Vision Channel IDs",
 				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
 			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Use logical OR mode",
+				"descrp"				: "If required Vision Channels should operate on a logical OR instead of a logical AND"
+			},			
 			
 			"showPerceptiveWalls" : {
 				"name" 					: "Show Perceptive walls [DEBUG]",
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			},
+			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Recreate Perceptive walls on scene load [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be recreated when a scene is reloaded (for debug purposes)"
 			},
 			
 			"followTokens" : {

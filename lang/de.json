@@ -27,7 +27,9 @@
 					"value1"			: "Düster",
 					"value2"			: "Hell"
 				},
-				"LingeringAP"			: "Verbleibende aktive Wahrnehmung"
+				"LingeringAP"			: "Verbleibende aktive Wahrnehmung",
+				"PassiveDC"				: "Passiver Wahrnehmungs SG",
+				"ActiveDC"				: "Aktiver Wahrnehmungs "
 			},
 			"SpottingConfirm" : {
 				"name"					: "Aufdecken bestätigen",
@@ -381,12 +383,24 @@
 			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Aufgedeckte Figuren sichtbar machen",
-				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen"
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte Figuren für alle sichtbar gemacht werden sollen",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"incombatonly"		: "Nur in Kämpfen",
+					"outcombatonly"		: "Nur außerhalb von Kämpfen"
+				}
 			},
 			
 			"RevealAllies" : {
 				"name"					: "Aufgedeckte verbündete Figuren sichtbar machen",
-				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)"
+				"descrp"				: "Ob aktiv oder passiv aufgedeckte verbündete Figuren für alle sichtbar gemacht werden sollen (nur wenn obere EInstellung aktiv ist)",
+				"options" : {
+					"never"				: "niemals",
+					"always"			: "immer",
+					"incombatonly"		: "Nur in Kämpfen",
+					"outcombatonly"		: "Nur außerhalb von Kämpfen"
+				}
 			},
 
 			"LingeringAP" : {
@@ -408,6 +422,16 @@
 				"name"					: "Verbleibende Aktive-Wahrnehmungs Dauer",
 				"descrp"				: "Die Dauer für welche die Aktive-Wahrnehmungs verbleibt in Sekunden (-1 für unbegrenzt)"
 			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Audgedeckte Türen beim anklicken sichtbar machen",
+				"descrp"				: "Ob aufgedeckte Geheimtüren beim anklicken zu normalen Türen werden sollen"
+			},
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Unsichtbare MATT Fliesen deaktivieren",
+				"descrp"				: "Ob aufdeckbare Fliesen welche nicht entdeckt wurden für MATT Zwecke deaktiviert werden sollen"
+			},
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Erzwinge \"Wurf Ignorieren\" Tasten invertierung",
@@ -467,6 +491,11 @@
 			"VCRange3DCalc" : {
 				"name" 					: "Sicht Kanäle 3D berechnung",
 				"descrp" 				: "Ob die Reichweite von Sicht Kanälen in 3D berechnet werden soll"
+			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Nutze logische ODER",
+				"descrp"				: "Ob benötigte Sicht Kanäle ein logisches ODER anstatt eines logischen UND benutzen sollen"
 			},		
 
 			"ShowVCIDs" : {
@@ -476,12 +505,22 @@
 			
 			"showPerceptiveWalls" : {
 				"name" 					: "Zeige Perceptive Wände [DEBUG]",
-				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (fürs debuggen)"
+				"descrp" 				: "Ob Perceptive Wände in der Wandebene angezeigt werden sollen (für debuggen)"
+			},
+			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Erzeuge Perceptive Wände bei laden neu [DEBUG]",
+				"descrp" 				: "Ob Perceptive Wände beim laden von Scenen neu erzeugt werden sollen (für debuggen)"
 			},
 			
 			"followTokens" : {
 				"name" 					: "Folge Figuren",
 				"descrp" 				: "Ob die Kamera den ausgewählten Figuren bei Bewegungen folgen soll"
+			},
+			
+			"followonControl" : {
+				"name" 					: "Bei Kontrolle folgen",
+				"descrp" 				: "Ob die Kamera im Moment der Kontrolle bewegt werden soll"
 			},
 			
 			"MessagePopUps" : {
@@ -512,6 +551,16 @@
 			"LingeringAPIconPosition" : {
 				"name" 					: "Positions des Indikators für aktive Wahrnehmung",
 				"descrp" 				: "Wo im Figur HUD der Indikator für andauernde aktive Wahrnehmung angezeigt wird",
+				"options" : {
+					"none"				: "garnicht",
+					"left"				: "links",
+					"right"				: "rechts"
+				}
+			},
+			
+			"PDCInputPosition" : {
+				"name" 					: "Positions des Indikators für Wahrnehmungs SG",
+				"descrp" 				: "Wo im Figur HUD der Indikator für Wahrnehmungs SG angezeigt wird",
 				"options" : {
 					"none"				: "garnicht",
 					"left"				: "links",
@@ -659,6 +708,11 @@
 				"descrp"				: "Ob diese Tür aufgedeckt werden kann (Passiv order Aktiv)"
 			},
 			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Aufdecken wenn entdeckt",
+				"descrp"				: "Ob dieses Objekt aufgedeckt werden soll wenn es entdeckt wird (überschreibt Welteinstellungen wenn aktiv)"
+			},
+			
 			"PPDCFlag" : {
 				"name" 					: "Passive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit passiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich)"
@@ -760,6 +814,7 @@
 					"SeethroughWalls"	: "Durch Wände",
 					"Range"				: "Reichweite",
 					"RangeFormula"		: "Reichweiten Formel",
+					"RangeMin"			: "Minimal Reichweite",
 					"Color"				: "Farbe",
 					"EffectFilter" : {
 						"name"			: "Effekt Filter",
@@ -778,12 +833,14 @@
 					},
 					"EffectFilterColor" : "Effekt FIlter Farbe",
 					"Transparency"		: "Transparenz",
+					"defaultReceiver"	: "Empfänger Standard",
 					"VCID"				: "Interne ID",
 					"Emits"				: "Sendet",
 					"Receives"			: "Empfängt",
 					"ReceiveFiltered"	: "Empfang Filter",
 					"ReceiveRange"		: "Eigene Reichweite",
 					"CalculatedRange"	: "Errechnete Reichweite",
+					"ReceiveRangeMin"	: "Eigenes Reichweiten Minimum",
 					"Sight"				: "Sicht",
 					"Movement"			: "Bewegung"
 				}
@@ -841,6 +898,67 @@
 					"settings" : {
 						"target" : {
 							"name"			: "Ziel"
+						}
+					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Gebe Sichtkanal",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> an <span class=\"entity-style\">{pEntities}</span> als <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanal"
+						},
+						"type" : {
+							"name"			: "Gebe als",
+							"options" : {
+								"Emits"		: "Sendet",
+								"Receives"	: "Empfängt",
+								"Sight"		: "Sicht (nur Wände)",
+								"Movement"	: "Bewegung (nur Wände)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Entferne Sichtkanal",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> von <span class=\"entity-style\">{pEntities}</span> als <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanal"
+						},
+						"type" : {
+							"name"			: "Entferne als",
+							"options" : {
+								"Emits"		: "Sendet",
+								"Receives"	: "Empfängt",
+								"Sight"		: "Sicht (nur Wände)",
+								"Movement"	: "Bewegung (nur Wände)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Resette \"Aufgedeckt von\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> bei <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Setze \"Kann aufgedeckt werden\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> von <span class=\"entity-style\">{pEntities}</span> auf <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Schalte \"Kann aufgedeckt werden\"</span> von <span class=\"entity-style\">{pEntities}</span> um"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Setze auf",
+							"options" : {
+								"true"		: "Wahr",
+								"false"		: "Falsch",
+								"toggle"	: "umschalten"
+							}
 						}
 					}
 				}

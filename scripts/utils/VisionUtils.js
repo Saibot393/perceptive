@@ -74,6 +74,8 @@ class VisionUtils {
 	
 	static RangeDCModifier(pRangeInfo, pRangeInterval, pRangeDC) {} //return the range dependetn DC modifier (per complete pRangeInterval increase by pRangeDC)
 	
+	static objectelevation(pObject) {} //returns the elevation of pObject
+	
 	//IMPLEMENTATIONS
 	static spotablesinVision(pToken, pCategory = {Walls : true, Tokens : true, Tiles : true}) {
 		let vSpotables = [];
@@ -106,6 +108,7 @@ class VisionUtils {
 			vinVision = false;
 			
 			if (PerceptiveFlags.canbeSpotted(vDoors[i].document)) {//partly modified from foundry.js
+				/*
 				const ray = vDoors[i].toRay();
 				const [x, y] = vDoors[i].midpoint;
 				const [dx, dy] = [-ray.dy, ray.dx];
@@ -114,11 +117,15 @@ class VisionUtils {
 				  {x: x + (t * dx), y: y + (t * dy)},
 				  {x: x - (t * dx), y: y - (t * dy)}
 				];
+				*/
 				
 				// Test each point for visibility
+				vinVision = VisionUtils.simpletestVisibility(vDoors[i].midpoint, {tolerance: 0, object: vDoors[i].doorControl, ray : true});
+				/*
 				vinVision = points.some(p => {
-				  return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
-				});				
+				  return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)
+				});		
+				*/			
 			}
 			
 			if (vinVision) {
@@ -223,11 +230,17 @@ class VisionUtils {
 												
 												let vDistance;
 												
+												let vPosition = vSpotter.object.center;
+												
+												if (pInfos?.visionPoint) {
+													vPosition = pInfos.visionPoint;
+												}
+												
 												if ((pPosition.elevation != undefined) && (vSpotter.elevation != pPosition.elevation)) {
-													vDistance = GeometricUtils.DistanceXYZ({...vSpotter.object.center, elevation : vSpotter.elevation}, pPosition, vElevationScale);
+													vDistance = GeometricUtils.DistanceXYZ({...vPosition, elevation : vSpotter.elevation}, pPosition, vElevationScale);
 												}
 												else {
-													vDistance = GeometricUtils.DistanceXY(vSpotter.object.center, pPosition);
+													vDistance = GeometricUtils.DistanceXY(vPosition, pPosition);
 												}
 												
 												let vCalculatedDistance = vDistance - vTotalTolerance;
@@ -243,7 +256,7 @@ class VisionUtils {
 												
 												if ((vCalculatedDistance) <= pConeRange) {
 													//is in cone range, check angle
-													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vSpotter.object.center)) - (vSpotter.rotation + pConeRotation)%360;
+													let vAngleDiff = GeometricUtils.NormalAngle(GeometricUtils.Differencefromxy(pPosition, vPosition)) - (vSpotter.rotation + pConeRotation)%360;
 													
 													return Math.min(Math.abs(vAngleDiff), Math.abs(vAngleDiff-360)) < cSpotConeAngle/2;
 												}
@@ -254,7 +267,7 @@ class VisionUtils {
 	static async PassivPerception(pToken) {
 		if (pToken && pToken.actor) {
 			if (PerceptiveUtils.isPf2e()) {
-				return await pToken.actor.system.attributes.perception?.dc;
+				return await pToken.actor.system.perception?.dc;
 			}
 			else {
 				let vRollData = {actor : pToken.actor};
@@ -387,18 +400,46 @@ class VisionUtils {
 		}			
 	}
 	
-	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null}) { //adapted from foundry.js
+	static simpletestVisibility(ppoint, pInfos = {tolerance : 0, object : null, ray : false}) { //adapted from foundry.js
 		// If no vision sources are present, the visibility is dependant of the type of user
 		if ( !canvas.effects.visionSources.some(s => s.active) ) return game.user.isGM;
 
 		// Prepare an array of test points depending on the requested tolerance
-		const t = pInfos.tolerance;
-		const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
-		const points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+		let points = [];
+		
+		if (pInfos.ray && pInfos.object?.wall) {
+			const wallobject = pInfos.object.wall;
+			const ray = wallobject.toRay();
+			const [x, y] = ppoint;
+			const [dx, dy] = [-ray.dy, ray.dx];
+			const t = 3 / (Math.abs(dx) + Math.abs(dy)); // Approximate with Manhattan distance for speed
+			points = [
+				{x: x + (t * dx), y: y + (t * dy)},
+				{x: x - (t * dx), y: y - (t * dy)}
+			];
+		}
+		else {
+			const t = pInfos.tolerance;
+			const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
+			points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+		}
 
-		return points.some(p => {
-			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
-		});
+		if (PerceptiveCompUtils.isactiveModule(cLevels)) {
+			let vz = PerceptiveCompUtils.WHLVLzmiddle(pInfos.object);
+			
+			points = points.map(p => {
+				return {x : p.x, y : p.y, z : vz};
+			});
+			
+			return points.some(p => {
+				return PerceptiveCompUtils.LVLLOStest(p);
+			});
+		}
+		else {
+			return points.some(p => {
+				return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+			});
+		}
 	}
 	
 	static WalltestVisibility(pWall, pInfos = {tolerance : 2, object : null}) {
@@ -421,8 +462,8 @@ class VisionUtils {
 	static VisionLevel(pToken) {
 		let vVLevel = cVisionLevel.Normal;
 		
-		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.traits?.senses?.length) {
-			let vsenses = pToken.actor.system.traits.senses;
+		if (PerceptiveUtils.isPf2e() && pToken.actor?.system?.perception?.senses?.length) {
+			let vsenses = pToken.actor.system.perception.senses;
 			
 			if (vsenses.find(vsense => (vsense.type == "darkvision") && (vsense.range > 0))) {
 				vVLevel = cVisionLevel.TotalDark;
@@ -581,6 +622,16 @@ class VisionUtils {
 		}
 		
 		return 0;
+	}
+	
+	static objectelevation(pObject) {
+		let vElevation = PerceptiveCompUtils.WHLelevation(pObject);
+		
+		if (vElevation == undefined) {
+			vElevation = pObject.elevation;
+		}
+		
+		return vElevation;
 	}
 }
 

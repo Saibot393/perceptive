@@ -1,6 +1,6 @@
 import { cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy, cMATT} from "../compatibility/PerceptiveCompUtils.js";
 import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
@@ -17,6 +17,13 @@ const cPlaySoundIcon = "fa-solid fa-play";
 const cVCactive = true;
 
 Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
+  game.settings.register(cModuleName, "lastVersion", {
+	scope: "world",
+	config: false,
+	type: String,
+	default: "0.0.0"
+  }); 
+
   //Settings
   //general
   game.settings.register(cModuleName, "SplitInteractionDistances", {
@@ -365,8 +372,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.MakeSpottedTokensVisible.descrp"),
 		scope: "world",
 		config: true,
-		type: Boolean,
-		default: false
+		type: String,
+		choices: {
+			"never": Translate("Settings.MakeSpottedTokensVisible.options.never"),
+			"always": Translate("Settings.MakeSpottedTokensVisible.options.always"),
+			"incombatonly": Translate("Settings.MakeSpottedTokensVisible.options.incombatonly"),
+			"outcombatonly": Translate("Settings.MakeSpottedTokensVisible.options.outcombatonly")	
+		},
+		default: "never"
 	  }); 
 	  
 	  game.settings.register(cModuleName, "RevealAllies", {
@@ -374,8 +387,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		hint: Translate("Settings.RevealAllies.descrp"),
 		scope: "world",
 		config: true,
-		type: Boolean,
-		default: false
+		type: String,
+		choices: {
+			"never": Translate("Settings.RevealAllies.options.never"),
+			"always": Translate("Settings.RevealAllies.options.always"),
+			"incombatonly": Translate("Settings.RevealAllies.options.incombatonly"),
+			"outcombatonly": Translate("Settings.RevealAllies.options.outcombatonly")	
+		},
+		default: "never"
 	  }); 
 
 	  game.settings.register(cModuleName, "LingeringAP", {
@@ -408,7 +427,25 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: Number,
 		default: -1
-	  }); 		  
+	  }); 
+
+	  game.settings.register(cModuleName, "RevealSpottedDooronClick", {
+		name: Translate("Settings.RevealSpottedDooronClick.name"),
+		hint: Translate("Settings.RevealSpottedDooronClick.descrp"),
+		scope: "world",
+		config: true,
+		type: Boolean,
+		default: false
+	  }); 	  
+	  
+	  game.settings.register(cModuleName, "disableSpottableMATTTiles", {
+		name: Translate("Settings.disableSpottableMATTTiles.name"),
+		hint: Translate("Settings.disableSpottableMATTTiles.descrp"),
+		scope: "world",
+		config: PerceptiveCompUtils.isactiveModule(cMATT),
+		type: Boolean,
+		default: false
+	  }); 
  
 	//formulas
 	  game.settings.register(cModuleName, "PassivePerceptionFormula", {
@@ -711,6 +748,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   });   
   
+  game.settings.register(cModuleName, "vRequiredOrBehaviour", {
+	name: Translate("Settings.vRequiredOrBehaviour.name"),
+	hint: Translate("Settings.vRequiredOrBehaviour.descrp"),
+	scope: "world",
+	config: cVCactive || game.settings.get(cModuleName, "ActivateVCs"),
+	type: Boolean,
+	default: false
+  });   
+  
   game.settings.register(cModuleName, "ShowVCIDs", {
 	name: Translate("Settings.ShowVCIDs.name"),
 	hint: Translate("Settings.ShowVCIDs.descrp"),
@@ -746,6 +792,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	default: false
   }); 
   
+  game.settings.register(cModuleName, "recreatePerceptiveWalls", {
+	name: Translate("Settings.recreatePerceptiveWalls.name"),
+	hint: Translate("Settings.recreatePerceptiveWalls.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: false
+  }); 
+  
   //client
   game.settings.register(cModuleName, "followTokens", {
 	name: Translate("Settings.followTokens.name"),
@@ -754,6 +809,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	config: true,
 	type: Boolean,
 	default: false
+  }); 
+  
+  game.settings.register(cModuleName, "followonControl", {
+	name: Translate("Settings.followonControl.name"),
+	hint: Translate("Settings.followonControl.descrp"),
+	scope: "client",
+	config: true,
+	type: Boolean,
+	default: true
   }); 
   
   game.settings.register(cModuleName, "MessagePopUps", {
@@ -816,6 +880,20 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		"none": Translate("Settings.LingeringAPIconPosition.options.none"),
 		"left": Translate("Settings.LingeringAPIconPosition.options.left"),
 		"right": Translate("Settings.LingeringAPIconPosition.options.right")
+	},
+	default: "none"
+  }); 
+  
+  game.settings.register(cModuleName, "PDCInputPosition", {
+	name: Translate("Settings.PDCInputPosition.name"),
+	hint: Translate("Settings.PDCInputPosition.descrp"),
+	scope: "client",
+	config: true,
+	type: String,
+	choices: {
+		"none": Translate("Settings.PDCInputPosition.options.none"),
+		"left": Translate("Settings.PDCInputPosition.options.left"),
+		"right": Translate("Settings.PDCInputPosition.options.right")
 	},
 	default: "none"
   }); 
@@ -1027,7 +1105,9 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.RevealAllies"],
 												[data-setting-id="perceptive.LingeringAP"],
 												[data-setting-id="perceptive.LingeringAPRadius"],
-												[data-setting-id="perceptive.LingeringAPDuration"]`);
+												[data-setting-id="perceptive.LingeringAPDuration"],
+												[data-setting-id="perceptive.RevealSpottedDooronClick"],
+												[data-setting-id="perceptive.disableSpottableMATTTiles"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],
@@ -1081,4 +1161,15 @@ Hooks.on("ready", function() {
 		game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="]),
 		game.settings.set(cModuleName, "CritMethod", "CritMethod-natCritpm10")
 	}
+	
+	/*
+	//version setting fixing
+	let vCurrentVersion = game.modules.get(cModuleName).version;
+	let vLastVersion = game.settings.get(cModuleName, "lastVersion");
+	
+	if (PerceptiveUtils.versionCompare(vLastVersion, vCurrentVersion) < 0) {
+	}
+	
+	game.settings.set(cModuleName, "lastVersion", vCurrentVersion);
+	*/
 });

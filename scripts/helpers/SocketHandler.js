@@ -1,6 +1,6 @@
 import { DoorMoveRequest } from "../DoorMovingScript.js";
 import { PeekDoorRequest } from "../PeekingScript.js";
-import { SpotObjectsRequest, resetStealthRequest, PlayerMakeTempVisible } from "../SpottingScript.js";
+import { SpotObjectsRequest, resetStealthRequest, toggleDoorStateRequest, PlayerMakeTempVisible } from "../SpottingScript.js";
 import { PopUpRequest } from "../helpers/PerceptivePopups.js";
 import { PlaySoundRequest } from "../helpers/PerceptiveSound.js";
 
@@ -18,6 +18,9 @@ function organiseSocketEvents({pFunction, pData} = {}) {
 			break;
 		case "resetStealthRequest":
 			resetStealthRequest(pData);
+			break;
+		case "toggleDoorStateRequest":
+			toggleDoorStateRequest(pData);
 			break;
 		case "PlayerMakeTempVisible":
 			PlayerMakeTempVisible(pData);

@@ -5,6 +5,8 @@ import { GeometricUtils } from "./utils/GeometricUtils.js";
 import { PerceptiveCompUtils, cLibWrapper } from "./compatibility/PerceptiveCompUtils.js";
 import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 
+const cMovingDoors = new Set();
+
 class DoorMovingManager {
 	//DECLARATION
 	static async DoorMoveGM(pDoor, pDirectionInfo, pSpeed = 1) {} //slide or swing a pDoor open in direction pDirectionInfo
@@ -32,31 +34,37 @@ class DoorMovingManager {
 	static async DoorMoveGM(pDoor, pDirection, pSpeed = 1) {
 		if (!WallUtils.isLocked(pDoor)) {
 			if (PerceptiveFlags.Doorcanbemoved(pDoor)) {
-				await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
-				
-				let vDirection = Math.sign(pDirection);
-				
-				switch (PerceptiveFlags.DoorMovementType(pDoor)) {
-					case "swing":
-							await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor) * pSpeed);
-						break;
-						
-					case "slide":
-							await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor) * pSpeed);
-						break;
-				}
-							
-				if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
-					await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+				if (!cMovingDoors.has(pDoor.id)) { //prevent problems caused by movement being ordered during movement
+					cMovingDoors.add(pDoor.id);
 					
-					DoorMovingManager.onDoorClose(pDoor);
-				}
-				else {
-					await DoorMovingManager.updateDoorMovementWall(pDoor, true);
-				
-					if (!WallUtils.isOpened(pDoor)) {	
-						WallUtils.openDoor(pDoor);
-					}				
+					await PerceptiveFlags.createMovingWall(pDoor); //to prevent bugs
+					
+					let vDirection = Math.sign(pDirection);
+					
+					switch (PerceptiveFlags.DoorMovementType(pDoor)) {
+						case "swing":
+								await PerceptiveFlags.changeDoorSwingState(pDoor, vDirection * PerceptiveFlags.getDoorSwingSpeed(pDoor) * pSpeed);
+							break;
+							
+						case "slide":
+								await PerceptiveFlags.changeDoorSlideState(pDoor, vDirection * PerceptiveFlags.getDoorSlideSpeed(pDoor) * pSpeed);
+							break;
+					}
+								
+					if (PerceptiveFlags.DoorStateisClosed(pDoor)) {
+						await WallUtils.closeDoor(pDoor); //close door if it has swing/slided  to an appropiate position
+						
+						DoorMovingManager.onDoorClose(pDoor);
+					}
+					else {
+						await DoorMovingManager.updateDoorMovementWall(pDoor, true);
+					
+						if (!WallUtils.isOpened(pDoor)) {	
+							WallUtils.openDoor(pDoor);
+						}				
+					}
+					
+					cMovingDoors.delete(pDoor.id);
 				}
 			}
 			else {

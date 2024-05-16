@@ -27,7 +27,9 @@
 					"value1"			: "Dim",
 					"value2"			: "Bright"
 				},
-				"LingeringAP"				: "Lingering active perception"
+				"LingeringAP"			: "Lingering active perception",
+				"PassiveDC"				: "Passive perception DC",
+				"ActiveDC"				: "Active perception DC"
 			},
 			"SpottingConfirm" : {
 				"name"					: "Confirm Spotting",
@@ -381,12 +383,24 @@
 			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "Make spotted tokens visible",
-				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone"
+				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
 			},
 			
 			"RevealAllies" : {
 				"name"					: "Make allied tokens visible",
-				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
 			},
 
 			"LingeringAP" : {
@@ -407,7 +421,17 @@
 			"LingeringAPDuration" : {
 				"name"					: "Lingering active perception duration",
 				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
-			},					
+			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Make spotted door visible on click",
+				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
+			},				
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Disable invisible MATT tiles",
+				"descrp"				: "If spottable tiles that have not been spotted should become inactive for MATT purposes"
+			},	
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: "Force invert \"Ignore Roll\" key",
@@ -472,6 +496,11 @@
 			"ShowVCIDs" : {
 				"name" 					: "Show Vision Channel IDs",
 				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
+			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Use logical OR mode",
+				"descrp"				: "If required Vision Channels should operate on a logical OR instead of a logical AND"
 			},				
 			
 			"showPerceptiveWalls" : {
@@ -479,9 +508,19 @@
 				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
 			},
 			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Recreate Perceptive walls on scene load [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be recreated when a scene is reloaded (for debug purposes)"
+			},
+			
 			"followTokens" : {
 				"name" 					: "Follow tokens",
 				"descrp" 				: "If the camera should follow the selected token when they move"
+			},
+			
+			"followonControl" : {
+				"name" 					: "Follow on control",
+				"descrp" 				: "If the camera should change the moment a token is selected"
 			},
 			
 			"MessagePopUps" : {
@@ -512,6 +551,16 @@
 			"LingeringAPIconPosition" : {
 				"name" 					: "Position of active perception indicator",
 				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
+			"PDCInputPosition" : {
+				"name" 					: "Position of perception DC input",
+				"descrp" 				: "Where on the token HUD the perception DC indicator should be positioned",
 				"options" : {
 					"none"				: "nowhere",
 					"left"				: "left",
@@ -628,9 +677,9 @@
 				"name" 					: "Door hinge position",
 				"descrp"				: "The position a which the doors hinge is located",
 				"options" : {
-					"0"				: "Left",
-					"1"				: "Right",
-					"2"				: "Center"
+					"0"					: "Left",
+					"1"					: "Right",
+					"2"					: "Center"
 				}
 			},
 			
@@ -657,6 +706,11 @@
 			"canbeSpottedFlag" : {
 				"name" 					: "Can be spotted",
 				"descrp"				: "If this door can be spotted with perception (passive or active)"
+			},
+			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Reveal when spotted",
+				"descrp"				: "If this object should be revealed when spotted (overrides game settings when active)"
 			},
 			
 			"PPDCFlag" : {
@@ -760,6 +814,7 @@
 					"SeethroughWalls"	: "Through walls",
 					"Range"				: "Range",
 					"RangeFormula"		: "Range formula",
+					"RangeMin"			: "Minimum range",
 					"Color"				: "Color",
 					"EffectFilter" : {
 						"name"			: "Effect filter",
@@ -778,12 +833,14 @@
 					},
 					"EffectFilterColor" : "Effect Filter Color",
 					"Transparency"		: "Transparency",
+					"defaultReceiver"	: "Receive default",
 					"VCID"				: "Internal ID",
 					"Emits"				: "Emits",
 					"Receives"			: "Receives",
 					"ReceiveFiltered"	: "Reciver filter",
 					"ReceiveRange"		: "Custom range",
 					"CalculatedRange"	: "Calculated range",
+					"ReceiveRangeMin"	: "Custom range minimum",
 					"Sight"				: "Sight",
 					"Movement"			: "Movement"
 				}
@@ -841,6 +898,67 @@
 					"settings" : {
 						"target" : {
 							"name"			: "Target"
+						}
+					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Give vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> to <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Give as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Remove vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> from <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Remove as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Reset \"spotted by\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Set \"can be spotted\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span> to <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Toggle \"can be spotted\"</span> of <span class=\"entity-style\">{pEntities}</span>"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Set to",
+							"options" : {
+								"true"		: "True",
+								"false"		: "False",
+								"toggle"	: "Toggle value"
+							}
 						}
 					}
 				}

@@ -92,6 +92,9 @@ class PerceptiveSystemUtils {
 						
 							return vSystemInfo.roll.skillId == "prc";
 							break;
+						case cAdvanced5e:
+							return vSystemInfo.rollData?.find(vRoll => vRoll.label.includes(CONFIG.A5E.skills.prc));
+							break;
 						case cPf1eName:
 							pInfos["skill"] = vSystemInfo.subject?.skill;
 						
@@ -136,6 +139,9 @@ class PerceptiveSystemUtils {
 						case cDnD5e:
 							return vSystemInfo.roll?.type == "skill" && vSystemInfo.roll.skillId == "ste";
 							break;
+						case cAdvanced5e:
+							return vSystemInfo.rollData?.find(vRoll => vRoll.label.includes(CONFIG.A5E.skills.ste));
+							break;
 						case cPf1eName:
 							return vSystemInfo.subject?.skill == "ste";
 							break;
@@ -157,6 +163,7 @@ class PerceptiveSystemUtils {
 		switch (game.system.id) {
 			case cPf2eName:
 			case cDnD5e:
+			case cAdvanced5e:
 			case cPf1eName:
 				return true;
 				break;	
@@ -183,6 +190,10 @@ class PerceptiveSystemUtils {
 	}
 	
 	static StealthDCPf2e(pActor) {
+		if (pActor?.system.skills.stealth) {
+			//special case for NPCs
+			return pActor?.system.skills.stealth.dc;
+		}
 		return pActor?.system.skills.ste.dc;
 	}
 	
@@ -260,8 +271,8 @@ class PerceptiveSystemUtils {
 						canvas.templates.activate();
 						
 						vTemplate.object.controlIcon.onclick = function() {
-																			canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [vTemplate.id]);
-																			vMacro(((vTemplate.rotation + (360 - cConeRotCorrection) - vControlled.document.rotation))%360);
+							canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [vTemplate.id]);
+							vMacro(((vTemplate.rotation + (360 - cConeRotCorrection) - vControlled.document.rotation))%360);
 						};
 					}
 					else {
@@ -306,6 +317,9 @@ class PerceptiveSystemUtils {
 	static SystemdefaultPPformula() {
 		switch (game.system.id) {
 			case cDnD5e:
+				return "@actor.system.skills.prc.passive";
+				break;
+			case cAdvanced5e:
 				return "@actor.system.skills.prc.passive";
 				break;
 			default:

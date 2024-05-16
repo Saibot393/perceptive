@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -7,6 +7,7 @@ import {allowCanvasZoom} from "../helpers/PerceptiveMouseHandler.js";
 import {PerceptiveSheetSettings} from "../settings/PerceptiveSheetSettings.js";
 import {SpottingManager} from "../SpottingScript.js";
 import {PatchSupport} from "../helpers/BasicPatches.js";
+import {VisionChannelsUtils} from "../helpers/VisionChannelsHelper.js";
 
 const cPerceptiveIcon = "fa-solid fa-eye";
 const cTriggersIcon = "fa-running";
@@ -17,14 +18,17 @@ class PerceptiveCompatibility {
 	static addPeekingButton(pButtons, pLockObject, pLockType, pCharacter, pShowall) {} //adds an appropiate peeking button to pButtons
 	
 	//specific: stealthy
-	static onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
+	static async onTokenupdate(pToken, pchanges, pInfos) {}//called when a token is updated
 	
-	static onEffectupdate(pEffect, pchanges, pInfos) {}//called when a token is updated
+	static async onEffectupdate(pEffect, pchanges, pInfos) {}//called when a token is updated
 	
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {} //adds the Lock & Key Trigger settings to pApp
 	
 	static async onPerceptiveSpotting(pObjects, pInfos, pSpotters) {} //called when someone spots a lock
+	
+	//specific: Epic Rolls
+	static onEpicRoll(pActor, pRoll, pSkill) {} //called when an epic roll is made
 	
 	//IMPLEMENTATIONS
 	//specific: Lock & Key
@@ -39,39 +43,58 @@ class PerceptiveCompatibility {
 	}
 	
 	//specific: stealthy
-	static onTokenupdate(pToken, pchanges, pInfos) {
+	static async onTokenupdate(pToken, pchanges, pInfos) {
 		if (game.settings.get(cModuleName, "StealthyIntegration")) {
 			if (pchanges.flags?.perceptive?.hasOwnProperty("PPDCFlag") || pchanges.flags?.perceptive?.hasOwnProperty("APDCFlag")) {
 				let vMaxResult = Math.max(PerceptiveFlags.getPPDC(pToken, true), PerceptiveFlags.getAPDC(pToken, true));
 				
 				if ((vMaxResult >= 0) && (vMaxResult < Infinity)) {
+					await stealthy.bankStealth(pToken, vMaxResult)
+					/*
 					let vStealthyEffects = pToken.actor.effects.filter(vEffect => vEffect.flags?.stealthy?.hidden);
 					
 					for (let i = 0; i < vStealthyEffects.length; i++) {
 						vStealthyEffects[i].flags.stealthy.hidden = vMaxResult;
 					}
+					*/
 				}
 			}
 		}
 	}
 
-	static onEffectupdate(pEffect, pchanges, pInfos) {
+	static async onEffectupdate(pEffect, pchanges, pInfos) {
 		if (game.settings.get(cModuleName, "StealthyIntegration")) {
-			if (pchanges.flags?.stealthy?.hasOwnProperty("hidden")) {
-				let vStealthValue = pchanges.flags.stealthy.hidden;
-				
+			if (pchanges.flags?.stealthy?.hasOwnProperty("stealth")) {
+				let vStealthValue = pchanges.flags.stealthy.stealth;
 				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
-				
 				let vNewDCs = {PPDC : vStealthValue, APDC : vStealthValue};
 				
 				for (let i = 0; i < vActiveScenes.length; i++) {
 					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pEffect.parent.id);
 					
 					for (let j = 0; j < vrelevantTokens.length; j++) {
-						PerceptiveFlags.setSpottingDCs(vrelevantTokens[j], vNewDCs);
+						await PerceptiveFlags.setSpottingDCs(vrelevantTokens[j], vNewDCs);
 					}
 				}
 			}	
+		}
+	}
+	
+	//specific: Levels
+	static insertLevelsWallVisibility() {
+		let vOldCall = CONFIG.Levels.handlers.UIHandler.UIVisible;
+		
+		CONFIG.Levels.handlers.UIHandler.UIVisible = (vplaceable) => {
+			if (PerceptiveFlags.isPerceptiveWall(vplaceable.document)) {
+				if (!game.settings.get(cModuleName, "showPerceptiveWalls")) {
+					//make sure that perceptive walls remain invisible, overwrite levels logic
+					vplaceable.visible = false;
+					
+					return;
+				}
+			}
+			
+			return vOldCall(vplaceable);
 		}
 	}
 	
@@ -166,6 +189,23 @@ class PerceptiveCompatibility {
 			}
 		}
 	}
+	
+	//specific: Epic Rolls
+	static onEpicRoll(pActor, pRoll, pSkill) {
+		if (pSkill == "prc") {
+			console.log(1);
+			Hooks.call(cModuleName + ".PerceptionRoll", pActor.id, pRoll, game.user.id);
+		}
+		else {
+			console.log(2);
+			Hooks.call(cModuleName + ".PerceptionRoll", pActor.id, pRoll, game.user.id, pSkill);
+		}
+		
+		if (pSkill == "ste") {
+			console.log(3);
+			Hooks.call(cModuleName + ".StealthRoll", pActor.id, pRoll, game.user.id);	
+		}
+	}
 }
 
 Hooks.once("init", () => {
@@ -211,7 +251,56 @@ Hooks.once("init", () => {
 		Hooks.on(cModuleName + ".TileSpottingSettings", (pApp, pHTML, pData) => PerceptiveCompatibility.addTriggerSettings(pApp, pHTML, pData));
 		
 		Hooks.on(cModuleName + ".NewlyVisible", (pObjects, pInfos, pSpotters) => PerceptiveCompatibility.onPerceptiveSpotting(pObjects, pInfos, pSpotters));
+		
+		Hooks.once("ready", () => {
+			//ugly? yes, but the only way i found, so it stays
+			let vprevrunActions = TileDocument.prototype.runActions;
+			
+			let vnewrunActions = async function (context, start = 0, resume = null, stopCallback = null) {
+				if (!resume && game.settings.get(cModuleName, "disableSpottableMATTTiles")) {
+					let vSpottingFunction = game.modules.get(cModuleName).api.isSpottedby;
+					
+					if (PerceptiveFlags.canbeSpotted(this)) {
+						let vFound = false;
+					
+						for (let i = 0; i < context.tokens.length; i++) {
+							vFound = vFound || await vSpottingFunction(this, context.tokens[i], { LOS: false, Range: true, Effects: true, canbeSpotted: true })
+						}
+						
+						if (context.tokens.length == 0 && game.user.isGM) {
+							vFound = true;
+						}
+						
+						if (!vFound) {
+							return false;
+						}
+					}
+				}
+				
+				let vCall = vprevrunActions.bind(this);
+				
+				vCall(context, start, resume, stopCallback);
+			};
+			
+			TileDocument.prototype.runActions = vnewrunActions;
+		});
+		
+		/*
+		if (RideableCompUtils.isactiveModule(cMATT)) {
+			Hooks.on("triggerTile", (pTile, palsoTile, pTrigger, pInfos, pUserID, pData) => PerceptiveCompatibility.onTileTrigger(pTile, pTrigger, pInfos, pUserID, pData));
+		}
+		*/
 	}
+	
+	/*
+	if (PerceptiveCompUtils.isactiveModule(cEpicRolls)) {
+		Hooks.on("dnd5e.rollSkill", (pActor, pRoll, pSkill) => {PerceptiveCompatibility.onEpicRoll(pActor, pRoll, pSkill)});
+	}
+	*/
+});
+
+Hooks.once("levelsInit", () => {
+	PerceptiveCompatibility.insertLevelsWallVisibility();
 });
 
 Hooks.once("ready", () => {
@@ -256,7 +345,7 @@ Hooks.once("setupTileActions", (pMATT) => {
 						name: Translate(cMATT + ".actions." + "spot-object" + ".settings." + "target" + ".name"),
 						type: "select",
 						subtype: "entity",
-						options: { show: ['token', 'within', 'players', 'previous', 'tagger'] },
+						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
 						required: true,
 						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)); }
 					}
@@ -286,6 +375,227 @@ Hooks.once("setupTileActions", (pMATT) => {
 					let vTargets = await pMATT.entityName(action.data?.targets);
 					
 					return TranslateandReplace(cMATT + ".actions." + "spot-object" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName, pTargets : vTargets});
+				}
+			});
+			
+			//give VC
+			pMATT.registerTileAction(cModuleName, 'give-VC', {
+				name: Translate(cMATT + ".actions." + "give-VC" + ".name"),
+				requiresGM: true,
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
+						restrict: (entity) => { return (entity instanceof Token || entity instanceof Tile || entity instanceof Wall); }
+					},
+					{
+						id: "channelid",
+						name: Translate(cMATT + ".actions." + "give-VC" + ".settings." + "channelid" + ".name"),
+						list: "channelids",
+						type: "list",
+						defvalue: 'Emits'
+					},
+					{
+						id: "type",
+						name: Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".name"),
+						list: "type",
+						type: "list",
+						defvalue: 'Emits'
+					}
+				],
+				values: {
+					"type": {
+						"Emits": Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + "Emits"),
+						"Receives": Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + "Receives"),
+						"Sight": Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + "Sight"),
+						"Movement": Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + "Movement")
+					},
+					get channelids() {
+						return VisionChannelsUtils.VCNames()
+					}
+				},
+				group: cModuleName,
+				fn: async (args = {}) => {
+					const { action } = args;
+					
+					let vEntities = await pMATT.getEntities(args);
+					
+					let vType = action.data?.type;
+					
+					let vChannel = action.data?.channelid;
+					
+					VisionChannelsUtils.AddChannelstoObject(vEntities, [vChannel], [vType]);
+				},
+				content: async (trigger, action) => {
+					let entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					let vTypeName = Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + action.data?.type);
+					let vChannelName = VisionChannelsUtils.VCNames()[action.data?.channelid];
+					
+					return TranslateandReplace(cMATT + ".actions." + "give-VC" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName, pType : vTypeName, pChannel : vChannelName});
+				}
+			});
+			
+			//remove VC
+			pMATT.registerTileAction(cModuleName, 'remove-VC', {
+				name: Translate(cMATT + ".actions." + "remove-VC" + ".name"),
+				requiresGM: true,
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
+						restrict: (entity) => { return (entity instanceof Token || entity instanceof Tile || entity instanceof Wall); }
+					},
+					{
+						id: "channelid",
+						name: Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "channelid" + ".name"),
+						list: "channelids",
+						type: "list",
+						defvalue: 'Emits'
+					},
+					{
+						id: "type",
+						name: Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "type" + ".name"),
+						list: "type",
+						type: "list",
+						defvalue: 'Emits'
+					}
+				],
+				values: {
+					"type": {
+						"Emits": Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "type" + ".options." + "Emits"),
+						"Receives": Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "type" + ".options." + "Receives"),
+						"Sight": Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "type" + ".options." + "Sight"),
+						"Movement": Translate(cMATT + ".actions." + "remove-VC" + ".settings." + "type" + ".options." + "Movement")
+					},
+					get channelids() {
+						return VisionChannelsUtils.VCNames()
+					}
+				},
+				group: cModuleName,
+				fn: async (args = {}) => {
+					const { action } = args;
+					
+					let vEntities = await pMATT.getEntities(args);
+					
+					let vType = action.data?.type;
+					
+					let vChannel = action.data?.channelid;
+					
+					VisionChannelsUtils.RemoveChannelsfromObject(vEntities, [vChannel], [vType]);
+				},
+				content: async (trigger, action) => {
+					let entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					let vTypeName = Translate(cMATT + ".actions." + "give-VC" + ".settings." + "type" + ".options." + action.data?.type);
+					let vChannelName = VisionChannelsUtils.VCNames()[action.data?.channelid];
+					
+					return TranslateandReplace(cMATT + ".actions." + "remove-VC" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName, pType : vTypeName, pChannel : vChannelName});
+				}
+			});
+			
+			//reset Spottedby
+			pMATT.registerTileAction(cModuleName, 'reset-Spottedby', {
+				name: Translate(cMATT + ".actions." + "reset-Spottedby" + ".name"),
+				requiresGM: true,
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
+						restrict: (entity) => { return (entity instanceof Token || entity instanceof Tile || entity instanceof Wall); }
+					}
+				],
+				group: cModuleName,
+				fn: async (args = {}) => {
+					const { action } = args;
+					
+					let vEntities = await pMATT.getEntities(args);
+					
+					for (let vDocument of vEntities) {
+						await game.modules.get("perceptive").api.PerceptiveFlags.clearSpottedby(vDocument);
+					}
+				},
+				content: async (trigger, action) => {
+					let entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					
+					return TranslateandReplace(cMATT + ".actions." + "reset-Spottedby" + ".descrp", {pname : Translate(trigger.name, false), pEntities : entityName});
+				}
+			});
+			
+			//set canbespotted
+			pMATT.registerTileAction(cModuleName, 'set-canbeSpotted', {
+				name: Translate(cMATT + ".actions." + "set-canbeSpotted" + ".name"),
+				requiresGM: true,
+				ctrls: [
+					{
+						id: "entity",
+						name: "MonksActiveTiles.ctrl.select-entity",
+						type: "select",
+						subtype: "entity",
+						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
+						defvalue : "previous",
+						restrict: (entity) => { return (entity instanceof Token || entity instanceof Tile || entity instanceof Wall); }
+					},
+					{
+						id: "setto",
+						name: Translate(cMATT + ".actions." + "set-canbeSpotted" + ".settings." + "setto" + ".name"),
+						list: "settos",
+						type: "list",
+						defvalue: 'Emits'
+					}
+				],
+				values: {
+					"settos": {
+						"true": Translate(cMATT + ".actions." + "set-canbeSpotted" + ".settings." + "setto" + ".options." + "true"),
+						"false": Translate(cMATT + ".actions." + "set-canbeSpotted" + ".settings." + "setto" + ".options." + "false"),
+						"toggle": Translate(cMATT + ".actions." + "set-canbeSpotted" + ".settings." + "setto" + ".options." + "toggle")
+					}
+				},
+				group: cModuleName,
+				fn: async (args = {}) => {
+					const { action } = args;
+					
+					let vEntities = await pMATT.getEntities(args);
+					
+					let vSetto = action.data?.setto;
+					
+					for (let vDocument of vEntities) {
+						switch (vSetto) {
+							case "true":
+								PerceptiveFlags.setcanbeSpotted(vDocument, true);
+								break;
+							case "false":
+								PerceptiveFlags.setcanbeSpotted(vDocument, false);
+								break;
+							case "toggle":
+								PerceptiveFlags.togglecanbeSpotted(vDocument);
+								break;
+						}
+					}
+				},
+				content: async (trigger, action) => {
+					let entityName = await pMATT.entityName(action.data?.entity || trigger.ctrls.find(c => c.id == "entity")?.defvalue);
+					
+					switch (action.data?.setto) {
+							case "true":
+							case "false":
+								let vSettoName = Translate(cMATT + ".actions." + "set-canbeSpotted" + ".settings." + "setto" + ".options." + action.data?.setto);
+								return TranslateandReplace(cMATT + ".actions." + "set-canbeSpotted" + ".descrp.value", {pname : Translate(trigger.name, false), pEntities : entityName, pvalue : vSettoName});
+								break;
+							case "toggle":
+								return TranslateandReplace(cMATT + ".actions." + "set-canbeSpotted" + ".descrp.toggle", {pname : Translate(trigger.name, false), pEntities : entityName});
+								break;
+					}
 				}
 			});
 			

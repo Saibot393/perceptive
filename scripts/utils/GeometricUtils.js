@@ -25,6 +25,8 @@ class GeometricUtils {
 	
 	static CenterPosition(pToken) {} //returns the position of the Center of pToken
 	
+	static liveCenterPosition(pToken) {} //returns a live ptoken center position (based on animation)
+	
 	static CenterPositionXY(pToken) {} //returns the center position of pToken
 	
 	static CenterPositionWall(pWall) {} //returns the position of the Center of pWall
@@ -124,6 +126,10 @@ class GeometricUtils {
 			return [pToken.x + GeometricUtils.insceneWidth(pToken)/2, pToken.y + GeometricUtils.insceneHeight(pToken)/2];
 		}
 	} 
+	
+	static liveCenterPosition(pToken) {
+		return [pToken.object.position.x + GeometricUtils.insceneWidth(pToken)/2, pToken.object.position.y + GeometricUtils.insceneHeight(pToken)/2];
+	}
 	
 	static CenterPositionXY(pToken) {
 		return {x : pToken.position.x + pToken.w/2, y : pToken.position.y + pToken.h/2};

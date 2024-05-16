@@ -17,7 +17,7 @@ class StalkingManager {
 	//IMPLEMENTATIONS
 	static PanToselectedCenter(pToken, pchanges) {
 		if (PerceptiveUtils.selectedTokens().length) {
-			let pCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.CenterPosition(vToken)));
+			let pCenter = GeometricUtils.average(PerceptiveUtils.selectedTokens().map(vToken => GeometricUtils.liveCenterPosition(vToken)));
 			
 			let vArea = GeometricUtils.GetArea(PerceptiveUtils.selectedTokens());
 			
@@ -50,18 +50,22 @@ class StalkingManager {
 	}
 	
 	//ons
-	static OnTokenrefresh(pToken, pchanges) {
-		if (PerceptiveUtils.selectedTokens().includes(pToken.document)) {
-			if (game.settings.get(cModuleName, "followTokens") && pchanges.refreshPosition) {
-				StalkingManager.PanToselectedCenter(pToken, pchanges);
+	static OnTokenrefresh(pToken, pchanges, pTest) {
+		if (pchanges.refreshPosition) {
+			if (PerceptiveUtils.selectedTokens().includes(pToken.document)) {
+				if (game.settings.get(cModuleName, "followTokens") && pchanges.refreshPosition) {
+					StalkingManager.PanToselectedCenter(pToken, pchanges);
+				}
 			}
 		}
 	}
 	
 	static OnTokenControl(pToken, pControl) {
-		if (pControl && game.settings.get(cModuleName, "followTokens")) {
-			StalkingManager.PanToselectedCenter(pToken);
-		}		
+		if (game.settings.get(cModuleName, "followonControl")) {
+			if (pControl && game.settings.get(cModuleName, "followTokens")) {
+				StalkingManager.PanToselectedCenter(pToken);
+			}		
+		}
 	} 
 }
 
