@@ -1,3 +1,6 @@
+## v3.5.8
+- Restored compatibility with Stealthy (compatible with Stealthy v4.0.4 and upwards) (thanks to [Eligarf](https://github.com/Eligarf))
+
 ## v3.5.7
 - Fixed bug that caused mistake with VC when levels was active
 
