@@ -1,3 +1,6 @@
+## v3.5.10
+- Improved swing range calculations
+
 ## v3.5.9
 - Fixed synching error for module flags, affecting moveable door walls
 
