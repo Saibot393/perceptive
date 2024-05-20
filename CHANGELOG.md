@@ -1,3 +1,9 @@
+## v3.5.10
+- Improved swing range calculations
+
+## v3.5.9
+- Fixed synching error for module flags, affecting moveable door walls
+
 ## v3.5.8
 - Restored compatibility with Stealthy (compatible with Stealthy v4.0.4 and upwards) (thanks to [Eligarf](https://github.com/Eligarf))
 

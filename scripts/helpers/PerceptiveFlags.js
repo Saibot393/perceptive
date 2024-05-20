@@ -1255,11 +1255,32 @@ class PerceptiveFlags {
 	}
 	
 	static async setDoorSwingState(pDoor, pAngle) {
-		await this.#setDoorSwingStateFlag(pDoor, Math.max(PerceptiveFlags.getDoorSwingRange(pDoor)[0], Math.min(PerceptiveFlags.getDoorSwingRange(pDoor)[1], pAngle%360)));
+		let vAngle = pAngle;
+		
+		while (vAngle < 0) {
+			vAngle = vAngle + 360;
+		}
+		
+		await this.#setDoorSwingStateFlag(pDoor, vAngle%360);
 	}
 	
 	static async changeDoorSwingState(pDoor, pChange) {
-		await PerceptiveFlags.setDoorSwingState(pDoor, PerceptiveFlags.getDoorSwingState(pDoor) + pChange)
+		let vRanges = PerceptiveFlags.getDoorSwingRange(pDoor);
+		while (vRanges[1] < vRanges[0]) {
+			vRanges[1] = vRanges[1] + 360;
+		}
+		
+		let vAngle = PerceptiveFlags.getDoorSwingState(pDoor)%360;
+		
+		if (vAngle < vRanges[0]) {
+			vAngle = vAngle + 360;
+		}
+		
+		let vTargetAngle = vAngle + pChange;
+		
+		vTargetAngle = Math.max(vRanges[0], Math.min(vRanges[1], vTargetAngle));
+		
+		await PerceptiveFlags.setDoorSwingState(pDoor, vTargetAngle)
 	} 
 	
 	static getDoorSwingSpeed(pDoor) {
