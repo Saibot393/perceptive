@@ -1039,6 +1039,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	restricted: false,
 	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
+  
+  game.keybindings.register(cModuleName, "EditHoveredDoor", {
+	name: Translate("Keys.EditHoveredDoor.name"),
+	hint: Translate("Keys.EditHoveredDoor.descrp"),
+	onDown: () => {canvas.walls.hover?.document.sheet.render(true)},
+	restricted: true,
+	precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
 });
 
 function collapseContent(pHTML, pTitle, pIndentifiers) {

@@ -634,6 +634,11 @@
 			"MouseMoveDoorFast" : {
 				"name" 					: "Mouse Move door fast",
 				"descrp"				: "Hold this button while scrolling to move the hovered door quickly"
+			},
+			
+			"EditHoveredDoor" : {
+				"name" 					: "Quick edit door",
+				"descrp"				: "Open settings of hovered door"
 			}
 		},
 		

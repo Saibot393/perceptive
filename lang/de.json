@@ -634,6 +634,11 @@
 			"MouseMoveDoorFast" : {
 				"name" 					: "Mause Tür schnell bewegen",
 				"descrp"				: "Halte diese Taste und scrolle um eine Tür schnell zu bewegen"
+			},
+			
+			"EditHoveredDoor" : {
+				"name" 					: "Tür schnell editieren",
+				"descrp"				: "Einstellungen der gehoverten Tür öffnen"
 			}
 		},
 		
