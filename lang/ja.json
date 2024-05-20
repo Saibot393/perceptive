@@ -27,13 +27,15 @@
 					"value1"			: "薄暗い",
 					"value2"			: "明るい"
 				},
-				"LingeringAP"				: "能動知覚の維持"
+				"LingeringAP"				: "能動知覚の維持",
+				"PassiveDC"				: "受動知覚DC",
+				"ActiveDC"				: "能動知覚DC"
 			},
 			"SpottingConfirm" : {
 				"name"					: "発見結果",
-				"content"				: "プレイヤー <b>{pPlayer}</b> は{pSkillName}判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 シークレットドアとこれらの不可視コマ: <br>",
+				"content"				: "プレイヤー <b>{pPlayer}</b> は{pSkillName}判定で <b>{pResult}</b> をロールし <b>{pSpotters}</b> が許可され 、シーン <b>{pScene}</b> で <b>{pDoors}</b> を見つけた。 隠し扉とこれらの不可視コマ: <br>",
 				"defaultSkill"			: "知覚",
-				"forcecontent"			: "Player <b>{pPlayer}</b> has requested for <b>{pSpotters}</b> in scene <b>{pScene}</b> to spot <b>{pDoors}</b> secret doors and these hidden tokens <b>without</b> a perception roll: <br>",
+				"forcecontent"			: "プレイヤー <b>{pPlayer}</b> に <b>{pSpotters}</b> が欲求され、シーン <b>{pScene}</b> で <b>{pDoors}</b> 枚の隠し扉と以下の不可視コマを〈知覚〉ロールの <b>必要なしに</b> 見つけた: <br>",
 				"Behaviour"				: " <b>{pBehaviour}</b> 判定で <b>{pResult}</b>"
 			},
 			"StartStealthing"			: "隠密開始",
@@ -44,14 +46,14 @@
 			"RollFormulas"				: "ロール & ロール式",
 			"Effects"					: "効果",
 			"Illumination"				: "照明",
-			"Sound"						: "Sound",
-			"SoundnImages"				: "Geräusche & Bilder",
-			"Tile"						: "Tile",
-			"Triggers"					: "Triggers",
-			"ResetSpottedby"			: "Reset \"spotted by\"",
+			"Sound"						: "音声",
+			"SoundnImages"				: "音声と画像",
+			"Tile"						: "タイル",
+			"Triggers"					: "トリガー",
+			"ResetSpottedby"			: "\"発見された\"をリセット",
 			"with"						: "with",
 			"VisionChannels"			: "Vision Channels",
-			"OpenVCMenu"				: "Open Vision Channels Menu"
+			"OpenVCMenu"				: "Vision Channels メニューを開く"
 		},
 		
 		"ChatMessage" : {
@@ -59,29 +61,29 @@
 				"content"				: "あなたは <b>{pDoors}</b> のシークレットドアとこれらの不可視コマを見つけた:",
 				"unknown"				: "???"
 			},
-			"LostLingeringAP" 			: "{pName} has lost lingering active perception",
-			"Peeking"					: "{pName} tried to peek a lock",
+			"LostLingeringAP" 			: "{pName} は継続的な能動知覚を失った",
+			"Peeking"					: "{pName} は鍵穴を覗こうとした",
 			"PeekingSuccess" : {
-				"default"				: "{pName} succeeded at peeking a lock",
-				"crit"					: "{pName} critically succeeded at peeking a lock"
+				"default"				: "{pName} は鍵穴覗きに成功した",
+				"crit"					: "{pName} は鍵穴覗きにクリティカル成功した"
 			},
 			"PeekingFail" : {
-				"default"				: "{pName} failed at peeking a lock",
-				"crit"					: "{pName} critically failed at peeking a lock"
+				"default"				: "{pName} は鍵穴覗きに失敗した",
+				"crit"					: "{pName} は鍵穴覗きに致命的失敗した"
 			}
 		},
 		
 		"Warnings" : {
-			"MacroSeekDeactivatet" 		: "このマクロは現在使用できません。\"Perception macro use behaviour\"設定を確認してください。"
+			"MacroSeekDeactivatet" 		: "このマクロは現在使用できません。「知覚マクロの使用動作」設定を確認してください。"
 		},
 		
 		"Popups" : {
-			"OutofRange"				: "Out of range",
-			"CantbePeeked"				: "Cant be peeked",
-			"DoorisLocked"				: "Locked",
-			"CantbeMoved"				: "Cant be moved",
-			"GainedLingeringAP"			: "Lingering active perception gained",
-			"RemovedLingeringAP"		: "Lingering active perception lost"
+			"OutofRange"				: "範囲外",
+			"CantbePeeked"				: "覗けない",
+			"DoorisLocked"				: "鍵がかかっている",
+			"CantbeMoved"				: "動かせない",
+			"GainedLingeringAP"			: "継続的な能動知覚を得た",
+			"RemovedLingeringAP"		: "継続的な能動知覚を失った"
 		},
 		
 		"Settings" : {
@@ -141,18 +143,18 @@
 			}, 
 			
 			"GMConfirmPeeking" : {
-				"name"					: "GM confrims peeks",
-				"descrp"				: "If the GM has to confirm every peek action"
+				"name"					: "GMが鍵穴覗きを確認",
+				"descrp"				: "GMが各鍵穴覗きを確認するか設定します。"
 			},
 			
 			"PeekingFormula" : {
-				"name"					: "Peeking formula",
-				"descrp"				: "Formalu used for peeking through locks (leave empty to deactivate)"
+				"name"					: "鍵穴覗きのダイス式",
+				"descrp"				: "鍵穴を覗く時に使用するダイス式 (空白で無効化)"
 			},
 			
 			"PeekingDefaultDC" : {
-				"name"					: "Peeking default DC",
-				"descrp"				: "Default DC for peeking through newly created walls"
+				"name"					: "鍵穴覗きの初期難易度（DC）",
+				"descrp"				: "新規で作成された壁を覗き通す初期難易度を設定します"
 			},
 			
 			"DoorstandardMove" : {
@@ -224,7 +226,7 @@
 					"activeonly"		: "能動的な判定のみ",
 					"passiveonly"		: "受動的な判定のみ",
 					"incombatonly"		: "戦闘時のみ (両方の判定)",
-					"outcombatonly"		: "out of combat only (both checks)"
+					"outcombatonly"		: "戦闘外のみ (両方の判定)"
 				}
 			},	
 
@@ -245,13 +247,13 @@
 			},
 			
 			"RangePDCModifier" : {
-				"name"					: "Range perception DC modifier",
-				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
+				"name"					: "範囲知覚の難易度修正値",
+				"descrp"				: "発見可能な物体までの距離に基づいた〈知覚〉の難易度 (難易度インクリメント/範囲インクリメント、0/0 で無効化)"
 			},
 			
 			"Range3DCalculation" : {
-				"name"					: "Range 3D calculation",
-				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
+				"name"					: "範囲を３Dで計算",
+				"descrp"				: "視界の範囲を3Dで計算するか設定します (2Dの代わりに)"
 			},
 			
 			"UsePf2eRules" : {
@@ -320,7 +322,7 @@
 			},
 			
 			"PerceptiveStealthFriendliesvisible" : {
-				"name"					: "友好者に可視化させるPerceptive の隠密",
+				"name"					: "友好者に可視化させるPerceptiveの隠密",
 				"descrp"				: "Perceptiveの隠密であっても、友好的なコマは他の友好コマが見ることができます。"				
 			},
 			
@@ -355,8 +357,8 @@
 			},
 			
 			"Light3Dcalc" : {
-				"name"					: "Illumination 3D calculation",
-				"descrp"				: "If the token illumination should be calculated in 3D (instead of 2D)"
+				"name"					: "照明3D計算",
+				"descrp"				: "コマの照明が3Dで計算されるか設定します (2Dの代わりに)"
 			},
 			
 			"GMSpotconfirmDialog" : {
@@ -375,18 +377,30 @@
 			}, 
 			
 			"ShowfailuresinGMconfirm" : {
-				"name"					: "Show failures in GM confirm dialog",
-				"descrp"				: "Shows tokens for which the perception check failed as unchecked entries in the GM confirm dialog"
+				"name"					: "GM確認ダイアログに失敗を表示",
+				"descrp"				: "知覚判定に失敗したコマを未チェックのエントリとしてGM確認ダイアログに表示"
 			},
 			
 			"MakeSpottedTokensVisible" : {
 				"name"					: "見つかったコマを可視化",
-				"descrp"				: "能動的・受動的に見つかったコマが全員に可視化されるかどうかを設定します。"
+				"descrp"				: "能動的・受動的に見つかったコマが全員に可視化されるかどうかを設定します。",
+				"options" : {
+					"never"				: "行わない",
+					"always"			: "常時行う",
+					"incombatonly"		: "戦闘中のみ",
+					"outcombatonly"		: "戦闘外のみ"
+				}
 			},
 			
 			"RevealAllies" : {
-				"name"					: "Make allied tokens visible",
-				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)"
+				"name"					: "仲間のコマを可視化",
+				"descrp"				: "能動的・受動的に発見された仲間のコマが可視化されるかどうか設定します (上記設定とだけ動作します)",
+				"options" : {
+					"never"				: "行わない",
+					"always"			: "常時行う",
+					"incombatonly"		: "戦闘中のみ",
+					"outcombatonly"		: "戦闘外のみ"
+				}
 			},
 
 			"LingeringAP" : {
@@ -400,19 +414,24 @@
 			}, 		
 
 			"LingeringAPRadius" : {
-				"name"					: "Lingering active perception radius",
-				"descrp"				: "The radius measured from the point of the original roll in which the active perception remains (-1 for unlimited)"
+				"name"					: "継続的能動知覚範囲",
+				"descrp"				: "能動的な知覚判定を行った地点から測った有効範囲（-1で無制限）"
 			},	
 
 			"LingeringAPDuration" : {
-				"name"					: "Lingering active perception duration",
-				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
+				"name"					: "継続的能動知覚持続時間",
+				"descrp"				: "能動的な知覚が有効な、秒数で数えた持続時間（-1で無制限）"
 			},				
 			
 			"RevealSpottedDooronClick" : {
-				"name"					: "Make spotted door visible on click",
-				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
+				"name"					: "クリック時に発見済みの扉を可視化",
+				"descrp"				: "発見済みの透明な扉がクリックしたら通常のドアになるべきかどうか"
 			},	 			
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "透明なMATTタイルを無効化",
+				"descrp"				: "見つかっていない発見可能なタイルはMATT上、非アクティブになります"
+			},	
 			
 			"ForceInvertIgnoreRollKey" : {
 				"name" 					: " \"Ignore Roll\" キーの反転を強制",
@@ -420,8 +439,8 @@
 			},
 			
 			"GMReciveInformationWhisper" : {
-				"name"					: "GM recives info messages",
-				"descrp"				: "If the GM should recive whispered player update messages" 
+				"name"					: "情報メッセージをGMが受領",
+				"descrp"				: "秘匿で送られたプレイヤーの更新メッセージをGMが受け取りますs" 
 			},
 			
 			"onlyMacroSeek" : {
@@ -440,58 +459,58 @@
 			},
 			
 			"SpottedSound" : {
-				"name"					: "Spotted Sound",
-				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+				"name"					: "発見音",
+				"descrp"				: "操作されたコマが発見された時に流す効果音（音声ファイルのパス）"
 			},	
 			
 			"SpottedSoundVolume" : {
-				"name"					: "Spotted Sound volume",
-				"descrp"				: "Volume of the spotted sound"
+				"name"					: "発見音の音量",
+				"descrp"				: "発見音の音量"
 			},	
 
 			"SpotterImagePing" : {
-				"name"					: "Spotter ping image",
-				"descrp"				: "The image with which spotters of hidden objects are pinged"
+				"name"					: "発見者ping 画像",
+				"descrp"				: "隠れた物体の発見者を強調する時の画像"
 			},		
 
 			"SpotterImagePingDuration" : {
-				"name"					: "Spotter ping image duration",
-				"descrp"				: "The duration for which the spotter ping image persists (in seconds)"
+				"name"					: "発見者のping画像持続時間",
+				"descrp"				: "発見者のping画像が残る持続時間 （秒数で）"
 			},
 
 			"ActivateVCs" : {
-				"name" 					: "Activate Vision Channels",
-				"descrp" 				: "If the perceptive Vision Channels feature should be active"
+				"name" 					: "Vision Channelsを起動",
+				"descrp" 				: "IVision Channels機能が有効であるかどうか"
 			},	
 
 			"SimulateVCPlayerVision" : {
-				"name" 					: "Simulate player vision",
-				"descrp" 				: "If the Vision Channel based player vision of the currently selected token should be displayed"
+				"name" 					: "プレイヤーの視界をシミュレート",
+				"descrp" 				: "If the Vision Channelを使用したプレイヤーの現在選択されたコマの視界を表示するかどうか"
 			},		
 			
 			"VCRange3DCalc" : {
-				"name" 					: "Vision Channel 3D range",
-				"descrp" 				: "If the Vision Channel range should be calculated in 3D"
+				"name" 					: "Vision Channelの3D距離",
+				"descrp" 				: "Vision Channelの距離が3次元で計算されるかどうか"
 			},		
 
 			"ShowVCIDs" : {
-				"name" 					: "Show Vision Channel IDs",
-				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
+				"name" 					: "Vision Channel IDを表示",
+				"descrp" 				: "内部 Vision Channel IDがメニューに表示されるかどうか"
 			},	
 
 			"vRequiredOrBehaviour" : {
-				"name"					: "Use logical OR mode",
-				"descrp"				: "If required Vision Channels should operate on a logical OR instead of a logical AND"
+				"name"					: "論理ORモード使用",
+				"descrp"				: "欲求されたVision Channelsが論理ANDの代わりに論理ORを使用するかどうか"
 			},		
 			
 			"showPerceptiveWalls" : {
-				"name" 					: "Perceptive の壁を表示 [DEBUG]",
+				"name" 					: "Perceptive 壁を表示 [DEBUG]",
 				"descrp" 				: "Perceptive壁が可視化されるかどうか(デバッグ用)"
 			},
 			
 			"recreatePerceptiveWalls" : {
-				"name" 					: "Recreate Perceptive walls on scene load [DEBUG]",
-				"descrp" 				: "If Perceptive walls should be recreated when a scene is reloaded (for debug purposes)"
+				"name" 					: "Perceptive 壁をシーン読み込み時に再作成 [DEBUG]",
+				"descrp" 				: "Perceptive壁がシーン再読込時に再作成されるかどうか（デバッグ用）"
 			},
 			
 			"followTokens" : {
@@ -499,9 +518,14 @@
 				"descrp" 				: "カメラが選択したコマを追従するかどうか設定します。"
 			},
 			
+			"followonControl" : {
+				"name" 					: "操作中に追従",
+				"descrp" 				: "コマが選択された瞬間にカメラが移動するかどうか"
+			},
+						
 			"MessagePopUps" : {
-				"name" 					: "Message popups",
-				"descrp" 				: "If messages popups for moving doors and peeking locks should be shown"
+				"name" 					: "メッセージポップアップ",
+				"descrp" 				: "扉を動かしたり覗き見をしたときにメッセージポップアップが表示されるかどうか"
 			},
 			
 			"moveDoorControls" : {
@@ -511,7 +535,7 @@
 			
 			"SpeedDoorMovefactor" : {
 				"name" 					: "ドアの開閉速度",
-				"descrp" 				: "alt+mouse-wheelでドアを開閉する時の速度"
+				"descrp" 				: "alt+マウススクロールでドアを開閉する時の速度"
 			},
 			
 			"IlluminationIconPosition" : {
@@ -525,8 +549,18 @@
 			},
 			
 			"LingeringAPIconPosition" : {
-				"name" 					: "Position of active perception indicator",
-				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"name" 					: "能動的知覚インジケーターの位置",
+				"descrp" 				: "コマHUDのどこに継続する能動的知覚インジケーターを配置させるか",
+				"options" : {
+					"none"				: "なし",
+					"left"				: "左",
+					"right"				: "右"
+				}
+			},
+			
+			"PDCInputPosition" : {
+				"name" 					: "知覚DC入力の位置",
+				"descrp" 				: "コマHUDのどこに知覚インジケーターを配置させるか",
 				"options" : {
 					"none"				: "なし",
 					"left"				: "左",
@@ -545,8 +579,8 @@
 			},
 			
 			"WhisperLingeringAPremoval" : {
-				"name" 					: "Notify on lingering AP removal",
-				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
+				"name" 					: "継続的な能動知覚の除去を通知",
+				"descrp" 				: "継続的な能動知覚が取り除かれた時、チャットに通知を表示するかどうか"
 			},
 
 			"InvertIgnoreRollKey" : {
@@ -610,8 +644,8 @@
 			},
 			
 			"PeekingDCFlag" : {
-				"name" 					: "Peeking DC",
-				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
+				"name" 					: "鍵穴覗き難易度",
+				"descrp"				: "この鍵穴を覗くための難易度 (0でロール停止)"
 			},
 			
 			"LockPeekSizeFlag" : {
@@ -640,7 +674,7 @@
 			},
 			
 			"DoorHingePositionFlag" : {
-        "name" 					: "ドアの丁番位置",
+				"name" 					: "ドアの丁番位置",
 				"descrp" 				: "ドアの丁番がある位置を指定します。",
 				"options" : {
 					"0"				: "左",
@@ -651,7 +685,7 @@
 			
 			"DoorSwingSpeedFlag" : {
 				"name" 					: "開閉速度",
-				"descrp"				: "The swing speed of the door in degrees°"
+				"descrp"				: "角度°で扉が開く速さ"
 			},		
 			
 			"DoorSwingRangeFlag" : {
@@ -674,6 +708,11 @@
 				"descrp"				: "このドアが知覚（受動・能動）によって発見可能か設定します。"
 			},
 			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "発見時に公開",
+				"descrp"				: "この物体が発見時に公開されるかどうか（有効時にゲーム設定を上書きします）"
+			},
+			
 			"PPDCFlag" : {
 				"name" 					: "受動知覚の難易度",
 				"descrp"				: "受動知覚により発見される難易度 (-1 で不可能)"
@@ -685,41 +724,41 @@
 			},
 			
 			"SpottingRangeFlag" : {
-				"name"					: "Spotting Range",
-				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
+				"name"					: "発見範囲",
+				"descrp"				: "この物体が発見できるカスタム距離（ワールド設定を上書き、-1 で無効化）"
 			},
 			
 			"otherSkillADCsFlag" : {
-				"openButtonname"		: "Other active skill DCs",
-				"confirmmButtonname"	: "Confirm",
-				"Title"					: "Other active skill DCs",
-				"name"					: "The active spot DCs for other skills (-1 for impossible):",
-				"entry"					: "DC for {pSkill} checks"
+				"openButtonname"			: "その他の能動的技能の難易度",
+				"confirmmButtonname"			: "決定",
+				"Title"					: "他の能動技能DC",
+				"name"					: "他の技能における能動発見DC（-1で不可能）:",
+				"entry"					: "{pSkill} 判定のDC"
 			},
 			
 			"SpottingMessageFlag" : {
-				"name"					: "Spotting message",
-				"descrp"				: "Message whispered to the spotter of this object"
+				"name"					: "メッセージの発見",
+				"descrp"				: "この物体の発見者に秘匿通知されるメッセージ"
 			},
 			
 			"LockPPDCFlag" : {
 				"name" 					: "受動知覚難易度を固定",
-				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
+				"descrp"				: "移動時にこのコマの受動知覚DC再ロールを抑止"
 			},
 			
 			"resetSpottedbyMoveFlag" : {
 				"name"					: "コマの移動により発見をリセット",
-				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
+				"descrp"				: "能動的な発見者は隠れたコマの移動によってリセットされるかどうか"
 			},
 			
 			"StealthEffectsFlag" : {
 				"name"					: "隠密の効果",
-				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
+				"descrp"				: "隠密のロール時に追加で隠密効果をこのコマに適用するかどうか（名前もしくはID、\";\"で分割）"
 			},
 			
 			"OverrideWorldSEffectsFlag" : {
 				"name"					: "このワールドにおける隠密の効果を上書き",
-				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
+				"descrp"				: "このコマの隠密効果がワールドの隠密効果を上書きするかどうか"
 			},
 
 			"SceneBrightEndFlag" : {
@@ -733,22 +772,22 @@
 			},
 			
 			"TilePerceptiveNameFlag" : {
-				"name"					: "Tile name",
-				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
+				"name"					: "タイル名",
+				"descrp"				: "Perceptiveに使用されるこのタイルの名前（例：ダイアログ）"
 			},
 
 			"MATTTriggerTileFlag" : {
-				"name" 					: "Triggered tile ID",
-				"descrp"				: "The ID of the tile triggered by the Lock & Key actions below (you may use different landings)"
+				"name" 					: "起動タイルID",
+				"descrp"				: "以下のLock & Keyアクションによって起動されるタイルのID（ほかの条件も使用可能です）"
 			},
 			
 			"MATTTriggerConditionsFlag" : {
-				"NewlySpotted.name"		: "On newly spotted",
+				"NewlySpotted.name"		: "新規発見時",
 				"options" : {
-					"never"				: "never",
-					"always"			: "always",
-					"active"			: "active",
-					"passive"			: "passive"
+					"never"				: "なし",
+					"always"			: "常時",
+					"active"			: "能動",
+					"passive"			: "受動"
 				}
 			}
 		},
@@ -756,13 +795,13 @@
 		"vision-channels-window" : {
 			"buttons" : {
 				"OpenVCMenu" : {
-					"name"				: "Open Vision Channels"
+					"name"				: "Vision Channelsを開く"
 				},
 				"confirm" : {
-					"name"				: "Confirm"
+					"name"				: "確定"
 				},
 				"add" : {
-					"name"				: "Add channel"
+					"name"				: "チャネル追加"
 				}
 			},
 			"titles" : {
@@ -770,79 +809,82 @@
 			},
 			"entries" : {
 				"titles" : {
-					"Name"				: "Name",
-					"RequiredtoSee"		: "Required to see",
-					"SeethroughWalls"	: "Through walls",
-					"Range"				: "Range",
-					"RangeFormula"		: "Range formula",
-					"Color"				: "Color",
+					"Name"				: "名前",
+					"RequiredtoSee"		: "可視化に必要",
+					"SeethroughWalls"	: "壁を通して",
+					"Range"				: "射程",
+					"RangeFormula"		: "射程計算式",
+					"RangeMin"			: "最低射程",
+					"Color"				: "色",
 					"EffectFilter" : {
-						"name"			: "Effect filter",
+						"name"			: "エフェクトフィルタ",
 						"options" : {
 							"off"		: "off",
-							"outline"   : "outline",
-							"outline_waves" : "outline & waves",
-							"glow"		: "glow",
-							"TMfog"		: "fog",
-							"TMelectric": "electricity",
-							"TMtransform": "swirly",
-							"TMflood"	: "flood",
-							"TMadjustment" : "fading",
-							"TMblur"	: "blur"
+							"outline"   : "アウトライン",
+							"outline_waves" : "アウトライン & ウェーブ",
+							"glow"		: "輝く",
+							"TMfog"		: "霧",
+							"TMelectric": "電撃",
+							"TMtransform": "渦巻",
+							"TMflood"	: "洪水",
+							"TMadjustment" : "掠れ",
+							"TMblur"	: "ブラー"
 						}
 					},
-					"EffectFilterColor" : "Effect Filter Color",
-					"Transparency"		: "Transparency",
+					"EffectFilterColor" : "エフェクトフィルタ色",
+					"Transparency"		: "透明度",
+					"defaultReceiver"	: "デフォルトを受領",
 					"VCID"				: "Internal ID",
-					"Emits"				: "Emits",
-					"Receives"			: "Receives",
-					"ReceiveFiltered"	: "Reciver filter",
-					"ReceiveRange"		: "Custom range",
-					"CalculatedRange"	: "Calculated range",
-					"Sight"				: "Sight",
-					"Movement"			: "Movement"
+					"Emits"				: "出現",
+					"Receives"			: "受領",
+					"ReceiveFiltered"	: "フィルター受領",
+					"ReceiveRange"		: "カスタム射程",
+					"CalculatedRange"	: "計算された射程",
+					"ReceiveRangeMin"	: "カスタム最低射程",
+					"Sight"				: "視認",
+					"Movement"			: "移動"
 				}
 			}
 		},
 		
 		"PeekingConfirm" : {
-			"name" 						: "Peeking confirm",
-			"descrp" 					: "User {pUserName} want to lock peek a door, confirm?"
+			"name" 						: "のぞき見確定",
+			"descrp" 					: "ユーザー {pUserName} が鍵穴を覗きたがっています。承認しますか？"
 		},
 		
 		"monks-active-tiles" : {
 			"filters" : {
-				"name"						: "Filter",
+				"name"						: "フィルタ",
 				
 				"filter-spotted-by" : {
-					"name"					: "Filter objects spotted by",
+					"name"					: "次の者に発見された物体をフィルタ：",
 					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} by <span class=\"entity-style\">{pSpotters}</span>",
 					"settings" : {
 						"spotters" : {
-							"name" 			: "Spotters"
+							"name" 			: "発見者"
 						},
 						"filterCondition" : {
-							"name"			: "Filter if",
+							"name"			: "次でフィルタ：",
 							"options" : {
-								"spotted"	: "has been spotted",
-								"notspotted": "has not been spotted"
+								"spotted"	: "発見済み",
+								"notspotted": "未発見"
 							}
 						}
 					}
 				},
 				
 				"filter-has-spotted" : {
-					"name"					: "Filter tokens having spotted",
+					"name"					: "発見済みコマをフィルタ",
 					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
 					"settings" : {
 						"spotted" : {
-							"name" 			: "Spotted"
+							"name" 			: "発見済み"
 						},
 						"filterCondition" : {
-							"name"			: "Filter if",
+							"name"			: "次でフィルター：",
 							"options" : {
-								"spotted"	: "has spotted",
-								"notspotted": "has not spotted"
+								"spotted"	: "発見済み",
+								"notspotted": "未発見"
 							}
 						}
 					}
@@ -851,11 +893,72 @@
 			
 			"actions" : {
 				"spot-object" : {
-					"name"					: "Spot object",
+					"name"					: "物体を発見",
 					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> with <span class=\"entity-style\">{pEntities}</span>",
 					"settings" : {
 						"target" : {
-							"name"			: "Target"
+							"name"			: "目標"
+						}
+					}
+				},
+				
+				"give-VC" : {
+					"name"					: "vision channel付与",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> to <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "チャネル"
+						},
+						"type" : {
+							"name"			: "次として付与：",
+							"options" : {
+								"Emits"		: "出現",
+								"Receives"	: "受領",
+								"Sight"		: "視認 (壁のみ)",
+								"Movement"	: "移動 (壁のみ)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "vision channel除去",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> from <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "チャネル"
+						},
+						"type" : {
+							"name"			: "次として取り除き：",
+							"options" : {
+								"Emits"		: "出現",
+								"Receives"	: "受領",
+								"Sight"		: "視認 (壁のみ)",
+								"Movement"	: "移動 (壁のみ)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "発見者をリセット",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "「発見可能」を設定",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span> to <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Toggle \"can be spotted\"</span> of <span class=\"entity-style\">{pEntities}</span>"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "セット",
+							"options" : {
+								"true"		: "真",
+								"false"		: "偽",
+								"toggle"	: "切り替え値"
+							}
 						}
 					}
 				}
