@@ -1,3 +1,8 @@
+## v3.6.0
+- Updated Japanese translation (thanks to [doumoku](https://github.com/doumoku))
+- Added macro "Remove lingering AP selected" to quickly eddit certain spot invisible settings of selected objects
+- Added optional key to open settings of hovered door
+
 ## v3.5.10
 - Improved swing range calculations
 
