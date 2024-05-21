@@ -46,17 +46,19 @@ class PerceptiveCompatibility {
 	static async onTokenupdate(pToken, pchanges, pInfos) {
 		if (game.settings.get(cModuleName, "StealthyIntegration")) {
 			if (pchanges.flags?.perceptive?.hasOwnProperty("PPDCFlag") || pchanges.flags?.perceptive?.hasOwnProperty("APDCFlag")) {
-				let vMaxResult = Math.max(PerceptiveFlags.getPPDC(pToken, true), PerceptiveFlags.getAPDC(pToken, true));
-				
-				if ((vMaxResult >= 0) && (vMaxResult < Infinity)) {
-					await stealthy.bankStealth(pToken, vMaxResult)
-					/*
-					let vStealthyEffects = pToken.actor.effects.filter(vEffect => vEffect.flags?.stealthy?.hidden);
+				if (stealthy.getBankedStealth(pToken) != undefined) {
+					let vMaxResult = Math.max(PerceptiveFlags.getPPDC(pToken, true), PerceptiveFlags.getAPDC(pToken, true));
 					
-					for (let i = 0; i < vStealthyEffects.length; i++) {
-						vStealthyEffects[i].flags.stealthy.hidden = vMaxResult;
+					if ((vMaxResult >= 0) && (vMaxResult < Infinity)) {
+						await stealthy.bankStealth(pToken, vMaxResult)
+						/*
+						let vStealthyEffects = pToken.actor.effects.filter(vEffect => vEffect.flags?.stealthy?.hidden);
+						
+						for (let i = 0; i < vStealthyEffects.length; i++) {
+							vStealthyEffects[i].flags.stealthy.hidden = vMaxResult;
+						}
+						*/
 					}
-					*/
 				}
 			}
 		}
