@@ -1,3 +1,6 @@
+## v3.6.1
+- Fix for [stealthy](https://foundryvtt.com/packages/stealthy) compatibility
+
 ## v3.6.0
 - Updated Japanese translation (thanks to [doumoku](https://github.com/doumoku))
 - Added macro "Remove lingering AP selected" to quickly eddit certain spot invisible settings of selected objects
