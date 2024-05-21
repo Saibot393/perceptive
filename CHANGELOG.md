@@ -1,3 +1,6 @@
+## v3.6.2
+- Improved active effect synch
+
 ## v3.6.1
 - Fix for [stealthy](https://foundryvtt.com/packages/stealthy) compatibility
 
