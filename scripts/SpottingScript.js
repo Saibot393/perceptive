@@ -1449,23 +1449,28 @@ class SpottingManager {
 		}
 	}
 	
-/*
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
-		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
-				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
-				
-				for (let i = 0; i < vActiveScenes.length; i++) {
-					let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+		console.log(pInfos);
+		if (!pInfos[cModuleName + "delete"]) {
+			if (game.user.isGM) {
+				EffectManager.removeStealthEffects(pActor.prototypeToken, true);
+				/*
+				if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+					let vActiveScenes = game.scenes.filter(vScene => vScene.active);
 					
-					for (let j = 0; j < vrelevantTokens.length; j++) {	
-						PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
-					}
-				}			
+					for (let i = 0; i < vActiveScenes.length; i++) {
+						let vrelevantTokens = vActiveScenes[i].tokens.filter(vToken => vToken.actorId == pActor.id);
+						
+						for (let j = 0; j < vrelevantTokens.length; j++) {	
+							PerceptiveFlags.setPerceptiveStealthing(vrelevantTokens[j], false);
+						}
+					}			
+				}
+				*/
 			}
 		}
 	}
-*/
+
 
 	static async onStealthRoll(pActor, pRoll) {
 		let vRelevantTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.actorId == pActor);
@@ -1755,7 +1760,7 @@ Hooks.once("ready", function() {
 
 		Hooks.on("renderTokenHUD", (...args) => SpottingManager.addPerceptiveHUD(...args));
 
-		//Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
+		Hooks.on(cModuleName + ".PerceptiveEffectdeletion", (pEffect, pInfos, pUserID, pActor) => SpottingManager.onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor));
 	}
 });
 

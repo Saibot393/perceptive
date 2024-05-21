@@ -93,7 +93,6 @@ class EffectManager {
 		}
 		
 		if (!pApplyReset) {
-			
 			await PerceptiveFlags.setPerceptiveStealthing(pHider, false);
 		}
 	}

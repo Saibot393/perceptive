@@ -140,11 +140,18 @@ class PerceptiveCompUtils {
 				vName = pEffects[i].label;
 			}
 			
-			await game.dfreds.effectInterface._socket.executeAsGM('removeEffect', {
-			  effectName: vName,
-			  uuid : pToken.actor.uuid,
-			  origin : cModuleName
-			});
+			if (pEffects[i]?.parent?.effects.get(pEffects[i].id)) {
+				if (game.user.isGM) {
+					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [pEffects[i].id], {[cModuleName + "delete"] : true})
+				}
+				else {
+					await game.dfreds.effectInterface._socket.executeAsGM('removeEffect', {
+						effectName: vName,
+						uuid : pToken.actor.uuid,
+						origin : cModuleName
+					});
+				}
+			}
 			//game.dfreds.effectInterface.removeEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
 		}		
 	}
