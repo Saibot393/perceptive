@@ -1450,7 +1450,6 @@ class SpottingManager {
 	}
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
-		console.log(pInfos);
 		if (!pInfos[cModuleName + "delete"]) {
 			if (game.user.isGM) {
 				EffectManager.removeStealthEffects(pActor.prototypeToken, true);

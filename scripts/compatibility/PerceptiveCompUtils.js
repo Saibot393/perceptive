@@ -141,7 +141,7 @@ class PerceptiveCompUtils {
 			}
 			
 			if (pEffects[i]?.parent?.effects.get(pEffects[i].id)) {
-				if (game.user.isGM) {
+				if (game.user.isGM && pEffects[i].origin == cModuleName) {
 					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [pEffects[i].id], {[cModuleName + "delete"] : true})
 				}
 				else {
