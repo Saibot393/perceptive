@@ -1,0 +1,973 @@
+{
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"				: "Perceptive",
+			"LockPeekSettings"			: "Ustawienia podglądu zamka",
+			"DoorMoveSettings"			: "Ustawienia ruchu drzwi",
+			"SpottingSettings"			: "Ustawienia Spot Invisible",
+			"ClientSettings"			: "Ustawienia klienta",
+			"PeekLock"					: "Blokada podglądu",
+			"Basic"						: "Podstawowy",
+			"SpottingInfos"	: {
+				"Title"					: "Informacje o wykryciu",
+				"PP"					: "Obliczona pasywna percepcja: {pValue}",
+				"Spottedby"				: "Zauważony przez: {pNames}",
+				"LightModifier"			: "Modyfikator ST percepcji oświetlenia: {pValue}",
+				"LightRollBehaviour"	: "Modyfikator zachowania rzutu percepcji oświetlenia: {pBehaviour}",
+				"VisionLevel" : {
+					"name"				: "Poziom wizji: {pLevel}",
+					"value0"			: "Podstawowa wizja",
+					"value1"			: "Widzenie w słabym świetle",
+					"value2"			: "Widzenie w ciemności",
+					"value3"			: "Widzenie w ciemności (całkowite)"
+				},
+				"LightLevel" : {
+					"name"				: "Poziom oświetlenia: {pLevel}",
+					"value0"		    : "Ciemno",
+					"value1"			: "Słabe światło",
+					"value2"			: "Jasno"
+				},
+				"LingeringAP"			: "Długotrwała aktywna percepcja",
+				"PassiveDC"				: "ST pasywnej percepcji",
+				"ActiveDC"				: "ST aktywnej percepcji"
+			},
+			"SpottingConfirm" : {
+				"name"					: "Potwierdź wykrycie",
+				"content"				: "Gracz <b>{pPlayer}</b> wyrzucił <b>{pResult}</b> na {pSkillName}, który pozwala <b>{pSpotters}</b> w scenie <b>{pScene}</b> dostrzec <b>{pDoors}</b> sekretnych drzwi i tych ukrytych tokenów: <br>",
+				"defaultSkill"			: "percepcja",
+				"forcecontent"			: "Gracz <b>{pPlayer}</b> wystąpił o <b>{pSpotters}</b> w scenie <b>{pScene}</b>, aby dostrzec <b>{pDoors}</b> sekretnych drzwi i tych ukrytych tokenów <b>bez</b> rzutu na percepcję: <br>",
+				"Behaviour"				: "z rzutem <b>{pBehaviour}</b> w wyniku czego <b>{pResult}</b>"
+			},
+			"StartStealthing"			: "Rozpocznij skradanie",
+			"StopStealthing"			: "Zakończ skradanie",
+			"GMuiandcontrol"			: "MG UI & Kontrola",
+			"SightRange"				: "Zasięg widzenia",
+			"RulesAutomation"			: "Zasady i Automatyzacje",
+			"RollFormulas"				: "Rzuty i Formuły",
+			"Effects"					: "Efekty",
+			"Illumination"				: "Oświetlenie",
+			"Sound"						: "Dźwięk",
+			"SoundnImages"				: "Dźwięk i Obrazy",
+			"Tile"						: "Kafelek",
+			"Triggers"					: "Wyzwalacze",
+			"ResetSpottedby"			: "Zresetuj \"zauważony przez\"",
+			"with"						: "z",
+			"VisionChannels"			: "Kanały wizji",
+			"OpenVCMenu"				: "Otwórz menu kanałów wizji"
+		},
+		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "Byłeś w stanie zauważyć <b>{pDoors}</b> sekretnych drzwi i ukrytych tokenów:",
+				"unknown"				: "???"
+			},
+			"LostLingeringAP" 			: "{pName} utracił aktywną percepcję",
+			"Peeking"					: "{pName} próbował zerknąć na zamek",
+			"PeekingSuccess" : {
+				"default"				: "{pName} udało się zerknąć na zamek",
+				"crit"					: "{pName} krytycznie udało się zerknąć na zamek"
+			},
+			"PeekingFail" : {
+				"default"				: "{pName} nie udało się zerknąć na zamek",
+				"crit"					: "{pName} krytycznie nie udało się zerknąć na zamek"
+			}
+		},
+		
+		"Warnings" : {
+			"MacroSeekDeactivatet" 		: "Makro to jest obecnie niedostępne, patrz ustawienie \"Zachowanie podczas korzystania z makra percepcji\""
+		},
+		
+		"Popups" : {
+			"OutofRange"				: "Poza zasięgiem",
+			"CantbePeeked"				: "Nie można zerknąć",
+			"DoorisLocked"				: "Zablokowany",
+			"CantbeMoved"				: "Nie można przesunąć",
+			"GainedLingeringAP"			: "Uzyskano długotrwałą aktywną percepcję",
+			"RemovedLingeringAP"		: "Utracono długotrwałą aktywną percepcję"
+		},
+		
+		"Settings" : {
+			"SplitInteractionDistances" : {
+				"name"					: "Podzielone odległości interakcji",
+				"descrp"				: "Jeśli odległości interakcji dla zerkania na zamek i przesuwania drzwi powinny być podzielone"
+			},
+			
+			"InteractionDistance" : {
+				"name"					: "Maksymalna odległość interakcji",
+				"descrp"				: "Maksymalna odległość, na jaką gracze mogą wchodzić w interakcje z obiektami (-1 dla nieograniczonej)"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Użyj odległości Arms Reach",
+				"descrp"				: "Użyj odległości Arms Reach dla maksymalnej odległości interakcji"
+			},
+			
+			"DFredsEffectsIntegration" : {
+				"name"					: "Integracja DFreds Convenient Effects",
+				"descrp"				: "Użyj DFreds convenient effects"
+			},
+			
+			"Vision5eIntegration" : {
+				"name"					: "Integracja Vision 5e",
+				"descrp"				: "Dostosuj do zasad Vision 5e"
+			},
+			
+			"StealthyIntegration" : {
+				"name"					: "Integracja Stealthy",
+				"descrp"				: "ST Skradania będzie synchronizowane między Perceptive i Stealthy"
+			},
+			
+			"Peekablebydefault" : {
+				"name" 					: "Domyślnie blokada z możliwością podglądu",
+				"descrp" 				: "Jeśli drzwi mogą być domyślnie zablokowane"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "Standardowy rozmiar podglądu zamka",
+				"descrp" 				: "Standardowy rozmiar szczeliny używany podczas podglądu zamka w odniesieniu do rozmiaru drzwi (0-1)."
+			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "Standardowa pozycja podglądu zamka",
+				"descrp" 				: "Standardowa pozycja szczeliny używana podczas podglądu zamka w odniesieniu do rozmiaru drzwi (0-1)."
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "Zatrzymaj podgląd zamka podczas ruchu",
+				"descrp" 				: "Zatrzymuje tokeny przed podglądaniem zamka, gdy tylko się poruszą, nawet jeśli nadal znajdują się w odległości interakcji"
+			}, 
+			
+			"PeekingDistance" : {
+				"name" 					: "Odległość podglądu zamka",
+				"descrp" 				: "Maksymalna odległość, na jaką gracze mogą podglądać zamki (-1 dla nieograniczonego)"
+			}, 
+			
+			"GMConfirmPeeking" : {
+				"name"					: "MG potwierdza podgląd",
+				"descrp"				: "Jeśli MG musi potwierdzić każdą akcję zerknięcia"
+			},
+			
+			"PeekingFormula" : {
+				"name"					: "Formuła zerkania",
+				"descrp"				: "Formuła używana do podglądania zamków (pozostaw puste, aby dezaktywować)"
+			},
+			
+			"PeekingDefaultDC" : {
+				"name"					: "Domyślne ST podglądu",
+				"descrp"				: "Domyślny ST dla zerkania przez nowo utworzone ściany"
+			},
+			
+			"DoorstandardMove" : {
+				"name" 					: "Standardowy typ ruchu drzwi",
+				"descrp" 				: "Standardowy rodzaj ruchu drzwi",
+				"options" : {
+					"none"				: "Brak ruchu (normalne drzwi)",
+					"swing"				: "Drzwi obrotowe",
+					"slide"				: "Drzwi przesuwne"
+				}
+			}, 
+			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "Domyślnie zapobiega normalnemu otwarciu",
+				"descrp" 				: "Standardowe ustawienie, czy drzwi, które mogą się obracać lub przesuwać, nadal można otworzyć lewym przyciskiem myszy"
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "Standardowa pozycja zawiasów drzwi",
+				"descrp" 				: "Pozycja, w której znajduje się zawias drzwi",
+				"options" : {
+					"0"				: "Lewo",
+					"1"				: "Prawo",
+					"2"				: "Centrum"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "Standardowa prędkość uchylenia",
+				"descrp" 				: "Standardowa prędkość uchylenia drzwi w stopniach°"
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "Standardowy zakres uchylenia",
+				"descrp" 				: "Zakres, w jakim drzwi mogą się uchylać w stopniach° ({min}:{max} pozostaw puste, aby nie było limitu)"
+			}, 			
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "Standardowa prędkość przesuwu",
+				"descrp" 				: "Standardowa prędkość przesuwu drzwi w częściach rozmiaru drzwi (0-1)"
+			},
+			
+			"MovingDistance" : {
+				"name" 					: "Odległość ruchu drzwi",
+				"descrp" 				: "Maksymalna odległość, na jaką gracze mogą przesuwać drzwi (-1 dla nieograniczonej)"
+			}, 
+			
+			"ActivateSpotting" : {
+				"name"					: "Aktywuj funkcję Spot Invisible",
+				"descrp"				: "Jeśli funkcja Spot Invisible powinna być włączona (wyłącz ją, aby poprawić wydajność)"
+			},
+			
+			"SpottingRange" : {
+				"name"					: "Zakres wykrywania",
+				"descrp"				: "Maksymalny zasięg, w którym można wykrywać tokeny i drzwi (-1 dla nieograniczonego)"
+			},
+			
+			"SpottingConeRange" : {
+				"name"					: "Zasięg stożka wykrywania",
+				"descrp"				: "Dodatkowy zakres wykrywania punktowego stosowany w stożku 90° przed tokenami (0 do zwiększenia wydajności)."
+			},
+			
+			"ApplyRange" : {
+				"name"					: "Zastosuj zakresy",
+				"descrp"				: "Dla których testów należy zastosować zakresy",
+				"options" : {
+					"never"				: "nigdy",
+					"always"			: "zawsze",
+					"activeonly"		: "tylko aktywne testy",
+					"passiveonly"		: "tylko pasywne testy",
+					"incombatonly"		: "tylko w walce (oba testy)",
+					"outcombatonly"		: "tylko poza walką (oba testy)"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "Użyj zakresu od granicy do granicy",
+				"descrp"				: "Jeśli zakresy widzenia powinny być obliczane na podstawie granic tokenów zamiast ich środka"
+			},
+			
+			"StandardVisionDirection" : {
+				"name"					: "Standardowy kierunek wizji",
+				"descrp"				: "Kierunek używany dla stożków wizji, mierzony dla nieobróconych tokenów",
+				"options" : {
+					"bottom"			: "dół",
+					"left"				: "lewo",
+					"top"				: "góra",
+					"right"				: "prawo"
+				}
+			},
+			
+			"RangePDCModifier" : {
+				"name"					: "Zasięg modyfikatora ST percepcji",
+				"descrp"				: "Modyfikator ST percepcji oparty na odległości do zauważalnego obiektu (przyrost ST/zwiększenie zasięgu, 0/0 aby wyłączyć)"
+			},
+			
+			"Range3DCalculation" : {
+				"name"					: "Obliczanie zasięgu 3D",
+				"descrp"				: "Jeśli zasięg widzenia powinien być obliczany w 3D (zamiast 2D)"
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Użyj zasad Pf2e",
+				"descrp"				: "Czy należy stosować zasady Pf2e, w tym rozróżnienie między ukrywaniem się i skradaniem oraz odpowiednie zasady"
+			},
+			
+			"AutoRerollPPDConMove" : {
+				"name"					: "Automatyczne przerzucenie ST skradania",
+				"descrp"				: "Czy ST skradania się powinno być przerzucane, gdy token się porusza (można zablokować na token)"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "Zautomatyzuj token Może zostać wykryty",
+				"descrp"				: "Ustawienie \"Może zostać wykryty\" w Tokenach zostanie automatycznie zmienione po wykryciu zmiany ukrycia"
+			},
+	
+			"CritMethod" : {
+				"name" 					: "System krytyków",
+				"descrp"				: "Sposób określania rzutów krytycznych",
+				"options" : {
+					"noCrit"			: "Brak krytyków",
+					"natCrit"			: "Nat 1/20",
+					"natCritpm10"		: "Nat 1/20 i +-10 ST [np. Pf2e]"
+				}
+			},
+			
+			"SimulatePlayerVision" : {
+				"name"					: "Perspektywa gracza",
+				"descrp"				: "Jeśli MG używają tej samej formuły wykrywania ukrytych tokenów co gracze (tylko dla tokenów)"
+			},
+			
+			"PassivePerceptionFormula" : {
+				"name"					: "Formuła pasywnej percepcji",
+				"descrp"				: "Formuła pasywnej percepcji systemu (np. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", pomoc można znaleźć na stronie Github tego modułu)"
+			},
+
+			"PerceptionKeyWord" : {
+				"name"					: "Słowo klucz percepcji",
+				"descrp"				: "Słowo kluczowe do rozpoznawania rzutów percepcji (ciąg znaków obecny w tekście opisu rzutów percepcji)"
+			}, 
+			
+			"StealthKeyWord" : {
+				"name"					: "Słowo klucz ukrycia",
+				"descrp"				: "Słowo kluczowe do rozpoznawania rzutów ukrywania się (ciąg znaków obecny w tekście opisu rzutów ukrywania się)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "Zachowanie automatycznego ukrywania się",
+				"descrp"				: "Co powinno się stać, gdy zostanie wykonany test skradania się?",
+				"options" : {
+					"off"				: "nic",
+					"both"				: "Ustaw aktywną i pasywną ST percepcji",
+					"activeonly"		: "Ustaw tylko aktywne ST percepcji"
+				}
+			},
+			
+			"applySystemStealthEffect" : {
+				"name"					: "Zastosuj systemowe efekty ukrycia",
+				"descrp"				: "Czy efekty ukrycia zależne od systemu powinny być stosowane po rzucie na ukrycie?"				
+			},
+			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "Użyj ukrycia Perceptive",
+				"descrp"				: "Jeśli należy użyć \"efektu ukrycia\" Perceptive"				
+			},
+			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "Perceptive widoczni ukrywający się sojusznicy",
+				"descrp"				: "Przyjazne tokeny będą widoczne dla innych przyjaznych tokenów, nawet jeśli są one skradające się."				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Synchronizuj usunięcie ukrycia z Perceptive",
+				"descrp"				: "Usunięcie ukrycia perceptive z tokena usunie ustawione efekty ukrycia i odwrotnie"				
+			},
+			
+			"customStealthEffects" : {
+				"name"					: "Niestandardowe efekty ukrycia",
+				"descrp"				: "Dodatkowe efekty, które są stosowane, gdy token rzuca na skradanie się (nazwy lub identyfikatory, oddzielone \";\")"				
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "Domyślne resetowanie zauważenia przy ruchu tokena",
+				"descrp"				: "Jeśli aktywni obserwatorzy ukrytego tokena powinni zostać zresetowani po ruchu"
+			}, 
+			
+			"IlluminationPDCModifier" : {
+				"name"					: "Modyfikatory ST percepcji oświetlenia",
+				"descrp"				: "Modyfikatory, które są stosowane do ST percepcji dla różnych poziomów oświetlenia (przyćmione światło, jasne światło, \"0,0\" dla braku modyfikatorów)"
+			}, 
+			
+			"UseIlluminationPDCModifierforAP" : {
+				"name"					: "Używanie modyfikatorów ST percepcji oświetlenia dla aktywnej percepcji",
+				"descrp"				: "W przypadku aktywnej percepcji rzuty powinny korzystać z modyfikatora ST oświetlenia"
+			},
+			
+			"IlluminationAPDCBehaviour" : {
+				"name"					: "Zachowanie percepcji oświetlenia",
+				"descrp"				: "Zachowanie rzutów percepcji dla różnych poziomów oświetlenia (przyciemnione światło, jasne światło, \"=,=\" dla domyślnego zachowania, ważne słowa kluczowe: advantage, adv, +, normal, =, disadvantage, disadv, -)"
+			},
+			
+			"Light3Dcalc" : {
+				"name"					: "Obliczanie oświetlenia 3D",
+				"descrp"				: "Jeśli oświetlenie tokena powinno być obliczane w 3D (zamiast 2D)"
+			},
+			
+			"GMSpotconfirmDialog" : {
+				"name"					: "MG potwierdza Wykrycie",
+				"descrp"				: "Rzucenie testu percepcji powinno utworzyć okno dialogowe dla MG, w którym należy potwierdzić wykrycie"
+			}, 
+			
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "MG potwierdza zachowanie Wykrycia",
+				"descrp"				: "Użytkownicy, którzy wykonają test percepcji, powinni utworzyć okno dialogowe dla MG, w którym należy potwierdzić wykrycie",
+				"options" : {
+					"off"				: "wyłączony",
+					"playersonly"		: "tylko gracze",
+					"always"			: "dla każdego"
+				}
+			}, 
+			
+			"ShowfailuresinGMconfirm" : {
+				"name"					: "Pokaż porażki w oknie dialogowym potwierdzenia MG",
+				"descrp"				: "Pokazuje tokeny, dla których test percepcji nie powiódł się jako niezaznaczone wpisy w oknie dialogowym potwierdzenia MG"
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Spraw, aby zauważone tokeny były widoczne",
+				"descrp"				: "Aktywnie lub pasywnie wykryte tokeny powinny być widoczne dla wszystkich",
+				"options" : {
+					"never"				: "nigdy",
+					"always"			: "zawsze",
+					"incombatonly"		: "tylko w walce",
+					"outcombatonly"		: "tylko poza walką"
+				}
+			},
+			
+			"RevealAllies" : {
+				"name"					: "Spraw, by tokeny sojuszników były widoczne",
+				"descrp"				: "Aktywnie lub pasywnie wykryte sojusznicze tokeny również powinny być widoczne (działa tylko z powyższymi ustawieniami)",
+				"options" : {
+					"never"				: "nigdy",
+					"always"			: "zawsze",
+					"incombatonly"		: "tylko w walce",
+					"outcombatonly"		: "tylko poza walką"
+				}
+			},
+
+			"LingeringAP" : {
+				"name"					: "Aktywna percepcja pozostaje",
+				"descrp"				: "Jeśli rzucono na aktywną percepcję, pozostanie ona po początkowym rzucie, dopóki nie zostanie usunięta ręcznie",
+				"options" : {
+					"off"				: "wyłączony",
+					"always"			: "zawsze",
+					"outofcombatonly"	: "poza walką"
+				}
+			}, 		
+
+			"LingeringAPRadius" : {
+				"name"					: "Promień ciągłej aktywnej percepcji",
+				"descrp"				: "Promień mierzony od punktu pierwotnego rzutu, w którym pozostaje aktywna percepcja (-1 dla nieograniczonej)"
+			},	
+
+			"LingeringAPDuration" : {
+				"name"					: "Czas trwania aktywnej percepcji",
+				"descrp"				: "Czas trwania aktywnej percepcji w sekundach (-1 dla nieograniczonej)"
+			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Spraw, by zauważone drzwi były widoczne po kliknięciu",
+				"descrp"				: "Jeśli zostaną zauważone, niewidzialne drzwi powinny stać się normalnymi drzwiami po kliknięciu"
+			},				
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Wyłącz niewidoczne kafelki MATT",
+				"descrp"				: "Jeśli wykrywalne kafelki, które nie zostały wykryte, powinny stać się nieaktywne dla celów MATT"
+			},	
+			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: "Wymuś odwrócenie klawisza \"Ignoruj rzut\"",
+				"descrp" 				: "Przywraca przycisk \"Ignoruj rzut\" dla wszystkich graczy i usuwa ustawienie klienta"				
+			},
+			
+			"GMReciveInformationWhisper" : {
+				"name"					: "MG odbiera wiadomości informacyjne",
+				"descrp"				: "Jeśli MG powinien otrzymywać szeptane wiadomości z aktualizacjami od graczy" 
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "Percepcja tylko przy użyciu makr",
+				"descrp" 				: "Jeśli tylko rzuty percepcji wykonane przy użyciu makr Perceptive powinny być brane pod uwagę"				
+			},
+			
+			"MacroSeekBehaviour" : {
+				"name"					: "Zachowanie podczas korzystania z makra percepcji",
+				"descrp"				: "Na jakich warunkach brane są pod uwagę tylko rzuty percepcji wykonane za pomocą makr Perceptive",
+				"options" : {
+					"never"				: "nigdy",
+					"incombatonly"		: "tylko w walce",
+					"always"			: "zawsze"
+				}
+			},
+			
+			"SpottedSound" : {
+				"name"					: "Wykrycie Dźwięku",
+				"descrp"				: "Dźwięk odtwarzany po wykryciu kontrolowanego tokena (ścieżka do pliku dźwiękowego)"
+			},			
+			
+			"SpottedSoundVolume" : {
+				"name"					: "Głośność wykrytego dźwięku",
+				"descrp"				: "Głośność wykrywanego dźwięku"
+			},	
+
+			"SpotterImagePing" : {
+				"name"					: "Obraz pingu wykrycia",
+				"descrp"				: "Obraz, za pomocą którego obserwatorzy ukrytych obiektów są pingowani"
+			},		
+
+			"SpotterImagePingDuration" : {
+				"name"					: "Czas trwania obrazu pingu wykrycia",
+				"descrp"				: "Czas trwania obrazu pingu wykrycia (w sekundach)"
+			},
+
+			"ActivateVCs" : {
+				"name" 					: "Aktywacja kanałów wizji",
+				"descrp" 				: "Jeśli funkcja percepcji Kanałów Wizji powinna być aktywna"
+			},	
+
+			"SimulateVCPlayerVision" : {
+				"name" 					: "Symulacja widzenia gracza",
+				"descrp" 				: "Jeśli ma być wyświetlana wizja gracza aktualnie wybranego tokena oparta na kanale wizji"
+			},		
+			
+			"VCRange3DCalc" : {
+				"name" 					: "Zakres kanału wizji 3D",
+				"descrp" 				: "Jeśli zasięg kanału wizji ma być obliczany w 3D"
+			},		
+
+			"ShowVCIDs" : {
+				"name" 					: "Pokaż ID kanałów wizji",
+				"descrp" 				: "Jeśli wewnętrzne identyfikatory kanałów wizji powinny być wyświetlane w menu"
+			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Użyj trybu logicznego OR",
+				"descrp"				: "W razie potrzeby kanały wizji powinny działać na zasadzie logicznego OR zamiast logicznego AND"
+			},				
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Pokaż ściany Perceptive [DEBUG]",
+				"descrp" 				: "Jeśli ściany Perceptive powinny być widoczne w warstwie ścian (do celów debugowania)"
+			},
+			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Odtworzenie ścian Perceptive przy ładowaniu sceny [DEBUG]",
+				"descrp" 				: "Czy ściany Perceptive powinny być odtwarzane po przeładowaniu sceny (do celów debugowania)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "Podążaj za tokenami",
+				"descrp" 				: "Jeśli kamera ma podążać za wybranym tokenem, gdy ten się porusza"
+			},
+			
+			"followonControl" : {
+				"name" 					: "Podążaj za kontrolowanym",
+				"descrp" 				: "Jeśli kamera ma się zmienić w momencie wybrania tokena"
+			},
+			
+			"MessagePopUps" : {
+				"name" 					: "Wyskakujące komunikaty",
+				"descrp" 				: "Czy powinny być wyświetlane wyskakujące komunikaty dla przesuwania drzwi i zerkania na zamki"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "Elementy sterujące przesuwaniem drzwi",
+				"descrp" 				: "Jeśli elementy sterujące drzwi powinny poruszać się wraz z ruchomymi ścianami"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "Współczynnik szybkiego ruchu drzwi",
+				"descrp" 				: "Współczynnik prędkości podczas przesuwania drzwi za pomocą alt+kółko myszy"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "Pozycja wskaźnika oświetlenia",
+				"descrp" 				: "Gdzie na tokenie HUD należy umieścić wskaźnik oświetlenia",
+				"options" : {
+					"none"				: "nigdzie",
+					"left"				: "lewo",
+					"right"				: "prawo"
+				}
+			},
+			
+			"LingeringAPIconPosition" : {
+				"name" 					: "Pozycja aktywnego wskaźnika percepcji",
+				"descrp" 				: "Gdzie na tokenie HUD powinien znajdować się wskaźnik ciągłej aktywnej percepcji",
+				"options" : {
+					"none"				: "nigdzie",
+					"left"				: "lewo",
+					"right"				: "prawo"
+				}
+			},
+			
+			"PDCInputPosition" : {
+				"name" 					: "Pozycja wejścia ST percepcji",
+				"descrp" 				: "Gdzie na tokenie HUD powinien znajdować się wskaźnik ST percepcji",
+				"options" : {
+					"none"				: "nigdzie",
+					"left"				: "lewo",
+					"right"				: "prawo"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "Czas trwania pingu wykrycia",
+				"descrp" 				: "Jak długo obiekty wykryte z aktywnym rzutem percepcji powinny być pingowane (w sekundach, 0 wyłącza pingowanie)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "Pokaż wyniki percepcji",
+				"descrp" 				: "Jeśli wynik własnych rzutów percepcji powinien być wyświetlany na czacie"
+			},
+			
+			"WhisperLingeringAPremoval" : {
+				"name" 					: "Powiadomienie o usunięciu AP",
+				"descrp" 				: "Czy powiadomienie powinno być wyświetlane na czacie, gdy trwająca aktywna percepcja zostanie usunięta"
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "Odwrócenie klawisza \"Ignoruj rzut\"",
+				"descrp" 				: "Jeśli rzuty powinny być rozpoznawane tylko PO naciśnięciu przycisku"
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "Przejrzystość tokenów ukrytych",
+				"descrp" 				: "Przejrzystość tokenów ze stanem ukryty"
+			}			
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "Blokada podglądu"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "Przesuń drzwi w lewo"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "Przesuń drzwi w prawo"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "Przełącz śledzenie tokenów"
+			},
+			
+			"IgnoreRoll" : {
+				"name" 					: "Ignoruj rzut",
+				"descrp"				: "Przytrzymaj ten klawisz, aby Perceptive nie rozpoznała go na potrzeby rzutów na Skradanie się lub Percepcję. (można odwrócić)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "Usuń ukrycie wybranych tokenów",
+				"descrp"				: "Usuwa dane/efekty związane z ukryciem z wybranych tokenów"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "Blokada podglądu myszką",
+				"descrp"				: "Przytrzymaj ten przycisk podczas klikania prawym przyciskiem myszy, aby podejrzeć wybrany zamek"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "Przesuwanie drzwi za pomocą myszy",
+				"descrp"				: "Przytrzymaj ten przycisk podczas przewijania, aby przesunąć najechane drzwi (może pozostać pusty)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "Szybkie przesuwanie drzwi myszką",
+				"descrp"				: "Przytrzymaj ten przycisk podczas przewijania, aby szybko przesunąć najechane drzwi"
+			},
+			
+			"EditHoveredDoor" : {
+				"name" 					: "Szybka edycja drzwi",
+				"descrp"				: "Ustawienia otwierania najechanych drzwi"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "Zamek może być podglądany",
+				"descrp"				: "Jeśli ten zamek może zostać podglądnięty przez gracza"
+			},
+			
+			"PeekingDCFlag" : {
+				"name" 					: "ST Podglądania",
+				"descrp"				: "Klasa trudności podglądu tego zamka (0 wyłącza rzuty)"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "Rozmiar podglądu zamka",
+				"descrp"				: "Rozmiar szczeliny używany podczas podglądu zamka w odniesieniu do rozmiaru drzwi (0-1)"
+			},
+			
+			"LockPeekPositionFlag" : {
+				"name" 					: "Pozycja podglądu zamka",
+				"descrp"				: "Pozycja szczeliny używana podczas podglądu zamka w odniesieniu do rozmiaru drzwi (0-1)"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "Typ ruchu drzwi",
+				"descrp"				: "Standardowy typ ruchu tych drzwi",
+				"options" : {
+					"none"				: "Brak ruchu (normalne drzwi)",
+					"swing"				: "Drzwi obrotowe",
+					"slide"				: "Drzwi przesuwne"
+				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "Zapobiegaj normalnemu otwarciu",
+				"descrp"				: "Jeśli drzwi nadal można otworzyć lewym przyciskiem myszy (tylko drzwi ruchome)"
+			},
+			
+			"DoorHingePositionFlag" : {
+				"name" 					: "Pozycja zawiasów drzwi",
+				"descrp"				: "Pozycja, w której znajdują się zawiasy drzwi",
+				"options" : {
+					"0"					: "Lewo",
+					"1"					: "Prawo",
+					"2"					: "Centrum"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "Szybkość uchylenia",
+				"descrp"				: "Prędkość uchylenia drzwi w stopniach°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "Zakres uchylenia",
+				"descrp"				: "Zakres, w jakim drzwi mogą się uchylać w stopniach° (min-max)"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "Prędkość przesuwu",
+				"descrp"				: "Prędkość przesuwu drzwi w częściach rozmiaru drzwi (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "Czy ukrywanie się Perceptive",
+				"descrp"				: "Jeśli ten token ma \"efekt\" skradania się Perceptive"
+			},
+			
+			"canbeSpottedFlag" : {
+				"name" 					: "Może być zauważony",
+				"descrp"				: "Jeśli drzwi te można dostrzec za pomocą percepcji (pasywnej lub aktywnej)"
+			},
+			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Ujawnienie po zauważeniu",
+				"descrp"				: "Czy ten obiekt powinien zostać ujawniony po wykryciu (zastępuje ustawienia gry, gdy jest aktywny)"
+			},
+			
+			"PPDCFlag" : {
+				"name" 					: "ST pasywnej percepcji",
+				"descrp"				: "ST do bycia zauważonym przy użyciu pasywnej percepcji (-1 dla niemożliwego)"
+			},
+			
+			"APDCFlag" : {
+				"name" 					: "ST aktywnej percepcji",
+				"descrp"				: "ST do zauważenia za pomocą percepcji pasywnej (-1 dla niemożliwego, puste do zsynchronizowania z percepcją pasywną)"
+			},
+			
+			"SpottingRangeFlag" : {
+				"name"					: "Zakres Wykrywania",
+				"descrp"				: "Niestandardowy zakres, w którym obiekt może zostać wykryty (nadpisuje ustawienia świata, -1 do wyłączenia)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Inne aktywne ST umiejętności",
+				"confirmButtonname"		: "Potwierdź",
+				"Title"					: "Inne aktywne ST umiejętności",
+				"name"					: "ST aktywnego miejsca dla innych umiejętności (-1 dla niemożliwego):",
+				"entry"					: "ST dla testów {pSkill}"
+			},
+			
+			"SpottingMessageFlag" : {
+				"name"					: "Komunikat o zauważeniu",
+				"descrp"				: "Wiadomość szeptana do obserwatora tego obiektu"
+			},
+			
+			"LockPPDCFlag" : {
+				"name" 					: "Blokada ST pasywnej percepcji",
+				"descrp"				: "Zapobiega ponownemu przerzucaniu ST pasywnej percepcji tego tokena podczas ruchu"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "Reset wykrycia przy ruchu tokena",
+				"descrp"				: "Jeśli aktywni obserwatorzy ukrytego tokena powinni zostać zresetowani po jego ruchu"
+			},
+			
+			"StealthEffectsFlag" : {
+				"name"					: "Efekty skradania się",
+				"descrp"				: "Dalsze efekty skradania zastosowane do tego tokena podczas rzucania skradania (nazwy lub identyfikatory, oddzielone \";\")"
+			},
+			
+			"OverrideWorldSEffectsFlag" : {
+				"name"					: "Zastąpienie efektów skradania się świata",
+				"descrp"				: "Jeśli ten token ma efekty skradania się, powinny one zastąpić efekty skradania się świata"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "Limit jasności i ciemności",
+				"descrp"				: "Poziom ciemności sceny poniżej tej wartości będzie uważany za jasny dla tej sceny"
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "Limit przyciemnienia",
+				"descrp"				: "Poziom ciemności sceny poniżej tej wartości zostanie uznany za przyciemniony dla tej sceny"
+			},
+			
+			"TilePerceptiveNameFlag" : {
+				"name"					: "Nazwa kafelka",
+				"descrp"				: "Nazwa używana przez Perceptive dla tego kafelka (np. Dialogi)"
+			},
+
+			"MATTTriggerTileFlag" : {
+				"name" 					: "ID aktywowanego kafelka",
+				"descrp"				: "Identyfikator kafelka uruchamianego przez poniższe akcje Lock & Key (możesz użyć różnych ustawień)"
+			},
+			
+			"MATTTriggerConditionsFlag" : {
+				"NewlySpotted.name"		: "Na nowo zauważonych",
+				"options" : {
+					"never"				: "nigdy",
+					"always"			: "zawsze",
+					"active"			: "aktywny",
+					"passive"			: "pasywny"
+				}
+			}
+		},
+		
+		"vision-channels-window" : {
+			"buttons" : {
+				"OpenVCMenu" : {
+					"name"				: "Otwarte kanały wizji"
+				},
+				"confirm" : {
+					"name"				: "Potwierdź"
+				},
+				"add" : {
+					"name"				: "Dodaj kanał"
+				}
+			},
+			"titles" : {
+				"VisionChannels"		: "Kanały wizji"
+			},
+			"entries" : {
+				"titles" : {
+					"Name"				: "Nazwa",
+					"RequiredtoSee"		: "Wymagane, aby zobaczyć",
+					"SeethroughWalls"	: "Poprzez ściany",
+					"Range"				: "Zasięg",
+					"RangeFormula"		: "Formuła zakresu",
+					"RangeMin"			: "Minimalny zakres",
+					"Color"				: "Kolor",
+					"EffectFilter" : {
+						"name"			: "Filtr efektów",
+						"options" : {
+							"off"		: "wyłączony",
+							"outline"   : "zarys",
+							"outline_waves" : "zarys i fale",
+							"glow"		: "blask",
+							"TMfog"		: "mgła",
+							"TMelectric": "elektryczność",
+							"TMtransform": "zawirowanie",
+							"TMflood"	: "powódź",
+							"TMadjustment" : "zanikanie",
+							"TMblur"	: "rozmycie"
+						}
+					},
+					"EffectFilterColor" : "Kolor filtra efektu",
+					"Transparency"		: "Przezroczystość",
+					"defaultReceiver"	: "Odbieraj domyślnie",
+					"VCID"				: "Wewnętrzne ID",
+					"Emits"				: "Emituje",
+					"Receives"			: "Otrzymuje",
+					"ReceiveFiltered"	: "Otrzymuj filtr",
+					"ReceiveRange"		: "Niestandardowy zakres",
+					"CalculatedRange"	: "Obliczony zakres",
+					"ReceiveRangeMin"	: "Minimalny zakres niestandardowy",
+					"Sight"				: "Wzrok",
+					"Movement"			: "Ruch"
+				}
+			}
+		},
+		
+		"PeekingConfirm" : {
+			"name" 						: "Potwierdzenie zerknięcia",
+			"descrp" 					: "Użytkownik {pUserName} chce zablokować drzwi, potwierdzić?"
+		},
+		
+		"monks-active-tiles" : {
+			"filters" : {
+				"name"						: "Filtr",
+				
+				"filter-spotted-by" : {
+					"name"					: "Filtruj obiekty wykryte przez",
+					"descrp"				: "<span class=\"filter-style\">Filtr</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} przez <span class=\"entity-style\">{pSpotters}</span>",
+					"settings" : {
+						"spotters" : {
+							"name" 			: "Obserwatorzy"
+						},
+						"filterCondition" : {
+							"name"			: "Filtruj, jeśli",
+							"options" : {
+								"spotted"	: "został zauważony",
+								"notspotted": "nie został zauważony"
+							}
+						}
+					}
+				},
+				
+				"filter-has-spotted" : {
+					"name"					: "Filtrowanie tokenów po wykryciu",
+					"descrp"				: "<span class=\"filter-style\">Filtr</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
+					"settings" : {
+						"spotted" : {
+							"name" 			: "Zauważony"
+						},
+						"filterCondition" : {
+							"name"			: "Filtruj, jeśli",
+							"options" : {
+								"spotted"	: "zauważył",
+								"notspotted": "nie zauważył"
+							}
+						}
+					}
+				}
+			},
+			
+			"actions" : {
+				"spot-object" : {
+					"name"					: "Obiekt zauważalny",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> z <span class=\"entity-style\">{pEntities}</span>",
+					"settings" : {
+						"target" : {
+							"name"			: "Cel"
+						}
+					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Daj kanał wizji",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> do <span class=\"entity-style\">{pEntities}</span> jako <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanał"
+						},
+						"type" : {
+							"name"			: "Podaj jako",
+							"options" : {
+								"Emits"		: "Emituje",
+								"Receives"	: "Otrzymuje",
+								"Sight"		: "Wzrok (tylko ściany)",
+								"Movement"	: "Ruch (tylko ściany)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Usuń kanał wizji",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> z <span class=\"entity-style\">{pEntities}</span> jako <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Kanał"
+						},
+						"type" : {
+							"name"			: "Usuń jako",
+							"options" : {
+								"Emits"		: "Emituje",
+								"Receives"	: "Otrzymuje",
+								"Sight"		: "Wzrok (tylko ściany)",
+								"Movement"	: "Ruch (tylko ściany)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Zresetuj \"zauważony przez\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> z <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Ustaw \"może być zauważony\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> z <span class=\"entity-style\">{pEntities}</span> do <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Przełącznik \"może być zauważony\"</span> z <span class=\"entity-style\">{pEntities}</span>"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Ustaw na",
+							"options" : {
+								"true"		: "Prawda",
+								"false"		: "Fałsz",
+								"toggle"	: "Przełącz wartość"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
