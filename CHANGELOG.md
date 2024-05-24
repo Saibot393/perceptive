@@ -1,3 +1,6 @@
+## v3.6.3
+- Added Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+
 ## v3.6.2
 - Improved active effect synch
 
