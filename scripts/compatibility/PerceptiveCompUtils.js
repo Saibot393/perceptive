@@ -1,5 +1,5 @@
 import { cModuleName } from "../utils/PerceptiveUtils.js";
-import { PerceptiveFlags } from "../helpers/PerceptiveFlags.js";
+import { PerceptiveFlags, cPerceptiveEffectF } from "../helpers/PerceptiveFlags.js";
 import { GeometricUtils } from "../utils/GeometricUtils.js";
 
 //Module Names
@@ -122,9 +122,9 @@ class PerceptiveCompUtils {
 	static async AddDfredEffect(pEffects, pToken) {
 		for (let i = 0; i < pEffects.length; i++) {
 			await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
-			  effect: pEffects[i].toObject(),
-			  uuid : pToken.actor.uuid,
-			  origin : cModuleName
+				effect: {...pEffects[i].toObject(), flags : {[cModuleName] : {[cPerceptiveEffectF] : true}}},
+				uuid : pToken.actor.uuid,
+				origin : cModuleName
 			});
 			/*
 			game.dfreds.effectInterface.addEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
@@ -133,22 +133,24 @@ class PerceptiveCompUtils {
 	}
 	
 	static async RemovePerceptiveDfredEffect(pEffects, pToken) {
-		for (let i = 0; i < pEffects.length; i++) {
-			let vName = pEffects[i].name;
+		let vEffects = pEffects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect));
+		
+		for (let i = 0; i < vEffects.length; i++) {
+			let vName = vEffects[i].name;
 			
 			if (!vName) {
-				vName = pEffects[i].label;
+				vName = vEffects[i].label;
 			}
 			
-			if (pEffects[i]?.parent?.effects.get(pEffects[i].id)) {
-				if (game.user.isGM && pEffects[i].origin == cModuleName) {
-					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [pEffects[i].id], {[cModuleName + "delete"] : true})
+			if (vEffects[i]?.parent?.effects.get(vEffects[i].id)) {
+				if (game.user.isGM) {
+					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [vEffects[i].id], {[cModuleName + "delete"] : true})
 				}
 				else {
 					await game.dfreds.effectInterface._socket.executeAsGM('removeEffect', {
 						effectName: vName,
-						uuid : pToken.actor.uuid,
-						origin : cModuleName
+						uuid : pToken.actor.uuid//,
+						//origin : cModuleName
 					});
 				}
 			}
@@ -184,7 +186,7 @@ class PerceptiveCompUtils {
 	}
 	
 	static isPercpetiveEffect(pEffect) {
-		return pEffect.origin == cModuleName;
+		return pEffect.origin == cModuleName || (pEffect.flags && pEffect.flags[cModuleName] && pEffect.flags[cModuleName][cPerceptiveEffectF]);
 	} 
 	
 	//specific: MATT
