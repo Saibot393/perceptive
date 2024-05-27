@@ -1,3 +1,6 @@
+## v3.6.5
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+  
 ## v3.6.4
 - Improved perceptive effects recognition
 
