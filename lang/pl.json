@@ -118,8 +118,8 @@
 			},
 			
 			"Peekablebydefault" : {
-				"name" 					: "Domyślnie blokada z możliwością podglądu",
-				"descrp" 				: "Jeśli drzwi mogą być domyślnie zablokowane"
+				"name" 					: "Drzwi z możliwością podglądu",
+				"descrp" 				: "Jeśli drzwi mają mieć domyślnie możliwość podglądu"
 			}, 
 			
 			"LockpeekstandardSize" : {
