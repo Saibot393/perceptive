@@ -1690,6 +1690,7 @@ Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		vDCVisionFunctions.push(function(pObject) {
+			if (!canvas.scene.tokenVision) return;
 			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 			
 			let vPrevVisible = pObject.visible;
@@ -1710,6 +1711,7 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
+			if (!canvas.scene.tokenVision) return;
 			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 			
 			let vPrevVisible = pObject.visible;
