@@ -225,7 +225,7 @@ class SpottingManager {
 		if (vLocalVisionData.v3DRange) {
 			vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(pToken.document)}
 		}
-			
+		
 		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 			//performance reason (vLocalVisionData.vRangeDCModifier)
 			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
@@ -1314,7 +1314,7 @@ class SpottingManager {
 			let vControlledTokens = PerceptiveUtils.selectedTokens().filter(vToken => vToken.sight.enabled);
 			
 			for (let i = 0; i < vControlledTokens.length; i++) {
-				vControlledTokens[i].object.updateVisionSource();
+				if (vControlledTokens[i].object.updateVisionSource) vControlledTokens[i].object.updateVisionSource();
 			}
 		}
 	}
@@ -1738,16 +1738,15 @@ Hooks.once("ready", function() {
 			let vPrevVisible = pObject.visible;
 																															
 			let vInfos = {PassivSpot : true, TokenSuccessDegrees : {}};
-			
-			if (SpottingManager.TokenSpottingVisible(pObject, vInfos)){																															
+
+			if (SpottingManager.TokenSpottingVisible(pObject, vInfos)){		
 				if (!vPrevVisible) {
 					SpottingManager.onNewlyVisible([pObject.document], vInfos);
 				}
-				
 				return true;
 			}
 			else {
-				if (PerceptiveFlags.isPerceptiveStealthing(pObject.document)) {
+				if (PerceptiveFlags.isPerceptiveStealthing(pObject.document) || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) {
 					if((!pObject.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((pObject.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 						return false;
 					}
@@ -1769,8 +1768,12 @@ Hooks.once("ready", function() {
 					if (!vPrevVisible) {
 						SpottingManager.onNewlyVisible([pObject.document], vInfos);
 					}
-					
 					return true;
+				}
+				else {
+					if (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision){
+						return false;
+					}
 				}
 				/*
 				else {
