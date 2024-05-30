@@ -1,3 +1,6 @@
+## v4.0.0
+- v12 compatibility
+
 ## v3.6.6
 - Fixed bug that allowed players to see invisible tokens borders when hovering over them on scenes without token vision
   - The spotting feature is now effectively disabled while on a scene without token vision
