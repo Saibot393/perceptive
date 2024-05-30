@@ -1707,6 +1707,7 @@ Hooks.once("ready", function() {
 			else {
 				if ( !canvas.effects.visibility.tokenVision ) return;
 			}
+			
 			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 			
 			let vPrevVisible = pObject.visible;
@@ -1720,7 +1721,7 @@ Hooks.once("ready", function() {
 				return true;
 			}
 			else {
-				if (game.user.isGM && (pObject.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.length) {
+				if (game.user.isGM && (pObject.wall.document.door == 2) && vLocalVisionData.vSimulatePlayerVision && canvas.tokens.controlled.find(vToken => vToken.hasSight)) {
 					return false;
 				}
 			}
@@ -1746,8 +1747,8 @@ Hooks.once("ready", function() {
 				return true;
 			}
 			else {
-				if (PerceptiveFlags.isPerceptiveStealthing(pObject.document) || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) {
-					if((!pObject.isOwner || (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision)) && !((pObject.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
+				if (PerceptiveFlags.isPerceptiveStealthing(pObject.document)) {
+					if((!pObject.isOwner || (game.user.isGM && canvas.tokens.controlled.find(vToken => vToken.hasSight) && vLocalVisionData.vSimulatePlayerVision)) && !((pObject.document.disposition == 1) && (vLocalVisionData.vlastDisposition == 1) && game.settings.get(cModuleName, "PerceptiveStealthFriendliesvisible"))) { //long long man
 						return false;
 					}
 				}
@@ -1757,6 +1758,7 @@ Hooks.once("ready", function() {
 		if (game.release.generation >= 12) {
 			vTileVisionFunctions.push(function(pObject) {
 				if ( !canvas.visibility.tokenVision ) return;
+				//if (!PerceptiveFlags.canbeSpotted(pObject.document)) return;
 				
 				if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 				
@@ -1771,7 +1773,7 @@ Hooks.once("ready", function() {
 					return true;
 				}
 				else {
-					if (game.user.isGM && canvas.tokens.controlled.length && vLocalVisionData.vSimulatePlayerVision){
+					if (game.user.isGM && canvas.tokens.controlled.find(vToken => vToken.hasSight) && vLocalVisionData.vSimulatePlayerVision && pObject.document.hidden){
 						return false;
 					}
 				}

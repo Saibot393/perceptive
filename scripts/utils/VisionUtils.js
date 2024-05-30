@@ -294,13 +294,13 @@ class VisionUtils {
 			
 			if ((pObjects[i].documentName == "Token") && !pObjects[i].object?.visible) {
 				pObjects[i].object.visible = true;
-				if (pObjects[i].object.refresh) pObjects[i].object.refresh();
+				if (game.release.generation >= 12) pObjects[i].object.refresh();
 				pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 			}
 			
 			if ((pObjects[i].documentName == "Tile") && !pObjects[i].object?.visible) {
 				pObjects[i].object.visible = true;
-				if (pObjects[i].object.refresh) pObjects[i].object.refresh();
+				if (game.release.generation >= 12) pObjects[i].object.refresh();
 				if (pObjects[i].object.mesh) {
 					pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 				}
@@ -375,6 +375,7 @@ class VisionUtils {
 			if (!PerceptiveCompUtils.isactiveModule(cLevels)) {
 				//Levels takes care of this, if active (leads to strange blink ins otherwise)
 				vTiles[i].visible = true;
+				if (game.release.generation >= 12) vTiles[i].refresh();
 			}
 			if (vTiles[i].mesh) {
 				if (vTiles[i].document?.texture?.tint != undefined) {
@@ -477,7 +478,12 @@ class VisionUtils {
 		
 		// Test each point for visibility
 		return points.some(p => {
-			return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
+			if (game.release.generation >= 12) {
+				return canvas.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+			}
+			else {
+				return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}}) /*&& (Math.sqrt((p.x - pToken.x)**2 + (p.y - pToken.y)**2) < vRange)*/;
+			}
 		});	
 	}
 	

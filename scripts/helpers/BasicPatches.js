@@ -164,10 +164,12 @@ Hooks.once("ready", function() {
 	if (game.release.generation >= 12) {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testEdgeInclusion", function(pWrapped, pEdge, pEdgeType, pBounds) {
-																																		let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
-																															
-																																		if (vBuffer != undefined) {
-																																			return vBuffer;
+																																		if (pEdge.object) {
+																																			let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
+																																
+																																			if (vBuffer != undefined) {
+																																				return vBuffer;
+																																			}
 																																		}
 					
 																																		return pWrapped(pEdge, pEdgeType, pBounds)}, "MIXED");
@@ -176,10 +178,12 @@ Hooks.once("ready", function() {
 			const vOldWallCall = ClockwiseSweepPolygon.prototype._testEdgeInclusion;
 			
 			ClockwiseSweepPolygon.prototype._testEdgeInclusion = function (pEdge, pEdgeType, pBounds) {
-				let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
-				
-				if (vBuffer != undefined) {
-					return vBuffer;
+				if (pEdge.object) {
+					let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
+					
+					if (vBuffer != undefined) {
+						return vBuffer;
+					}
 				}
 				
 				let vWallCallBuffer = vOldWallCall.bind(this);

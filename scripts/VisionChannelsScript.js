@@ -25,6 +25,8 @@ class VisionChannelsManager {
 	
 	static async OnAEChange(pActor) {} //called when the AEs of an actor changes
 	
+	static CheckTilesVisibility() {} //tests the visibility of all tile on canvas
+	
 	//ons
 	static async onTokenupdate(pToken, pchanges, pInfos, pUserID) {} //called when a token updates
 	
@@ -58,6 +60,8 @@ class VisionChannelsManager {
 		}
 		
 		VisionUtils.PrepareVCObjects();
+		
+		if (game.release.generation >= 12) VisionChannelsManager.CheckTilesVisibility();
 	}
 	
 	//support
@@ -111,8 +115,18 @@ class VisionChannelsManager {
 			let vControlled = canvas.tokens.controlled;
 			
 			for (let i = 0; i < vControlled.length; i++) {
-				vControlled[i].updateVisionSource();
+				if (vControlled[i].updateVisionSource) vControlled[i].updateVisionSource();
 			}
+		}
+	}
+	
+	static CheckTilesVisibility() {
+		let vTiles = canvas.tiles.placeables;
+		
+		let vBuffer;
+		
+		for (let i = 0; i < vTiles.length; i++) {
+			vTiles[i].renderFlags.set({refreshState: true});
 		}
 	}
 	
@@ -122,7 +136,7 @@ class VisionChannelsManager {
 			VisionChannelsManager.updateVisionValues();
 			
 			if (pchanges?.flags?.perceptive?.hasOwnProperty(cVisionChannelsF)) {
-				pToken.object.updateVisionSource();
+				if (pToken.object.updateVisionSource) pToken.object.updateVisionSource();
 			}
 		}
 	}
@@ -137,7 +151,7 @@ Hooks.once("ready", function() {
 	CONFIG.debug.perceptive.VCScript = false;
 	
 	if (game.settings.get(cModuleName, "ActivateVCs")) {
-		vDCVisionFunctions.push(function(pObject) {
+		vDCVisionFunctions.unshift(function(pObject) {
 			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
@@ -146,7 +160,7 @@ Hooks.once("ready", function() {
 							RangeList : vLocalVisionData.vRangeList,
 							logicalOR : vLocalVisionData.vRequiredOrBehaviour
 						};
-			
+						
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, vInfos);
 			
 			//console.log(vInfos);
@@ -187,7 +201,7 @@ Hooks.once("ready", function() {
 			return vChannel;
 		});
 		
-		vTileVisionFunctions.push(function(pObject) {
+		vTileVisionFunctions.unshift(function(pObject) {
 			if (vLocalVisionData.vCompleteVision) {return undefined};
 			
 			let vEmitterVCs = PerceptiveFlags.getVCEmitters(pObject.document);
@@ -199,7 +213,7 @@ Hooks.once("ready", function() {
 								RangeList : vLocalVisionData.vRangeList,
 								logicalOR : vLocalVisionData.vRequiredOrBehaviour
 							};
-				
+
 				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, vInfos);
 				
 				//console.log(vInfos, PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels);
@@ -211,6 +225,8 @@ Hooks.once("ready", function() {
 				if (CONFIG.debug.perceptive.VCScript) {
 					console.log(vInfos);
 				}
+				
+				console.log(vChannel);
 				
 				return vChannel;
 			}
@@ -261,11 +277,23 @@ Hooks.once("ready", function() {
 	
 	Hooks.on("deleteActiveEffect",  (pEffect, pInfos, pID) => {VisionChannelsManager.OnAEChange(pEffect.parent)});
 	
+	if (game.release.generation >= 12) {
+		Hooks.on("refreshToken", (pToken) => {
+			if (pToken.controlled) {
+				VisionChannelsManager.CheckTilesVisibility();
+			}
+		});
+		
+		Hooks.on("controlToken", (pToken) => {
+			VisionChannelsManager.CheckTilesVisibility();
+		});
+	}
+	
 	Hooks.on(cModuleName+".updateVCVision", async (pObject) => {
 		if (pObject.object?.controlled && pObject.documentName == 'Token') {
 			await VisionChannelsManager.updateVisionValues();
 			
-			pObject.object.updateVisionSource();
+			if (pObject.object.updateVisionSource) pObject.object.updateVisionSource();
 		}
 	});
 });

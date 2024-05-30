@@ -453,14 +453,14 @@ class VisionChannelsUtils {
 				for (let i = 0; i < vCommons.length; i++) {
 					vRanges[vCommons[i]] = {};
 					
-					if (!isNaN(pVCInfos.RangeList[vCommons[i]].max)) {
+					if (!isNaN(pVCInfos.RangeList[vCommons[i]]?.max)) {
 						vRanges[vCommons[i]].max = pVCInfos.RangeList[vCommons[i]].max;
 					}
 					else {
 						vRanges[vCommons[i]].max = vChannels[vCommons[i]]?.Range;
 					}
 					
-					if (!isNaN(pVCInfos.RangeList[vCommons[i]].min)) {
+					if (!isNaN(pVCInfos.RangeList[vCommons[i]]?.min)) {
 						vRanges[vCommons[i]].min = pVCInfos.RangeList[vCommons[i]].min;
 					}
 					else {
