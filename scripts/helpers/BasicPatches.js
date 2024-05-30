@@ -124,29 +124,60 @@ Hooks.once("ready", function() {
 		});
 	}
 	
-	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pWall, pBounds) {
-																																	let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
-																														
-																																	if (vBuffer != undefined) {
-																																		return vBuffer;
-																																	}
+	if (game.release.generation >= 12) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testEdgeInclusion", function(pWrapped, pEdge, pEdgeType, pBounds) {
+																																		let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
+																															
+																																		if (vBuffer != undefined) {
+																																			return vBuffer;
+																																		}
+					
+																																		return pWrapped(pEdge, pEdgeType, pBounds)}, "MIXED");
+		}
+		else {
+			const vOldWallCall = ClockwiseSweepPolygon.prototype._testEdgeInclusion;
+			
+			ClockwiseSweepPolygon.prototype._testEdgeInclusion = function (pEdge, pEdgeType, pBounds) {
+				console.log(pBounds);
+				let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
 				
-																																	return pWrapped(pWall, pBounds)}, "MIXED");
+				if (vBuffer != undefined) {
+					return vBuffer;
+				}
+				
+				let vWallCallBuffer = vOldWallCall.bind(this);
+				
+				return vWallCallBuffer(pEdge, pEdgeType, pBounds);
+			}
+		}
+
 	}
 	else {
-		const vOldWallCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
-		
-		ClockwiseSweepPolygon.prototype._testWallInclusion = function (pWall, pBounds) {
-			let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pWall, pBounds) {
+																																		let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+																															
+																																		if (vBuffer != undefined) {
+																																			return vBuffer;
+																																		}
+					
+																																		return pWrapped(pWall, pBounds)}, "MIXED");
+		}
+		else {
+			const vOldWallCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
 			
-			if (vBuffer != undefined) {
-				return vBuffer;
+			ClockwiseSweepPolygon.prototype._testWallInclusion = function (pWall, pBounds) {
+				let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
+				
+				if (vBuffer != undefined) {
+					return vBuffer;
+				}
+				
+				let vWallCallBuffer = vOldWallCall.bind(this);
+				
+				return vWallCallBuffer(pWall, pBounds);
 			}
-			
-			let vWallCallBuffer = vOldWallCall.bind(this);
-			
-			return vWallCallBuffer(pWall, pBounds);
 		}
 	}	
 });

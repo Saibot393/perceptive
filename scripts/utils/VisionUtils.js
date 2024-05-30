@@ -384,7 +384,13 @@ class VisionUtils {
 		
 		for (let i = 0; i < vTokens.length; i++) {
 			if (vTokens[i].document?.texture?.tint != undefined) {
-				vTokens[i].mesh.tint = parseInt(vTokens[i].document.texture.tint.substr(1,7), 16);
+				let vTargetTint = vTokens[i].document.texture.tint;
+				
+				if (typeof vTargetTint == "string") {
+					vTargetTint = parseInt(vTargetTint.substr(1,7), 16)
+				}
+				
+				vTokens[i].mesh.tint = vTargetTint;
 			}
 			else {
 				vTokens[i].mesh.tint = cSTDTint;

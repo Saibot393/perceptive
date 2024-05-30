@@ -66,7 +66,14 @@ class PeekingManager {
 						}
 						
 						if (pTokens[i].object) {
-							pTokens[i].object.updateVisionSource();
+							if (pTokens[i].object.updateVisionSource) {
+								pTokens[i].object.updateVisionSource();
+							}
+							else {
+								if (pTokens[i].object.initializeVisionSource) {
+									pTokens[i].object.initializeVisionSource();
+								}
+							}
 						}
 					}
 				}

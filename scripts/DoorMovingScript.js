@@ -148,7 +148,12 @@ class DoorMovingManager {
 	static DControlProxyVisible(pDoorControl) {//modified from foundry.js
 		//adapted from foundry.js get isVisible()
 		
-		if ( !canvas.effects.visibility.tokenVision ) return true;
+		if (game.release.generation >= 12) {
+			if ( !canvas.visibility.tokenVision ) return true;
+		}
+		else {
+			if ( !canvas.effects.visibility.tokenVision ) return true;
+		}
 
 		if (PerceptiveFlags.Doorcanbemoved(pDoorControl.wall.document)) {
 			// Hide secret doors from players
@@ -171,9 +176,16 @@ class DoorMovingManager {
 				];
 
 				// Test each point for visibility
-				return points.some(p => {
-				  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
-				});
+				if (game.release.generation >= 12) {
+					return points.some(p => {
+					  return canvas.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
+					});
+				}
+				else {
+					return points.some(p => {
+					  return canvas.effects.visibility.testVisibility(p, {object: pDoorControl, tolerance: 0});
+					});
+				}
 			}
 		}
 		
