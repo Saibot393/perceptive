@@ -125,8 +125,6 @@ class SpottingManager {
 
 	//IMPLEMENTATIONS
 	static DControlSpottingVisible(pDoorControl) { //modified from foundry.js
-		if ( !canvas.effects.visibility.tokenVision ) return true;
-
 		let vWallObject = pDoorControl.wall;
 		
 		if (vWallObject) {
@@ -200,7 +198,6 @@ class SpottingManager {
 		pToken.detectionFilter = undefined;
 
 		// Some tokens are always visible
-		if ( !canvas.effects.visibility.tokenVision ) return true;
 		if ( pToken.controlled ) return true;
 		//or invisible
 		if (!PerceptiveFlags.canbeSpotted(pToken.document)) return false;
@@ -254,8 +251,12 @@ class SpottingManager {
 	}
 	
 	static TileSpottingVisible(pTile) {
-		if ( !canvas.effects.visibility.tokenVision ) return true;
-		
+		if (game.release.generation >= 12) {
+			if ( !canvas.visibility.tokenVision ) return true;
+		}
+		else {
+			if ( !canvas.effects.visibility.tokenVision ) return true;
+		}
 		if (!PerceptiveFlags.canbeSpotted(pTile.document)) return false;
 		
 		let vTolerance;
@@ -711,6 +712,14 @@ class SpottingManager {
 		
 		vSpottables = vSpottables.filter(vObject => !(vObject.documentName == "Token" || vObject.documentName == "Tile") || pInfos.TokenSpotted[vObject.id]);
 
+		if (game.release.generation >= 12) {
+			for (let i = 0; i < pSpotters.length; i++) {
+				for(let j = 0; j < vSpottables.length; j++) {
+					await PerceptiveFlags.addSpottedby(vSpottables[j], pSpotters[i]);
+				}
+			}
+		}
+
 		if (pInfos.sendingPlayer == game.user.id) {
 			pInfos.GMSpotting = true;
 			SpottingManager.PlayerMakeTempVisible(game.user.id, vSpottables.map(vObject => vObject.id), pInfos);
@@ -718,10 +727,12 @@ class SpottingManager {
 		else {
 			game.socket.emit("module." + cModuleName, {pFunction : "PlayerMakeTempVisible", pData : {pPlayerID : pInfos.sendingPlayer, pObjectIDs : vSpottables.map(vObject => vObject.id), pInfos : pInfos}})
 		}
-
-		for (let i = 0; i < pSpotters.length; i++) {
-			for(let j = 0; j < vSpottables.length; j++) {
-				await PerceptiveFlags.addSpottedby(vSpottables[j], pSpotters[i]);
+		
+		if (game.release.generation < 12) {
+			for (let i = 0; i < pSpotters.length; i++) {
+				for(let j = 0; j < vSpottables.length; j++) {
+					await PerceptiveFlags.addSpottedby(vSpottables[j], pSpotters[i]);
+				}
 			}
 		}
 	}
@@ -1555,7 +1566,7 @@ class SpottingManager {
 			}
 		}
 		
-		if (pToken.controlled) {
+		if (pToken.controlled && game.release.generation < 12) {
 			SpottingManager.CheckTilesSpottingVisible();
 		}
 	}
@@ -1690,7 +1701,12 @@ Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "ActivateSpotting")) {
 		//replace control visible to allow controls of spotted doors to be visible
 		vDCVisionFunctions.push(function(pObject) {
-			if (!canvas.scene.tokenVision) return;
+			if (game.release.generation >= 12) {
+				if ( !canvas.visibility.tokenVision ) return;
+			}
+			else {
+				if ( !canvas.effects.visibility.tokenVision ) return;
+			}
 			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 			
 			let vPrevVisible = pObject.visible;
@@ -1711,7 +1727,12 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
-			if (!canvas.scene.tokenVision) return;
+			if (game.release.generation >= 12) {
+				if ( !canvas.visibility.tokenVision ) return;
+			}
+			else {
+				if ( !canvas.effects.visibility.tokenVision ) return;
+			}
 			if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
 			
 			let vPrevVisible = pObject.visible;
@@ -1733,6 +1754,33 @@ Hooks.once("ready", function() {
 				}
 			}
 		});
+		
+		if (game.release.generation >= 12) {
+			vTileVisionFunctions.push(function(pObject) {
+				if ( !canvas.visibility.tokenVision ) return;
+				
+				if (vLocalVisionData.vGMVision) return; //let core foundry/wall height handle this
+				
+				let vPrevVisible = pObject.visible;
+																																
+				let vInfos = {PassivSpot : true};
+				
+				if (SpottingManager.TileSpottingVisible(pObject, vInfos)){																															
+					if (!vPrevVisible) {
+						SpottingManager.onNewlyVisible([pObject.document], vInfos);
+					}
+					
+					return true;
+				}
+				/*
+				else {
+					if (canvas,tokens.selected.length <= 0) {
+						vTiles[i].object.visible = game.user.isGM;
+					}
+				}
+				*/
+			});
+		}
 
 		//More hooks than the average fisher convention
 		Hooks.on("updateToken", (...args) => {SpottingManager.onTokenupdate(...args)});

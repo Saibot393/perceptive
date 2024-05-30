@@ -294,11 +294,13 @@ class VisionUtils {
 			
 			if ((pObjects[i].documentName == "Token") && !pObjects[i].object?.visible) {
 				pObjects[i].object.visible = true;
+				if (pObjects[i].object.refresh) pObjects[i].object.refresh();
 				pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 			}
 			
 			if ((pObjects[i].documentName == "Tile") && !pObjects[i].object?.visible) {
 				pObjects[i].object.visible = true;
+				if (pObjects[i].object.refresh) pObjects[i].object.refresh();
 				if (pObjects[i].object.mesh) {
 					pObjects[i].object.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 				}
@@ -347,6 +349,10 @@ class VisionUtils {
 		if (pTile.mesh?.alpha < game.settings.get(cModuleName, "SpottedTokenTransparency")) {
 			pTile.mesh.alpha = game.settings.get(cModuleName, "SpottedTokenTransparency");
 		}
+		
+		if (game.release.generation >= 12) {
+			pTile.refresh();
+		}
 	}
 	
 	static PrepareVCObjects() {
@@ -372,7 +378,12 @@ class VisionUtils {
 			}
 			if (vTiles[i].mesh) {
 				if (vTiles[i].document?.texture?.tint != undefined) {
-					vTiles[i].mesh.tint = parseInt(vTiles[i].document.texture.tint.substr(1,7), 16);
+					if (game.release.generation >= 12) {
+						vTiles[i].mesh.tint = vTiles[i].document.texture.tint;
+					}
+					else {
+						vTiles[i].mesh.tint = parseInt(vTiles[i].document.texture.tint.substr(1,7), 16);
+					}
 				}
 				else {
 					vTiles[i].mesh.tint = cSTDTint;
@@ -443,7 +454,12 @@ class VisionUtils {
 		}
 		else {
 			return points.some(p => {
-				return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+				if (game.release.generation >= 12) {
+					return canvas.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+				}
+				else {
+					return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
+				}
 			});
 		}
 	}

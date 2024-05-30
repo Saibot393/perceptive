@@ -47,15 +47,52 @@ class PatchSupport {
 }
 
 Hooks.once("ready", function() {
-	Hooks.on("refreshToken", (pToken) => {
-		if (pToken.controlled) {
-			PatchSupport.CheckTilesVisibility(pToken);
+	if (game.release.generation >= 12) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "Tile.prototype.isVisible", function(pWrapped, ...args) {
+																											let vBuffer;
+																											
+																											for (let i = 0; i < vTileVisionFunctions.length; i++) {
+																												vBuffer = vTileVisionFunctions[i](this);
+																												
+																												if (vBuffer != undefined) {
+																													return vBuffer;
+																												}
+																											}
+																											
+																											return pWrapped(args)}, "MIXED");
 		}
-	});
-	
-	Hooks.on("controlToken", (pToken) => {
-		PatchSupport.CheckTilesVisibility(pToken);
-	});
+		else {
+			const vOldTileCall = Tile.prototype.__lookupGetter__("isVisible");
+
+			Tile.prototype.__defineGetter__("isVisible", function () {
+				let vBuffer;
+				
+				for (let i = 0; i < vTileVisionFunctions.length; i++) {
+					vBuffer = vTileVisionFunctions[i](this);
+					
+					if (vBuffer != undefined) {
+						return vBuffer;
+					}
+				}
+
+				let vTileCallBuffer = vOldTileCall.bind(this);
+
+				return vTileCallBuffer();
+			});
+		}
+	}
+	else {
+		Hooks.on("refreshToken", (pToken) => {
+			if (pToken.controlled) {
+				PatchSupport.CheckTilesVisibility(pToken);
+			}
+		});
+		
+		Hooks.on("controlToken", (pToken) => {
+			PatchSupport.CheckTilesVisibility(pToken);
+		});
+	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(pWrapped, ...args) {
@@ -139,7 +176,6 @@ Hooks.once("ready", function() {
 			const vOldWallCall = ClockwiseSweepPolygon.prototype._testEdgeInclusion;
 			
 			ClockwiseSweepPolygon.prototype._testEdgeInclusion = function (pEdge, pEdgeType, pBounds) {
-				console.log(pBounds);
 				let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
 				
 				if (vBuffer != undefined) {
