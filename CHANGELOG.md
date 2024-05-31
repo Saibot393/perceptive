@@ -1,3 +1,6 @@
+## v4.0.1
+- Fixed libwrapper compatibility warning
+
 ## v4.0.0
 - v12 compatibility
 
