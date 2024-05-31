@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -242,7 +242,7 @@ Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cZnPOptions)) {
 		libWrapper.register(cModuleName, "MouseManager.prototype._onWheel", function(pWrapped, ...args) {if (allowCanvasZoom(args[0])) {return pWrapped(...args)}}, "MIXED");
 	
-		libWrapper.ignore_conflicts(cModuleName, cZnPOptions, "MouseManager.prototype._onWheel");
+		libWrapper.ignore_conflicts(cModuleName, [cZnPOptions, cMassEdit], "MouseManager.prototype._onWheel");
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cMATT)) {

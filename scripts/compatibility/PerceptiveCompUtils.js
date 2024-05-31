@@ -18,6 +18,7 @@ const cMATT = "monks-active-tiles";
 const cATV = "tokenvisibility";
 const cTokenMagic = "tokenmagic";
 const cEpicRolls = "epic-rolls-5e";
+const cMassEdit = "multi-token-edit";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -39,7 +40,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
