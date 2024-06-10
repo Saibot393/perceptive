@@ -832,7 +832,7 @@ class SpottingManager {
 							break;			
 				}
 		
-				if (vResetallStealthValues) {
+				if (vResetallStealthValues && !pInfos.keepStealthValues) {
 					PerceptiveFlags.resetStealth(pObjects[i]);
 				}
 				else {
@@ -1490,7 +1490,8 @@ class SpottingManager {
 		let vStealthResult = pRoll.total;
 		
 		for (let i = 0; i < vRelevantTokens.length; i++) {
-			await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			//await PerceptiveFlags.resetStealth(vRelevantTokens[i]);
+			await PerceptiveFlags.clearSpottedby(vRelevantTokens[i]);
 			
 			await PerceptiveFlags.MakeSpottable(vRelevantTokens[i]);
 
