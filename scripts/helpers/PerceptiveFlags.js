@@ -1566,7 +1566,7 @@ class PerceptiveFlags {
 	static async resetStealth(pToken) {
 		await PerceptiveFlags.clearSpottedby(pToken);
 		
-		await PerceptiveFlags.#setPPDC(pToken, -1);
+		//await PerceptiveFlags.#setPPDC(pToken, -1);
 		
 		if (game.settings.get(cModuleName, "AutomateTokenSpottable")) {
 			await this.#setcanbeSpotted(pToken, false);
