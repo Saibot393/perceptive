@@ -1,3 +1,6 @@
+## v4.0.3
+- Object being spotted will no longer reset their stealth DCs
+
 ## v4.0.2
 - Fixed bug that caused the passive perception to always be reset when rolling stealth
 
