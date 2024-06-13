@@ -1,3 +1,6 @@
+## v4.0.5
+- Small bug fix
+
 ## v4.0.4
 - Small bug fixes
 - Improved illumination calculation for v12
