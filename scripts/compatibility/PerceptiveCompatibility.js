@@ -306,7 +306,7 @@ Hooks.once("levelsInit", () => {
 });
 
 Hooks.once("ready", () => {
-	if (game.release.generation < 12) {
+	/*
 		if (PerceptiveCompUtils.isactiveModule(cATV)) {
 			const vOldWallCall = game.modules.get("tokenvisibility").api.Area3d._testWallInclusion;
 			
@@ -322,7 +322,7 @@ Hooks.once("ready", () => {
 				return vWallCallBuffer(pWall, pBounds, pInfos);
 			}
 		}
-	}
+	*/
 });
 
 Hooks.once("setupTileActions", (pMATT) => {
