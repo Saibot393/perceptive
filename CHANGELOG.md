@@ -1,3 +1,7 @@
+## v4.0.4
+- Small bug fixes
+- Improved illumination calculation for v12
+
 ## v4.0.3
 - Objects being spotted will no longer reset their stealth DCs
 
