@@ -543,12 +543,21 @@ class VisionUtils {
 			vScene = canvas.scene;
 		}
 		
+		let vHasGlobalLight;
+		
+		if (game.release.generation < 12) {
+			vHasGlobalLight = vScene.globalLight;
+		}
+		else {
+			vHasGlobalLight = vScene.environment.globalLight.enabled;
+		}
+		
 		if (vScene) {
-			if (vScene.globalLight && (vScene.darkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
+			if (vHasGlobalLight && (vScene.darkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
 				vLightningLevel = cLightLevel.Bright;
 			}
 			else {
-				if (vScene.globalLight && (vScene.darkness < PerceptiveFlags.SceneDimEnd(vScene))/*cDimInterval[1]*/) {
+				if (vHasGlobalLight && (vScene.darkness < PerceptiveFlags.SceneDimEnd(vScene))/*cDimInterval[1]*/) {
 					vLightningLevel = cLightLevel.Dim;
 				}
 				

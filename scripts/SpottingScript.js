@@ -986,7 +986,7 @@ class SpottingManager {
 		if (vIlluminationPosition != "none") {
 			let vIlluminationIcon;
 
-			await PerceptiveFlags.CheckLightLevel(vToken); //the given pToken is a bit of a dud, better recheck the real token
+			if (vToken) await PerceptiveFlags.CheckLightLevel(vToken); //the given pToken is a bit of a dud, better recheck the real token
 			
 			switch (PerceptiveFlags.LightLevel(pToken)) {
 				case cLightLevel.Dark:

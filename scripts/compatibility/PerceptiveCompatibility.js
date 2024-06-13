@@ -306,19 +306,21 @@ Hooks.once("levelsInit", () => {
 });
 
 Hooks.once("ready", () => {
-	if (PerceptiveCompUtils.isactiveModule(cATV)) {
-		const vOldWallCall = game.modules.get("tokenvisibility").api.Area3d._testWallInclusion;
-		
-		game.modules.get("tokenvisibility").api.Area3d._testWallInclusion = function (pWall, pBounds, pInfos) {
-			let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, {config : {type : pInfos.type, source : {object : canvas.tokens.controlled[0]}}});
+	if (game.release.generation < 12) {
+		if (PerceptiveCompUtils.isactiveModule(cATV)) {
+			const vOldWallCall = game.modules.get("tokenvisibility").api.Area3d._testWallInclusion;
 			
-			if (vBuffer != undefined) {
-				return vBuffer;
+			game.modules.get("tokenvisibility").api.Area3d._testWallInclusion = function (pWall, pBounds, pInfos) {
+				let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, {config : {type : pInfos.type, source : {object : canvas.tokens.controlled[0]}}});
+				
+				if (vBuffer != undefined) {
+					return vBuffer;
+				}
+				
+				let vWallCallBuffer = vOldWallCall.bind(this);
+				
+				return vWallCallBuffer(pWall, pBounds, pInfos);
 			}
-			
-			let vWallCallBuffer = vOldWallCall.bind(this);
-			
-			return vWallCallBuffer(pWall, pBounds, pInfos);
 		}
 	}
 });
