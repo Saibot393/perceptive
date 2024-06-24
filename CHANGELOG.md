@@ -1,3 +1,6 @@
+## v4.0.6
+- Small bug fix for levels compatibility
+
 ## v4.0.5
 - Small bug fix
 
