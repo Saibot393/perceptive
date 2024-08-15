@@ -148,7 +148,7 @@ class PerceptiveCompUtils {
 					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [vEffects[i].id], {[cModuleName + "delete"] : true})
 				}
 				else {
-					await game.dfreds.effectInterface._socket.executeAsGM('removeEffect', {
+					await game.dfreds.effectInterface?._socket.executeAsGM('removeEffect', {
 						effectName: vName,
 						uuid : pToken.actor.uuid//,
 						//origin : cModuleName
@@ -165,16 +165,16 @@ class PerceptiveCompUtils {
 		let vBuffer;
 		
 		for (let i = 0; i < pNameIDs.length; i++) {
-			vBuffer = game.dfreds.effects._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
+			vBuffer = game.dfreds.effects?._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
 			
 			if (vBuffer) {
 				vNameIDs.push(vBuffer);
 			}
 			else {
-				vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem()?.effects.get(pNameIDs[i]);
+				vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.get(pNameIDs[i]);
 				
 				if (!vBuffer) {
-					vBuffer = game.dfreds.effects._customEffectsHandler._findCustomEffectsItem()?.effects.find(v => v.name == pNameIDs[i]);
+					vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.find(v => v.name == pNameIDs[i]);
 				}
 				
 				if (vBuffer) {

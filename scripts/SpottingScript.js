@@ -234,7 +234,7 @@ class SpottingManager {
 		}
 		
 		let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
-		
+
 		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, vRangeDCModifier, pInfos) ) {
 			// Otherwise, test visibility against current sight polygons
 			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
