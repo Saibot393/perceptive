@@ -57,7 +57,7 @@ class PerceptiveCompUtils {
 	
 	static async RemovePerceptiveDfredEffect(pEffects, pToken) {} //uses dfreds api to remove effects with pEffectNames to pToken
 	
-	static FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
+	static async FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
 	
@@ -121,62 +121,122 @@ class PerceptiveCompUtils {
 	
 	//specific: dfreds-convenient-effects
 	static async AddDfredEffect(pEffects, pToken) {
-		for (let i = 0; i < pEffects.length; i++) {
-			await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
-				effect: {...pEffects[i].toObject(), flags : {[cModuleName] : {[cPerceptiveEffectF] : true}}},
-				uuid : pToken.actor.uuid,
-				origin : cModuleName
-			});
-			/*
-			game.dfreds.effectInterface.addEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
-			*/
+		console.log(pEffects);
+		if (game.release.generation < 12) {
+			for (let i = 0; i < pEffects.length; i++) {
+				await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
+					effect: {...pEffects[i].toObject(), flags : {[cModuleName] : {[cPerceptiveEffectF] : true}}},
+					uuid : pToken.actor.uuid,
+					origin : cModuleName
+				});
+				/*
+				game.dfreds.effectInterface.addEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+				*/
+			}
+		}
+		else {
+			for (let i = 0; i < pEffects.length; i++) {
+				await game.dfreds.effectInterface.addEffect({
+					effectData: {...pEffects[i].toObject(),
+								 flags : {[cModuleName] : {[cPerceptiveEffectF] : true}}},
+					uuid : pToken.actor.uuid
+				});
+				/*
+				game.dfreds.effectInterface.addEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+				*/
+			}
 		}
 	}
 	
 	static async RemovePerceptiveDfredEffect(pEffects, pToken) {
 		let vEffects = pEffects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect));
 		
-		for (let i = 0; i < vEffects.length; i++) {
-			let vName = vEffects[i].name;
-			
-			if (!vName) {
-				vName = vEffects[i].label;
-			}
-			
-			if (vEffects[i]?.parent?.effects.get(vEffects[i].id)) {
-				if (game.user.isGM) {
-					await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [vEffects[i].id], {[cModuleName + "delete"] : true})
+		if (game.release.generation < 12) {
+			for (let i = 0; i < vEffects.length; i++) {
+				let vName = vEffects[i].name;
+				
+				if (!vName) {
+					vName = vEffects[i].label;
 				}
-				else {
-					await game.dfreds.effectInterface?._socket.executeAsGM('removeEffect', {
-						effectName: vName,
-						uuid : pToken.actor.uuid//,
-						//origin : cModuleName
-					});
+				
+				if (vEffects[i]?.parent?.effects.get(vEffects[i].id)) {
+					if (game.user.isGM) {
+						await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [vEffects[i].id], {[cModuleName + "delete"] : true})
+					}
+					else {
+						await game.dfreds.effectInterface?._socket.executeAsGM('removeEffect', {
+							effectName: vName,
+							uuid : pToken.actor.uuid//,
+							//origin : cModuleName
+						});
+					}
 				}
-			}
-			//game.dfreds.effectInterface.removeEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
-		}		
+				//game.dfreds.effectInterface.removeEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+			}	
+		}
+		else {
+			for (let i = 0; i < vEffects.length; i++) {
+				let vName = vEffects[i].name;
+				
+				if (!vName) {
+					vName = vEffects[i].label;
+				}
+				
+				if (vEffects[i]?.parent?.effects.get(vEffects[i].id)) {
+					if (game.user.isGM) {
+						await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", [vEffects[i].id], {[cModuleName + "delete"] : true})
+					}
+					else {
+						await game.dfreds.effectInterface.removeEffect({
+							effectName: vName,
+							uuid : pToken.actor.uuid//,
+							//origin : cModuleName
+						});
+					}
+				}
+				//game.dfreds.effectInterface.removeEffect({effectName : pEffectNames[i], uuid : pToken.actor.uuid, origin : cModuleName})
+			}	
+		}
 	}
 	
-	static FilterDFEffects(pNameIDs) {
+	static async FilterDFEffects(pNameIDs) {
+		console.log(pNameIDs);
 		let vNameIDs = [];
 		
 		let vBuffer;
 		
-		for (let i = 0; i < pNameIDs.length; i++) {
-			vBuffer = game.dfreds.effects?._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
-			
-			if (vBuffer) {
-				vNameIDs.push(vBuffer);
+		if (game.release.generation < 12) {
+			for (let i = 0; i < pNameIDs.length; i++) {
+				vBuffer = game.dfreds.effects?._all.find(vEffect => vEffect.name == pNameIDs[i] /*|| vEffect.label == pNameIDs[i]*/);
+				
+				if (vBuffer) {
+					vNameIDs.push(vBuffer);
+				}
+				else {
+					vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.get(pNameIDs[i]);
+					
+					if (!vBuffer) {
+						vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.find(v => v.name == pNameIDs[i]);
+					}
+					
+					if (vBuffer) {
+						vNameIDs.push(vBuffer);
+					}
+				}
 			}
-			else {
-				vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.get(pNameIDs[i]);
+		}
+		else {
+			for (let i = 0; i < pNameIDs.length; i++) {
+				vBuffer = await game.dfreds.effectInterface.findEffect({effectName : pNameIDs[i]});
 				
 				if (!vBuffer) {
-					vBuffer = game.dfreds.effects?._customEffectsHandler._findCustomEffectsItem()?.effects.find(v => v.name == pNameIDs[i]);
+					vBuffer = await game.dfreds.effectInterface.findEffect({effectId : pNameIDs[i]});
+				}	
+					
+				if (!vBuffer) {
+					vBuffer = await fromUuid(pNameIDs[i]);
 				}
-				
+					
 				if (vBuffer) {
 					vNameIDs.push(vBuffer);
 				}
