@@ -1,3 +1,7 @@
+## v4.0.7
+- Added Portuguese Brazil translation (thanks to [Andersants](https://github.com/Andersants))
+- Small bug fixes
+
 ## v4.0.6
 - Small bug fix for levels compatibility
 
