@@ -1,3 +1,6 @@
+## v4.0.8
+- Compatibility update for new DFreds CE
+
 ## v4.0.7
 - Added Portuguese Brazil translation (thanks to [Andersants](https://github.com/Andersants))
 - Small bug fixes
