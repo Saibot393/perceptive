@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit, cMWE } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -236,7 +236,7 @@ Hooks.once("init", () => {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLevels)) {
-		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, options) {if ((options?.source?.document.documentName == "Token") && pwall && IgnoreWall(pwall.document, options.source.document)){return true} return pWrapped(pwall, pcollisiontype, options)}, "MIXED");
+		libWrapper.register(cModuleName, "CONFIG.Levels.handlers.SightHandler.shouldIgnoreWall", function(pWrapped, pwall, pcollisiontype, poptions, pedges) {if ((poptions?.source?.document.documentName == "Token") && pwall && IgnoreWall(pwall.document, poptions.source.document)){return true} return pWrapped(pwall, pcollisiontype, poptions, pedges)}, "MIXED");
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cZnPOptions)) {
@@ -292,6 +292,12 @@ Hooks.once("init", () => {
 			Hooks.on("triggerTile", (pTile, palsoTile, pTrigger, pInfos, pUserID, pData) => PerceptiveCompatibility.onTileTrigger(pTile, pTrigger, pInfos, pUserID, pData));
 		}
 		*/
+	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cMWE)) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.ignore_conflicts(cModuleName, cMWE, "ClockwiseSweepPolygon.prototype._testEdgeInclusion");
+		}
 	}
 	
 	/*

@@ -19,6 +19,7 @@ const cATV = "tokenvisibility";
 const cTokenMagic = "tokenmagic";
 const cEpicRolls = "epic-rolls-5e";
 const cMassEdit = "multi-token-edit";
+const cMWE = "monks-wall-enhancement";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -40,7 +41,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit, cMWE}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -121,7 +122,6 @@ class PerceptiveCompUtils {
 	
 	//specific: dfreds-convenient-effects
 	static async AddDfredEffect(pEffects, pToken) {
-		console.log(pEffects);
 		if (game.release.generation < 12) {
 			for (let i = 0; i < pEffects.length; i++) {
 				await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
@@ -200,7 +200,6 @@ class PerceptiveCompUtils {
 	}
 	
 	static async FilterDFEffects(pNameIDs) {
-		console.log(pNameIDs);
 		let vNameIDs = [];
 		
 		let vBuffer;
