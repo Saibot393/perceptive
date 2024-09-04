@@ -1,3 +1,6 @@
+## v4.0.9
+- Small compatibility fixes and improvements
+
 ## v4.0.8
 - Compatibility update for new DFreds CE
 
