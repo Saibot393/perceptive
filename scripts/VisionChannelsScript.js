@@ -226,8 +226,6 @@ Hooks.once("ready", function() {
 					console.log(vInfos);
 				}
 				
-				console.log(vChannel);
-				
 				return vChannel;
 			}
 		});		

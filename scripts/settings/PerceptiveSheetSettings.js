@@ -34,7 +34,7 @@ class PerceptiveSheetSettings {
 	
 	static createHTMLOption(pInfos, pto, pwithformgroup = false) {} //creates new html "code"
 	
-	static FixSheetWindow(pHTML, pApp, pIndentifier) {} //fixes the formating of pHTML sheet window
+	static FixSheetWindow(pHTML, pIndentifier) {} //fixes the formating of pHTML sheet window
 	
 	//IMPLEMENTATIONS
 	
@@ -287,7 +287,7 @@ class PerceptiveSheetSettings {
 			}			
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs[data-group="main"]`);
+		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs[data-group="main"]`);
 	}
 	
 	static async TileSheetSettings(pApp, pHTML, pData) {
@@ -336,7 +336,7 @@ class PerceptiveSheetSettings {
 		}
 		
 		
-		PerceptiveSheetSettings.FixSheetWindow(pHTML, pApp, `nav.sheet-tabs:first`);
+		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs:first`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
@@ -652,7 +652,7 @@ class PerceptiveSheetSettings {
 		}		
 	}
 	
-	static FixSheetWindow(pHTML, pApp, pIndentifier) {
+	static FixSheetWindow(pHTML, pIndentifier) {
 		let vNeededWidth = 0;
 		
 		pHTML.find(pIndentifier).children().each(function() {
@@ -661,12 +661,8 @@ class PerceptiveSheetSettings {
 		
 		let vWindow = pHTML.find(pIndentifier).closest(`div.app.window-app`);
 		
-		if (vNeededWidth > pApp.options.width/*vWindow.width()*/) {
-			//vWindow.width(vNeededWidth);
-			
-			//vWindow.find(`form`).removeAttr(`style`);
-			
-			pApp.setPosition({"width" : vNeededWidth});
+		if (vNeededWidth > pHTML.width()) {
+			pHTML.width(vNeededWidth);
 		}		
 	}
 }
