@@ -105,6 +105,11 @@
 				"descrp"				: "用 DFreds convenient effects"
 			},
 			
+			"CPREffectsIntegration" : {
+				"name"					: "Chris's Premades ",
+				"descrp"				: "用 Chris's Premades"
+			},
+			
 			"Vision5eIntegration" : {
 				"name"					: "Vision 5e integration",
 				"descrp"				: "使用5E视觉模组规则"

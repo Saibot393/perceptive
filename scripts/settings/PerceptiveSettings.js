@@ -1,6 +1,6 @@
 import { cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import { cDoorMoveTypes } from "../helpers/PerceptiveFlags.js";
-import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cVision5e, cStealthy, cMATT} from "../compatibility/PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cArmReach, cArmReachold, cDfredCE, cCPR, cVision5e, cStealthy, cMATT} from "../compatibility/PerceptiveCompUtils.js";
 import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 
 import {SelectedPeekhoveredDoor} from "../PeekingScript.js";
@@ -59,6 +59,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	hint: Translate("Settings.DFredsEffectsIntegration.descrp"),
 	scope: "world",
 	config: PerceptiveCompUtils.isactiveModule(cDfredCE),
+	type: Boolean,
+	default: false,
+	requiresReload: true
+  }); 
+  
+  game.settings.register(cModuleName, "CPREffectsIntegration", {
+	name: Translate("Settings.CPREffectsIntegration.name"),
+	hint: Translate("Settings.CPREffectsIntegration.descrp"),
+	scope: "world",
+	config: PerceptiveCompUtils.isactiveModule(cCPR),
 	type: Boolean,
 	default: false,
 	requiresReload: true

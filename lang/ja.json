@@ -107,6 +107,11 @@
 				"descrp"				: "DFreds Convenient Effectsを使用します。"
 			},
 			
+			"CPREffectsIntegration" : {
+				"name"					: "Chris's Premades 統合化",
+				"descrp"				: "Chris's Premades を使用します。"
+			},
+			
 			"Vision5eIntegration" : {
 				"name"					: "Vision 5e 統合化",
 				"descrp"				: "Vision 5e のルールに則ります。"

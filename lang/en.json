@@ -107,6 +107,11 @@
 				"descrp"				: "Use DFreds convenient effects"
 			},
 			
+			"CPREffectsIntegration" : {
+				"name"					: "Chris's Premades integration",
+				"descrp"				: "Use Chris's Premades effects"
+			},
+			
 			"Vision5eIntegration" : {
 				"name"					: "Vision 5e integration",
 				"descrp"				: "Adapt to Vision 5e rules"

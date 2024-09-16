@@ -13,7 +13,7 @@ class EffectManager {
 	//DECLARATIONS
 	static applyStealthEffects(pHider, pInfos = {}) {} //gives the rider all pEffects
 	
-	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as Rideable effect
+	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as perceptive effect
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 	
@@ -23,7 +23,7 @@ class EffectManager {
 		//Ridden Mounting Effects
 		let vEffectNames = [];
 		
-		if (PerceptiveUtils.isPf2e() || (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration"))) {	
+		if (PerceptiveUtils.isPf2e() || PerceptiveCompUtils.hasactiveEffectModule()) {	
 			await EffectManager.removeStealthEffects(pHider, true);
 		
 			vEffectNames = PerceptiveFlags.StealthEffects(pHider);
@@ -72,9 +72,7 @@ class EffectManager {
 			}
 			
 			if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
-				vEffectDocuments = await PerceptiveCompUtils.FilterDFEffects(vEffectNames);
-				
-				PerceptiveCompUtils.AddDfredEffect(vEffectDocuments, pHider);
+				PerceptiveCompUtils.addIDNameEffects(vEffectNames, pHider);
 			}
 		}
 		
@@ -88,8 +86,8 @@ class EffectManager {
 			await pHider.actor.deleteEmbeddedDocuments("Item", pHider.actor.itemTypes.effect.concat(pHider.actor.itemTypes.condition).filter(vElement => PerceptiveFlags.isPerceptiveEffect(vElement)).map(vElement => vElement.id));
 		}
 		
-		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
-			await PerceptiveCompUtils.RemovePerceptiveDfredEffect(pHider.actor.effects.map(vElement => vElement), pHider);
+		if (PerceptiveCompUtils.hasactiveEffectModule()) {
+			await PerceptiveCompUtils.RemovePerceptiveEffects(pHider);
 		}
 		
 		if (!pApplyReset) {

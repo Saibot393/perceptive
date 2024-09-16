@@ -20,6 +20,7 @@ const cTokenMagic = "tokenmagic";
 const cEpicRolls = "epic-rolls-5e";
 const cMassEdit = "multi-token-edit";
 const cMWE = "monks-wall-enhancement";
+const cCPR = "chris-premades";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -41,7 +42,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit, cMWE}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit, cMWE, cCPR}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS
@@ -53,6 +54,15 @@ class PerceptiveCompUtils {
 	
 	static ARWithinDistance(pCharacter, pObject) {} //[ArmReach] returns if pCharacter is close enought to pLock to interact
 	
+	//effect modules specific: dfreds-convenient-effects & chris premades
+	static hasactiveEffectModule() {} //returns if an effect module compatibility is enabled
+	
+	static addIDNameEffects(pNameIDs, pToken) {} //adds effects matching pNameIDs to pToken using compatible modules
+	
+	static async RemovePerceptiveEffects(pToken) {} //removes perceptive effects from pToken actor
+	
+	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
+	
 	//specific: dfreds-convenient-effects
 	static async AddDfredEffect(pEffects, pToken) {} //uses dfreds api to add effects with pEffectNames to pToken
 	
@@ -60,7 +70,10 @@ class PerceptiveCompUtils {
 	
 	static async FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
-	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
+	//specific: chris premades
+	static async AddCPREffects(pEffects, pToken) {} //uses CPR to add effects to pToken
+	
+	static FilterCPREffects(pNameIDs) {} //returns array of effects datas
 	
 	//specific: MATT
 	static async MATTTriggerTile(pObject) {} //returns Tile triggered by pObject actions
@@ -119,6 +132,34 @@ class PerceptiveCompUtils {
 		
 		return true;//if anything fails
 	}
+	
+	//effect modules specific: dfreds-convenient-effects & chris premades
+	static hasactiveEffectModule() {
+		return (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) || (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration"))
+	}
+	
+	static async addIDNameEffects(pNameIDs, pToken) {
+		console.log(pNameIDs);
+		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
+			console.log(await PerceptiveCompUtils.FilterDFEffects(pNameIDs));
+			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken);
+		}
+		
+		if (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration")) {
+			console.log(PerceptiveCompUtils.FilterCPREffects(pNameIDs));
+			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken);
+		}
+	}
+	
+	static async RemovePerceptiveEffects(pToken) {
+		let vEffectIDs = pToken.actor.effects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect)).map(vEffect => vEffect.id);
+
+		await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", vEffectIDs);
+	}
+	
+	static isPercpetiveEffect(pEffect) {
+		return pEffect.origin == cModuleName || (pEffect.flags && pEffect.flags[cModuleName] && pEffect.flags[cModuleName][cPerceptiveEffectF]);
+	} 
 	
 	//specific: dfreds-convenient-effects
 	static async AddDfredEffect(pEffects, pToken) {
@@ -245,9 +286,31 @@ class PerceptiveCompUtils {
 		return vNameIDs;
 	}
 	
-	static isPercpetiveEffect(pEffect) {
-		return pEffect.origin == cModuleName || (pEffect.flags && pEffect.flags[cModuleName] && pEffect.flags[cModuleName][cPerceptiveEffectF]);
-	} 
+	//specific: chris premades
+	static async AddCPREffects(pEffects, pToken, pInfos = {forMountEffect : false, grappleEffect : false}) {
+		pEffects.forEach(vEffect => vEffect.origin = cModuleName);
+		pEffects.forEach(vEffect => vEffect.flags = {[cModuleName] : {[cPerceptiveEffectF] : true}});
+		
+		console.log(pEffects);
+		
+		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects)
+	}
+	
+	static FilterCPREffects(pNameIDs) {
+		let vEffects = game.items.find(i => i.flags['chris-premades']?.effectInterface).collections.effects;
+		
+		if (!vEffects) {
+			return [];
+		}
+		
+		vEffects = vEffects.filter(vEffect => pNameIDs.find(vNameID => vEffect.name == vNameID || vEffect.id == vNameID || vEffect.uuid == vNameID));
+		
+		for (let i = 0; i < vEffects.length; i++) {
+			vEffects[i] = {...vEffects[i]};
+		}
+		
+		return vEffects;
+	}
 	
 	//specific: MATT
 	static async MATTTriggerTile(pObject) {
