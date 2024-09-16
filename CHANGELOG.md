@@ -1,3 +1,6 @@
+## v4.1.2
+- small bug fix
+
 ## v4.1.1
 - small bug fix
 
