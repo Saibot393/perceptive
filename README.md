@@ -237,6 +237,8 @@ The module should be compatible with all game systems and most modules on Foundr
   - A "Peek lock" options will be shown on the lock interaction menu of Lock & Key
 - [DFreds Convenient Effects](https://foundryvtt.com/packages/dfreds-convenient-effects)
   - Additional setting "DFreds Convenient Effects Integration" to enable stealth effects
+ - [Chris's Premades](https://foundryvtt.com/packages/chris-premades)
+  - Additional setting "Chris's Premades integration" to enable effects managed by Chris's Premades
 - [Vision 5e](https://foundryvtt.com/packages/vision-5e)
   - Additional setting "Vision 5e Integration" to apply additional stealth effects and detect the vision type set by Vision 5e
 - [Stealthy](https://foundryvtt.com/packages/stealthy)
