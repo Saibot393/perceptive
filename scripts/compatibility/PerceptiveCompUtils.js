@@ -142,8 +142,10 @@ class PerceptiveCompUtils {
 		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
 			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken);
 		}
-		
+		console.log(pNameIDs);
 		if (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration")) {
+			console.log(pNameIDs);
+			console.log(PerceptiveCompUtils.FilterCPREffects(pNameIDs));
 			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken);
 		}
 	}
@@ -292,7 +294,7 @@ class PerceptiveCompUtils {
 	}
 	
 	static FilterCPREffects(pNameIDs) {
-		let vEffects = game.items.find(i => i.flags['chris-premades']?.effectInterface).collections.effects;
+		let vEffects = game.items.find(i => i.flags[cCPR]?.effectInterface).collections.effects;
 		
 		if (!vEffects) {
 			return [];

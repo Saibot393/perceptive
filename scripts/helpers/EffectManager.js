@@ -51,7 +51,7 @@ class EffectManager {
 						}
 					}
 					
-					if (game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
+					if (PerceptiveCompUtils.hasactiveEffectModule()) {
 						vEffectNames.push(cStealthEffectName);
 						
 						if (PerceptiveCompUtils.isactiveModule(cVision5e) && game.settings.get(cModuleName, "Vision5eIntegration")) {
@@ -71,7 +71,7 @@ class EffectManager {
 				}
 			}
 			
-			if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
+			if (PerceptiveCompUtils.hasactiveEffectModule()) {
 				PerceptiveCompUtils.addIDNameEffects(vEffectNames, pHider);
 			}
 		}
