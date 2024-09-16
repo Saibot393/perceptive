@@ -139,14 +139,11 @@ class PerceptiveCompUtils {
 	}
 	
 	static async addIDNameEffects(pNameIDs, pToken) {
-		console.log(pNameIDs);
 		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
-			console.log(await PerceptiveCompUtils.FilterDFEffects(pNameIDs));
 			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken);
 		}
 		
 		if (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration")) {
-			console.log(PerceptiveCompUtils.FilterCPREffects(pNameIDs));
 			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken);
 		}
 	}
@@ -290,8 +287,6 @@ class PerceptiveCompUtils {
 	static async AddCPREffects(pEffects, pToken, pInfos = {forMountEffect : false, grappleEffect : false}) {
 		pEffects.forEach(vEffect => vEffect.origin = cModuleName);
 		pEffects.forEach(vEffect => vEffect.flags = {[cModuleName] : {[cPerceptiveEffectF] : true}});
-		
-		console.log(pEffects);
 		
 		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects)
 	}

@@ -504,7 +504,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.applySystemStealthEffect.name"),
 		hint: Translate("Settings.applySystemStealthEffect.descrp"),
 		scope: "world",
-		config: (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) && (!game.settings.get(cModuleName, "UsePf2eRules")),
+		config: (PerceptiveUtils.isPf2e() || PerceptiveCompUtils.hasactiveEffectModule()) && (!game.settings.get(cModuleName, "UsePf2eRules")),
 		type: Boolean,
 		default: false
 	  });   
@@ -531,7 +531,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.syncEffectswithPerceptiveStealth.name"),
 		hint: Translate("Settings.syncEffectswithPerceptiveStealth.descrp"),
 		scope: "world",
-		config: game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+		config: PerceptiveCompUtils.hasactiveEffectModule(),
 		type: Boolean,
 		default: false
 	  });   
@@ -540,7 +540,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		name: Translate("Settings.customStealthEffects.name"),
 		hint: Translate("Settings.customStealthEffects.descrp"),
 		scope: "world",
-		config: PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration"),
+		config: PerceptiveUtils.isPf2e() || PerceptiveCompUtils.hasactiveEffectModule(),
 		type: String,
 		default: ""
 	  });  
