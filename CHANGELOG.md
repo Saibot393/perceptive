@@ -1,3 +1,6 @@
+## v4.1.1
+- small bug fix
+
 ## v4.1.0
 - Added compatibility with [Chris's Premades](https://foundryvtt.com/packages/chris-premades)
   - Adds the world setting "Chris's Premades integration" to use the effects managed by Chris's Premade
