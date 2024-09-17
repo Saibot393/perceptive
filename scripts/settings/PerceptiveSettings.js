@@ -679,7 +679,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		config: true,
 		type: String,
 		default: "",
-               filePicker: "audio"
+        filePicker: "audio"
 	  }); 	
 	  
 	  game.settings.register(cModuleName, "SpottedSoundVolume", {
