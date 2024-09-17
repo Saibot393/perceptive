@@ -678,7 +678,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		scope: "world",
 		config: true,
 		type: String,
-		default: ""
+		default: "",
+               filePicker: "audio"
 	  }); 	
 	  
 	  game.settings.register(cModuleName, "SpottedSoundVolume", {
@@ -702,7 +703,8 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		scope: "world",
 		config: true,
 		type: String,
-		default: ""
+		default: "",
+		filePicker: "imagevideo"
 	  }); 	
 	  
 	  game.settings.register(cModuleName, "SpotterImagePingDuration", {
