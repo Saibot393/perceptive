@@ -142,10 +142,8 @@ class PerceptiveCompUtils {
 		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
 			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken);
 		}
-		console.log(pNameIDs);
+
 		if (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration")) {
-			console.log(pNameIDs);
-			console.log(PerceptiveCompUtils.FilterCPREffects(pNameIDs));
 			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken);
 		}
 	}
@@ -286,11 +284,20 @@ class PerceptiveCompUtils {
 	}
 	
 	//specific: chris premades
-	static async AddCPREffects(pEffects, pToken, pInfos = {forMountEffect : false, grappleEffect : false}) {
-		pEffects.forEach(vEffect => vEffect.origin = cModuleName);
-		pEffects.forEach(vEffect => vEffect.flags = {[cModuleName] : {[cPerceptiveEffectF] : true}});
+	static async AddCPREffects(pEffects, pToken) {
+		//pEffects.forEach(vEffect => vEffect.origin = cModuleName);
+		//pEffects.forEach(vEffect => vEffect.flags = {[cModuleName] : {[cPerceptiveEffectF] : true}});
 		
-		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects)
+		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects, {keepId: true});
+		
+		for (let vEffect of pEffects) {
+			let vAppliedEffect = pToken.actor.effects.find(vAE => vAE._source?._id == vEffect.id);
+			
+			if (vAppliedEffect) {
+				await vAppliedEffect.setFlag(cModuleName, cPerceptiveEffectF, true);
+				await vAppliedEffect.update({origin : cModuleName});
+			}
+		}
 	}
 	
 	static FilterCPREffects(pNameIDs) {
@@ -302,10 +309,11 @@ class PerceptiveCompUtils {
 		
 		vEffects = vEffects.filter(vEffect => pNameIDs.find(vNameID => vEffect.name == vNameID || vEffect.id == vNameID || vEffect.uuid == vNameID));
 		
+		/*
 		for (let i = 0; i < vEffects.length; i++) {
 			vEffects[i] = {...vEffects[i]};
 		}
-		
+		*/
 		return vEffects;
 	}
 	
