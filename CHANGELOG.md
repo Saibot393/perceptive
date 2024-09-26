@@ -1,3 +1,6 @@
+## v4.1.5
+- small addition to api
+
 ## v4.1.4
 - added file picker to several settings (thanks to [ChasarooniZ](https://github.com/ChasarooniZ))
 
