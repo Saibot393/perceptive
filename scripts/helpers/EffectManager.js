@@ -90,7 +90,7 @@ class EffectManager {
 			await PerceptiveCompUtils.RemovePerceptiveEffects(pHider);
 		}
 		
-		if (!pApplyReset) {
+		if (!pApplyReset && pHider) {
 			await PerceptiveFlags.setPerceptiveStealthing(pHider, false);
 		}
 	}

@@ -6,6 +6,7 @@ import {VisionUtils} from "../utils/VisionUtils.js";
 import {VisionChannelsUtils} from "../helpers/VisionChannelsHelper.js";
 import {CanVCSeeObject} from "../VisionChannelsScript.js";
 import {PatchSupport} from "../helpers/BasicPatches.js";
+import {EffectManager} from "../helpers/EffectManager.js";
 
 function objectDocument(pObject) { //for support
 	let vObject = pObject;
@@ -121,6 +122,7 @@ Hooks.once("init", () => {
 		togglePerceptiveStealthing,
 		setPerceptiveStealthing,
 		isPerceptiveStealthing,
-		SpottablesinRange
+		SpottablesinRange,
+		EffectManager
 	}
 });

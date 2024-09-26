@@ -129,7 +129,6 @@ class PerceptiveSystemUtils {
 		if (pMessage.isRoll) {
 			if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 				let vSystemInfo = pMessage.flags?.[game.system.id];
-				
 				if (vSystemInfo) {
 					switch (game.system.id) {
 						case cPf2eName:
