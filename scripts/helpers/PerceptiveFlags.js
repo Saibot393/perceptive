@@ -255,6 +255,8 @@ class PerceptiveFlags {
 	
 	static RevealwhenSpotted(pObject) {} //returns if pObject should be revealed when spotted
 	
+	static prepareSpottableToken(pToken, pDCs, pSpottedby = []) {} //makes pToken, spottable, clears the spotted by list and adds new spotted bys
+	
 	//Vision channels
 	static getVisionChannels(pObject, pRaw = false) {} //returns the vision channels of pObject
 	
@@ -1446,8 +1448,17 @@ class PerceptiveFlags {
 	}
 	
 	static async addSpottedby(pObject, pToken) {
-		if (!PerceptiveFlags.isSpottedby(pObject, pToken)) {
-			await this.#setSpottedby(pObject, this.#SpottedbyFlag(pObject).concat([pToken.id]));
+		if (Array.isArray(pToken)) {
+			let vNews = pToken.filter(vNew => !PerceptiveFlags.isSpottedby(pObject, vNew)).map(vNew => vNew.id);
+			
+			if (vNews.length) {
+				await this.#setSpottedby(pObject, this.#SpottedbyFlag(pObject).concat(vNews));
+			}	
+		}
+		else {
+			if (!PerceptiveFlags.isSpottedby(pObject, pToken)) {
+				await this.#setSpottedby(pObject, this.#SpottedbyFlag(pObject).concat([pToken.id]));
+			}
 		}
 	}
 	
@@ -1741,6 +1752,28 @@ class PerceptiveFlags {
 	
 	static RevealwhenSpotted(pObject) {
 		return this.#RevealwhenSpottedFlag(pObject);
+	}
+	
+	static prepareSpottableToken(pToken, pDCs, pSpottedby = []) {
+		let vUpdates = {flags : {[cModuleName] : {}}}
+		
+		vUpdates.flags[cModuleName][ccanbeSpottedF] = true;
+		
+		for (let vKey of ["PPDC", "APDC", "PPDice"]) {
+			if (pDCs.hasOwnProperty(vKey)) {
+				vUpdates.flags[cModuleName][`${vKey}Flag`] = pDCs[vKey];
+			}
+		}
+		
+		let vSpottedby = pSpottedby;
+		
+		if (!Array.isArray(vSpottedby)) {
+			vSpottedby = [pSpottedby];
+		}
+		
+		vUpdates.flags[cModuleName][cSpottedbyF] = pSpottedby.map(vSpotter => vSpotter.id);
+		
+		pToken.update(vUpdates);
 	}
 	
 	//Vision channels
