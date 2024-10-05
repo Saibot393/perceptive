@@ -78,6 +78,7 @@
 		},
 		
 		"Popups" : {
+			"GamePaused"				: "Gra jest wstrzymana",
 			"OutofRange"				: "Poza zasięgiem",
 			"CantbePeeked"				: "Nie można zerknąć",
 			"DoorisLocked"				: "Zablokowany",
