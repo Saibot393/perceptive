@@ -1,3 +1,6 @@
+## v4.1.8
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+
 ## v4.1.7
 - Fixed bug that could cause graphical token effects to be reset unintentional
 - Added "Game paused" popup where applicable
