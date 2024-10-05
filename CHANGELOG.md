@@ -1,3 +1,6 @@
+## v4.1.6
+- small api update
+
 ## v4.1.5
 - small addition to api
 
