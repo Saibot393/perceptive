@@ -754,6 +754,9 @@ class SpottingManager {
 			if (!game.paused) {
 				await game.socket.emit("module." + cModuleName, {pFunction : "SpotObjectsRequest", pData : {pSceneID : canvas.scene.id, pObjectIDs : vObjectIDs, pSpotterIDs : PerceptiveUtils.IDsfromTokens(pSpotters), pInfos : pInfos}});
 			}
+			else {
+				pSpotters.forEach(vSpotter => PerceptivePopups.TextPopUpID(vSpotter, "GamePaused")); //MESSAGE POPUP
+			}
 		}
 	}
 

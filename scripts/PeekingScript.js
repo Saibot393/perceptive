@@ -109,6 +109,9 @@ class PeekingManager {
 					if (!game.paused) {
 						game.socket.emit("module." + cModuleName, {pFunction : "PeekDoorRequest", pData : {pSceneID : canvas.scene.id, pDoorID : pDoor.id, pTokenIDs : PerceptiveUtils.IDsfromTokens(pTokens), pInfos : pInfos}});
 					}
+					else {
+						PerceptivePopups.TextPopUpID(pDoor, "GamePaused") //MESSAGE POPUP
+					}
 				}	
 			}
 		}

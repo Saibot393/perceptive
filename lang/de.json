@@ -78,6 +78,7 @@
 		},
 		
 		"Popups" : {
+			"GamePaused"				: "Spiel ist pausiert",
 			"OutofRange"				: "Außer Reichweite",
 			"CantbePeeked"				: "Kann nicht durchschaut werden",
 			"DoorisLocked"				: "Verschlossen",

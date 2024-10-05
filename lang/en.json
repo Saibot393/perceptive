@@ -78,6 +78,7 @@
 		},
 		
 		"Popups" : {
+			"GamePaused"				: "Game is paused",
 			"OutofRange"				: "Out of range",
 			"CantbePeeked"				: "Cant be peeked",
 			"DoorisLocked"				: "Locked",

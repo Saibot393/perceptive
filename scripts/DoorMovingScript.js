@@ -90,6 +90,9 @@ class DoorMovingManager {
 						PerceptivePopups.TextPopUpID(pDoor, "OutofRange") //MESSAGE POPUP
 					}
 				}
+				else {
+					PerceptivePopups.TextPopUpID(pDoor, "GamePaused") //MESSAGE POPUP
+				}
 			}
 		}
 	}

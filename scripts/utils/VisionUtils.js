@@ -148,7 +148,7 @@ class VisionUtils {
 			
 			if (PerceptiveFlags.canbeSpotted(vTokens[i].document)) {//partly modified from foundry.js
 				// Clear the detection filter
-				vTokens[i].detectionFilter = undefined;
+				//vTokens[i].detectionFilter = undefined;
 
 				// Some tokens are always visible
 				//if ( !canvas.effects.visibility.tokenVision ) return true;
