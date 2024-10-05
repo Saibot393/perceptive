@@ -1,3 +1,7 @@
+## v4.1.7
+- Fixed bug that could cause graphical token effects to be reset unintentional
+- Added "Game paused" popup where applicable
+
 ## v4.1.6
 - small api update
 
