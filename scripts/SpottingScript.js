@@ -1564,8 +1564,8 @@ class SpottingManager {
 		if (PerceptiveFlags.canbeSpotted(pToken.document)) {
 			VisionUtils.PreapreSpotableToken(pToken);
 
-			if (pToken.isOwner) {	
-				if (game.settings.get(cModuleName, "useSpottingLightLevels") && !pToken.isPreview) {
+			if (pToken.isOwner) {
+				if ((game.settings.get(cModuleName, "useSpottingLightLevels") || game.settings.get(cModuleName, "useLightAdvantageSystem")) && !pToken.isPreview) {
 					PerceptiveFlags.CheckLightLevel(pToken.document, true);
 				}
 			}

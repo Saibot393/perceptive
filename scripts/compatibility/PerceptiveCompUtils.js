@@ -285,9 +285,6 @@ class PerceptiveCompUtils {
 	
 	//specific: chris premades
 	static async AddCPREffects(pEffects, pToken) {
-		//pEffects.forEach(vEffect => vEffect.origin = cModuleName);
-		//pEffects.forEach(vEffect => vEffect.flags = {[cModuleName] : {[cPerceptiveEffectF] : true}});
-		
 		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects, {keepId: true});
 		
 		for (let vEffect of pEffects) {

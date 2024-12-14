@@ -552,18 +552,53 @@ class VisionUtils {
 			vHasGlobalLight = vScene.environment.globalLight.enabled;
 		}
 		
+		let vLightCheck = true; //if non darkness lights need to be checked
+		
 		if (vScene) {
-			if (vHasGlobalLight && (vScene.darkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
+			let vDarkness = vScene.darkness;
+			
+			let vRegions = canvas.scene.regions.filter(vRegion => true);
+			
+			vRegions = vRegions.filter(vRegion => vRegion.object.testPoint(pPoint, pPoint.elevation)); //replace with token set
+			
+			let vBehaviours = [];
+			
+			vRegions.forEach(vRegion => {
+				if (vRegion?.behaviors) {
+					vBehaviours.push(...vRegion.behaviors.filter(vBehaviour => vBehaviour.active && vBehaviour.type == "adjustDarknessLevel"));
+				}
+			});
+			
+			const cModes = foundry.data.regionBehaviors.AdjustDarknessLevelRegionBehaviorType.MODES;
+
+			vBehaviours.forEach(vBehaviour => {
+				switch ( vBehaviour.system.mode ) {
+					case cModes.OVERRIDE: vDarkness = vBehaviour.system.modifier;
+					case cModes.BRIGHTEN: vDarkness = vDarkness * (1 - vBehaviour.system.modifier);
+					case cModes.DARKEN: vDarkness = 1 - ((1 - vDarkness) * (1 - vBehaviour.system.modifier));
+				}
+			});
+			
+			console.log(vDarkness);
+			
+			if (vHasGlobalLight && (vDarkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
 				vLightningLevel = cLightLevel.Bright;
+				vLightCheck = false;
 			}
 			else {
-				if (vHasGlobalLight && (vScene.darkness < PerceptiveFlags.SceneDimEnd(vScene))/*cDimInterval[1]*/) {
+				if (vHasGlobalLight && (vDarkness < PerceptiveFlags.SceneDimEnd(vScene))/*cDimInterval[1]*/) {
 					vLightningLevel = cLightLevel.Dim;
 				}
-				
-				let vrelevantLightSources = vScene.lights.map(vLight => vLight._object?.source);
-				
-				vrelevantLightSources = vrelevantLightSources.concat(vScene.tokens.filter(vToken => vToken.object?.light?.active).map(vToken => vToken.object.light));
+			}
+			
+			let vrelevantLightSources = vScene.lights.filter(vLight => !vLight.hidden).map(vLight => vLight._object?.source);
+			
+			vrelevantLightSources = vrelevantLightSources.concat(vScene.tokens.filter(vToken => vToken.object?.light?.active).map(vToken => vToken.object.light));
+			
+			if (vLightCheck || vrelevantLightSources.find(vLight => vLight.isDarkness)) {
+				if (!vLightCheck) {
+					vrelevantLightSources = vrelevantLightSources.filter(vLight => vLight.isDarkness);
+				}
 				
 				vrelevantLightSources = vrelevantLightSources.filter(vLight => vLight?.shape?.contains(pPoint.x, pPoint.y));
 				
@@ -573,25 +608,37 @@ class VisionUtils {
 					vrelevantLightSources = vrelevantLightSources.filter(vLight => (vLight.elevation == pPoint.elevation) || (GeometricUtils.DistanceXYZ(pPoint, vLight, vElevationScale) < vLight.data.dim));
 				}
 				
-				if (vrelevantLightSources.length > 0) {
-					//at least Dim
-					vLightningLevel = cLightLevel.Dim;
-					
-					if (v3Dcalc) {
-						if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXYZ(pPoint, vLight, vElevationScale) < vLight.data.bright)) {
-							//is Bright
-							vLightningLevel = cLightLevel.Bright;
-						}						
-					}
-					else {
-						if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXY(pPoint, vLight) < vLight.data.bright)) {
-							//is Bright
-							vLightningLevel = cLightLevel.Bright;
+				let vrelevantDarkSources = vrelevantLightSources.filter(vLight => vLight.isDarkness);
+				
+				vrelevantLightSources = vrelevantLightSources.filter(vLight => !vLight.isDarkness);
+				
+				if (vrelevantDarkSources.length) {
+					vLightningLevel = cLightLevel.Dark;
+				}
+				else {
+					if (vLightCheck && vrelevantLightSources.length > 0) {
+						//at least Dim
+						vLightningLevel = cLightLevel.Dim;
+						
+						if (v3Dcalc) {
+							if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXYZ(pPoint, vLight, vElevationScale) < vLight.data.bright)) {
+								//is Bright
+								vLightningLevel = cLightLevel.Bright;
+							}						
+						}
+						else {
+							if (vrelevantLightSources.find(vLight => GeometricUtils.DistanceXY(pPoint, vLight) < vLight.data.bright)) {
+								//is Bright
+								vLightningLevel = cLightLevel.Bright;
+							}
 						}
 					}
 				}
 			}
 		}
+		
+		//zones
+		
 		
 		return vLightningLevel;
 	}

@@ -342,7 +342,9 @@ class PerceptiveSheetSettings {
 	static SceneSheetSettings(pApp, pHTML, pData) {
 			//create title (under which all settings are placed)
 			let vTittleHTML = `<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`;
+			
 			pHTML.find('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
+			console.log(pHTML.find('input[name="darkness"]'))
 			
 			//scene bright end
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneBrightEndF +".name"), 
