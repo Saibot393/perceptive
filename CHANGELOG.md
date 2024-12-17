@@ -1,3 +1,8 @@
+## v4.2.0
+- Fixed bug with illumination level update
+- Illumination level calculations now include darkness light sources
+- Illumination level calculations now include zone darkness adjustments
+
 ## v4.1.8
 - Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
 
