@@ -579,8 +579,6 @@ class VisionUtils {
 				}
 			});
 			
-			console.log(vDarkness);
-			
 			if (vHasGlobalLight && (vDarkness < PerceptiveFlags.SceneBrightEnd(vScene))/*cDimInterval[0]*/) {
 				vLightningLevel = cLightLevel.Bright;
 				vLightCheck = false;
