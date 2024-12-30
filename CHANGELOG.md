@@ -1,3 +1,6 @@
+## v4.2.1
+- removed left over console log
+
 ## v4.2.0
 - Fixed bug with illumination level update
 - Illumination level calculations now include darkness light sources
