@@ -1,3 +1,6 @@
+## v4.2.2
+- Fixed bug in "Toggle VC receiver filter of selected Token" macro
+
 ## v4.2.1
 - removed left over console log
 
