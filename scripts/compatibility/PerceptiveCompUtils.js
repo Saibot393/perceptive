@@ -292,7 +292,7 @@ class PerceptiveCompUtils {
 			
 			if (vAppliedEffect) {
 				await vAppliedEffect.setFlag(cModuleName, cPerceptiveEffectF, true);
-				await vAppliedEffect.update({origin : cModuleName});
+				//await vAppliedEffect.update({origin : cModuleName});
 			}
 		}
 	}
