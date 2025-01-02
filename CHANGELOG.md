@@ -1,3 +1,6 @@
+## v4.2.3
+- Addition for v4.2.2
+
 ## v4.2.2
 - Fixed bug in "Toggle VC receiver filter of selected Token" macro
 
