@@ -3,6 +3,7 @@ import { PerceptiveFlags } from "./PerceptiveFlags.js";
 import { PerceptiveCompUtils, cDfredCE, cVision5e } from "../compatibility/PerceptiveCompUtils.js";
 
 const cStealthEffectName = "Invisible"; //standard effect
+const cDnD5eInvisibility = "dnd5einvisible00";
 const cadvancedStealthEffectName = "Inaudible"; //necessry for some vision modules
 
 const cUndetectedPf2eEffectID = "Compendium.pf2e.conditionitems.Item.VRSef5y1LmL2Hkjf"; //normal stealth effects of Pf2e system
@@ -52,7 +53,7 @@ class EffectManager {
 					}
 					
 					if (PerceptiveCompUtils.hasactiveEffectModule()) {
-						vEffectNames.push(cStealthEffectName);
+						vEffectNames.push(cDnD5eInvisibility);
 						
 						if (PerceptiveCompUtils.isactiveModule(cVision5e) && game.settings.get(cModuleName, "Vision5eIntegration")) {
 							vEffectNames.push(cadvancedStealthEffectName);
@@ -97,7 +98,7 @@ class EffectManager {
 	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {
 		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+			if (!pInfos[cModuleName + "delete"] && game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
 				let vActiveScenes = game.scenes.filter(vScene => vScene.active);
 				
 				for (let i = 0; i < vActiveScenes.length; i++) {

@@ -151,7 +151,7 @@ class PerceptiveCompUtils {
 	static async RemovePerceptiveEffects(pToken) {
 		let vEffectIDs = pToken.actor.effects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect)).map(vEffect => vEffect.id);
 
-		await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", vEffectIDs);
+		await pToken.actor.deleteEmbeddedDocuments("ActiveEffect", vEffectIDs, {[cModuleName + "delete"] : true});
 	}
 	
 	static isPercpetiveEffect(pEffect) {

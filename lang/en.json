@@ -333,7 +333,7 @@
 			},
 			
 			"syncEffectswithPerceptiveStealth" : {
-				"name"					: "Sync Perceptive stealth removel",
+				"name"					: "Sync Perceptive stealth removal",
 				"descrp"				: "Removing perceptive stealth from a token will remove the set stealthing effects and vice versa"				
 			},
 			
