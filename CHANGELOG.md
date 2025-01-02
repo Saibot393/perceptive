@@ -1,4 +1,7 @@
 ## v4.2.4
+- More small bug fixes
+
+## v4.2.4
 - Small bug fix
 
 ## v4.2.3
