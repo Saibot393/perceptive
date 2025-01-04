@@ -969,7 +969,12 @@ class SpottingManager {
 					return false;
 				}
 				
-				vRangeModifier = VisionUtils.RangeDCModifier(vRangeInfo, cRangeDCInterval, cRangeDCModifier);
+				if (!isNaN(cRangeDCModifier) && !isNaN(cRangeDCInterval)) {
+					vRangeModifier = VisionUtils.RangeDCModifier(vRangeInfo, cRangeDCInterval, cRangeDCModifier);
+				}
+				else {
+					vRangeModifier = 0;
+				}
 			}
 			
 			//check illumination of pObject
