@@ -16,6 +16,8 @@ class EffectManager {
 	
 	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as perceptive effect
 	
+	static hasPerceptiveEffect(pToken) {}//returns if pToken has an perceptive marked effect
+	
 	static onPerceptiveEffectdeletion(pEffect, pInfos, pUserID, pActor) {} //called when an effect marked as perceptive effect is deleted
 	
 	//IMPLEMENTATION
@@ -93,6 +95,15 @@ class EffectManager {
 		
 		if (!pApplyReset && pHider) {
 			await PerceptiveFlags.setPerceptiveStealthing(pHider, false);
+		}
+	}
+	
+	static hasPerceptiveEffect(pToken) {
+		if (PerceptiveUtils.isPf2e()) {
+			return pToken.actor.itemTypes.effect.concat(pToken.actor.itemTypes.condition).find(vElement => PerceptiveFlags.isPerceptiveEffect(vElement))
+		}
+		else {
+			return pToken.actor.effects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect));
 		}
 	}
 	

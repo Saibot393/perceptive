@@ -916,13 +916,16 @@ class SpottingManager {
 	
 	static async isSpottedby(pObject, pSpotter, pChecks = {LOS : false, Range : true, Effects : true, Hidden : true, canbeSpotted : true}) {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
-			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall.document.parent.id == pSpotter.parent.id))) {
+			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall?.document.parent.id == pSpotter.parent.id))) {
 				//different scenes
 				return false;
 			}
 			
 			if (pChecks.Effects) {
-				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && !pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible")) && !(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden")))) {
+				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && 
+					!pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible")) &&
+					!(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden"))) && 
+					!EffectManager.hasPerceptiveEffect(pObject)) {
 					//no invisibility
 					return true;
 				}
