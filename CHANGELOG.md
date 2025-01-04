@@ -1,3 +1,6 @@
+## v4.2.7
+- Small bug fix
+
 ## v4.2.6
 - Improved Module integration/api
 
