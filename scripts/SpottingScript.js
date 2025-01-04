@@ -925,7 +925,7 @@ class SpottingManager {
 			if (pChecks.Effects) {
 				if (!PerceptiveFlags.isPerceptiveStealthing(pObject) && !pObject.hidden && 
 					!pObject.actor?.effects.find(veffect => veffect.statuses.has("invisible")) &&
-					!(pChecks.Hidden && (pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden")) || pObject.actor?.effects.find(veffect => veffect.statuses.has("hiding")))) && 
+					!(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden") || veffect.statuses.has("hiding")) && 
 					!EffectManager.hasPerceptiveEffect(pObject)) {
 					//no invisibility
 					if (CONFIG.debug.perceptive.SpottingScript) console.log(true);
