@@ -1,3 +1,6 @@
+## v4.2.9
+- Small internal fix
+
 ## v4.2.8
 - Small bug fix for v4.2.7 bug fix
 
