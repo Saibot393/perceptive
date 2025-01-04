@@ -918,6 +918,7 @@ class SpottingManager {
 		if (pObject && pSpotter && pSpotter.documentName == "Token") {
 			if (!((pObject.parent.id == pSpotter.parent.id) || (pObject.wall?.document.parent.id == pSpotter.parent.id))) {
 				//different scenes
+				if (CONFIG.debug.perceptive.SpottingScript) console.log(false);
 				return false;
 			}
 			
@@ -927,6 +928,7 @@ class SpottingManager {
 					!(pChecks.Hidden && pObject.actor?.effects.find(veffect => veffect.statuses.has("hidden"))) && 
 					!EffectManager.hasPerceptiveEffect(pObject)) {
 					//no invisibility
+					if (CONFIG.debug.perceptive.SpottingScript) console.log(true);
 					return true;
 				}
 			}
@@ -934,6 +936,7 @@ class SpottingManager {
 			if (pChecks.LOS) {
 				if (!pSpotter.object?.los?.contains(pObject.center.x, pObject.center.y)) {
 					//not in FOV
+					if (CONFIG.debug.perceptive.SpottingScript) console.log(false);
 					return false;
 				}
 			}
@@ -966,6 +969,7 @@ class SpottingManager {
 				const cRangeDCInterval = Number(game.settings.get(cModuleName, "RangePDCModifier").split("/")[1])*cRangeFactor;
 
 				if (!VisionUtils.inVisionRange([pSpotter], vSpotPoint, vRange, game.settings.get(cModuleName, "SpottingConeRange")*cRangeFactor, pSpotter.rotation, 0, vRangeInfo)) {
+					if (CONFIG.debug.perceptive.SpottingScript) console.log(false);
 					return false;
 				}
 				
@@ -981,9 +985,10 @@ class SpottingManager {
 			//await PerceptiveFlags.CheckLightLevel(pObject);
 			
 			//check if pObject can currently be spotted by pSpotter
+			if (CONFIG.debug.perceptive.SpottingScript) console.log(Boolean(PerceptiveFlags.canbeSpottedwith(pObject, [pSpotter], VisionUtils.VisionLevel(pSpotter), await VisionUtils.PassivPerception(pSpotter), vRangeModifier, {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : !pChecks.canbeSpotted})));
 			return Boolean(PerceptiveFlags.canbeSpottedwith(pObject, [pSpotter], VisionUtils.VisionLevel(pSpotter), await VisionUtils.PassivPerception(pSpotter), vRangeModifier, {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : !pChecks.canbeSpotted}));
 		}
-		
+		if (CONFIG.debug.perceptive.SpottingScript) console.log(false);
 		return false;
 	}
 

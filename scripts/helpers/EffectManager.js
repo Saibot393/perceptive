@@ -103,7 +103,7 @@ class EffectManager {
 			return pToken.actor.itemTypes.effect.concat(pToken.actor.itemTypes.condition).find(vElement => PerceptiveFlags.isPerceptiveEffect(vElement))
 		}
 		else {
-			return pToken.actor.effects.filter(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect));
+			return pToken.actor.effects.find(vEffect => PerceptiveCompUtils.isPercpetiveEffect(vEffect));
 		}
 	}
 	
