@@ -543,14 +543,16 @@ class VisionUtils {
 			vScene = canvas.scene;
 		}
 		
-		let vHasGlobalLight;
+		let vHasGlobalLight = true;
 		
+		/*
 		if (game.release.generation < 12) {
 			vHasGlobalLight = vScene.globalLight;
 		}
 		else {
 			vHasGlobalLight = vScene.environment.globalLight.enabled;
 		}
+		*/
 		
 		let vLightCheck = true; //if non darkness lights need to be checked
 		
@@ -634,9 +636,6 @@ class VisionUtils {
 				}
 			}
 		}
-		
-		//zones
-		
 		
 		return vLightningLevel;
 	}
