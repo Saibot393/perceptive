@@ -972,6 +972,10 @@ class PerceptiveFlags {
 		if (pObject && !isNaN(pContent)) {
 			await pObject.setFlag(cModuleName, cLightLevelF, pContent); 
 			
+			if (pObject.actor) {
+				this.#setLightLevel(pObject.actor, pContent);
+			}
+			
 			return true;
 		}
 		return false;					
