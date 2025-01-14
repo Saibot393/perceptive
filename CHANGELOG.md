@@ -1,3 +1,6 @@
+## v4.2.11
+- Added light level flag to actors
+
 ## v4.2.10
 - Small improvements
 
