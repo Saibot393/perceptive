@@ -1,0 +1,979 @@
+{
+	"perceptive" : {
+		"Titles" : {
+			"perceptive"			  : "Percettivo",
+			"LockPeekSettings"  : "Impostazioni Sbirciare",
+			"DoorMoveSettings"	: "Impostazioni Movimento Porta",
+			"SpottingSettings"	: "Impostazioni Individuazione Invisibile",
+			"ClientSettings"		: "Impostazioni Client",
+			"PeekLock"			    : "Sbirciare",
+			"Basic"				      : "Base",
+			"SpottingInfos"	: {
+				"Title"			  : "Individuare Informazioni",
+				"PP"			    : "Calcola percezione passiva: {pValue}",
+				"Spottedby"		: "Individuato da: {pNames}",
+				"LightModifier"		: "Modificatore CD Percezione Illuminazione: {pValue}",
+				"LightRollBehaviour"	: "Modificatore comportamento tiro percezione illuminazione: {pBehaviour}",
+				"VisionLevel" : {
+					"name"			  : "Livello Visione: {pLevel}",
+					"value0"			: "Visione Base",
+					"value1"			: "Visione Crepuscolare",
+					"value2"			: "Scurovisione",
+					"value3"			: "Scurovisione (totale)"
+				},
+				"LightLevel" : {
+					"name"			: "Livello Illuminazione: {pLevel}",
+					"value0"		  : "Oscurità",
+					"value1"			: "Fioca",
+					"value2"			: "Intensa"
+				},
+				"LingeringAP"		: "Persistenza Percezione Attiva",
+				"PassiveDC"			: "CD Percezione Passiva",
+				"ActiveDC"			: "CD Percezione Attiva"
+			},
+			"SpottingConfirm" : {
+				"name"					: "Conferma Individuazione",
+				"content"				: "Giocatore <b>{pPlayer}</b> ha tirato un <b>{pResult}</b> su {pSkillName} che gli permette <b>{pSpotters}</b> nella scena <b>{pScene}</b> di individuare <b>{pDoors}</b> porte segrete e questi token nascosti: <br>",
+				"defaultSkill"	: "Percezione",
+				"forcecontent"	: "Giocatore <b>{pPlayer}</b> ha richiesto <b>{pSpotters}</b> nella scena <b>{pScene}</b> per individuare <b>{pDoors}</b> porte segrete e questi token nascosti <b>senza</b> tiro percezione: <br>",
+				"Behaviour"			: "con un tiro <b>{pBehaviour}</b> di <b>{pResult}</b>"
+			},
+			"StartStealthing"	: "Inizia Furtività",
+			"StopStealthing"	: "Termina Furtività",
+			"GMuiandcontrol"	: "Interfaccia utente e controllo DM",
+			"SightRange"			: "Campo Visivo",
+			"RulesAutomation"	: "Regole & Automazioni",
+			"RollFormulas"		: "Tiri & Formule",
+			"Effects"				  : "Effetti",
+			"Illumination"		: "Illuminazione",
+			"Sound"				    : "Suoni",
+			"SoundnImages"		: "Suoni & Immagini",
+			"Tile"				: "Tile",
+			"Triggers"		: "Triggers",
+			"ResetSpottedby"	: "Reset \"individuato da\"",
+			"with"				: "con",
+			"VisionChannels"	: "Canali Visivi",
+			"OpenVCMenu"			: "Apri Menu Canali Visivi"
+		},
+		
+		"ChatMessage" : {
+			"SpottingReport" : {
+				"content"				: "Sei riuscito a individuare <b>{pDoors}</b> porte segrete e questi token nascosti:",
+				"unknown"				: "???"
+			},
+			"LostLingeringAP" 			: "{pName} ha perso la percezione attiva persistente",
+			"Peeking"				: "{pName} ha provato a sbirciare dalla serratura",
+			"PeekingSuccess" : {
+				"default"			: "{pName} riesce a sbirciare dalla serratura",
+				"crit"			: "{pName} riesce a sbirciare perfettamente dalla serratura"
+			},
+			"PeekingFail" : {
+				"default"			: "{pName} fallisce nello sbirciare dalla serratura",
+				"crit"			: "{pName} fallisce malamente nello sbirciare dalla serratura"
+			}
+		},
+		
+		"Warnings" : {
+			"MacroSeekDeactivatet" 	: "Questa macro non è attualmente disponibile, vedere l'impostazione \"Comportamento di utilizzo della macro Percezione\""
+		},
+		
+		"Popups" : {
+			"GamePaused"				: "Gioco in Pausa",
+			"OutofRange"				: "Fuori Portata",
+			"CantbePeeked"			: "Non può essere sbirciato",
+			"DoorisLocked"			: "Bloccato",
+			"CantbeMoved"				: "Non può essere mosso",
+			"GainedLingeringAP"	: "Percezione attiva persistente acquisita",
+			"RemovedLingeringAP": "Percezione attiva persistente persa"
+		},
+		
+		"Settings" : {
+			"SplitInteractionDistances" : {
+				"name"					: "Split interactions distances",
+				"descrp"				: "If the interactions distances for lock peeking and door moving should be split"
+			},
+			
+			"InteractionDistance" : {
+				"name"					: "Maximum interaction distance",
+				"descrp"				: "Maximum distance over which players can interact with objects (-1 for unlimited)"
+			},
+			
+			"UseArmsreachDistance" : {
+				"name"					: "Use Arms Reach distance",
+				"descrp"				: "Use the Arms Reach distance for the maximum interaction distance"
+			},
+			
+			"DFredsEffectsIntegration" : {
+				"name"					: "DFreds Convenient Effects integration",
+				"descrp"				: "Use DFreds convenient effects"
+			},
+			
+			"CPREffectsIntegration" : {
+				"name"					: "Chris's Premades integration",
+				"descrp"				: "Use Chris's Premades effects"
+			},
+			
+			"Vision5eIntegration" : {
+				"name"					: "Vision 5e integration",
+				"descrp"				: "Adapt to Vision 5e rules"
+			},
+			
+			"StealthyIntegration" : {
+				"name"					: "Stealthy integration",
+				"descrp"				: "Stealth DCs will be synced between Perceptive and Stealthy"
+			},
+			
+			"Peekablebydefault" : {
+				"name" 					: "Lock peekable by default",
+				"descrp" 				: "If doors can be lock peeked by default"
+			}, 
+			
+			"LockpeekstandardSize" : {
+				"name" 					: "Standard size of lock peeks",
+				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size (0-1)"
+			}, 
+			
+			"LockpeekstandardPosition" : {
+				"name" 					: "Standard position of lock peeks",
+				"descrp" 				: "The standard gap position used when peeking a lock relativ to the doors size (0-1)"
+			}, 
+			
+			"StopPeekonMove" : {
+				"name" 					: "Stop lock peeking on movement",
+				"descrp" 				: "Stops tokens from lockpeeking as soon as they move, even if they are still within the interaction distance"
+			}, 
+			
+			"PeekingDistance" : {
+				"name" 					: "Lock peeking distance",
+				"descrp" 				: "Maximum distance over which players can peek locks (-1 for unlimited)"
+			}, 
+			
+			"GMConfirmPeeking" : {
+				"name"					: "GM confrims peeks",
+				"descrp"				: "If the GM has to confirm every peek action"
+			},
+			
+			"PeekingFormula" : {
+				"name"					: "Peeking formula",
+				"descrp"				: "Formula used for peeking through locks (leave empty to deactivate)"
+			},
+			
+			"PeekingDefaultDC" : {
+				"name"					: "Peeking default DC",
+				"descrp"				: "Default DC for peeking through newly created walls"
+			},
+			
+			"DoorstandardMove" : {
+				"name" 					: "Door standard movement type",
+				"descrp" 				: "The standard movement type of doors",
+				"options" : {
+					"none"				: "No movement (normal door)",
+					"swing"				: "Swinging door",
+					"slide"				: "Sliding door"
+				}
+			}, 
+			
+			"PreventNormalOpenbydefault" : {
+				"name" 					: "Prevent normal open by default",
+				"descrp" 				: "The standard setting wether doors that can swing or slide are still openable with a left click"
+			}, 
+			
+			"DoorstandardHinge" : {
+				"name" 					: "Door standard hinge position",
+				"descrp" 				: "The position a which a doors hinge is located",
+				"options" : {
+					"0"				: "Left",
+					"1"				: "Right",
+					"2"				: "Center"
+				}
+			}, 
+			
+			"DoorstandardSwingSpeed" : {
+				"name" 					: "Standard swing speed",
+				"descrp" 				: "The standard swing speed of doors in degrees°"
+			},
+
+			"DoorStandardSwingRange" : {
+				"name" 					: "Standard swing range",
+				"descrp" 				: "The range in which doors can swing in degrees° ({min}:{max} leave empty for no limit)"
+			}, 			
+			
+			"DoorstandardSlideSpeed" : {
+				"name" 					: "Standard slide speed",
+				"descrp" 				: "The standard slide speed of doors in parts of door size (0-1)"
+			},
+			
+			"MovingDistance" : {
+				"name" 					: "Door moving distance",
+				"descrp" 				: "Maximum distance over which players can move doors (-1 for unlimited)"
+			}, 
+			
+			"ActivateSpotting" : {
+				"name"					: "Activate Spot Invisible feature",
+				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
+			},
+			
+			"SpottingRange" : {
+				"name"					: "Spotting range",
+				"descrp"				: "Maximum range in which tokens and doors can be spotted (-1 for unlimited)"
+			},
+			
+			"SpottingConeRange" : {
+				"name"					: "Spotting cone range",
+				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
+			},
+			
+			"ApplyRange" : {
+				"name"					: "Apply ranges",
+				"descrp"				: "For which checks the ranges should be applied",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"activeonly"		: "active checks only",
+					"passiveonly"		: "passive checks only",
+					"incombatonly"		: "in combat only (both checks)",
+					"outcombatonly"		: "out of combat only (both checks)"
+				}
+			},	
+
+			"UseBordertoBorderRange" : {
+				"name"					: "Use border to border range",
+				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
+			},
+			
+			"StandardVisionDirection" : {
+				"name"					: "Standard vision direction",
+				"descrp"				: "The direction used for vision cones, measured for unrotated tokens",
+				"options" : {
+					"bottom"			: "bottom",
+					"left"				: "left",
+					"top"				: "top",
+					"right"				: "right"
+				}
+			},
+			
+			"RangePDCModifier" : {
+				"name"					: "Range perception DC modifier",
+				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
+			},
+			
+			"Range3DCalculation" : {
+				"name"					: "Range 3D calculation",
+				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
+			},
+			
+			"UsePf2eRules" : {
+				"name"					: "Use Pf2e rules",
+				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
+			},
+			
+			"AutoRerollPPDConMove" : {
+				"name"					: "Auto reroll sneaking stealth dc",
+				"descrp"				: "If the sneaking stealth dc should be rerolled when a token moves (can be locked per token)"
+			},
+			
+			"AutomateTokenSpottable" : {
+				"name"					: "Automate token Can be spotted",
+				"descrp"				: "The Can be spotted setting of Tokens will be automatically changed when a stealth change is detected"
+			},
+	
+			"CritMethod" : {
+				"name" 					: "Crit system",
+				"descrp"				: "The way critical rolls are determined",
+				"options" : {
+					"noCrit"			: "No crits",
+					"natCrit"			: "Nat 1/20",
+					"natCritpm10"		: "Nat 1/20 & +-10 of DC [e.g. Pf2e]"
+				}
+			},
+			
+			"SimulatePlayerVision" : {
+				"name"					: "Player perspective",
+				"descrp"				: "If GMs use the same spotting formula as players for hidden tokens (only for tokens)"
+			},
+			
+			"PassivePerceptionFormula" : {
+				"name"					: "Passive perception formula",
+				"descrp"				: "Passive perception formula of the system (e.g. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", help can be found on the Github page of this module)"
+			},
+
+			"PerceptionKeyWord" : {
+				"name"					: "Perception key-word",
+				"descrp"				: "Key word to recognise perception rolls (a string present in the flavour text of perception rolls)"
+			}, 
+			
+			"StealthKeyWord" : {
+				"name"					: "Stealth key-word",
+				"descrp"				: "Key word to recognise stealth rolls (a string present in the flavour text of stealth rolls)"
+			}, 
+			
+			"AutoStealthDCbehaviour" : {
+				"name" 					: "Auto stealth behaviour",
+				"descrp"				: "What should happen when a stealth check is rolled",
+				"options" : {
+					"off"				: "nothing",
+					"both"				: "Set active and passive perception DC",
+					"activeonly"		: "Set only active perception DC"
+				}
+			},
+			
+			"applySystemStealthEffect" : {
+				"name"					: "Apply system stealth effect(s)",
+				"descrp"				: "If system dependent stealth effects should be applied when stealth is rolled"				
+			},
+			
+			"usePerceptiveStealthEffect" : {
+				"name"					: "Use Perceptive stealth",
+				"descrp"				: "If perceptives own stealth \"effect\" should be used"				
+			},
+			
+			"PerceptiveStealthFriendliesvisible" : {
+				"name"					: "Perceptive stealthing friendlies visible",
+				"descrp"				: "Friendly tokens will be visible to other friendly tokens, even if they are perceptive stealthing"				
+			},
+			
+			"syncEffectswithPerceptiveStealth" : {
+				"name"					: "Sync Perceptive stealth removal",
+				"descrp"				: "Removing perceptive stealth from a token will remove the set stealthing effects and vice versa"				
+			},
+			
+			"customStealthEffects" : {
+				"name"					: "Custom stealth effects",
+				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\")"				
+			},
+			
+			"resetSpottedbyMovedefault" : {
+				"name"					: "Reset spotted on token movement by default",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon movement"
+			}, 
+			
+			"IlluminationPDCModifier" : {
+				"name"					: "Illumination perception DC modifiers",
+				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Dim-light,Bright-light , \"0,0\" for no modifiers)"
+			}, 
+			
+			"UseIlluminationPDCModifierforAP" : {
+				"name"					: "Use Illumination perception DC modifiers for active perception",
+				"descrp"				: "If active perception rolls should use the Illumination DC modifier for spotting"
+			},
+			
+			"IlluminationAPDCBehaviour" : {
+				"name"					: "Illumination perception behaviour",
+				"descrp"				: "Behaviour of perception rolls for different Light levels (Dim-light,Bright-light , \"=,=\" for default behaviour, valid key words: advantage, adv, +, normal, =, disadvantage, disadv, -)"
+			},
+			
+			"Light3Dcalc" : {
+				"name"					: "Illumination 3D calculation",
+				"descrp"				: "If the token illumination should be calculated in 3D (instead of 2D)"
+			},
+			
+			"GMSpotconfirmDialog" : {
+				"name"					: "GM confirm Spotting",
+				"descrp"				: "If rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed"
+			}, 
+			
+			"GMSpotconfirmDialogbehaviour" : {
+				"name"					: "GM confirm Spotting behaviour",
+				"descrp"				: "For which users rolling a perception check should create a dialog for the GM in which the spotting has to be confirmed",
+				"options" : {
+					"off"				: "off",
+					"playersonly"		: "players only",
+					"always"			: "for everyone"
+				}
+			}, 
+			
+			"ShowfailuresinGMconfirm" : {
+				"name"					: "Show failures in GM confirm dialog",
+				"descrp"				: "Shows tokens for which the perception check failed as unchecked entries in the GM confirm dialog"
+			}, 
+			
+			"MakeSpottedTokensVisible" : {
+				"name"					: "Make spotted tokens visible",
+				"descrp"				: "If actively or passively spotted tokens should be made visible for everyone",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
+			},
+			
+			"RevealAllies" : {
+				"name"					: "Make allied tokens visible",
+				"descrp"				: "If actively or passively spotted allied tokens should be made visible too (only works with above setting)",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"incombatonly"		: "in combat only",
+					"outcombatonly"		: "out of combat only"
+				}
+			},
+
+			"LingeringAP" : {
+				"name"					: "Active perception lingers",
+				"descrp"				: "If rolled active perception lingers after its innitial role until removed manually",
+				"options" : {
+					"off"				: "off",
+					"always"			: "always",
+					"outofcombatonly"	: "out of combat"
+				}
+			}, 		
+
+			"LingeringAPRadius" : {
+				"name"					: "Lingering active perception radius",
+				"descrp"				: "The radius measured from the point of the original roll in which the active perception remains (-1 for unlimited)"
+			},	
+
+			"LingeringAPDuration" : {
+				"name"					: "Lingering active perception duration",
+				"descrp"				: "The duration for which the active perception remains in seconds (-1 for unlimited)"
+			},				
+			
+			"RevealSpottedDooronClick" : {
+				"name"					: "Make spotted door visible on click",
+				"descrp"				: "If spotted invisible doors should become normal doors when clicked"
+			},				
+			
+			"disableSpottableMATTTiles" : {
+				"name"					: "Disable invisible MATT tiles",
+				"descrp"				: "If spottable tiles that have not been spotted should become inactive for MATT purposes"
+			},	
+			
+			"ForceInvertIgnoreRollKey" : {
+				"name" 					: "Force invert \"Ignore Roll\" key",
+				"descrp" 				: "Inverts the \"Ignore Roll\" key for all players and removes the client setting"				
+			},
+			
+			"GMReciveInformationWhisper" : {
+				"name"					: "GM recives info messages",
+				"descrp"				: "If the GM should recive whispered player update messages" 
+			},
+			
+			"onlyMacroSeek" : {
+				"name" 					: "Perception only with Macros",
+				"descrp" 				: "If only perception Rolls made with the Perceptive macros should be considered"				
+			},
+			
+			"MacroSeekBehaviour" : {
+				"name"					: "Perception macro use behaviour",
+				"descrp"				: "Under which conditions only perception Rolls made with Perceptive macros are considered",
+				"options" : {
+					"never"				: "never",
+					"incombatonly"		: "only in combat",
+					"always"			: "always"
+				}
+			},
+			
+			"SpottedSound" : {
+				"name"					: "Spotted Sound",
+				"descrp"				: "Sound played when a controlled token is spotted (path to soundfile)"
+			},			
+			
+			"SpottedSoundVolume" : {
+				"name"					: "Spotted Sound volume",
+				"descrp"				: "Volume of the spotted sound"
+			},	
+
+			"SpotterImagePing" : {
+				"name"					: "Spotter ping image",
+				"descrp"				: "The image with which spotters of hidden objects are pinged"
+			},		
+
+			"SpotterImagePingDuration" : {
+				"name"					: "Spotter ping image duration",
+				"descrp"				: "The duration for which the spotter ping image persists (in seconds)"
+			},
+
+			"ActivateVCs" : {
+				"name" 					: "Activate Vision Channels",
+				"descrp" 				: "If the perceptive Vision Channels feature should be active"
+			},	
+
+			"SimulateVCPlayerVision" : {
+				"name" 					: "Simulate player vision",
+				"descrp" 				: "If the Vision Channel based player vision of the currently selected token should be displayed"
+			},		
+			
+			"VCRange3DCalc" : {
+				"name" 					: "Vision Channel 3D range",
+				"descrp" 				: "If the Vision Channel range should be calculated in 3D"
+			},		
+
+			"ShowVCIDs" : {
+				"name" 					: "Show Vision Channel IDs",
+				"descrp" 				: "If the internal Vision Channel IDs should be displayed in the Menu"
+			},	
+
+			"vRequiredOrBehaviour" : {
+				"name"					: "Use logical OR mode",
+				"descrp"				: "If required Vision Channels should operate on a logical OR instead of a logical AND"
+			},				
+			
+			"showPerceptiveWalls" : {
+				"name" 					: "Show Perceptive walls [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be visible in the wall layer (for debug purposes)"
+			},
+			
+			"recreatePerceptiveWalls" : {
+				"name" 					: "Recreate Perceptive walls on scene load [DEBUG]",
+				"descrp" 				: "If Perceptive walls should be recreated when a scene is reloaded (for debug purposes)"
+			},
+			
+			"followTokens" : {
+				"name" 					: "Follow tokens",
+				"descrp" 				: "If the camera should follow the selected token when they move"
+			},
+			
+			"followonControl" : {
+				"name" 					: "Follow on control",
+				"descrp" 				: "If the camera should change the moment a token is selected"
+			},
+			
+			"MessagePopUps" : {
+				"name" 					: "Message popups",
+				"descrp" 				: "If messages popups for moving doors and peeking locks should be shown"
+			},
+			
+			"moveDoorControls" : {
+				"name" 					: "Move door controls",
+				"descrp" 				: "If door controls should move with the moving walls"
+			},
+			
+			"SpeedDoorMovefactor" : {
+				"name" 					: "Fast door move factor",
+				"descrp" 				: "Speed factor when moving doors with alt+mouse-wheel"
+			},
+			
+			"IlluminationIconPosition" : {
+				"name" 					: "Position of illumination indicator",
+				"descrp" 				: "Where on the token HUD the illumination indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
+			"LingeringAPIconPosition" : {
+				"name" 					: "Position of active perception indicator",
+				"descrp" 				: "Where on the token HUD the lingering active perception indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
+			"PDCInputPosition" : {
+				"name" 					: "Position of perception DC input",
+				"descrp" 				: "Where on the token HUD the perception DC indicator should be positioned",
+				"options" : {
+					"none"				: "nowhere",
+					"left"				: "left",
+					"right"				: "right"
+				}
+			},
+			
+			"SpottingPingDuration" : {
+				"name" 					: "Spotting ping duration",
+				"descrp" 				: "How long objects spotted with an active perception roll should be pinged for (in seconds, 0 to disable the ping)"
+			},
+			
+			"WhisperPerceptionResult" : {
+				"name" 					: "Show perception results",
+				"descrp" 				: "If the result of own perception rolls should be shown in the chat"
+			},
+			
+			"WhisperLingeringAPremoval" : {
+				"name" 					: "Notify on lingering AP removal",
+				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
+			},
+
+			"InvertIgnoreRollKey" : {
+				"name" 					: "Invert \"Ignore Roll\" key",
+				"descrp" 				: "If rolls should only be recognised WHEN the set key is pressed"
+			},
+			
+			"SpottedTokenTransparency" : {
+				"name" 					: "Stealthed token transparency",
+				"descrp" 				: "The transparency of stealthed tokens"
+			}			
+		},
+		
+		"Keys" : {
+			"PeekLock" : {
+				"name" 					: "Peek lock"
+			},
+
+			"MoveDoorLeft" : {
+				"name" 					: "Move door to the left"
+			},
+			
+			"MoveDoorRight" : {
+				"name" 					: "Move door to the right"
+			},
+			
+			"ToggleTokenFollowing" : {
+				"name" 					: "Toggle Follow tokens"
+			},
+			
+			"IgnoreRoll" : {
+				"name" 					: "Ignore Roll",
+				"descrp"				: "Hold this key to prevent Perceptive to recognise it for the purpose of Stealth or Perception Rolls. (can be inverted)"
+			},
+			
+			"resetStealthSelected" : {
+				"name" 					: "Remove selected tokens stealth",
+				"descrp"				: "Removes the stealth related data/effects from selected tokens"
+			},
+			
+			"MousePeekLock" : {
+				"name" 					: "Mouse Peek lock",
+				"descrp"				: "Hold this button while right clicking to peek the clicked lock"
+			},
+			
+			"MouseMoveDoor" : {
+				"name" 					: "Mouse Move door",
+				"descrp"				: "Hold this button while scrolling to move the hovered door (can be left empty)"
+			},
+			
+			"MouseMoveDoorFast" : {
+				"name" 					: "Mouse Move door fast",
+				"descrp"				: "Hold this button while scrolling to move the hovered door quickly"
+			},
+			
+			"EditHoveredDoor" : {
+				"name" 					: "Quick edit door",
+				"descrp"				: "Open settings of hovered door"
+			}
+		},
+		
+		"SheetSettings" : {
+			"canbeLockpeekedFlag" : {
+				"name" 					: "Can be lock peeked",
+				"descrp"				: "If this lock can peeked by a player"
+			},
+			
+			"PeekingDCFlag" : {
+				"name" 					: "Peeking DC",
+				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
+			},
+			
+			"LockPeekSizeFlag" : {
+				"name" 					: "Lock peek size",
+				"descrp"				: "The gap size used when peeking a lock relativ to the doors size (0-1)"
+			},
+			
+			"LockPeekPositionFlag" : {
+				"name" 					: "Lock peek position",
+				"descrp"				: "The gap position used when peeking a lock relativ to the doors size (0-1)"
+			},
+			
+			"DoorMovementFlag" : {
+				"name" 					: "Door movement type",
+				"descrp"				: "The standard movement type of this door",
+				"options" : {
+					"none"				: "No movement (normal door)",
+					"swing"				: "Swinging door",
+					"slide"				: "Sliding door"
+				}
+			},
+			
+			"PreventNormalOpenFlag" : {
+				"name" 					: "Prevent normal opening",
+				"descrp"				: "If this door can stil be opened with a left click (only moving doors)"
+			},
+			
+			"DoorHingePositionFlag" : {
+				"name" 					: "Door hinge position",
+				"descrp"				: "The position a which the doors hinge is located",
+				"options" : {
+					"0"					: "Left",
+					"1"					: "Right",
+					"2"					: "Center"
+				}
+			},
+			
+			"DoorSwingSpeedFlag" : {
+				"name" 					: "Swing speed",
+				"descrp"				: "The swing speed of the door in degrees°"
+			},		
+			
+			"DoorSwingRangeFlag" : {
+				"name" 					: "Swing range",
+				"descrp"				: "Range in which this door can swing in degrees° (min-max)"
+			},		
+
+			"DoorSlideSpeedFlag" : {
+				"name" 					: "Slide speed",
+				"descrp"				: "The slide speed of the door in  parts of door size (0-1)"
+			},
+
+			"PerceptiveStealthingFlag" : {
+				"name" 					: "Is Perceptive stealthing",
+				"descrp"				: "If this token has the Perceptive stealth \"effect\""
+			},
+			
+			"canbeSpottedFlag" : {
+				"name" 					: "Can be spotted",
+				"descrp"				: "If this door can be spotted with perception (passive or active)"
+			},
+			
+			"RevealwhenSpottedFlag" : {
+				"name" 					: "Reveal when spotted",
+				"descrp"				: "If this object should be revealed when spotted (overrides game settings when active)"
+			},
+			
+			"PPDCFlag" : {
+				"name" 					: "Passive perception DC",
+				"descrp"				: "DC to be spotted with passive perception (-1 for impossible)"
+			},
+			
+			"APDCFlag" : {
+				"name" 					: "Active perception DC",
+				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
+			},
+			
+			"SpottingRangeFlag" : {
+				"name"					: "Spotting Range",
+				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
+			},
+			
+			"otherSkillADCsFlag" : {
+				"openButtonname"		: "Other active skill DCs",
+				"confirmButtonname"		: "Confirm",
+				"Title"					: "Other active skill DCs",
+				"name"					: "The active spot DCs for other skills (-1 for impossible):",
+				"entry"					: "DC for {pSkill} checks"
+			},
+			
+			"SpottingMessageFlag" : {
+				"name"					: "Spotting message",
+				"descrp"				: "Message whispered to the spotter of this object"
+			},
+			
+			"LockPPDCFlag" : {
+				"name" 					: "Lock passive perception DC",
+				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
+			},
+			
+			"resetSpottedbyMoveFlag" : {
+				"name"					: "Reset spotted on token movement",
+				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
+			},
+			
+			"StealthEffectsFlag" : {
+				"name"					: "Stealth effects",
+				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
+			},
+			
+			"OverrideWorldSEffectsFlag" : {
+				"name"					: "Override world stealth effects",
+				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
+			},
+
+			"SceneBrightEndFlag" : {
+				"name"					: "Bright darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered bright for this scene"
+			},
+			
+			"SceneDimEndFlag" : {
+				"name"					: "Dim darkness limit",
+				"descrp"				: "A scene darkness level below this value will be considered dim for this scene"
+			},
+			
+			"TilePerceptiveNameFlag" : {
+				"name"					: "Tile name",
+				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
+			},
+
+			"MATTTriggerTileFlag" : {
+				"name" 					: "Triggered tile ID",
+				"descrp"				: "The ID of the tile triggered by the Lock & Key actions below (you may use different landings)"
+			},
+			
+			"MATTTriggerConditionsFlag" : {
+				"NewlySpotted.name"		: "On newly spotted",
+				"options" : {
+					"never"				: "never",
+					"always"			: "always",
+					"active"			: "active",
+					"passive"			: "passive"
+				}
+			}
+		},
+		
+		"vision-channels-window" : {
+			"buttons" : {
+				"OpenVCMenu" : {
+					"name"				: "Open Vision Channels"
+				},
+				"confirm" : {
+					"name"				: "Confirm"
+				},
+				"add" : {
+					"name"				: "Add channel"
+				}
+			},
+			"titles" : {
+				"VisionChannels"		: "Vision Channels"
+			},
+			"entries" : {
+				"titles" : {
+					"Name"				: "Name",
+					"RequiredtoSee"		: "Required to see",
+					"SeethroughWalls"	: "Through walls",
+					"Range"				: "Range",
+					"RangeFormula"		: "Range formula",
+					"RangeMin"			: "Minimum range",
+					"Color"				: "Color",
+					"EffectFilter" : {
+						"name"			: "Effect filter",
+						"options" : {
+							"off"		: "off",
+							"outline"   : "outline",
+							"outline_waves" : "outline & waves",
+							"glow"		: "glow",
+							"TMfog"		: "fog",
+							"TMelectric": "electricity",
+							"TMtransform": "swirly",
+							"TMflood"	: "flood",
+							"TMadjustment" : "fading",
+							"TMblur"	: "blur"
+						}
+					},
+					"EffectFilterColor" : "Effect Filter Color",
+					"Transparency"		: "Transparency",
+					"defaultReceiver"	: "Receive default",
+					"VCID"				: "Internal ID",
+					"Emits"				: "Emits",
+					"Receives"			: "Receives",
+					"ReceiveFiltered"	: "Reciver filter",
+					"ReceiveRange"		: "Custom range",
+					"CalculatedRange"	: "Calculated range",
+					"ReceiveRangeMin"	: "Custom range minimum",
+					"Sight"				: "Sight",
+					"Movement"			: "Movement"
+				}
+			}
+		},
+		
+		"PeekingConfirm" : {
+			"name" 						: "Peeking confirm",
+			"descrp" 					: "User {pUserName} want to lock peek a door, confirm?"
+		},
+		
+		"monks-active-tiles" : {
+			"filters" : {
+				"name"						: "Filter",
+				
+				"filter-spotted-by" : {
+					"name"					: "Filter objects spotted by",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} by <span class=\"entity-style\">{pSpotters}</span>",
+					"settings" : {
+						"spotters" : {
+							"name" 			: "Spotters"
+						},
+						"filterCondition" : {
+							"name"			: "Filter if",
+							"options" : {
+								"spotted"	: "has been spotted",
+								"notspotted": "has not been spotted"
+							}
+						}
+					}
+				},
+				
+				"filter-has-spotted" : {
+					"name"					: "Filter tokens having spotted",
+					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
+					"settings" : {
+						"spotted" : {
+							"name" 			: "Spotted"
+						},
+						"filterCondition" : {
+							"name"			: "Filter if",
+							"options" : {
+								"spotted"	: "has spotted",
+								"notspotted": "has not spotted"
+							}
+						}
+					}
+				}
+			},
+			
+			"actions" : {
+				"spot-object" : {
+					"name"					: "Spot object",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> with <span class=\"entity-style\">{pEntities}</span>",
+					"settings" : {
+						"target" : {
+							"name"			: "Target"
+						}
+					}
+				},
+				
+				"give-VC" : {
+					"name"					: "Give vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> to <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Give as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"remove-VC" : {
+					"name"					: "Remove vision channel",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> from <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
+					"settings" : {
+						"channelid" : {
+							"name"			: "Channel"
+						},
+						"type" : {
+							"name"			: "Remove as",
+							"options" : {
+								"Emits"		: "Emits",
+								"Receives"	: "Receives",
+								"Sight"		: "Sight (walls only)",
+								"Movement"	: "Movement (walls only)"
+							}
+						}
+					}
+				},
+				
+				"reset-Spottedby" : {
+					"name"					: "Reset \"spotted by\"",
+					"descrp"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span>"
+				},
+				
+				"set-canbeSpotted" : {
+					"name"					: "Set \"can be spotted\"",
+					"descrp" : {
+						"value"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span> to <span class=\"value-style\">{pvalue}</span>",
+						"toggle"			: "<span class=\"logic-style\">Toggle \"can be spotted\"</span> of <span class=\"entity-style\">{pEntities}</span>"
+					},
+					"settings" : {
+						"setto" : {
+							"name"  		: "Set to",
+							"options" : {
+								"true"		: "True",
+								"false"		: "False",
+								"toggle"	: "Toggle value"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
