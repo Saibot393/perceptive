@@ -1,3 +1,6 @@
+## v4.2.12
+- Added  Italien translation (thanks to [GregoryWarn ](https://github.com/GregoryWarn))
+
 ## v4.2.11
 - Added light level flag to actors
 
