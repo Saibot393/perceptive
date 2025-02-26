@@ -89,253 +89,253 @@
 		
 		"Settings" : {
 			"SplitInteractionDistances" : {
-				"name"					: "Split interactions distances",
-				"descrp"				: "If the interactions distances for lock peeking and door moving should be split"
+				"name"					: "Dividi le distanze delle interazioni",
+				"descrp"				: "Se le distanze di interazione per lo sbirciare della serratura e lo spostamento della porta devono essere divise"
 			},
 			
 			"InteractionDistance" : {
-				"name"					: "Maximum interaction distance",
-				"descrp"				: "Maximum distance over which players can interact with objects (-1 for unlimited)"
-			},
-			
-			"UseArmsreachDistance" : {
-				"name"					: "Use Arms Reach distance",
-				"descrp"				: "Use the Arms Reach distance for the maximum interaction distance"
-			},
-			
-			"DFredsEffectsIntegration" : {
-				"name"					: "DFreds Convenient Effects integration",
-				"descrp"				: "Use DFreds convenient effects"
-			},
-			
-			"CPREffectsIntegration" : {
-				"name"					: "Chris's Premades integration",
-				"descrp"				: "Use Chris's Premades effects"
-			},
-			
-			"Vision5eIntegration" : {
-				"name"					: "Vision 5e integration",
-				"descrp"				: "Adapt to Vision 5e rules"
-			},
-			
-			"StealthyIntegration" : {
-				"name"					: "Stealthy integration",
-				"descrp"				: "Stealth DCs will be synced between Perceptive and Stealthy"
-			},
-			
-			"Peekablebydefault" : {
-				"name" 					: "Lock peekable by default",
-				"descrp" 				: "If doors can be lock peeked by default"
-			}, 
-			
-			"LockpeekstandardSize" : {
-				"name" 					: "Standard size of lock peeks",
-				"descrp" 				: "The standard gap size used when peeking a lock relativ to the doors size (0-1)"
-			}, 
-			
-			"LockpeekstandardPosition" : {
-				"name" 					: "Standard position of lock peeks",
-				"descrp" 				: "The standard gap position used when peeking a lock relativ to the doors size (0-1)"
-			}, 
-			
-			"StopPeekonMove" : {
-				"name" 					: "Stop lock peeking on movement",
-				"descrp" 				: "Stops tokens from lockpeeking as soon as they move, even if they are still within the interaction distance"
-			}, 
-			
-			"PeekingDistance" : {
-				"name" 					: "Lock peeking distance",
-				"descrp" 				: "Maximum distance over which players can peek locks (-1 for unlimited)"
-			}, 
-			
-			"GMConfirmPeeking" : {
-				"name"					: "GM confrims peeks",
-				"descrp"				: "If the GM has to confirm every peek action"
-			},
-			
-			"PeekingFormula" : {
-				"name"					: "Peeking formula",
-				"descrp"				: "Formula used for peeking through locks (leave empty to deactivate)"
-			},
-			
-			"PeekingDefaultDC" : {
-				"name"					: "Peeking default DC",
-				"descrp"				: "Default DC for peeking through newly created walls"
-			},
-			
-			"DoorstandardMove" : {
-				"name" 					: "Door standard movement type",
-				"descrp" 				: "The standard movement type of doors",
-				"options" : {
-					"none"				: "No movement (normal door)",
-					"swing"				: "Swinging door",
-					"slide"				: "Sliding door"
-				}
-			}, 
-			
-			"PreventNormalOpenbydefault" : {
-				"name" 					: "Prevent normal open by default",
-				"descrp" 				: "The standard setting wether doors that can swing or slide are still openable with a left click"
-			}, 
-			
-			"DoorstandardHinge" : {
-				"name" 					: "Door standard hinge position",
-				"descrp" 				: "The position a which a doors hinge is located",
-				"options" : {
-					"0"				: "Left",
-					"1"				: "Right",
-					"2"				: "Center"
-				}
-			}, 
-			
-			"DoorstandardSwingSpeed" : {
-				"name" 					: "Standard swing speed",
-				"descrp" 				: "The standard swing speed of doors in degrees°"
-			},
+		"name": "Distanza massima di interazione",
+		"descrp": "Distanza massima alla quale i giocatori possono interagire con gli oggetti (-1 per illimitata)"
+	},
 
-			"DoorStandardSwingRange" : {
-				"name" 					: "Standard swing range",
-				"descrp" 				: "The range in which doors can swing in degrees° ({min}:{max} leave empty for no limit)"
-			}, 			
-			
-			"DoorstandardSlideSpeed" : {
-				"name" 					: "Standard slide speed",
-				"descrp" 				: "The standard slide speed of doors in parts of door size (0-1)"
-			},
-			
-			"MovingDistance" : {
-				"name" 					: "Door moving distance",
-				"descrp" 				: "Maximum distance over which players can move doors (-1 for unlimited)"
-			}, 
-			
-			"ActivateSpotting" : {
-				"name"					: "Activate Spot Invisible feature",
-				"descrp"				: "If the Spot Invisible feature should be activated (turn off to improve performance)"
-			},
-			
-			"SpottingRange" : {
-				"name"					: "Spotting range",
-				"descrp"				: "Maximum range in which tokens and doors can be spotted (-1 for unlimited)"
-			},
-			
-			"SpottingConeRange" : {
-				"name"					: "Spotting cone range",
-				"descrp"				: "An additional spotting range applied in a 90° cone in front of tokens (0 to in crease performance)"
-			},
-			
-			"ApplyRange" : {
-				"name"					: "Apply ranges",
-				"descrp"				: "For which checks the ranges should be applied",
-				"options" : {
-					"never"				: "never",
-					"always"			: "always",
-					"activeonly"		: "active checks only",
-					"passiveonly"		: "passive checks only",
-					"incombatonly"		: "in combat only (both checks)",
-					"outcombatonly"		: "out of combat only (both checks)"
-				}
-			},	
+	"UseArmsreachDistance": {
+		"name": "Usa la distanza di Portata del Braccio",
+		"descrp": "Utilizza la distanza di Portata del Braccio come distanza massima di interazione"
+	},
 
-			"UseBordertoBorderRange" : {
-				"name"					: "Use border to border range",
-				"descrp"				: "If the vision ranges should be calculated from tokens borders instead of their center"
-			},
-			
-			"StandardVisionDirection" : {
-				"name"					: "Standard vision direction",
-				"descrp"				: "The direction used for vision cones, measured for unrotated tokens",
-				"options" : {
-					"bottom"			: "bottom",
-					"left"				: "left",
-					"top"				: "top",
-					"right"				: "right"
-				}
-			},
-			
-			"RangePDCModifier" : {
-				"name"					: "Range perception DC modifier",
-				"descrp"				: "Perception DC modifer based on distance to spotable object (DCincrement/RangeIncrement, 0/0 to turn off)"
-			},
-			
-			"Range3DCalculation" : {
-				"name"					: "Range 3D calculation",
-				"descrp"				: "If the vision range should be calculated in 3D (instead of 2D)"
-			},
-			
-			"UsePf2eRules" : {
-				"name"					: "Use Pf2e rules",
-				"descrp"				: "If the Pf2e rules should be used, including differentiating between hiding and sneaking and the respective rules"
-			},
-			
-			"AutoRerollPPDConMove" : {
-				"name"					: "Auto reroll sneaking stealth dc",
-				"descrp"				: "If the sneaking stealth dc should be rerolled when a token moves (can be locked per token)"
-			},
-			
-			"AutomateTokenSpottable" : {
-				"name"					: "Automate token Can be spotted",
-				"descrp"				: "The Can be spotted setting of Tokens will be automatically changed when a stealth change is detected"
-			},
+	"DFredsEffectsIntegration": {
+		"name": "Integrazione con DFreds Convenient Effects",
+		"descrp": "Usa gli effetti di DFreds Convenient Effects"
+	},
+
+	"CPREffectsIntegration": {
+		"name": "Integrazione con Chris's Premades",
+		"descrp": "Usa gli effetti di Chris's Premades"
+	},
+
+	"Vision5eIntegration": {
+		"name": "Integrazione con Vision 5e",
+		"descrp": "Adatta alle regole di Vision 5e"
+	},
+
+	"StealthyIntegration": {
+		"name": "Integrazione con Stealthy",
+		"descrp": "I DC di Furtività saranno sincronizzati tra Perceptive e Stealthy"
+	},
+
+	"Peekablebydefault": {
+		"name": "Sbirciare bloccato per impostazione predefinita",
+		"descrp": "Se le porte possono essere sbirciate quando bloccate per impostazione predefinita"
+	},
+
+	"LockpeekstandardSize": {
+		"name": "Dimensione standard dello spiraglio",
+		"descrp": "Dimensione standard dello spiraglio usato per sbirciare attraverso una serratura rispetto alla dimensione della porta (0-1)"
+	},
+
+	"LockpeekstandardPosition": {
+		"name": "Posizione standard dello spiraglio",
+		"descrp": "Posizione standard dello spiraglio usato per sbirciare attraverso una serratura rispetto alla dimensione della porta (0-1)"
+	},
+
+	"StopPeekonMove": {
+		"name": "Interrompi sbirciata al movimento",
+		"descrp": "Interrompe lo sbirciare attraverso la serratura non appena il token si muove, anche se è ancora entro la distanza di interazione"
+	},
+
+	"PeekingDistance": {
+		"name": "Distanza di sbirciata",
+		"descrp": "Distanza massima alla quale i giocatori possono sbirciare attraverso le serrature (-1 per illimitata)"
+	},
+
+	"GMConfirmPeeking": {
+		"name": "Conferma sbirciata del GM",
+		"descrp": "Se il GM deve confermare ogni azione di sbirciata"
+	},
+
+	"PeekingFormula": {
+		"name": "Formula per sbirciare",
+		"descrp": "Formula usata per sbirciare attraverso le serrature (lasciare vuoto per disattivare)"
+	},
+
+	"PeekingDefaultDC": {
+		"name": "DC predefinito per sbirciare",
+		"descrp": "DC predefinito per sbirciare attraverso le nuove pareti create"
+	},
 	
-			"CritMethod" : {
-				"name" 					: "Crit system",
-				"descrp"				: "The way critical rolls are determined",
-				"options" : {
-					"noCrit"			: "No crits",
-					"natCrit"			: "Nat 1/20",
-					"natCritpm10"		: "Nat 1/20 & +-10 of DC [e.g. Pf2e]"
-				}
-			},
-			
-			"SimulatePlayerVision" : {
-				"name"					: "Player perspective",
-				"descrp"				: "If GMs use the same spotting formula as players for hidden tokens (only for tokens)"
-			},
-			
-			"PassivePerceptionFormula" : {
-				"name"					: "Passive perception formula",
-				"descrp"				: "Passive perception formula of the system (e.g. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", help can be found on the Github page of this module)"
-			},
+	"DoorstandardMove": {
+		"name": "Tipo di movimento standard della porta",
+		"descrp": "Il tipo di movimento standard delle porte",
+		"options": {
+			"none": "Nessun movimento (porta normale)",
+			"swing": "Porta a battente",
+			"slide": "Porta scorrevole"
+		}
+	},
 
-			"PerceptionKeyWord" : {
-				"name"					: "Perception key-word",
-				"descrp"				: "Key word to recognise perception rolls (a string present in the flavour text of perception rolls)"
-			}, 
+	"PreventNormalOpenbydefault": {
+		"name": "Impedisci l'apertura normale per impostazione predefinita",
+		"descrp": "L'impostazione predefinita per cui le porte a battente o scorrevoli possono essere aperte con un clic sinistro"
+	},
+
+	"DoorstandardHinge": {
+		"name": "Posizione standard del cardine della porta",
+		"descrp": "La posizione in cui si trova il cardine della porta",
+		"options": {
+			"0": "Sinistra",
+			"1": "Destra",
+			"2": "Centro"
+		}
+	},
+
+	"DoorstandardSwingSpeed": {
+		"name": "Velocità di apertura standard",
+		"descrp": "La velocità di apertura standard delle porte in gradi°"
+	},
+
+	"DoorStandardSwingRange": {
+		"name": "Ampiezza di apertura standard",
+		"descrp": "L'ampiezza in cui le porte possono aprirsi in gradi° ({min}:{max}, lascia vuoto per nessun limite)"
+	},
+
+	"DoorstandardSlideSpeed": {
+		"name": "Velocità di scorrimento standard",
+		"descrp": "La velocità di scorrimento standard delle porte in frazioni della loro dimensione (0-1)"
+	},
+
+	"MovingDistance": {
+		"name": "Distanza di movimento della porta",
+		"descrp": "Distanza massima su cui i giocatori possono spostare le porte (-1 per illimitata)"
+	},
+
+	"ActivateSpotting": {
+		"name": "Attiva la funzione Individua Invisibili",
+		"descrp": "Se la funzione Individua Invisibili deve essere attivata (disattivare per migliorare le prestazioni)"
+	},
+
+	"SpottingRange": {
+		"name": "Raggio di individuazione",
+		"descrp": "Raggio massimo in cui i token e le porte possono essere individuati (-1 per illimitato)"
+	},
+
+	"SpottingConeRange": {
+		"name": "Ampiezza del cono di individuazione",
+		"descrp": "Un ulteriore raggio di individuazione applicato in un cono di 90° davanti ai token (0 per migliorare le prestazioni)"
+	},
+
+	"ApplyRange": {
+		"name": "Applica intervalli",
+		"descrp": "Per quali controlli gli intervalli devono essere applicati",
+		"options": {
+			"never": "mai",
+			"always": "sempre",
+			"activeonly": "solo controlli attivi",
+			"passiveonly": "solo controlli passivi",
+			"incombatonly": "solo in combattimento (entrambi i controlli)",
+			"outcombatonly": "solo fuori combattimento (entrambi i controlli)"
+		}
+	},
 			
-			"StealthKeyWord" : {
-				"name"					: "Stealth key-word",
-				"descrp"				: "Key word to recognise stealth rolls (a string present in the flavour text of stealth rolls)"
-			}, 
-			
-			"AutoStealthDCbehaviour" : {
-				"name" 					: "Auto stealth behaviour",
-				"descrp"				: "What should happen when a stealth check is rolled",
-				"options" : {
-					"off"				: "nothing",
-					"both"				: "Set active and passive perception DC",
-					"activeonly"		: "Set only active perception DC"
-				}
-			},
-			
-			"applySystemStealthEffect" : {
-				"name"					: "Apply system stealth effect(s)",
-				"descrp"				: "If system dependent stealth effects should be applied when stealth is rolled"				
-			},
-			
-			"usePerceptiveStealthEffect" : {
-				"name"					: "Use Perceptive stealth",
-				"descrp"				: "If perceptives own stealth \"effect\" should be used"				
-			},
-			
-			"PerceptiveStealthFriendliesvisible" : {
-				"name"					: "Perceptive stealthing friendlies visible",
-				"descrp"				: "Friendly tokens will be visible to other friendly tokens, even if they are perceptive stealthing"				
-			},
-			
-			"syncEffectswithPerceptiveStealth" : {
-				"name"					: "Sync Perceptive stealth removal",
-				"descrp"				: "Removing perceptive stealth from a token will remove the set stealthing effects and vice versa"				
-			},
+	"UseBordertoBorderRange": {
+		"name": "Usa distanza da bordo a bordo",
+		"descrp": "Se le distanze di visione devono essere calcolate dai bordi dei token invece che dal loro centro"
+	},
+
+	"StandardVisionDirection": {
+		"name": "Direzione visione standard",
+		"descrp": "La direzione utilizzata per i coni di visione, misurata per i token non ruotati",
+		"options": {
+			"bottom": "basso",
+			"left": "sinistra",
+			"top": "alto",
+			"right": "destra"
+		}
+	},
+
+	"RangePDCModifier": {
+		"name": "Modificatore CD percezione distanza",
+		"descrp": "Modificatore della CD di percezione basato sulla distanza dall'oggetto individuabile (incremento CD/incremento distanza, 0/0 per disattivare)"
+	},
+
+	"Range3DCalculation": {
+		"name": "Calcolo distanza in 3D",
+		"descrp": "Se la distanza di visione deve essere calcolata in 3D (invece che in 2D)"
+	},
+
+	"UsePf2eRules": {
+		"name": "Usa regole Pf2e",
+		"descrp": "Se devono essere usate le regole di Pf2e, inclusa la differenziazione tra nascondersi e muoversi furtivamente e le rispettive regole"
+	},
+
+	"AutoRerollPPDConMove": {
+		"name": "Ritiro automatico CD furtività in movimento",
+		"descrp": "Se la CD di furtività deve essere ritirata quando un token si muove (può essere bloccato per token)"
+	},
+
+	"AutomateTokenSpottable": {
+		"name": "Automatizza visibilità token",
+		"descrp": "L'impostazione \"Può essere individuato\" dei token verrà automaticamente aggiornata quando viene rilevato un cambiamento nella furtività"
+	},
+
+	"CritMethod": {
+		"name": "Sistema di critico",
+		"descrp": "Il metodo con cui vengono determinati i tiri critici",
+		"options": {
+			"noCrit": "Nessun critico",
+			"natCrit": "Nat 1/20",
+			"natCritpm10": "Nat 1/20 & ±10 dalla CD [es. Pf2e]"
+		}
+	},
+
+	"SimulatePlayerVision": {
+		"name": "Prospettiva giocatore",
+		"descrp": "Se i GM devono usare la stessa formula di individuazione dei giocatori per i token nascosti (solo per i token)"
+	},
+
+	"PassivePerceptionFormula": {
+		"name": "Formula percezione passiva",
+		"descrp": "Formula della percezione passiva del sistema (es. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", aiuto disponibile sulla pagina GitHub di questo modulo)"
+	},
+
+	"PerceptionKeyWord": {
+		"name": "Parola chiave percezione",
+		"descrp": "Parola chiave per riconoscere i tiri di percezione (una stringa presente nel testo descrittivo dei tiri di percezione)"
+	},
+
+	"StealthKeyWord": {
+		"name": "Parola chiave furtività",
+		"descrp": "Parola chiave per riconoscere i tiri di furtività (una stringa presente nel testo descrittivo dei tiri di furtività)"
+	},
+
+	"AutoStealthDCbehaviour": {
+		"name": "Comportamento automatico furtività",
+		"descrp": "Cosa deve accadere quando viene effettuato un tiro di furtività",
+		"options": {
+			"off": "niente",
+			"both": "Imposta CD percezione attiva e passiva",
+			"activeonly": "Imposta solo CD percezione attiva"
+		}
+	},
+
+	"applySystemStealthEffect": {
+		"name": "Applica effetti furtività di sistema",
+		"descrp": "Se gli effetti di furtività dipendenti dal sistema devono essere applicati quando viene effettuato un tiro di furtività"
+	},
+
+	"usePerceptiveStealthEffect": {
+		"name": "Usa furtività di Perceptive",
+		"descrp": "Se deve essere usato l'effetto di furtività di Perceptive"
+	},
+
+	"PerceptiveStealthFriendliesvisible": {
+		"name": "Token amici furtivi visibili",
+		"descrp": "I token amici saranno visibili agli altri token amici, anche se stanno usando la furtività di Perceptive"
+	},
+
+	"syncEffectswithPerceptiveStealth": {
+		"name": "Sincronizza rimozione furtività di Perceptive",
+		"descrp": "Rimuovere la furtività di Perceptive da un token rimuoverà anche gli effetti furtivi impostati e viceversa"
+	},
 			
 			"customStealthEffects" : {
 				"name"					: "Custom stealth effects",
