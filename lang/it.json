@@ -23,13 +23,13 @@
 				},
 				"LightLevel" : {
 					"name"			: "Livello Illuminazione: {pLevel}",
-					"value0"		  : "Oscurità",
-					"value1"			: "Fioca",
-					"value2"			: "Intensa"
+					"value0"		: "Oscurità",
+					"value1"		: "Fioca",
+					"value2"		: "Intensa"
 				},
 				"LingeringAP"		: "Persistenza Percezione Attiva",
-				"PassiveDC"			: "CD Percezione Passiva",
-				"ActiveDC"			: "CD Percezione Attiva"
+				"PassiveDC"		: "CD Percezione Passiva",
+				"ActiveDC"		: "CD Percezione Attiva"
 			},
 			"SpottingConfirm" : {
 				"name"					: "Conferma Individuazione",
@@ -602,7 +602,7 @@
 
 "Keys" : {
 	"PeekLock" : {
-		"name" 					: "Blocca spioncino"
+		"name" 					: "Sbircia"
 	},
 
 	"MoveDoorLeft" : {
@@ -628,7 +628,7 @@
 	},
 
 	"MousePeekLock" : {
-		"name" 					: "Blocca spioncino con il mouse",
+		"name" 					: "Sbircia con il mouse",
 		"descrp"				: "Tieni premuto questo tasto mentre clicchi con il tasto destro per guardare attraverso il lucchetto cliccato"
 	},
 
