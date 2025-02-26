@@ -579,396 +579,396 @@
 		"descrp": "Per quanto tempo devono essere segnalati gli oggetti individuati con un tiro di percezione attiva (in secondi, 0 per disattivare la segnalazione)"
 	},
 			
-			"WhisperPerceptionResult" : {
-				"name" 					: "Show perception results",
-				"descrp" 				: "If the result of own perception rolls should be shown in the chat"
-			},
-			
-			"WhisperLingeringAPremoval" : {
-				"name" 					: "Notify on lingering AP removal",
-				"descrp" 				: "If a notification should be shown in the chat, when the lingering active perception is removed"
-			},
+"WhisperPerceptionResult" : {
+	"name" 					: "Mostra i risultati della percezione",
+	"descrp" 				: "Se i risultati dei tiri di percezione del giocatore dovrebbero essere mostrati nella chat"
+},
 
-			"InvertIgnoreRollKey" : {
-				"name" 					: "Invert \"Ignore Roll\" key",
-				"descrp" 				: "If rolls should only be recognised WHEN the set key is pressed"
-			},
-			
-			"SpottedTokenTransparency" : {
-				"name" 					: "Stealthed token transparency",
-				"descrp" 				: "The transparency of stealthed tokens"
-			}			
-		},
-		
-		"Keys" : {
-			"PeekLock" : {
-				"name" 					: "Peek lock"
-			},
+"WhisperLingeringAPremoval" : {
+	"name" 					: "Notifica sulla rimozione dell'AP residuo",
+	"descrp" 				: "Se una notifica dovrebbe essere mostrata nella chat quando la percezione attiva residua viene rimossa"
+},
 
-			"MoveDoorLeft" : {
-				"name" 					: "Move door to the left"
-			},
-			
-			"MoveDoorRight" : {
-				"name" 					: "Move door to the right"
-			},
-			
-			"ToggleTokenFollowing" : {
-				"name" 					: "Toggle Follow tokens"
-			},
-			
-			"IgnoreRoll" : {
-				"name" 					: "Ignore Roll",
-				"descrp"				: "Hold this key to prevent Perceptive to recognise it for the purpose of Stealth or Perception Rolls. (can be inverted)"
-			},
-			
-			"resetStealthSelected" : {
-				"name" 					: "Remove selected tokens stealth",
-				"descrp"				: "Removes the stealth related data/effects from selected tokens"
-			},
-			
-			"MousePeekLock" : {
-				"name" 					: "Mouse Peek lock",
-				"descrp"				: "Hold this button while right clicking to peek the clicked lock"
-			},
-			
-			"MouseMoveDoor" : {
-				"name" 					: "Mouse Move door",
-				"descrp"				: "Hold this button while scrolling to move the hovered door (can be left empty)"
-			},
-			
-			"MouseMoveDoorFast" : {
-				"name" 					: "Mouse Move door fast",
-				"descrp"				: "Hold this button while scrolling to move the hovered door quickly"
-			},
-			
-			"EditHoveredDoor" : {
-				"name" 					: "Quick edit door",
-				"descrp"				: "Open settings of hovered door"
-			}
-		},
-		
-		"SheetSettings" : {
-			"canbeLockpeekedFlag" : {
-				"name" 					: "Can be lock peeked",
-				"descrp"				: "If this lock can peeked by a player"
-			},
-			
-			"PeekingDCFlag" : {
-				"name" 					: "Peeking DC",
-				"descrp"				: "The difficulty class to peek this lock (0 to turn rolls off)"
-			},
-			
-			"LockPeekSizeFlag" : {
-				"name" 					: "Lock peek size",
-				"descrp"				: "The gap size used when peeking a lock relativ to the doors size (0-1)"
-			},
-			
-			"LockPeekPositionFlag" : {
-				"name" 					: "Lock peek position",
-				"descrp"				: "The gap position used when peeking a lock relativ to the doors size (0-1)"
-			},
-			
-			"DoorMovementFlag" : {
-				"name" 					: "Door movement type",
-				"descrp"				: "The standard movement type of this door",
-				"options" : {
-					"none"				: "No movement (normal door)",
-					"swing"				: "Swinging door",
-					"slide"				: "Sliding door"
-				}
-			},
-			
-			"PreventNormalOpenFlag" : {
-				"name" 					: "Prevent normal opening",
-				"descrp"				: "If this door can stil be opened with a left click (only moving doors)"
-			},
-			
-			"DoorHingePositionFlag" : {
-				"name" 					: "Door hinge position",
-				"descrp"				: "The position a which the doors hinge is located",
-				"options" : {
-					"0"					: "Left",
-					"1"					: "Right",
-					"2"					: "Center"
-				}
-			},
-			
-			"DoorSwingSpeedFlag" : {
-				"name" 					: "Swing speed",
-				"descrp"				: "The swing speed of the door in degrees°"
-			},		
-			
-			"DoorSwingRangeFlag" : {
-				"name" 					: "Swing range",
-				"descrp"				: "Range in which this door can swing in degrees° (min-max)"
-			},		
+"InvertIgnoreRollKey" : {
+	"name" 					: "Inverti il tasto \"Ignora tiro\"",
+	"descrp" 				: "Se i tiri devono essere riconosciuti SOLO quando il tasto impostato viene premuto"
+},
+
+"SpottedTokenTransparency" : {
+	"name" 					: "Trasparenza dei token nascosti",
+	"descrp" 				: "La trasparenza dei token nascosti"
+}
+},
+
+"Keys" : {
+	"PeekLock" : {
+		"name" 					: "Blocca spioncino"
+	},
+
+	"MoveDoorLeft" : {
+		"name" 					: "Sposta porta a sinistra"
+	},
+
+	"MoveDoorRight" : {
+		"name" 					: "Sposta porta a destra"
+	},
+
+	"ToggleTokenFollowing" : {
+		"name" 					: "Attiva/disattiva seguimento dei token"
+	},
+
+	"IgnoreRoll" : {
+		"name" 					: "Ignora tiro",
+		"descrp"				: "Tieni premuto questo tasto per impedire a Perceptive di riconoscerlo ai fini dei tiri di Furtività o Percezione. (può essere invertito)"
+	},
+
+	"resetStealthSelected" : {
+		"name" 					: "Rimuovi furtività dai token selezionati",
+		"descrp"				: "Rimuove i dati/e gli effetti relativi alla furtività dai token selezionati"
+	},
+
+	"MousePeekLock" : {
+		"name" 					: "Blocca spioncino con il mouse",
+		"descrp"				: "Tieni premuto questo tasto mentre clicchi con il tasto destro per guardare attraverso il lucchetto cliccato"
+	},
+
+	"MouseMoveDoor" : {
+		"name" 					: "Sposta porta con il mouse",
+		"descrp"				: "Tieni premuto questo tasto mentre scorri per muovere la porta sotto il cursore (può essere lasciato vuoto)"
+	},
+
+	"MouseMoveDoorFast" : {
+		"name" 					: "Sposta porta velocemente con il mouse",
+		"descrp"				: "Tieni premuto questo tasto mentre scorri per muovere rapidamente la porta sotto il cursore"
+	},
+
+	"EditHoveredDoor" : {
+		"name" 					: "Modifica rapida della porta",
+		"descrp"				: "Apri le impostazioni della porta sotto il cursore"
+	}
+},
+
+"SheetSettings" : {
+	"canbeLockpeekedFlag" : {
+		"name" 					: "Può essere guardato attraverso il lucchetto",
+		"descrp"				: "Se questo lucchetto può essere guardato attraverso da un giocatore"
+	},
+
+	"PeekingDCFlag" : {
+		"name" 					: "Difficoltà per spioncino",
+		"descrp"				: "La classe di difficoltà per guardare attraverso questo lucchetto (0 per disabilitare i tiri)"
+	},
+
+	"LockPeekSizeFlag" : {
+		"name" 					: "Dimensione dello spioncino",
+		"descrp"				: "La dimensione della fessura utilizzata quando si guarda attraverso un lucchetto, relativa alla dimensione della porta (0-1)"
+	},
+
+	"LockPeekPositionFlag" : {
+		"name" 					: "Posizione dello spioncino",
+		"descrp"				: "La posizione della fessura utilizzata quando si guarda attraverso un lucchetto, relativa alla dimensione della porta (0-1)"
+	},
+
+	"DoorMovementFlag" : {
+		"name" 					: "Tipo di movimento porta",
+		"descrp"				: "Il tipo di movimento standard di questa porta",
+		"options" : {
+			"none"				: "Nessun movimento (porta normale)",
+			"swing"				: "Porta a battente",
+			"slide"				: "Porta scorrevole"
+		}
+	},
+
+	"PreventNormalOpenFlag" : {
+		"name" 					: "Impedisci apertura normale",
+		"descrp"				: "Se questa porta può ancora essere aperta con un clic sinistro (solo per porte mobili)"
+	},
+
+	"DoorHingePositionFlag" : {
+		"name" 					: "Posizione della cerniera della porta",
+		"descrp"				: "La posizione in cui è situata la cerniera della porta",
+		"options" : {
+			"0"					: "Sinistra",
+			"1"					: "Destra",
+			"2"					: "Centro"
+		}
+	},
+
+	"DoorSwingSpeedFlag" : {
+		"name" 					: "Velocità di apertura a battente",
+		"descrp"				: "La velocità di apertura della porta in gradi°"
+	},
+
+	"DoorSwingRangeFlag" : {
+		"name" 					: "Gamma di apertura a battente",
+		"descrp"				: "Intervallo in cui questa porta può aprirsi in gradi° (min-max)"
+	},		
 
 			"DoorSlideSpeedFlag" : {
-				"name" 					: "Slide speed",
-				"descrp"				: "The slide speed of the door in  parts of door size (0-1)"
-			},
+    "name" 					: "Velocità di scorrimento",
+    "descrp"				: "La velocità di scorrimento della porta in frazioni della dimensione della porta (0-1)"
+},
 
-			"PerceptiveStealthingFlag" : {
-				"name" 					: "Is Perceptive stealthing",
-				"descrp"				: "If this token has the Perceptive stealth \"effect\""
-			},
-			
-			"canbeSpottedFlag" : {
-				"name" 					: "Can be spotted",
-				"descrp"				: "If this door can be spotted with perception (passive or active)"
-			},
-			
-			"RevealwhenSpottedFlag" : {
-				"name" 					: "Reveal when spotted",
-				"descrp"				: "If this object should be revealed when spotted (overrides game settings when active)"
-			},
-			
-			"PPDCFlag" : {
-				"name" 					: "Passive perception DC",
-				"descrp"				: "DC to be spotted with passive perception (-1 for impossible)"
-			},
-			
-			"APDCFlag" : {
-				"name" 					: "Active perception DC",
-				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
-			},
-			
-			"SpottingRangeFlag" : {
-				"name"					: "Spotting Range",
-				"descrp"				: "Custom range over which this object can be spotted (overrides world settings, -1 to turn off)"
-			},
-			
-			"otherSkillADCsFlag" : {
-				"openButtonname"		: "Other active skill DCs",
-				"confirmButtonname"		: "Confirm",
-				"Title"					: "Other active skill DCs",
-				"name"					: "The active spot DCs for other skills (-1 for impossible):",
-				"entry"					: "DC for {pSkill} checks"
-			},
-			
-			"SpottingMessageFlag" : {
-				"name"					: "Spotting message",
-				"descrp"				: "Message whispered to the spotter of this object"
-			},
-			
-			"LockPPDCFlag" : {
-				"name" 					: "Lock passive perception DC",
-				"descrp"				: "Prevent this tokens passive perception DC from being rerolled on move"
-			},
-			
-			"resetSpottedbyMoveFlag" : {
-				"name"					: "Reset spotted on token movement",
-				"descrp"				: "If the active spotters of a hidden token should be reset upon its movement"
-			},
-			
-			"StealthEffectsFlag" : {
-				"name"					: "Stealth effects",
-				"descrp"				: "Further stealth effects applied to this token when rolling stealth (Names or IDs, seperated with \";\")"
-			},
-			
-			"OverrideWorldSEffectsFlag" : {
-				"name"					: "Override world stealth effects",
-				"descrp"				: "If this tokens stealth effects should override the worlds stealth effects"
-			},
+"PerceptiveStealthingFlag" : {
+    "name" 					: "È in stealth percettivo",
+    "descrp"				: "Se questo token ha l'effetto stealth \"percettivo\""
+},
 
-			"SceneBrightEndFlag" : {
-				"name"					: "Bright darkness limit",
-				"descrp"				: "A scene darkness level below this value will be considered bright for this scene"
-			},
-			
-			"SceneDimEndFlag" : {
-				"name"					: "Dim darkness limit",
-				"descrp"				: "A scene darkness level below this value will be considered dim for this scene"
-			},
-			
-			"TilePerceptiveNameFlag" : {
-				"name"					: "Tile name",
-				"descrp"				: "Name used by Perceptive for this tile (e.g. Dialogs)"
-			},
+"canbeSpottedFlag" : {
+    "name" 					: "Può essere individuato",
+    "descrp"				: "Se questa porta può essere individuata con la percezione (passiva o attiva)"
+},
 
-			"MATTTriggerTileFlag" : {
-				"name" 					: "Triggered tile ID",
-				"descrp"				: "The ID of the tile triggered by the Lock & Key actions below (you may use different landings)"
-			},
-			
-			"MATTTriggerConditionsFlag" : {
-				"NewlySpotted.name"		: "On newly spotted",
-				"options" : {
-					"never"				: "never",
-					"always"			: "always",
-					"active"			: "active",
-					"passive"			: "passive"
-				}
-			}
-		},
-		
-		"vision-channels-window" : {
-			"buttons" : {
-				"OpenVCMenu" : {
-					"name"				: "Open Vision Channels"
-				},
-				"confirm" : {
-					"name"				: "Confirm"
-				},
-				"add" : {
-					"name"				: "Add channel"
-				}
-			},
-			"titles" : {
-				"VisionChannels"		: "Vision Channels"
-			},
-			"entries" : {
-				"titles" : {
-					"Name"				: "Name",
-					"RequiredtoSee"		: "Required to see",
-					"SeethroughWalls"	: "Through walls",
-					"Range"				: "Range",
-					"RangeFormula"		: "Range formula",
-					"RangeMin"			: "Minimum range",
-					"Color"				: "Color",
-					"EffectFilter" : {
-						"name"			: "Effect filter",
-						"options" : {
-							"off"		: "off",
-							"outline"   : "outline",
-							"outline_waves" : "outline & waves",
-							"glow"		: "glow",
-							"TMfog"		: "fog",
-							"TMelectric": "electricity",
-							"TMtransform": "swirly",
-							"TMflood"	: "flood",
-							"TMadjustment" : "fading",
-							"TMblur"	: "blur"
-						}
-					},
-					"EffectFilterColor" : "Effect Filter Color",
-					"Transparency"		: "Transparency",
-					"defaultReceiver"	: "Receive default",
-					"VCID"				: "Internal ID",
-					"Emits"				: "Emits",
-					"Receives"			: "Receives",
-					"ReceiveFiltered"	: "Reciver filter",
-					"ReceiveRange"		: "Custom range",
-					"CalculatedRange"	: "Calculated range",
-					"ReceiveRangeMin"	: "Custom range minimum",
-					"Sight"				: "Sight",
-					"Movement"			: "Movement"
-				}
-			}
-		},
-		
-		"PeekingConfirm" : {
-			"name" 						: "Peeking confirm",
-			"descrp" 					: "User {pUserName} want to lock peek a door, confirm?"
-		},
-		
-		"monks-active-tiles" : {
-			"filters" : {
-				"name"						: "Filter",
-				
-				"filter-spotted-by" : {
-					"name"					: "Filter objects spotted by",
-					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} by <span class=\"entity-style\">{pSpotters}</span>",
-					"settings" : {
-						"spotters" : {
-							"name" 			: "Spotters"
-						},
-						"filterCondition" : {
-							"name"			: "Filter if",
-							"options" : {
-								"spotted"	: "has been spotted",
-								"notspotted": "has not been spotted"
-							}
-						}
-					}
-				},
-				
-				"filter-has-spotted" : {
-					"name"					: "Filter tokens having spotted",
-					"descrp"				: "<span class=\"filter-style\">Filter</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
-					"settings" : {
-						"spotted" : {
-							"name" 			: "Spotted"
-						},
-						"filterCondition" : {
-							"name"			: "Filter if",
-							"options" : {
-								"spotted"	: "has spotted",
-								"notspotted": "has not spotted"
-							}
-						}
-					}
-				}
-			},
-			
-			"actions" : {
-				"spot-object" : {
-					"name"					: "Spot object",
-					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> with <span class=\"entity-style\">{pEntities}</span>",
-					"settings" : {
-						"target" : {
-							"name"			: "Target"
-						}
-					}
-				},
-				
-				"give-VC" : {
-					"name"					: "Give vision channel",
-					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> to <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
-					"settings" : {
-						"channelid" : {
-							"name"			: "Channel"
-						},
-						"type" : {
-							"name"			: "Give as",
-							"options" : {
-								"Emits"		: "Emits",
-								"Receives"	: "Receives",
-								"Sight"		: "Sight (walls only)",
-								"Movement"	: "Movement (walls only)"
-							}
-						}
-					}
-				},
-				
-				"remove-VC" : {
-					"name"					: "Remove vision channel",
-					"descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> from <span class=\"entity-style\">{pEntities}</span> as <span class=\"value-style\">{pType}</span>",
-					"settings" : {
-						"channelid" : {
-							"name"			: "Channel"
-						},
-						"type" : {
-							"name"			: "Remove as",
-							"options" : {
-								"Emits"		: "Emits",
-								"Receives"	: "Receives",
-								"Sight"		: "Sight (walls only)",
-								"Movement"	: "Movement (walls only)"
-							}
-						}
-					}
-				},
-				
-				"reset-Spottedby" : {
-					"name"					: "Reset \"spotted by\"",
-					"descrp"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span>"
-				},
-				
-				"set-canbeSpotted" : {
-					"name"					: "Set \"can be spotted\"",
-					"descrp" : {
-						"value"				: "<span class=\"logic-style\">{pname}</span> of <span class=\"entity-style\">{pEntities}</span> to <span class=\"value-style\">{pvalue}</span>",
-						"toggle"			: "<span class=\"logic-style\">Toggle \"can be spotted\"</span> of <span class=\"entity-style\">{pEntities}</span>"
-					},
-					"settings" : {
-						"setto" : {
-							"name"  		: "Set to",
-							"options" : {
-								"true"		: "True",
-								"false"		: "False",
-								"toggle"	: "Toggle value"
+"RevealwhenSpottedFlag" : {
+    "name" 					: "Rivelare quando individuato",
+    "descrp"				: "Se questo oggetto deve essere rivelato quando viene individuato (sovrascrive le impostazioni di gioco quando attivo)"
+},
+
+"PPDCFlag" : {
+    "name" 					: "Percezione passiva DC",
+    "descrp"				: "DC per essere individuato con percezione passiva (-1 per impossibile)"
+},
+
+"APDCFlag" : {
+    "name" 					: "Percezione attiva DC",
+    "descrp"				: "DC per essere individuato con percezione attiva (-1 per impossibile, vuoto per sincronizzare con percezione passiva)"
+},
+
+"SpottingRangeFlag" : {
+    "name"					: "Distanza di individuazione",
+    "descrp"				: "Distanza personalizzata oltre la quale questo oggetto può essere individuato (sovrascrive le impostazioni globali, -1 per disabilitare)"
+},
+
+"otherSkillADCsFlag" : {
+    "openButtonname"		: "Altri DC di abilità attive",
+    "confirmButtonname"		: "Conferma",
+    "Title"					: "Altri DC di abilità attive",
+    "name"					: "I DC di individuazione attiva per altre abilità (-1 per impossibile):",
+    "entry"					: "DC per i tiri di {pSkill}"
+},
+
+"SpottingMessageFlag" : {
+    "name"					: "Messaggio di individuazione",
+    "descrp"				: "Messaggio sussurrato all'individuatore di questo oggetto"
+},
+
+"LockPPDCFlag" : {
+    "name" 					: "Percezione passiva della serratura DC",
+    "descrp"				: "Impedisce che la DC di percezione passiva di questo token venga rielaborata durante il movimento"
+},
+
+"resetSpottedbyMoveFlag" : {
+    "name"					: "Resetta individuato al movimento del token",
+    "descrp"				: "Se gli individuatori attivi di un token nascosto devono essere resettati durante il suo movimento"
+},
+
+"StealthEffectsFlag" : {
+    "name"					: "Effetti di furtività",
+    "descrp"				: "Ulteriori effetti di furtività applicati a questo token durante il tiro di furtività (nomi o ID, separati da \";\")"
+},
+
+"OverrideWorldSEffectsFlag" : {
+    "name"					: "Sovrascrivi effetti di furtività globali",
+    "descrp"				: "Se gli effetti di furtività di questo token devono sovrascrivere gli effetti di furtività globali"
+},
+
+"SceneBrightEndFlag" : {
+    "name"					: "Limite di luminosità",
+    "descrp"				: "Un livello di oscurità della scena inferiore a questo valore sarà considerato luminoso per questa scena"
+},
+
+"SceneDimEndFlag" : {
+    "name"					: "Limite di oscurità",
+    "descrp"				: "Un livello di oscurità della scena inferiore a questo valore sarà considerato poco illuminato per questa scena"
+},
+
+"TilePerceptiveNameFlag" : {
+    "name"					: "Nome della tessera",
+    "descrp"				: "Nome utilizzato da Perceptive per questa tessera (ad esempio, Dialoghi)"
+},
+
+"MATTTriggerTileFlag" : {
+    "name" 					: "ID tessera attivata",
+    "descrp"				: "L'ID della tessera attivata dalle azioni Lock & Key qui sotto (puoi usare diverse uscite)"
+},
+
+"MATTTriggerConditionsFlag" : {
+    "NewlySpotted.name"		: "Su appena individuato",
+    "options" : {
+        "never"				: "mai",
+        "always"			: "sempre",
+        "active"			: "attivo",
+        "passive"			: "passivo"
+    }
+  }
+},
+
+"vision-channels-window" : {
+    "buttons" : {
+        "OpenVCMenu" : {
+            "name"				: "Apri Canali di Visione"
+        },
+        "confirm" : {
+            "name"				: "Conferma"
+        },
+        "add" : {
+            "name"				: "Aggiungi canale"
+        }
+    },
+    "titles" : {
+        "VisionChannels"		: "Canali di Visione"
+    },
+    "entries" : {
+        "titles" : {
+            "Name"				: "Nome",
+            "RequiredtoSee"		: "Necessario per vedere",
+            "SeethroughWalls"	: "Vedere attraverso le pareti",
+            "Range"				: "Distanza",
+            "RangeFormula"		: "Formula della distanza",
+            "RangeMin"			: "Distanza minima",
+            "Color"				: "Colore",
+            "EffectFilter" : {
+                "name"			: "Filtro effetto",
+                "options" : {
+                    "off"		: "spento",
+                    "outline"   : "contorno",
+                    "outline_waves" : "contorno e onde",
+                    "glow"		: "bagliore",
+                    "TMfog"		: "nebbia",
+                    "TMelectric": "elettricità",
+                    "TMtransform": "spirale",
+                    "TMflood"	: "allagamento",
+                    "TMadjustment" : "sfocatura",
+                    "TMblur"	: "sfocatura"
+                }
+            },
+            "EffectFilterColor" : "Colore Filtro Effetto",
+            "Transparency"		: "Trasparenza",
+            "defaultReceiver"	: "Ricevi predefinito",
+            "VCID"				: "ID Interno",
+            "Emits"				: "Emette",
+            "Receives"			: "Riceve",
+            "ReceiveFiltered"	: "Filtra ricezioni",
+            "ReceiveRange"		: "Distanza personalizzata",
+            "CalculatedRange"	: "Distanza calcolata",
+            "ReceiveRangeMin"	: "Distanza minima personalizzata",
+            "Sight"				: "Vista",
+            "Movement"			: "Movimento"
+        }
+    }
+},
+
+"PeekingConfirm" : {
+    "name" 						: "Conferma Sguardo",
+    "descrp" 					: "L'utente {pUserName} vuole guardare una porta, confermi?"
+},
+
+"monks-active-tiles" : {
+    "filters" : {
+        "name"						: "Filtro",
+        
+        "filter-spotted-by" : {
+            "name"					: "Filtra oggetti individuati da",
+            "descrp"				: "<span class=\"filter-style\">Filtra</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} da <span class=\"entity-style\">{pSpotters}</span>",
+            "settings" : {
+                "spotters" : {
+                    "name" 			: "Individuatori"
+                },
+                "filterCondition" : {
+                    "name"			: "Filtra se",
+                    "options" : {
+                        "spotted"	: "è stato individuato",
+                        "notspotted": "non è stato individuato"
+                    }
+                }
+            }
+        },
+        
+        "filter-has-spotted" : {
+            "name"					: "Filtra token che hanno individuato",
+            "descrp"				: "<span class=\"filter-style\">Filtra</span> <span class=\"entity-style\">{pEntities}</span> {pFilterCondition} <span class=\"entity-style\">{pSpotted}</span>",
+            "settings" : {
+                "spotted" : {
+                    "name" 			: "Individuato"
+                },
+                "filterCondition" : {
+                    "name"			: "Filtra se",
+                    "options" : {
+                        "spotted"	: "ha individuato",
+                        "notspotted": "non ha individuato"
+                    }
+                }
+            }
+        }
+    },
+    
+    "actions" : {
+        "spot-object" : {
+            "name"					: "Individua oggetto",
+            "descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"entity-style\">{pTargets}</span> con <span class=\"entity-style\">{pEntities}</span>",
+            "settings" : {
+                "target" : {
+                    "name"			: "Obiettivo"
+                }
+            }
+        },
+
+        "give-VC" : {
+            "name"					: "Dai canale di visione",
+            "descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> a <span class=\"entity-style\">{pEntities}</span> come <span class=\"value-style\">{pType}</span>",
+            "settings" : {
+                "channelid" : {
+                    "name"			: "Canale"
+                },
+                "type" : {
+                    "name"			: "Dai come",
+                    "options" : {
+                        "Emits"		: "Emette",
+                        "Receives"	: "Riceve",
+                        "Sight"		: "Vista (solo pareti)",
+                        "Movement"	: "Movimento (solo pareti)"
+                    }
+                }
+            }
+        },
+
+        "remove-VC" : {
+            "name"					: "Rimuovi canale di visione",
+            "descrp"				: "<span class=\"logic-style\">{pname}</span> <span class=\"value-style\">{pChannel}</span> da <span class=\"entity-style\">{pEntities}</span> come <span class=\"value-style\">{pType}</span>",
+            "settings" : {
+                "channelid" : {
+                    "name"			: "Canale"
+                },
+                "type" : {
+                    "name"			: "Rimuovi come",
+                    "options" : {
+                        "Emits"		: "Emette",
+                        "Receives"	: "Riceve",
+                        "Sight"		: "Vista (solo pareti)",
+                        "Movement"	: "Movimento (solo pareti)"
+                    }
+                }
+            }
+        },
+
+        "reset-Spottedby" : {
+            "name"					: "Resetta \"individuato da\"",
+            "descrp"				: "<span class=\"logic-style\">{pname}</span> di <span class=\"entity-style\">{pEntities}</span>"
+        },
+
+        "set-canbeSpotted" : {
+            "name"					: "Imposta \"può essere individuato\"",
+            "descrp" : {
+                "value"				: "<span class=\"logic-style\">{pname}</span> di <span class=\"entity-style\">{pEntities}</span> a <span class=\"value-style\">{pvalue}</span>",
+                "toggle"			: "<span class=\"logic-style\">Attiva/disattiva \"può essere individuato\"</span> di <span class=\"entity-style\">{pEntities}</span>"
+            },
+            "settings" : {
+                "setto" : {
+                    "name"  		: "Imposta a",
+                    "options" : {
+                        "true"		: "Vero",
+                        "false"		: "Falso",
+                        "toggle"	: "Commutare valore"
 							}
 						}
 					}
