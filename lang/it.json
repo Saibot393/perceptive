@@ -41,19 +41,19 @@
 			"StartStealthing"	: "Inizia Furtività",
 			"StopStealthing"	: "Termina Furtività",
 			"GMuiandcontrol"	: "Interfaccia utente e controllo DM",
-			"SightRange"			: "Campo Visivo",
+			"SightRange"		: "Campo Visivo",
 			"RulesAutomation"	: "Regole & Automazioni",
 			"RollFormulas"		: "Tiri & Formule",
-			"Effects"				  : "Effetti",
+			"Effects"		: "Effetti",
 			"Illumination"		: "Illuminazione",
-			"Sound"				    : "Suoni",
+			"Sound"			: "Suoni",
 			"SoundnImages"		: "Suoni & Immagini",
-			"Tile"				: "Tile",
+			"Tile"			: "Tile",
 			"Triggers"		: "Triggers",
 			"ResetSpottedby"	: "Reset \"individuato da\"",
-			"with"				: "con",
+			"with"			: "con",
 			"VisionChannels"	: "Canali Visivi",
-			"OpenVCMenu"			: "Apri Menu Canali Visivi"
+			"OpenVCMenu"		: "Apri Menu Canali Visivi"
 		},
 		
 		"ChatMessage" : {
@@ -90,7 +90,7 @@
 		"Settings" : {
 			"SplitInteractionDistances" : {
 				"name"					: "Dividi le distanze delle interazioni",
-				"descrp"				: "Se le distanze di interazione per lo sbirciare della serratura e lo spostamento della porta devono essere divise"
+				"descrp"				: "Se le distanze di interazione per lo sbirciare dalla serratura e lo spostamento della porta devono essere divise"
 			},
 			
 			"InteractionDistance" : {
@@ -120,7 +120,7 @@
 
 	"StealthyIntegration": {
 		"name": "Integrazione con Stealthy",
-		"descrp": "I DC di Furtività saranno sincronizzati tra Perceptive e Stealthy"
+		"descrp": "Le CD di Furtività saranno sincronizzate tra Perceptive e Stealthy"
 	},
 
 	"Peekablebydefault": {
@@ -149,8 +149,8 @@
 	},
 
 	"GMConfirmPeeking": {
-		"name": "Conferma sbirciata del GM",
-		"descrp": "Se il GM deve confermare ogni azione di sbirciata"
+		"name": "Conferma sbirciata del DM",
+		"descrp": "Se il DM deve confermare ogni azione di sbirciata"
 	},
 
 	"PeekingFormula": {
@@ -159,8 +159,8 @@
 	},
 
 	"PeekingDefaultDC": {
-		"name": "DC predefinito per sbirciare",
-		"descrp": "DC predefinito per sbirciare attraverso le nuove pareti create"
+		"name": "CD predefinita per sbirciare",
+		"descrp": "CD predefinita per sbirciare attraverso le nuove pareti create"
 	},
 	
 	"DoorstandardMove": {
@@ -289,7 +289,7 @@
 
 	"SimulatePlayerVision": {
 		"name": "Prospettiva giocatore",
-		"descrp": "Se i GM devono usare la stessa formula di individuazione dei giocatori per i token nascosti (solo per i token)"
+		"descrp": "Se i DM devono usare la stessa formula di individuazione dei giocatori per i token nascosti (solo per i token)"
 	},
 
 	"PassivePerceptionFormula": {
@@ -368,13 +368,13 @@
 	},
 
 	"GMSpotconfirmDialog": {
-		"name": "Conferma individuazione GM",
-		"descrp": "Se un tiro di percezione deve generare un dialogo per il GM in cui l'individuazione deve essere confermata"
+		"name": "Conferma individuazione DM",
+		"descrp": "Se un tiro di percezione deve generare un dialogo per il DM in cui l'individuazione deve essere confermata"
 	},
 
 	"GMSpotconfirmDialogbehaviour": {
-		"name": "Comportamento conferma individuazione GM",
-		"descrp": "Per quali utenti un tiro di percezione deve generare un dialogo per il GM per confermare l'individuazione",
+		"name": "Comportamento conferma individuazione DM",
+		"descrp": "Per quali utenti un tiro di percezione deve generare un dialogo per il DM per confermare l'individuazione",
 		"options": {
 			"off": "disattivato",
 			"playersonly": "solo giocatori",
@@ -383,8 +383,8 @@
 	},
 
 	"ShowfailuresinGMconfirm": {
-		"name": "Mostra fallimenti nella conferma GM",
-		"descrp": "Mostra i token per cui il tiro di percezione è fallito come voci non selezionate nel dialogo di conferma GM"
+		"name": "Mostra fallimenti nella conferma DM",
+		"descrp": "Mostra i token per cui il tiro di percezione è fallito come voci non selezionate nel dialogo di conferma DM"
 	},
 
 	"MakeSpottedTokensVisible": {
@@ -445,8 +445,8 @@
 	},
 
 	"GMReciveInformationWhisper": {
-		"name": "Il GM riceve messaggi informativi",
-		"descrp": "Se il GM deve ricevere messaggi sussurrati con aggiornamenti dai giocatori"
+		"name": "Il DM riceve messaggi informativi",
+		"descrp": "Se il DM deve ricevere messaggi sussurrati con aggiornamenti dai giocatori"
 	},
 
 	"onlyMacroSeek": {
@@ -581,12 +581,12 @@
 			
 "WhisperPerceptionResult" : {
 	"name" 					: "Mostra i risultati della percezione",
-	"descrp" 				: "Se i risultati dei tiri di percezione del giocatore dovrebbero essere mostrati nella chat"
+	"descrp" 				: "Se i risultati dei tiri di percezione del giocatore devono essere mostrati nella chat"
 },
 
 "WhisperLingeringAPremoval" : {
 	"name" 					: "Notifica sulla rimozione dell'AP residuo",
-	"descrp" 				: "Se una notifica dovrebbe essere mostrata nella chat quando la percezione attiva residua viene rimossa"
+	"descrp" 				: "Se una notifica deve essere mostrata nella chat quando la percezione attiva residua viene rimossa"
 },
 
 "InvertIgnoreRollKey" : {
@@ -725,26 +725,26 @@
 },
 
 "PPDCFlag" : {
-    "name" 					: "Percezione passiva DC",
-    "descrp"				: "DC per essere individuato con percezione passiva (-1 per impossibile)"
+    "name" 				: "CD Percezione passiva",
+    "descrp"				: "CD per essere individuato con percezione passiva (-1 per impossibile)"
 },
 
 "APDCFlag" : {
-    "name" 					: "Percezione attiva DC",
-    "descrp"				: "DC per essere individuato con percezione attiva (-1 per impossibile, vuoto per sincronizzare con percezione passiva)"
+    "name" 				: "CD Percezione attiva",
+    "descrp"				: "CD per essere individuato con percezione attiva (-1 per impossibile, vuoto per sincronizzare con percezione passiva)"
 },
 
 "SpottingRangeFlag" : {
-    "name"					: "Distanza di individuazione",
+    "name"				: "Distanza di individuazione",
     "descrp"				: "Distanza personalizzata oltre la quale questo oggetto può essere individuato (sovrascrive le impostazioni globali, -1 per disabilitare)"
 },
 
 "otherSkillADCsFlag" : {
-    "openButtonname"		: "Altri DC di abilità attive",
+    "openButtonname"		: "Altre CD di abilità attive",
     "confirmButtonname"		: "Conferma",
-    "Title"					: "Altri DC di abilità attive",
-    "name"					: "I DC di individuazione attiva per altre abilità (-1 per impossibile):",
-    "entry"					: "DC per i tiri di {pSkill}"
+    "Title"					: "Altre CD di abilità attive",
+    "name"					: "Le CD di individuazione attiva per altre abilità (-1 per impossibile):",
+    "entry"					: "CD per i tiri di {pSkill}"
 },
 
 "SpottingMessageFlag" : {
@@ -753,42 +753,42 @@
 },
 
 "LockPPDCFlag" : {
-    "name" 					: "Percezione passiva della serratura DC",
-    "descrp"				: "Impedisce che la DC di percezione passiva di questo token venga rielaborata durante il movimento"
+    "name" 				: "CD Percezione passiva della serratura",
+    "descrp"				: "Impedisce che la CD di percezione passiva di questo token venga rielaborata durante il movimento"
 },
 
 "resetSpottedbyMoveFlag" : {
-    "name"					: "Resetta individuato al movimento del token",
+    "name"				: "Resetta individuato al movimento del token",
     "descrp"				: "Se gli individuatori attivi di un token nascosto devono essere resettati durante il suo movimento"
 },
 
 "StealthEffectsFlag" : {
-    "name"					: "Effetti di furtività",
+    "name"				: "Effetti di furtività",
     "descrp"				: "Ulteriori effetti di furtività applicati a questo token durante il tiro di furtività (nomi o ID, separati da \";\")"
 },
 
 "OverrideWorldSEffectsFlag" : {
-    "name"					: "Sovrascrivi effetti di furtività globali",
+    "name"				: "Sovrascrivi effetti di furtività globali",
     "descrp"				: "Se gli effetti di furtività di questo token devono sovrascrivere gli effetti di furtività globali"
 },
 
 "SceneBrightEndFlag" : {
-    "name"					: "Limite di luminosità",
+    "name"				: "Limite di luminosità",
     "descrp"				: "Un livello di oscurità della scena inferiore a questo valore sarà considerato luminoso per questa scena"
 },
 
 "SceneDimEndFlag" : {
-    "name"					: "Limite di oscurità",
+    "name"				: "Limite di oscurità",
     "descrp"				: "Un livello di oscurità della scena inferiore a questo valore sarà considerato poco illuminato per questa scena"
 },
 
 "TilePerceptiveNameFlag" : {
-    "name"					: "Nome della tessera",
+    "name"				: "Nome della tessera",
     "descrp"				: "Nome utilizzato da Perceptive per questa tessera (ad esempio, Dialoghi)"
 },
 
 "MATTTriggerTileFlag" : {
-    "name" 					: "ID tessera attivata",
+    "name" 				: "ID tessera attivata",
     "descrp"				: "L'ID della tessera attivata dalle azioni Lock & Key qui sotto (puoi usare diverse uscite)"
 },
 
