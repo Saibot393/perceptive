@@ -256,8 +256,35 @@ Hooks.once("init", () => {
 		
 		Hooks.once("ready", () => {
 			//ugly? yes, but the only way i found, so it stays
-			let vprevrunActions = TileDocument.prototype.runActions;
+			let vprevTrigger = TileDocument.prototype.trigger;
 			
+			let vnewTrigger = async function (args) {
+				if (game.settings.get(cModuleName, "disableSpottableMATTTiles")) {
+					
+					let vSpottingFunction = game.modules.get(cModuleName).api.isSpottedby;
+					
+					if (PerceptiveFlags.canbeSpotted(this)) {
+						let vFound = false;
+					
+						for (let i = 0; i < args.tokens.length; i++) {
+							vFound = vFound || await vSpottingFunction(this, args.tokens[i], { LOS: false, Range: true, Effects: true, canbeSpotted: true })
+						}
+						
+						if (args.tokens.length == 0 && game.user.isGM) {
+							vFound = true;
+						}
+						
+						if (!vFound) {
+							return;
+						}
+					}
+				}
+				
+				let vCall = vprevTrigger.bind(this);
+				
+				return vCall(args);
+			}
+			/*
 			let vnewrunActions = async function (context, start = 0, resume = null, stopCallback = null) {
 				if (!resume && game.settings.get(cModuleName, "disableSpottableMATTTiles")) {
 					let vSpottingFunction = game.modules.get(cModuleName).api.isSpottedby;
@@ -283,8 +310,9 @@ Hooks.once("init", () => {
 				
 				vCall(context, start, resume, stopCallback);
 			};
+			*/
 			
-			TileDocument.prototype.runActions = vnewrunActions;
+			TileDocument.prototype.trigger = vnewTrigger;
 		});
 		
 		/*
