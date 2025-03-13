@@ -1,3 +1,6 @@
+## v4.2.15
+- Small Vision Channels improvement
+
 ## v4.2.14
 - Small Bug fix/Improvement for MATT compatibility
 
