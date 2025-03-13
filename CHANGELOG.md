@@ -1,3 +1,9 @@
+## v4.2.15
+- Small Vision Channels improvement
+
+## v4.2.14
+- Small Bug fix/Improvement for MATT compatibility
+
 ## v4.2.13
 - Updated Italien translation (thanks to [GregoryWarn ](https://github.com/GregoryWarn))
 
