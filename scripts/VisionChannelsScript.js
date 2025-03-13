@@ -9,7 +9,8 @@ var vLocalVisionData = {
 	vCompleteVision : false,
 	vRange3D : false,
 	vRequiredOrBehaviour : false,
-	vRangeList : {}
+	vRangeList : {},
+	vNoControl : true
 }
 
 class VisionChannelsManager {
@@ -32,6 +33,8 @@ class VisionChannelsManager {
 	
 	//IMPLEMENTATIONS
 	static async updateVisionValues(pIgnoreNewlyVisibleTiles = false) {
+		vLocalVisionData.vNoControl = Canvas.tokens?.controlled?.length == 0;
+		
 		if (!game.user.isGM || (game.settings.get(cModuleName, "SimulateVCPlayerVision") && canvas.tokens.controlled.length > 0)) {
 			let vTokens = canvas.tokens.controlled.map(vToken => vToken.document);
 			
@@ -177,6 +180,7 @@ Hooks.once("ready", function() {
 		});
 		
 		vTokenVisionFunctions.push(function(pObject) {
+			if (vLocalVisionData.vNoControl && !game.isGM && pObject.isOwner) {return undefined};
 			if (vLocalVisionData.vCompleteVision || pObject.controlled) {return undefined};
 			
 			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
