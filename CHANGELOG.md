@@ -1,3 +1,6 @@
+## v4.2.16
+- Small fix for previous update
+
 ## v4.2.15
 - Small Vision Channels improvement
 
