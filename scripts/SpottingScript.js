@@ -20,6 +20,8 @@ const cnotStealthIcon = "fa-solid fa-user";
 //bunch of variables for the sake of performance/simplicity
 var vLocalVisionData = {
 	vlastPPvalue : 0,
+	vlastPPProf : 0,
+	vlastAPProf : 0,
 	vlastVisionLevel : 0,
 	vlastDisposition : 0,
 	vSimulatePlayerVision : false,
@@ -160,7 +162,7 @@ class SpottingManager {
 			
 			let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
 			
-			if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall, vRangeDCModifier)) {
+			if (PerceptiveFlags.canbeSpottedwith(pDoorControl.wall.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Wall, vRangeDCModifier, {PPPL : vLocalVisionData.vlastPPProf})) {
 				// Hide secret doors from players
 				//const w = vWallObject;
 				//if ( (w.document.door === CONST.WALL_DOOR_TYPES.SECRET) && !game.user.isGM ) return false;
@@ -235,7 +237,7 @@ class SpottingManager {
 		
 		let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
 
-		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, vRangeDCModifier, pInfos) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pToken.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Token, vRangeDCModifier, {...pInfos, PPPL : vLocalVisionData.vlastPPProf}) ) {
 			// Otherwise, test visibility against current sight polygons
 			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
 				return false;
@@ -294,7 +296,7 @@ class SpottingManager {
 		
 		let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
 		
-		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile, vRangeDCModifier) ) {
+		if ( PerceptiveFlags.canbeSpottedwith(pTile.document, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers.Tile, vRangeDCModifier, {PPPL : vLocalVisionData.vlastPPProf}) ) {
 			// Otherwise, test visibility against current sight polygons
 			
 			if (!vLocalVisionData.vRangeDCModifier && (vLocalVisionData.vPassiveRange || vCustomRange) && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange})) {
@@ -352,12 +354,30 @@ class SpottingManager {
 			vLocalVisionData.vlastDisposition = Math.max(vTokens.map(vToken => vToken.disposition));
 
 			vLocalVisionData.vlastPPvalue = 0;
+			vLocalVisionData.vlastPPProf = 0;
+			vLocalVisionData.vlastAPProf = 0;
 			for (let i = 0; i < vTokens.length; i++) {
 				vBuffer = await VisionUtils.PassivPerception(vTokens[i]);
 
 				if (vBuffer > vLocalVisionData.vlastPPvalue) {
 					vLocalVisionData.vlastPPvalue = vBuffer;
+					vLocalVisionData.vlastPPProf = PerceptiveSystemUtils.resolvePerceptionProficiency(vTokens[i], "passive");
+					vLocalVisionData.vlastAPProf = PerceptiveSystemUtils.resolvePerceptionProficiency(vTokens[i], "active");
 				}
+				
+				/*
+				vBuffer = PerceptiveSystemUtils.resolvePerceptionProficiency(vTokens[i], "passive");
+				
+				if (vBuffer > vLocalVisionData.vlastPPProf) {
+					vLocalVisionData.vlastPPProf = vBuffer;
+				}
+				
+				vBuffer = PerceptiveSystemUtils.resolvePerceptionProficiency(vTokens[i], "active");
+				
+				if (vBuffer > vLocalVisionData.vlastAPProf) {
+					vLocalVisionData.vlastAPProf = vBuffer;
+				}
+				*/
 			}
 			
 			vLocalVisionData.vPPModifiers = { //Add AE modifiers
@@ -545,7 +565,7 @@ class SpottingManager {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
 
-						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
+						if (((vSuccessDegree > 0) && PerceptiveFlags.matchesPPPL(pObject, vLocalVisionData.vlastAPProf)) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							vSpotted.push(vSpotables[i]);
 							
 							if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"){
@@ -1674,7 +1694,7 @@ class SpottingManager {
 			
 			let vRangeDCModifier = VisionUtils.RangeDCModifier(vRangeInfo, vLocalVisionData.vRangeDCInterval, vLocalVisionData.vRangeDCModifier);
 			
-			return PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers[vObject.documentName], vRangeDCModifier);
+			return PerceptiveFlags.canbeSpottedwith(vObject, PerceptiveUtils.selectedTokens(), vLocalVisionData.vlastVisionLevel, vLocalVisionData.vlastPPvalue + vLocalVisionData.vPPModifiers[vObject.documentName], vRangeDCModifier, {PPPL : vLocalVisionData.vlastPPProf});
 		});
 		
 		//vPingIgnoreVisionCycles = 1;

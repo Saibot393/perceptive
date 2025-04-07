@@ -43,6 +43,8 @@ const ccanbeSpottedF = "canbeSpottedFlag"; //returns if this object can be spott
 const cPPDCF = "PPDCFlag"; //Flag for the passive perception DC of this object
 const cPPDiceF = "PPDiceFlag"; //Flag to store the dice rolled for the PPDC
 const cAPDCF = "APDCFlag"; //Flag for the passive perception DC of this object
+const cPPPLF = "PPPLFlag"; //Flag to store the required proficiency for the passiv perception
+const cAPPLF = "APPLFlag"; //Flag to store the required proficiency for the active perception
 const cSpottedbyF = "SpottedbyFlag"; //Flag to save the ids of actors by which this object has been spotted
 const cresetSpottedbyMoveF = "resetSpottedbyMoveFlag"; //Flag to reset the spooted by ids of this (Token) when it moves
 const cLightLevelF = "LightLevelFlag"; //stores the current light level of an object
@@ -66,7 +68,7 @@ const cReceiverFilterF = "ReceiverFilterFlag"; //Flag to store Receiver Filters
 export const cPerceptiveEffectF = "PerceptiveEffectFlag"; //Flag to signal that this effect was created by perceptive
 const cEffectInfoF = "EffectInfoFlag"; //Flag to store additional infos in effects
 
-export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF, cVisionChannelsF}
+export {cisPerceptiveWallF, ccanbeLockpeekedF, cLockPeekingWallIDsF, cLockpeekedbyF, cisLockPeekingWallF, cLockPeekSizeF, cLockPeekPositionF, cPeekingDCF, cDoormovingWallIDF, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSwingRangeF, cPreventNormalOpenF, cDoorSlideSpeedF, ccanbeSpottedF, cPPDCF, cAPDCF, cPPPLF, cAPPLF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF, cVisionChannelsF}
 
 //handels all reading and writing of flags (other scripts should not touch Rideable Flags (other than possible RiderCompUtils for special compatibilityflags)
 class PerceptiveFlags {
@@ -167,7 +169,7 @@ class PerceptiveFlags {
 	
 	static async MakeSpottable(pObject) {} //makes pObject spottable
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false, PPPL : 0}) {} //returns wether this pObject can be spotted by pTokens with pPPvalue
 		
 	static canbeSpottedpassiv(pObject) {}//returns if this pObject can be spotted passively
 	
@@ -175,9 +177,17 @@ class PerceptiveFlags {
 	
 	static getPPDC(pObject, praw = false) {} //returns the Passiv perception DC
 	
+	static getPPPL(pObject) {} //returns the Passiv perception required proficiency
+	
+	static matchesPPPL(pObject, pPPPLValue = 0) {} //returns if pPPPLValue is hight enough for pObject
+	
 	static getPPDice(pObject) {} //returns the dice rolled for the PPDC of pObject
 	
 	static getAPDC(pObject, praw = false) {} //returns the Active perception DC
+	
+	static getAPPL(pObject) {} //returns the Active perception required proficiency
+	
+	static matchesAPPL(pObject, pAPPLValue = 0) {} //returns if pAPPLValue is hight enough for pObject
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {} //returns the Passiv perception DC
 	
@@ -606,6 +616,32 @@ class PerceptiveFlags {
 		}
 		
 		return null; //default if anything fails
+	}	
+	
+	static #PPPLFlag (pObject) { 
+	//returns content of PPPLFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cPPPLF)) {
+				return vFlag.PPPLFlag;
+			}
+		}
+		
+		return 0; //default if anything fails
+	}	
+	
+	static #APPLFlag (pObject) { 
+	//returns content of APPLFlag of object (number)
+		let vFlag = this.#PerceptiveFlags(pObject);
+		
+		if (vFlag) {
+			if (vFlag.hasOwnProperty(cAPPLF)) {
+				return vFlag.APPLFlag;
+			}
+		}
+		
+		return 0; //default if anything fails
 	}	
 	
 	static #SpottedbyFlag (pObject) { 
@@ -1357,12 +1393,15 @@ class PerceptiveFlags {
 		this.#setcanbeSpotted(pObject, true);
 	}
 	
-	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false}) {
+	static canbeSpottedwith(pObject, pTokens, pVisionLevel, pPPvalue, pexternalDCModifier = 0, pInfos = {CritMode : 0, TokenSuccessDegrees : {}, Pf2eRules : false, ignorecanbeSpotted : false, PPPL : 0}) {
 		if (pInfos.Pf2eRules) {
 			//only Pf2e
 			if (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) {
-				let vSuccessDegree = 0;
+				if (!PerceptiveFlags.matchesPPPL(pObject, pInfos.PPPL)) {
+					return false;
+				}
 				
+				let vSuccessDegree = 0;
 				
 				if (PerceptiveFlags.canbeSpotted(pObject)) {
 					vSuccessDegree = PerceptiveUtils.successDegree([PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier, PerceptiveFlags.getPPDice(pObject)], pPPvalue, pInfos.CritMode);
@@ -1379,7 +1418,7 @@ class PerceptiveFlags {
 			
 			return false;
 		}
-		return (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) && ((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
+		return (PerceptiveFlags.canbeSpotted(pObject) || pInfos.ignorecanbeSpotted) && (((PerceptiveFlags.getPPDCModified(pObject, pVisionLevel) + pexternalDCModifier <= pPPvalue) && PerceptiveFlags.matchesPPPL(pObject, pInfos.PPPL)) || PerceptiveFlags.isSpottedbyone(pObject, pTokens))
 	}
 	
 	static canbeSpottedpassiv(pObject) {
@@ -1401,6 +1440,14 @@ class PerceptiveFlags {
 		}
 	}
 	
+	static getPPPL(pObject) {
+		return this.#PPPLFlag(pObject);
+	}
+	
+	static matchesPPPL(pObject, pPPPLValue = 0) {
+		return pPPPLValue >= PerceptiveFlags.getPPPL(pObject);
+	}
+	
 	static getPPDice(pObject) {
 		return this.#PPDiceFlag(pObject);
 	}
@@ -1417,6 +1464,14 @@ class PerceptiveFlags {
 		}
 		
 		return vDC;	
+	}
+	
+	static getAPPL(pObject) {
+		return this.#PPPLFlag(pObject);
+	}
+	
+	static matchesAPPL(pObject, pAPPLValue = 0) {
+		return pAPPLValue >= PerceptiveFlags.getAPPL(pObject);
 	}
 	
 	static getPPDCModified(pObject, pVisionMode = 0) {

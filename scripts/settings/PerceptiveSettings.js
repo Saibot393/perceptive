@@ -467,6 +467,24 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		default: PerceptiveSystemUtils.SystemdefaultPPformula()
 	  }); 
 	  
+	  game.settings.register(cModuleName, "PassivePerceptionProficiencyPath", {
+		name: Translate("Settings.PassivePerceptionProficiencyPath.name"),
+		hint: Translate("Settings.PassivePerceptionProficiencyPath.descrp"),
+		scope: "world",
+		config: PerceptiveSystemUtils.hasProficiencyLevels(),
+		type: String,
+		default: PerceptiveSystemUtils.SystemdefaultPerceptionProficiencyPath()
+	  }); 
+	  
+	  game.settings.register(cModuleName, "ActivePerceptionProficiencyPath", {
+		name: Translate("Settings.ActivePerceptionProficiencyPath.name"),
+		hint: Translate("Settings.ActivePerceptionProficiencyPath.descrp"),
+		scope: "world",
+		config: PerceptiveSystemUtils.hasProficiencyLevels(),
+		type: String,
+		default: PerceptiveSystemUtils.SystemdefaultPerceptionProficiencyPath()
+	  }); 
+	  
 	  game.settings.register(cModuleName, "PerceptionKeyWord", {
 		name: Translate("Settings.PerceptionKeyWord.name"),
 		hint: Translate("Settings.PerceptionKeyWord.descrp"),

@@ -63,12 +63,20 @@ class PerceptiveSystemUtils {
 	
 	static customPf2eSeek(pOptions) {} //custom Pf2e seek macro to add a custom trait
 	
+	static hasProficiencyLevels() {} //returns if this system supports proficiency levels (currently only pf2e and d&D supported)
+	
+	static ProficiencyLevel(pValue) {} //returns the numeric proficiency level based on the system proficiency level (0: no prof., 1: simple prof., 2: advanced prof. 3:...)
+	
+	static resolvePerceptionProficiency(pToken, pType = "active") {} //returns settings based proficiency of pActor in perception skill
+	
 	//system defaults	
 	static SystemdefaultPPformula() {} //returns the default formula for Lock breaking in the current system	
 	
 	static SystemdefaultPerceptionKeyWord() {} //returns the systems default key word for perceptions
 	
 	static SystemdefaultStealthKeyWord() {} //returns the systems default key word for stealths
+	
+	static SystemdefaultPerceptionProficiencyPath() {}
 	
 	//IMPLEMENTATIONS
 	static isSystemPerceptionRoll(pMessage, pInfos) {
@@ -312,6 +320,50 @@ class PerceptiveSystemUtils {
 		)		
 	}
 	
+	static hasProficiencyLevels() {
+		return [cPf2eName, cDnD5e].includes(game.system.id);
+	}
+	
+	static ProficiencyLevel(pValue) {
+		switch (game.system.id) {
+			default:
+				return pValue;
+				break;
+		}
+	}
+	
+	static resolvePerceptionProficiency(pToken, pType = "active") {
+		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
+			return 0;
+		}
+		
+		let vPath = "";
+		
+		switch (pType) {
+			case "active":
+				vPath = game.settings.get(cModuleName, "PassivePerceptionProficiencyPath");
+				break;
+			case "passive":
+				vPath = game.settings.get(cModuleName, "ActivePerceptionProficiencyPath");
+				break;
+		}
+		
+		let vValue = pToken?.actor?.System;
+		
+		if (vValue) {
+			for (let vKeyPart of vPath.split(".")) {
+				if (vValue) {
+					vValue = vValue[vKeyPart];
+				}
+			}
+		}
+		else {
+			vValue = 0;
+		}
+		
+		return Number(vValue) || 0;
+	}
+	
 	//system defaults
 	static SystemdefaultPPformula() {
 		switch (game.system.id) {
@@ -338,6 +390,17 @@ class PerceptiveSystemUtils {
 			default:
 				return "Stealth";
 		}		
+	}
+	
+	static SystemdefaultPerceptionProficiencyPath() {
+		switch (game.system.id) {
+			case cPf2eName:
+				return "perception.rank";
+				break;
+			case cDnD5e:
+				return "skills.prc.proficient";
+				break;
+		}	
 	}
 }
 

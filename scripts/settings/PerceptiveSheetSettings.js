@@ -1,7 +1,7 @@
 import * as FCore from "../CoreVersionComp.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {PerceptiveFlags, cDoorMovementF, cDoorHingePositionF, cDoorSwingSpeedF, cDoorSlideSpeedF, cDoorSwingRangeF} from "../helpers/PerceptiveFlags.js";
-import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF} from "../helpers/PerceptiveFlags.js";
+import {cDoorMoveTypes, ccanbeLockpeekedF, cPeekingDCF, cLockPeekSizeF, cLockPeekPositionF, cHingePositions, cSwingSpeedRange, cPreventNormalOpenF, cSlideSpeedRange, ccanbeSpottedF, cPPDCF, cAPDCF, cPPPLF, cAPPLF, cresetSpottedbyMoveF, cStealthEffectsF, cOverrideWorldSEffectsF, cSceneBrightEndF, cSceneDimEndF, cPerceptiveStealthingF, cLockPPDCF, cotherSkillADCsF, cTilePerceptiveNameF, cSpottingRangeF, cSpottingMessageF, cRevealwhenSpottedF} from "../helpers/PerceptiveFlags.js";
 import { VisionChannelsWindow } from "../helpers/VisionChannelsHelper.js";
 import {WallTabInserter} from "../helpers/WallTabInserter.js";
 import {PerceptiveUtils} from "../utils/PerceptiveUtils.js";
@@ -233,7 +233,7 @@ class PerceptiveSheetSettings {
 																	vtype : "checkbox", 
 																	vvalue : PerceptiveFlags.PPDCLocked(pApp.document), 
 																	vflagname : cLockPPDCF
-																	}, `div[data-tab="${cModuleName}"]`);					
+																	}, `div[data-tab="${cModuleName}"]`);	
 				}
 				
 				//reset spotted by on move
@@ -426,6 +426,16 @@ class PerceptiveSheetSettings {
 													vvalue : PerceptiveFlags.getPPDC(pApp.document, true), 
 													vflagname : cPPDCF
 													}, pto);
+													
+		//required proficiency for passive perception
+		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cPPPLF +".name"), 
+														vhint : Translate("SheetSettings."+ cPPPLF +".descrp." + game.system.id), 
+														vtype : "number", 
+														vvalue : PerceptiveFlags.getAPPL(pApp.document), 
+														vflagname : cPPPLF
+														}, `div[data-tab="${cModuleName}"]`);	
+		}
 					
 		//active perception dc
 		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cAPDCF +".name"), 
@@ -435,6 +445,16 @@ class PerceptiveSheetSettings {
 													vvalue : PerceptiveFlags.getAPDC(pApp.document, true), 
 													vflagname : cAPDCF
 													}, pto);
+						
+		//required proficiency for active perception
+		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
+			PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cAPPLF +".name"), 
+														vhint : Translate("SheetSettings."+ cAPPLF +".descrp." + game.system.id), 
+														vtype : "number", 
+														vvalue : PerceptiveFlags.getAPPL(pApp.document), 
+														vflagname : cAPPLF
+														}, `div[data-tab="${cModuleName}"]`);	
+		}
 													
 		//custom spotting range 
 		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSpottingRangeF +".name"), 
