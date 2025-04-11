@@ -10,6 +10,10 @@ import {cPf2eAPDCautomationTypes } from "./utils/PerceptiveSystemUtils.js";
 import {PerceptivePopups} from "./helpers/PerceptivePopups.js";
 import {PerceptiveSound} from "./helpers/PerceptiveSound.js";
 
+//TO DO:
+//Tile spotting delay
+//Levels compatbility
+
 const cIconDark = "fa-regular fa-circle";
 const cIconDim = "fa-solid fa-circle-half-stroke";
 const cIconBright = "fa-solid fa-circle";
@@ -565,7 +569,13 @@ class SpottingManager {
 						//only continue with objects spottable with this attribute unless it is a perception roll
 						vSuccessDegree = PerceptiveUtils.successDegree(vResultBuffer, vADC, -1, Math.max(pSpotters.map(vSpotter => PerceptiveFlags.getPerceptionAEBonus(vSpotter, vSpotables[i].documentName, pInfos.Skill)))); //Add AE modifier
 
-						if (((vSuccessDegree > 0) && PerceptiveFlags.matchesPPPL(pObject, vLocalVisionData.vlastAPProf)) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
+						if (!PerceptiveFlags.matchesAPPL(vSpotables[i], vLocalVisionData.vlastAPProf)) {
+							vSuccessDegree = 0;
+						}
+						console.log(PerceptiveFlags.matchesAPPL(vSpotables[i], vLocalVisionData.vlastAPProf));
+						console.log(vLocalVisionData.vlastAPProf);
+						console.log(vSpotables[i]);
+						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							vSpotted.push(vSpotables[i]);
 							
 							if (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"){

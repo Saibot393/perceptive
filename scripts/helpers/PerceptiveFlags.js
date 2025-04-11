@@ -1467,7 +1467,7 @@ class PerceptiveFlags {
 	}
 	
 	static getAPPL(pObject) {
-		return this.#PPPLFlag(pObject);
+		return this.#APPLFlag(pObject);
 	}
 	
 	static matchesAPPL(pObject, pAPPLValue = 0) {

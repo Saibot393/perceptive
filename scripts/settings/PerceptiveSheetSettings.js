@@ -431,8 +431,9 @@ class PerceptiveSheetSettings {
 		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cPPPLF +".name"), 
 														vhint : Translate("SheetSettings."+ cPPPLF +".descrp." + game.system.id), 
-														vtype : "number", 
-														vvalue : PerceptiveFlags.getAPPL(pApp.document), 
+														vtype : "number",
+														vstep : 0.5,												
+														vvalue : PerceptiveFlags.getPPPL(pApp.document), 
 														vflagname : cPPPLF
 														}, `div[data-tab="${cModuleName}"]`);	
 		}
@@ -450,7 +451,8 @@ class PerceptiveSheetSettings {
 		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cAPPLF +".name"), 
 														vhint : Translate("SheetSettings."+ cAPPLF +".descrp." + game.system.id), 
-														vtype : "number", 
+														vtype : "number",
+														vstep : 0.5,	
 														vvalue : PerceptiveFlags.getAPPL(pApp.document), 
 														vflagname : cAPPLF
 														}, `div[data-tab="${cModuleName}"]`);	

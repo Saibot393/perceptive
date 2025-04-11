@@ -333,7 +333,7 @@ class PerceptiveSystemUtils {
 	}
 	
 	static resolvePerceptionProficiency(pToken, pType = "active") {
-		if (PerceptiveSystemUtils.hasProficiencyLevels()) {
+		if (!PerceptiveSystemUtils.hasProficiencyLevels()) {
 			return 0;
 		}
 		
@@ -348,7 +348,7 @@ class PerceptiveSystemUtils {
 				break;
 		}
 		
-		let vValue = pToken?.actor?.System;
+		let vValue = pToken?.actor;
 		
 		if (vValue) {
 			for (let vKeyPart of vPath.split(".")) {
@@ -395,10 +395,10 @@ class PerceptiveSystemUtils {
 	static SystemdefaultPerceptionProficiencyPath() {
 		switch (game.system.id) {
 			case cPf2eName:
-				return "perception.rank";
+				return "system.perception.rank";
 				break;
 			case cDnD5e:
-				return "skills.prc.proficient";
+				return "system.skills.prc.proficient";
 				break;
 		}	
 	}

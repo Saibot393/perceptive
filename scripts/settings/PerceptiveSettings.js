@@ -1148,6 +1148,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												[data-setting-id="perceptive.disableSpottableMATTTiles"]`);
 
 		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
+											[data-setting-id="perceptive.PassivePerceptionProficiencyPath"],
+											[data-setting-id="perceptive.ActivePerceptionProficiencyPath"],
 											[data-setting-id="perceptive.PerceptionKeyWord"],
 											[data-setting-id="perceptive.StealthKeyWord"],
 											[data-setting-id="perceptive.AutoStealthDCbehaviour"]`);
