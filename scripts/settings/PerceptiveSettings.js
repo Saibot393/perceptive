@@ -562,6 +562,15 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		type: String,
 		default: ""
 	  });  
+	  
+	  game.settings.register(cModuleName, "customPerceptionEffect", {
+		name: Translate("Settings.customPerceptionEffect.name"),
+		hint: Translate("Settings.customPerceptionEffect.descrp"),
+		scope: "world",
+		config: PerceptiveUtils.isPf2e() || PerceptiveCompUtils.hasactiveEffectModule(),
+		type: String,
+		default: ""
+	  });  
 
 	//ranges
 	  game.settings.register(cModuleName, "SpottingRange", {
@@ -1158,7 +1167,8 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 											[data-setting-id="perceptive.usePerceptiveStealthEffect"],
 											[data-setting-id="perceptive.PerceptiveStealthFriendliesvisible"],
 											[data-setting-id="perceptive.syncEffectswithPerceptiveStealth"],
-											[data-setting-id="perceptive.customStealthEffects"]`);
+											[data-setting-id="perceptive.customStealthEffects"],
+											[data-setting-id="perceptive.customPerceptionEffect"]`);
 											
 		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
 												[data-setting-id="perceptive.SpottingConeRange"],

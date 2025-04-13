@@ -21,6 +21,8 @@ const cIconBright = "fa-solid fa-circle";
 const cStealthIcon = "fa-solid fa-user-ninja";
 const cnotStealthIcon = "fa-solid fa-user";
 
+const cDelimiter = ";";
+
 //bunch of variables for the sake of performance/simplicity
 var vLocalVisionData = {
 	vlastPPvalue : 0,
@@ -462,6 +464,14 @@ class SpottingManager {
 	
 	static async CheckAPerception(pSpotters, pResults,  pInfos = {isLingeringAP : false, SourceRollBehaviour : 0, Skill : ""}) {
 		if (pSpotters.length > 0 && pResults.length > 0) {
+			if (pInfos.Skill == "") {
+				if (game.settings.get(cModuleName, "customPerceptionEffect")) {
+					for (let vSpotter of pSpotters) {
+						EffectManager.applyEffects(vSpotter, game.settings.get(cModuleName, "customPerceptionEffect").split(cDelimiter));
+					}
+				}
+			}
+			
 			let vSpotables = VisionUtils.spotablesinVision();
 			
 			//filter out already spotted

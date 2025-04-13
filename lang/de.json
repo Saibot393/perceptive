@@ -296,6 +296,16 @@
 				"name"					: "Passive-Wahrnehmung Formel",
 				"descrp"				: "Passive-Wahrnehmung Formel des Systems (z.B. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", hilfe can auf der Git Hub Seite des Moduls gefunden werden)"
 			},
+			
+			"PassivePerceptionProficiencyPath" : {
+				"name"					: "Passive Wahrnehmung Trainingspfad",
+				"descrp"				: "Pfad zum Trainingslevel der passiven Wahrnehmung (Standard sollte ausreichen)"
+			},
+			
+			"ActivePerceptionProficiencyPath" : {
+				"name"					: "Aktive Wahrnehmung Trainingspfad",
+				"descrp"				: "Pfad zum Trainingslevel der aktiven Wahrnehmung (Standard sollte ausreichen)"
+			},
 
 			"PerceptionKeyWord" : {
 				"name"					: "Wahrnehmungs Stichwort",
@@ -340,6 +350,11 @@
 			"customStealthEffects" : {
 				"name"					: "Eigene Verstecken Effekte",
 				"descrp"				: "Weitere Effekte welche bei einem Versteckenwurf angewandt werden (Namen oder IDs, getrennt mit \";\")"				
+			},
+			
+			"customPerceptionEffect" : {
+				"name"					: "Eigene Wahrnehmungs Effekte",
+				"descrp"				: "Weitere Effekte welche bei einem Wahrnehmungswurf angewandt werden (Namen oder IDs, getrennt mit \";\")"				
 			},
 			
 			"resetSpottedbyMovedefault" : {
@@ -729,9 +744,25 @@
 				"descrp"				: "Schwierigkeitsklasse um mit passiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich)"
 			},
 			
+			"PPPLFlag" : {
+				"name" 					: "Passives Wahrnehmungs Trainings Stufe",
+				"descrp" : {
+					"dnd5e"				: "Benötigtes Training um dieses Objekt zu erspähen (Keins: 0, Normal: 1, Halbes: 0.5, Expertise: 2)",
+					"pf2e"				: "Benötigtes Training um dieses Objekt zu erspähen (Untrainiert: 0, Trainiert: 1, Experte: 2, Meister: 3, Legendär: 4)"
+				}
+			},
+			
 			"APDCFlag" : {
 				"name" 					: "Aktive Wahrnehmung SG",
 				"descrp"				: "Schwierigkeitsklasse um mit aktiver Wahrnehmung aufgedeckt zu werden (-1 wenn unmöglich, leerlassen um passiven SG zu nutzen)"
+			},
+			
+			"APPLFlag" : {
+				"name" 					: "Aktive Wahrnehmungs Trainings Stufe",
+				"descrp" : {
+					"dnd5e"				: "Benötigtes Training um dieses Objekt zu erspähen (Keins: 0, Normal: 1, Halbes: 0.5, Expertise: 2)",
+					"pf2e"				: "Benötigtes Training um dieses Objekt zu erspähen (Untrainiert: 0, Trainiert: 1, Experte: 2, Meister: 3, Legendär: 4)"
+				}
 			},
 			
 			"SpottingRangeFlag" : {

@@ -296,6 +296,16 @@
 				"name"					: "Passive perception formula",
 				"descrp"				: "Passive perception formula of the system (e.g. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", help can be found on the Github page of this module)"
 			},
+			
+			"PassivePerceptionProficiencyPath" : {
+				"name"					: "Passive perception proficency path",
+				"descrp"				: "Path to the passive proficiency path from actor (default should normally suffice)"
+			},
+			
+			"ActivePerceptionProficiencyPath" : {
+				"name"					: "Active perception proficency path",
+				"descrp"				: "Path to the active proficiency path from actor (default should normally suffice)"
+			},
 
 			"PerceptionKeyWord" : {
 				"name"					: "Perception key-word",
@@ -340,6 +350,11 @@
 			"customStealthEffects" : {
 				"name"					: "Custom stealth effects",
 				"descrp"				: "Additional Effects that are applied when a token rolls stealth (Names or IDs, seperated with \";\")"				
+			},
+			
+			"customPerceptionEffect" : {
+				"name"					: "Custom perception effects",
+				"descrp"				: "Additional Effects that are applied when a token rolls perception (Names or IDs, seperated with \";\")"				
 			},
 			
 			"resetSpottedbyMovedefault" : {
@@ -729,9 +744,25 @@
 				"descrp"				: "DC to be spotted with passive perception (-1 for impossible)"
 			},
 			
+			"PPPLFlag" : {
+				"name" 					: "Passive perception proficiency level",
+				"descrp" : {
+					"dnd5e"				: "Proficiency required to spot this object (No prof.: 0, Normal prof.: 1, Half prof.: 0.5, Expertise: 2)",
+					"pf2e"				: "Profiency required to spot this object (Untrained: 0, Trained: 1, Expert: 2, Master: 3, Legendary: 4)"
+				}
+			},
+			
 			"APDCFlag" : {
 				"name" 					: "Active perception DC",
 				"descrp"				: "DC to be spotted with ative perception (-1 for impossible, empty to synch with passive perception)"
+			},
+			
+			"APPLFlag" : {
+				"name" 					: "Active perception proficiency level",
+				"descrp" : {
+					"dnd5e"				: "Proficiency required to spot this object (No prof.: 0, Normal prof.: 1, Half prof.: 0.5, Expertise: 2)",
+					"pf2e"				: "Profiency required to spot this object (Untrained: 0, Trained: 1, Expert: 2, Master: 3, Legendary: 4)"
+				}
 			},
 			
 			"SpottingRangeFlag" : {

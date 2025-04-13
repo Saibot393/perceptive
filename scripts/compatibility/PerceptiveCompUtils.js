@@ -57,21 +57,21 @@ class PerceptiveCompUtils {
 	//effect modules specific: dfreds-convenient-effects & chris premades
 	static hasactiveEffectModule() {} //returns if an effect module compatibility is enabled
 	
-	static addIDNameEffects(pNameIDs, pToken) {} //adds effects matching pNameIDs to pToken using compatible modules
+	static addIDNameEffects(pNameIDs, pToken, pIsStealthEffect = true) {} //adds effects matching pNameIDs to pToken using compatible modules
 	
 	static async RemovePerceptiveEffects(pToken) {} //removes perceptive effects from pToken actor
 	
 	static isPercpetiveEffect(pEffect) {} //returns if pEffect is a perceptive effect
 	
 	//specific: dfreds-convenient-effects
-	static async AddDfredEffect(pEffects, pToken) {} //uses dfreds api to add effects with pEffectNames to pToken
+	static async AddDfredEffect(pEffects, pToken, pIsStealthEffect = true) {} //uses dfreds api to add effects with pEffectNames to pToken
 	
 	static async RemovePerceptiveDfredEffect(pEffects, pToken) {} //uses dfreds api to remove effects with pEffectNames to pToken
 	
 	static async FilterDFEffects(pNameIDs) {} //returns an array of effects fitting the ids or names in pNameIDs
 	
 	//specific: chris premades
-	static async AddCPREffects(pEffects, pToken) {} //uses CPR to add effects to pToken
+	static async AddCPREffects(pEffects, pToken, pIsStealthEffect = true) {} //uses CPR to add effects to pToken
 	
 	static FilterCPREffects(pNameIDs) {} //returns array of effects datas
 	
@@ -138,13 +138,13 @@ class PerceptiveCompUtils {
 		return (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) || (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration"))
 	}
 	
-	static async addIDNameEffects(pNameIDs, pToken) {
+	static async addIDNameEffects(pNameIDs, pToken, pIsStealthEffect = true) {
 		if (PerceptiveCompUtils.isactiveModule(cDfredCE) && game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
-			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken);
+			await PerceptiveCompUtils.AddDfredEffect(await PerceptiveCompUtils.FilterDFEffects(pNameIDs), pToken, pIsStealthEffect);
 		}
 
 		if (PerceptiveCompUtils.isactiveModule(cCPR) && game.settings.get(cModuleName, "CPREffectsIntegration")) {
-			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken);
+			await PerceptiveCompUtils.AddCPREffects(PerceptiveCompUtils.FilterCPREffects(pNameIDs), pToken, pIsStealthEffect);
 		}
 	}
 	
@@ -159,11 +159,11 @@ class PerceptiveCompUtils {
 	} 
 	
 	//specific: dfreds-convenient-effects
-	static async AddDfredEffect(pEffects, pToken) {
+	static async AddDfredEffect(pEffects, pToken, pIsStealthEffect = true) {
 		if (game.release.generation < 12) {
 			for (let i = 0; i < pEffects.length; i++) {
 				await game.dfreds.effectInterface._socket.executeAsGM('addEffect', {
-					effect: {...pEffects[i].toObject(), flags : {[cModuleName] : {[cPerceptiveEffectF] : true}}},
+					effect: {...pEffects[i].toObject(), flags : {[cModuleName] : {[cPerceptiveEffectF] : pIsStealthEffect}}},
 					uuid : pToken.actor.uuid,
 					origin : cModuleName
 				});
@@ -284,14 +284,14 @@ class PerceptiveCompUtils {
 	}
 	
 	//specific: chris premades
-	static async AddCPREffects(pEffects, pToken) {
+	static async AddCPREffects(pEffects, pToken, pIsStealthEffect = true) {
 		await pToken.actor.createEmbeddedDocuments("ActiveEffect", pEffects, {keepId: true});
 		
 		for (let vEffect of pEffects) {
 			let vAppliedEffect = pToken.actor.effects.find(vAE => vAE._source?._id == vEffect.id);
 			
 			if (vAppliedEffect) {
-				await vAppliedEffect.setFlag(cModuleName, cPerceptiveEffectF, true);
+				await vAppliedEffect.setFlag(cModuleName, cPerceptiveEffectF, pIsStealthEffect);
 				//await vAppliedEffect.update({origin : cModuleName});
 			}
 		}

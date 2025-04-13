@@ -12,7 +12,9 @@ const cHiddenPf2eEffectID = "Compendium.pf2e.conditionitems.Item.iU0fEDdBp3rXpTM
 class EffectManager {
 	
 	//DECLARATIONS
-	static applyStealthEffects(pHider, pInfos = {}) {} //gives the rider all pEffects
+	static async applyStealthEffects(pHider, pInfos = {}) {} //gives the rider all pEffects
+	
+	static async applyEffects(pToken, pNames, pInfos = {}) {} //applies effects in pNames to pToken
 	
 	static async removeStealthEffects(pHider, pApplyReset = false) {} //remove all effects flaged as perceptive effect
 	
@@ -64,23 +66,29 @@ class EffectManager {
 				}
 			}
 			
-			if (PerceptiveUtils.isPf2e()) {
-				vEffectDocuments = await PerceptiveUtils.ApplicableEffects(vEffectNames);
-				
-				let vEffects = await pHider.actor.createEmbeddedDocuments("Item", vEffectDocuments);
-				
-				for (let i = 0; i < vEffects.length; i++) {
-					await PerceptiveFlags.MarkasPerceptiveEffect(vEffects[i], pInfos.EffectInfos);
-				}
-			}
-			
-			if (PerceptiveCompUtils.hasactiveEffectModule()) {
-				PerceptiveCompUtils.addIDNameEffects(vEffectNames, pHider);
-			}
+			await EffectManager.applyEffects(pHider, vEffectNames, {pInfos, isStealthEffect : true});
 		}
 		
 		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
 			await PerceptiveFlags.setPerceptiveStealthing(pHider, true);
+		}
+	}
+	
+	static async applyEffects(pToken, pNames, pInfos = {}) {
+		if (PerceptiveUtils.isPf2e()) {
+			vEffectDocuments = await PerceptiveUtils.ApplicableEffects(pNames);
+			
+			let vEffects = await pToken.actor.createEmbeddedDocuments("Item", vEffectDocuments);
+			
+			if (pInfos.isStealthEffect) {
+				for (let i = 0; i < vEffects.length; i++) {
+					await PerceptiveFlags.MarkasPerceptiveEffect(vEffects[i], pInfos);
+				}
+			}
+		}
+		
+		if (PerceptiveCompUtils.hasactiveEffectModule()) {
+			PerceptiveCompUtils.addIDNameEffects(pNames, pToken, pInfos.isStealthEffect);
 		}
 	}
 	
