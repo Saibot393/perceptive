@@ -91,6 +91,8 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Make spotted door visible on click: to make spotted secret doors become normal doors on click
 - Rolls & Formulas
   - Passive perception formula: to set the formula used for passive perception (if not automated)
+  - Passive perception proficency path: to set the path of the proficiency attribute for passive perception
+  - Active perception proficency path: to set the path of the proficiency attribute for active perception
   - Perception key-word: to set the key word used to find perception rolls (if not automated) (a key can be set to not autodetect rolls)
   - Stealth key-word: to set the key word used to find stealth rolls (if not automated) (a key can be set to not autodetect rolls)
   - Auto stealth behaviour: to set which perception DC values should be set when a stealth roll is detected
@@ -100,6 +102,7 @@ Allows for player to either passively or actively spot secret doors and hidden t
   - Perceptive stealthing friendlies visible to allow friendly tokens that use Perceptives stealth to still be visible
   - Sync Perceptive stealth removel to automatically remove applied stealth effects when Perceptives stealth effect is removed and vice versa 
   - Custom stealth effects: to automatically apply custom stealth effects
+  - Custom perception effects: to set custom effects applied to tokens on perception roll
 - Sight Range
   - Spotting range to limit the range in which tokens and doors can be spotted
   - Spotting cone range to set an additional cone shaped spotting range infront of tokens
@@ -123,7 +126,9 @@ Allows for player to either passively or actively spot secret doors and hidden t
 - Can be spotted: to activate the spotting feature on this wall
 - Reveal when spotted: to make specific objects visible when spotted (overrides game settings when active)
 - Passive perception DC: to set the DC for passive perception (-1 for impossible)
+- Passive perception proficiency level: to set the perception proficiency required to passively spot this object
 - Active perception DC: to set the DC for actove perception (-1 for impossible, empty to synch with passive DC)
+- Active perception proficiency level: to set the perception proficiency required to actively spot this object
 - Spotting Range: to set a specific range in which this object can be spotted
 - Other active skill DCs: to set the active spotting DCs when using skills other then perception (currently only works with D&D5e, Pf2e, and Pf1e)
 - Reset "spotted by": to reset by whom this object has already be actively spotted by
