@@ -1,3 +1,10 @@
+## v4.3.0
+- Added world setting Passive perception proficency path to set the path of the proficiency attribute for passive perception
+- Added world setting Active perception proficency path to set the path of the proficiency attribute for active perception
+- Added world setting Custom perception effects to set custom effects applied to tokens on perception roll
+- Added object setting Passive perception proficiency level to set the perception proficiency required to passively spot this object
+- Added object setting Active perception proficiency level toset the perception proficiency required to actively spot this object
+
 ## v4.2.16
 - Small fix for previous update
 
