@@ -296,6 +296,16 @@
 				"name"					: "Formuła pasywnej percepcji",
 				"descrp"				: "Formuła pasywnej percepcji systemu (np. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", pomoc można znaleźć na stronie Github tego modułu)"
 			},
+			
+			"PassivePerceptionProficiencyPath" : {
+				"name"					: "Ścieżka biegłości pasywnej percepcji",
+				"descrp"				: "Ścieżka do pasywnej biegłości od aktora (domyślnie powinna wystarczyć)"
+			},
+			
+			"ActivePerceptionProficiencyPath" : {
+				"name"					: "Aktywna ścieżka biegłości percepcji",
+				"descrp"				: "Ścieżka do aktywnej biegłości od aktora (domyślnie powinna wystarczyć)"
+			},
 
 			"PerceptionKeyWord" : {
 				"name"					: "Słowo klucz percepcji",
@@ -340,6 +350,11 @@
 			"customStealthEffects" : {
 				"name"					: "Niestandardowe efekty ukrycia",
 				"descrp"				: "Dodatkowe efekty, które są stosowane, gdy token rzuca na skradanie się (nazwy lub identyfikatory, oddzielone \";\")"				
+			},
+			
+			"customPerceptionEffect" : {
+				"name"					: "Niestandardowe efekty percepcji",
+				"descrp"				: "Dodatkowe efekty, które są stosowane, gdy token rzuca percepcją (nazwy lub ID, oddzielone „;”)"				
 			},
 			
 			"resetSpottedbyMovedefault" : {
@@ -729,9 +744,25 @@
 				"descrp"				: "ST do bycia zauważonym przy użyciu pasywnej percepcji (-1 dla niemożliwego)"
 			},
 			
+			"PPPLFlag" : {
+				"name" 					: "Poziom biegłości pasywnej percepcji",
+				"descrp" : {
+					"dnd5e"				: "Biegłość wymagana do zauważenia tego obiektu (Brak biegłości: 0, Normalna biegłość: 1, Połowa biegłości: 0,5, Ekspercka: 2)",
+					"pf2e"				: "Wymagana biegłość, aby dostrzec ten obiekt (Niewyszkolony: 0, Wytrenowany: 1, Ekspert: 2, Mistrz: 3, Legendarny: 4)"
+				}
+			},
+			
 			"APDCFlag" : {
 				"name" 					: "ST aktywnej percepcji",
 				"descrp"				: "ST do zauważenia za pomocą percepcji pasywnej (-1 dla niemożliwego, puste do zsynchronizowania z percepcją pasywną)"
+			},
+			
+			"APPLFlag" : {
+				"name" 					: "Poziom biegłości aktywnej percepcji",
+				"descrp" : {
+					"dnd5e"				: "Biegłość wymagana do zauważenia tego obiektu (Brak biegłości: 0, Normalna biegłość: 1, Połowa biegłości: 0,5, Ekspercka: 2)",
+					"pf2e"				: "Wymagana biegłość, aby dostrzec ten obiekt (Niewyszkolony: 0, Wytrenowany: 1, Ekspert: 2, Mistrz: 3, Legendarny: 4)"
+				}
 			},
 			
 			"SpottingRangeFlag" : {
