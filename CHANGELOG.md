@@ -1,3 +1,6 @@
+## v4.3.1
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+- 
 ## v4.3.0
 - Added world setting Passive perception proficency path to set the path of the proficiency attribute for passive perception
 - Added world setting Active perception proficency path to set the path of the proficiency attribute for active perception
