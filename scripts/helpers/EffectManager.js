@@ -24,7 +24,6 @@ class EffectManager {
 	
 	//IMPLEMENTATION
 	static async applyStealthEffects(pHider, pInfos = {}) {
-		let vEffectDocuments;
 		//Ridden Mounting Effects
 		let vEffectNames = [];
 		
@@ -76,7 +75,7 @@ class EffectManager {
 	
 	static async applyEffects(pToken, pNames, pInfos = {}) {
 		if (PerceptiveUtils.isPf2e()) {
-			vEffectDocuments = await PerceptiveUtils.ApplicableEffects(pNames);
+			let vEffectDocuments = await PerceptiveUtils.ApplicableEffects(pNames);
 			
 			let vEffects = await pToken.actor.createEmbeddedDocuments("Item", vEffectDocuments);
 			
