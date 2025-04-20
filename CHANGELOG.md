@@ -1,3 +1,6 @@
+## v4.3.2
+- Bug fix for Pf2e effects
+
 ## v4.3.1
 - Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
   
