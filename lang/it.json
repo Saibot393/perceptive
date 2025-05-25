@@ -296,6 +296,16 @@
 		"name": "Formula percezione passiva",
 		"descrp": "Formula della percezione passiva del sistema (es. \"10 + @actor.system.abilities.wis.mod + @actor.system.skills.prc.value\", aiuto disponibile sulla pagina GitHub di questo modulo)"
 	},
+			
+	"PassivePerceptionProficiencyPath" : {
+		"name": "Percorso di competenza della percezione passiva",
+		"descrp": "Percorso verso il percorso di competenza passiva dall'attore (normalmente il valore predefinito dovrebbe essere sufficiente)"
+	},
+			
+	"ActivePerceptionProficiencyPath" : {
+		"name": "Percorso di competenza nella percezione attiva",
+		"descrp": "Percorso verso il percorso di competenza attiva dall'attore (normalmente il valore predefinito dovrebbe essere sufficiente)"
+	},
 
 	"PerceptionKeyWord": {
 		"name": "Parola chiave percezione",
@@ -337,11 +347,16 @@
 		"descrp": "Rimuovere la furtività di Perceptive da un token rimuoverà anche gli effetti furtivi impostati e viceversa"
 	},
 			
-"customStealthEffects": {
+	"customStealthEffects": {
 		"name": "Effetti furtività personalizzati",
-		"descrp": "Effetti aggiuntivi applicati quando un token effettua un tiro di furtività (Nomi o ID, separati con \";\")"
+		"descrp": "Effetti aggiuntivi applicati quando un token tira su furtività (Nomi o ID, separati con \";\")"
 	},
-
+			
+	"customPerceptionEffect" : {
+		"name": "Effetti percezione personalizzati",
+		"descrp": "Effetti aggiuntivi che vengono applicati quando un token tira su percezione (nomi o ID, separati da \";\")"				
+	},
+			
 	"resetSpottedbyMovedefault": {
 		"name": "Reset individuazione su movimento del token per impostazione predefinita",
 		"descrp": "Se gli osservatori attivi di un token nascosto devono essere azzerati al suo movimento"
@@ -728,12 +743,28 @@
     "name" 				: "CD Percezione passiva",
     "descrp"				: "CD per essere individuato con percezione passiva (-1 per impossibile)"
 },
-
+		
+"PPPLFlag" : {
+    "name" 				: "Livello di competenza della percezione passiva",
+    "descrp" : {
+	"dnd5e"				: "Competenza richiesta per individuare questo oggetto (Nessuna competenza: 0, Competenza normale: 1, Mezza competenza: 0,5, Maestria: 2)",
+	"pf2e"				: "Competenza richiesta per individuare questo oggetto (Non addestrato: 0, Addestrato: 1, Esperto: 2, Maestro: 3, Leggendario: 4)"
+	}
+},
+		
 "APDCFlag" : {
     "name" 				: "CD Percezione attiva",
     "descrp"				: "CD per essere individuato con percezione attiva (-1 per impossibile, vuoto per sincronizzare con percezione passiva)"
 },
 
+"APPLFlag" : {
+    "name" 				: "Livello di competenza nella percezione attiva",
+    "descrp" : {
+	"dnd5e"				: "Competenza richiesta per individuare questo oggetto (Nessuna competenza: 0, Competenza normale: 1, Mezza competenza: 0,5, Maestria: 2)",
+	"pf2e"				: "Competenza richiesta per individuare questo oggetto (Non addestrato: 0, Addestrato: 1, Esperto: 2, Maestro: 3, Leggendario: 4)"
+	}
+},
+			
 "SpottingRangeFlag" : {
     "name"				: "Distanza di individuazione",
     "descrp"				: "Distanza personalizzata oltre la quale questo oggetto può essere individuato (sovrascrive le impostazioni globali, -1 per disabilitare)"
