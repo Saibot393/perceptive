@@ -557,7 +557,7 @@ class VisionUtils {
 		let vLightCheck = true; //if non darkness lights need to be checked
 		
 		if (vScene) {
-			let vDarkness = vScene.darkness;
+			let vDarkness = vScene.environment?.darknessLevel ?? vScene.darkness;
 			
 			let vRegions = canvas.scene.regions.filter(vRegion => true);
 			
@@ -591,7 +591,7 @@ class VisionUtils {
 				}
 			}
 			
-			let vrelevantLightSources = vScene.lights.filter(vLight => !vLight.hidden).map(vLight => vLight._object?.source);
+			let vrelevantLightSources = vScene.lights.filter(vLight => !vLight.hidden).map(vLight => vLight._object?.lightSource || vLight._object?.source);
 			
 			vrelevantLightSources = vrelevantLightSources.concat(vScene.tokens.filter(vToken => vToken.object?.light?.active).map(vToken => vToken.object.light));
 			

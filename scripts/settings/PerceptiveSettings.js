@@ -1088,19 +1088,61 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
   });
 });
 
-function collapseContent(pHTML, pTitle, pIndentifiers) {
-	let vCollapse = `<details>
+function collapseContentv12(pHTML, pTitle, pIndentifiers) {
+	let vCollapse = fromHTML(`<details>
 						<summary>${Translate("Titles."+pTitle)}</summary>
 						<div content=${pTitle}>
 						</div>
-					</details>`;
+					</details>`);
 				
-	pHTML.find(pIndentifiers).first().closest(".form-group").before(vCollapse);
-	let vCollapsediv = pHTML.find(`div[content=${pTitle}]`);
+	pHTML.querySelector(pIndentifiers).closest(".form-group").before(vCollapse);
+	let vCollapsediv = pHTML.querySelector(`div[content=${pTitle}]`);
 	
-	pHTML.find(pIndentifiers).each(function () {
+	pHTML.querySelector(pIndentifiers).each(function () {
 		vCollapsediv.append(this);
 	});
+}
+
+function collapseContentnew(pHTML, pTitle, pIndentifiers) {
+	let vCollapse = fromHTML(`<details>
+						<summary>${Translate("Titles."+pTitle)}</summary>
+						<div content=${pTitle}>
+						</div>
+					</details>`);
+				
+	let vFirst;
+	let vID = 0;
+	
+	while (!vFirst && vID < pIndentifiers.length) {
+		vFirst = pHTML.querySelector(`[for="settings-config-${cModuleName}.${pIndentifiers[vID]}"]`);
+		vID = vID + 1;
+	}
+	
+	if (vFirst) {
+		vFirst.closest(".form-group").before(vCollapse);
+		
+		let vCollapsediv = pHTML.querySelector(`div[content=${pTitle}]`);
+		
+		for (let vIdentifier of pIndentifiers) {
+			let vSetting = pHTML.querySelector(`[for="settings-config-${cModuleName}.${vIdentifier}"]`);
+			if (vSetting) {
+				let vGroup = vSetting.closest(".form-group");
+				
+				if (vGroup) {
+					vCollapsediv.append(vGroup);
+				}
+			}
+		}
+	}
+}
+
+function collapseContent(pHTML, pTitle, pIndentifiers) {
+	if (game.release.generation <= 12) {
+		collapseContentv12(pHTML, pTitle, pIndentifiers.map(vIdentifier => `[data-setting-id="perceptive.${vIdentifier}"]`).join(`,`));
+	}
+	else {
+		collapseContentnew(pHTML, pTitle, pIndentifiers);
+	}
 }
 
 //Hooks
@@ -1111,98 +1153,109 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 	
 	if (game.user.isGM) {
 		//first peek setting
-		vnewHTML = `<h4 class="border"><u>${Translate("Titles.LockPeekSettings")}</u></h4>`;
+		vnewHTML = fromHTML(`<h4 class="border"><u>${Translate("Titles.LockPeekSettings")}</u></h4>`);
 		 
-		pHTML.find('input[name="' + cModuleName + '.Peekablebydefault"]').closest(".form-group").before(vnewHTML);
+		pHTML.querySelector('input[name="' + cModuleName + '.Peekablebydefault"]').closest(".form-group").before(vnewHTML);
 
 		//first door move setting
-		vnewHTML = `<h4 class="border"><u>${Translate("Titles.DoorMoveSettings")}</u></h4>`;
+		vnewHTML = fromHTML(`<h4 class="border"><u>${Translate("Titles.DoorMoveSettings")}</u></h4>`);
 		 
-		pHTML.find('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
+		pHTML.querySelector('select[name="' + cModuleName + '.DoorstandardMove"]').closest(".form-group").before(vnewHTML);	
 		
 		//first spotting setting
-		vnewHTML = `<h4 class="border"><u>${Translate("Titles.SpottingSettings")}</u></h4>`;
+		vnewHTML = fromHTML(`<h4 class="border"><u>${Translate("Titles.SpottingSettings")}</u></h4>`);
 		 
-		pHTML.find('input[name="' + cModuleName + '.ActivateSpotting"]').closest(".form-group").before(vnewHTML);	
+		pHTML.querySelector('input[name="' + cModuleName + '.ActivateSpotting"]').closest(".form-group").before(vnewHTML);	
 		
 		//first VC setting
-		vnewHTML = `<h4 class="border"><u>${Translate("Titles.VisionChannels")}</u></h4>`;
+		vnewHTML = fromHTML(`<h4 class="border"><u>${Translate("Titles.VisionChannels")}</u></h4>`);
 		 
-		pHTML.find('input[name="' + cModuleName + '.ActivateVCs"]').closest(".form-group").before(vnewHTML);
+		pHTML.querySelector('input[name="' + cModuleName + '.ActivateVCs"]').closest(".form-group").before(vnewHTML);
 		
 		//first client setting
-		vnewHTML = `<hr>
-					<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`;
+		vnewHTML = fromHTML(`<hr>
+					<h3 class="border"><u>${Translate("Titles.ClientSettings")}</u></h4>`);
 		 
-		pHTML.find('input[name="' + cModuleName + '.followTokens"]').closest(".form-group").before(vnewHTML);	
+		pHTML.querySelector('input[name="' + cModuleName + '.followTokens"]').closest(".form-group").before(vnewHTML);	
 		
 		//collapses
-		collapseContent(pHTML, "GMuiandcontrol", 	`[data-setting-id="perceptive.SimulatePlayerVision"],
-													[data-setting-id="perceptive.GMSpotconfirmDialogbehaviour"],
-													[data-setting-id="perceptive.ShowfailuresinGMconfirm"],
-													[data-setting-id="perceptive.ForceInvertIgnoreRollKey"],
-													[data-setting-id="perceptive.GMReciveInformationWhisper"],
-													[data-setting-id="perceptive.MacroSeekBehaviour"]`);
+		collapseContent(pHTML, "GMuiandcontrol", 	["SimulatePlayerVision",
+													"GMSpotconfirmDialogbehaviour",
+													"ShowfailuresinGMconfirm",
+													"ForceInvertIgnoreRollKey",
+													"GMReciveInformationWhisper",
+													"MacroSeekBehaviour"]);
 		
-		collapseContent(pHTML, "RulesAutomation", 	`[data-setting-id="perceptive.AutoRerollPPDConMove"],
-												[data-setting-id="perceptive.resetSpottedbyMovedefault"],
-												[data-setting-id="perceptive.CritMethod"],
-												[data-setting-id="perceptive.AutomateTokenSpottable"],
-												[data-setting-id="perceptive.MakeSpottedTokensVisible"],
-												[data-setting-id="perceptive.RevealAllies"],
-												[data-setting-id="perceptive.LingeringAP"],
-												[data-setting-id="perceptive.LingeringAPRadius"],
-												[data-setting-id="perceptive.LingeringAPDuration"],
-												[data-setting-id="perceptive.RevealSpottedDooronClick"],
-												[data-setting-id="perceptive.disableSpottableMATTTiles"]`);
+		collapseContent(pHTML, "RulesAutomation", 	["AutoRerollPPDConMove",
+													"resetSpottedbyMovedefault",
+													"CritMethod",
+													"AutomateTokenSpottable",
+													"MakeSpottedTokensVisible",
+													"RevealAllies",
+													"LingeringAP",
+													"LingeringAPRadius",
+													"LingeringAPDuration",
+													"RevealSpottedDooronClick",
+													"disableSpottableMATTTiles"]);
 
-		collapseContent(pHTML, "RollFormulas", 	`[data-setting-id="perceptive.PassivePerceptionFormula"],
-											[data-setting-id="perceptive.PassivePerceptionProficiencyPath"],
-											[data-setting-id="perceptive.ActivePerceptionProficiencyPath"],
-											[data-setting-id="perceptive.PerceptionKeyWord"],
-											[data-setting-id="perceptive.StealthKeyWord"],
-											[data-setting-id="perceptive.AutoStealthDCbehaviour"]`);
+		collapseContent(pHTML, "RollFormulas", 	["PassivePerceptionFormula",
+												"PassivePerceptionProficiencyPath",
+												"ActivePerceptionProficiencyPath",
+												"PerceptionKeyWord",
+												"StealthKeyWord",
+												"AutoStealthDCbehaviour"]);
 																										
-		collapseContent(pHTML, "Effects", 	`[data-setting-id="perceptive.applySystemStealthEffect"],
-											[data-setting-id="perceptive.usePerceptiveStealthEffect"],
-											[data-setting-id="perceptive.PerceptiveStealthFriendliesvisible"],
-											[data-setting-id="perceptive.syncEffectswithPerceptiveStealth"],
-											[data-setting-id="perceptive.customStealthEffects"],
-											[data-setting-id="perceptive.customPerceptionEffect"]`);
+		collapseContent(pHTML, "Effects", 	["applySystemStealthEffect",
+											"usePerceptiveStealthEffect",
+											"PerceptiveStealthFriendliesvisible",
+											"syncEffectswithPerceptiveStealth",
+											"customStealthEffects",
+											"customPerceptionEffect"]);
 											
-		collapseContent(pHTML, "SightRange", 	`[data-setting-id="perceptive.SpottingRange"],
-												[data-setting-id="perceptive.SpottingConeRange"],
-												[data-setting-id="perceptive.ApplyRange"],
-												[data-setting-id="perceptive.UseBordertoBorderRange"],
-												[data-setting-id="perceptive.StandardVisionDirection"],
-												[data-setting-id="perceptive.RangePDCModifier"],
-												[data-setting-id="perceptive.Range3DCalculation"]`);
+		collapseContent(pHTML, "SightRange", 	["SpottingRange",
+												"SpottingConeRange",
+												"ApplyRange",
+												"UseBordertoBorderRange",
+												"StandardVisionDirection",
+												"RangePDCModifier",
+												"Range3DCalculation"]);
 		
-		collapseContent(pHTML, "Illumination", 	`[data-setting-id="perceptive.IlluminationPDCModifier"],
-												[data-setting-id="perceptive.UseIlluminationPDCModifierforAP"],
-												[data-setting-id="perceptive.IlluminationAPDCBehaviour"],
-												[data-setting-id="perceptive.Light3Dcalc"]`);
+		collapseContent(pHTML, "Illumination", 	["IlluminationPDCModifier",
+												"UseIlluminationPDCModifierforAP",
+												"IlluminationAPDCBehaviour",
+												"Light3Dcalc"]);
 												
-		collapseContent(pHTML, "SoundnImages", 	`[data-setting-id="perceptive.SpottedSound"],
-												[data-setting-id="perceptive.SpottedSoundVolume"],
-												[data-setting-id="perceptive.SpotterImagePing"],
-												[data-setting-id="perceptive.SpotterImagePingDuration"]`);
+		collapseContent(pHTML, "SoundnImages", 	["SpottedSound",
+												"SpottedSoundVolume",
+												"SpotterImagePing",
+												"SpotterImagePingDuration"]);
 		
 		//test buttons
 		let vSoundForm;
 		let vNewDiv;
 		
-		vSoundForm = pHTML.find(`div.form-group[data-setting-id="perceptive.SpottedSound"]`);
-		vSoundForm.find('div').after(`<i class="${cPlaySoundIcon} audio-preview" style="flex-grow:0"></i>`);
-		vSoundForm.find(`i`).on("click", () => {PerceptiveSound.PlaySound(vSoundForm.find("input").val(), null, {pTest : true, pVolume : pHTML.find(`input[name="perceptive.SpottedSoundVolume"]`).val()})});
+		vSoundForm = pHTML.querySelector(`div.form-group[data-setting-id="perceptive.SpottedSound"]`) || pHTML.querySelector(`label[for="settings-config-perceptive.SpottedSound"]`).parentElement;
+		let vTestButton = fromHTML(`<i class="${cPlaySoundIcon} audio-preview" style="flex-grow:0"></i>`);
+		vSoundForm.querySelector('div').after(vTestButton);
+		vTestButton.onclick = () => {PerceptiveSound.PlaySound(vSoundForm.querySelector("input").val(), null, {pTest : true, pVolume : pHTML.querySelector(`input[name="perceptive.SpottedSoundVolume"]`).val()})};
 		
 		//menu button
 		if (cVCactive || game.settings.get(cModuleName, "ActivateVCs")) {
-			pHTML.find(`div.form-group[data-setting-id="perceptive.ActivateVCs"]`).after(`<button name="OpenVCMenu"> ${Translate("Titles.OpenVCMenu")}</button>`)
-			pHTML.find(`button[name="OpenVCMenu"]`).on("click", () => {new VisionChannelsWindow().render(true);});
+			let vButton = fromHTML(`<button name="OpenVCMenu"> ${Translate("Titles.OpenVCMenu")}</button>`);
+			let vSettingForm = pHTML.querySelector(`div.form-group[data-setting-id="perceptive.ActivateVCs"]`) || pHTML.querySelector(`label[for="settings-config-perceptive.ActivateVCs"]`).parentElement;
+			vSettingForm.after(vButton)
+			vButton.onclick = () => {new VisionChannelsWindow().render(true);};
 		}
 	}
 });  
+
+function fromHTML(pHTML) {
+	let vDIV = document.createElement('div');
+	
+	vDIV.innerHTML = pHTML;
+	
+	return vDIV.querySelector("*");
+}
 
 //some pf2e rules specific settings
 Hooks.on("ready", function() {

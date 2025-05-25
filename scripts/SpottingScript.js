@@ -1060,7 +1060,7 @@ class SpottingManager {
 									<i class="${vIlluminationIcon}"></i>
 							  </div>`;
 
-			pHTML.find("div.col."+vIlluminationPosition).append(vButtonHTML);
+			pHTML.querySelector("div.col."+vIlluminationPosition).append(fromHTML(vButtonHTML));
 
 			//vButton.click((pEvent) => {MountingManager.RequestToggleMount(RideableUtils.selectedTokens(), RideableUtils.TokenfromID(pToken._id))});
 		}
@@ -1068,10 +1068,10 @@ class SpottingManager {
 		//Perceptive hidden "Effect"
 		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
 			if (PerceptiveFlags.isPerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))) {
-				pHTML.find(`div[class="status-effects"]`).append(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`);
+				pHTML.find(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`));
 			}
 			else {
-				pHTML.find(`div[class="status-effects"]`).append(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`);
+				pHTML.find(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`));
 			}
 			
 			pHTML.find(`i[data-action="${cModuleName}-Stealth"]`).click(async (pEvent) => {	let vToken = PerceptiveUtils.TokenfromID(pToken._id);
@@ -1746,6 +1746,14 @@ class SpottingManager {
 		
 		return vinRange;
 	}
+}
+
+function fromHTML(pHTML) {
+	let vDIV = document.createElement('div');
+	
+	vDIV.innerHTML = pHTML;
+	
+	return vDIV.querySelector("*");
 }
 
 //Hooks

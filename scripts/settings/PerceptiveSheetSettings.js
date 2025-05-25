@@ -32,7 +32,7 @@ class PerceptiveSheetSettings {
 	//support
 	static AddHTMLOption(pHTML, pInfos, pto) {} //adds a new HTML option to pto in pHTML
 	
-	static createHTMLOption(pInfos, pto, pwithformgroup = false) {} //creates new html "code"
+	static createHTMLOption(pInfos, pto, pwithformgroup = false, pAsDOM = true) {} //creates new html "code"
 	
 	static FixSheetWindow(pHTML, pIndentifier) {} //fixes the formating of pHTML sheet window
 	
@@ -45,10 +45,10 @@ class PerceptiveSheetSettings {
 			
 			/*
 			//setup
-			let vprevElement = pHTML.find(`fieldset.door-options`);
+			let vprevElement = pHTML.querySelector(`fieldset.door-options`);
 			if (!vprevElement.length) {
 				//if door options was not found, try other search
-				vprevElement = pHTML.find(`select[name="ds"]`).closest(".form-group");
+				vprevElement = pHTML.querySelector(`select[name="ds"]`).closest(".form-group");
 			}
 			
 			
@@ -59,16 +59,16 @@ class PerceptiveSheetSettings {
 			vprevElement.after(vNewSection);
 			*/
 			
-			let vTabbar = pHTML.find(`nav.sheet-tabs`);
-			let vprevTab = pHTML.find(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
+			let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+			let vprevTab = pHTML.querySelector(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
 			
-			let vTabButtonHTML = 	`
-							<a class="item" data-tab="${cModuleName}">
+			let vTabButtonHTML = 	fromHTML(`
+							<a class="item" data-tab="${cModuleName}" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'}>
 								<i class="${cPerceptiveIcon}"></i>
 								${Translate("Titles."+cModuleName)}
 							</a>
-							`; //tab button HTML
-			let vTabContentHTML = `<div class="tab" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+							`); //tab button HTML
+			let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 			
 			vTabbar.append(vTabButtonHTML);
 			vprevTab.after(vTabContentHTML);	
@@ -80,7 +80,7 @@ class PerceptiveSheetSettings {
 						</div>
 					</details>`;
 					
-			pHTML.find(`div[data-tab="${cModuleName}"]`).append(vCollapse);
+			pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(vCollapse);
 			*/
 					
 			
@@ -179,9 +179,9 @@ class PerceptiveSheetSettings {
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
 				
 				//infos 
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
 				
 				Hooks.call(cModuleName + ".WallSpottingSettings", pApp, pHTML, pData);
 			}
@@ -196,16 +196,16 @@ class PerceptiveSheetSettings {
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
-				let vTabbar = pHTML.find(`[data-group="main"].sheet-tabs`);
-				let vprevTab = pHTML.find(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
+				let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+				let vprevTab = pHTML.querySelector(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
 				
-				let vTabButtonHTML = 	`
-								<a class="item" data-tab="${cModuleName}">
+				let vTabButtonHTML = 	fromHTML(`
+								<a class="item" ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
 									<i class="fas ${cPerceptiveIcon}"></i>
 									${Translate("Titles."+cModuleName)}
 								</a>
-								`; //tab button HTML
-				let vTabContentHTML = `<div class="tab" data-group="main" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+								`); //tab button HTML
+				let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);	
@@ -265,19 +265,19 @@ class PerceptiveSheetSettings {
 				}
 								
 				//infos 
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.PP", {pValue :  await VisionUtils.PassivPerception(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.PP", {pValue :  await VisionUtils.PassivPerception(pApp.document)})}</p>`));
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`));
 				
 				if (!game.settings.get(cModuleName, "UsePf2eRules")) {
-					pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`);
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`));
 				}
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`));
 			
 				Hooks.call(cModuleName + ".TokenSpottingSettings", pApp, pHTML, pData);
 			}
@@ -287,23 +287,23 @@ class PerceptiveSheetSettings {
 			}			
 		}
 		
-		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs[data-group="main"]`);
+		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs`);
 	}
 	
 	static async TileSheetSettings(pApp, pHTML, pData) {
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
-				let vTabbar = pHTML.find(`nav.sheet-tabs:first`);
-				let vprevTab = pHTML.find(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
+				let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+				let vprevTab = pHTML.querySelector(`div[data-tab="overhead"]`);//pHTML.querySelector(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
 				
-				let vTabButtonHTML = 	`
-								<a class="item" data-tab="${cModuleName}">
+				let vTabButtonHTML = 	fromHTML(`
+								<a class="item" ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
 									<i class="fas ${cPerceptiveIcon}"></i>
 									${Translate("Titles."+cModuleName)}
 								</a>
-								`; //tab button HTML
-				let vTabContentHTML = `<div class="tab" data-tab="${cModuleName}"></div>`; //tab content sheet HTML
+								`); //tab button HTML
+				let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);
@@ -323,9 +323,9 @@ class PerceptiveSheetSettings {
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
 				
 				//infos 
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
 				
-				pHTML.find(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
 				
 				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
 			}
@@ -336,15 +336,15 @@ class PerceptiveSheetSettings {
 		}
 		
 		
-		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs:first`);
+		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs`);
 	}
 	
 	static SceneSheetSettings(pApp, pHTML, pData) {
 			//create title (under which all settings are placed)
-			let vTittleHTML = `<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`;
+			let vTittleHTML = fromHTML(`<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`);
 			
-			pHTML.find('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
-			console.log(pHTML.find('input[name="darkness"]'))
+			pHTML.querySelector('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
+			console.log(pHTML.querySelector('input[name="darkness"]'))
 			
 			//scene bright end
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneBrightEndF +".name"), 
@@ -383,7 +383,7 @@ class PerceptiveSheetSettings {
 																					vvalue : PerceptiveFlags.getotherSkillADC(pApp.object, vSkill, true),
 																					vflagname : cotherSkillADCsF + "." + vSkill,
 																					vID : vSkill
-																					}, true);
+																					}, true, false);
 			}
 			
 			new Dialog({
@@ -468,14 +468,14 @@ class PerceptiveSheetSettings {
 													
 		if (PerceptiveSystemUtils.canAutodetectSkillRolls()) {
 			//other skill dcs menu button
-			let vSkillsButton = `<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`;
-			pHTML.find(pto).append(vSkillsButton);
-			pHTML.find(`button[id="${cModuleName}.otherSkillDCs"]`).click(function() {PerceptiveSheetSettings.OpenotherSkillDCs(pApp)});
+			let vSkillsButton = fromHTML(`<button id = "${cModuleName}.otherSkillDCs"> ${Translate("SheetSettings." + cotherSkillADCsF + ".openButtonname")} </button>`);
+			pHTML.querySelector(pto).append(vSkillsButton);
+			vSkillsButton.onclick = function() {PerceptiveSheetSettings.OpenotherSkillDCs(pApp)};
 		}
 		
-		let vResetButton = `<button id = "${cModuleName}.ResetSpottedby"> ${Translate("Titles.ResetSpottedby")} </button>`;
-		pHTML.find(pto).append(vResetButton);
-		pHTML.find(`button[id="${cModuleName}.ResetSpottedby"]`).click(function() {PerceptiveFlags.clearSpottedby(pApp.document);});	
+		let vResetButton = fromHTML(`<button id = "${cModuleName}.ResetSpottedby"> ${Translate("Titles.ResetSpottedby")} </button>`);
+		pHTML.querySelector(pto).append(vResetButton);
+		vResetButton.onclick = function() {PerceptiveFlags.clearSpottedby(pApp.document);};	
 
 		//spotting message 
 		PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSpottingMessageF +".name"), 
@@ -489,17 +489,17 @@ class PerceptiveSheetSettings {
 	}
 	
 	static AddVCSettings(pApp, pHTML, pData, pto) {
-			let vVCMenuButton = `<button name = "${cModuleName}.openVCMenu"> ${Translate("Titles.OpenVCMenu")} </button>`;
-			pHTML.find(pto).append(vVCMenuButton);
-			pHTML.find(`button[name="${cModuleName}.openVCMenu"]`).click(function() {new VisionChannelsWindow(pApp.document).render(true);});		
+			let vVCMenuButton = fromHTML(`<button name = "${cModuleName}.openVCMenu"> ${Translate("Titles.OpenVCMenu")} </button>`);
+			pHTML.querySelector(pto).append(vVCMenuButton);
+			vVCMenuButton.onclick = function() {new VisionChannelsWindow(pApp.document).render(true);};		
 	}
 	
 	//support
 	static AddHTMLOption(pHTML, pInfos, pto) {
-		pHTML.find(pto/*`div[data-tab="${cModuleName}"]`*/).append(PerceptiveSheetSettings.createHTMLOption(pInfos))
+		pHTML.querySelector(pto/*`div[data-tab="${cModuleName}"]`*/).append(PerceptiveSheetSettings.createHTMLOption(pInfos))
 	}
 	
-	static createHTMLOption(pInfos, pwithformgroup = false) {
+	static createHTMLOption(pInfos, pwithformgroup = false, pAsDOM = true) {
 		let vlabel = "Name";	
 		if (pInfos.hasOwnProperty("vlabel")) {
 			vlabel = pInfos.vlabel;
@@ -653,9 +653,9 @@ class PerceptiveSheetSettings {
 		
 		vnewHTML = vnewHTML + `</div>`;
 		
-		//pHTML.find('[name="RideableTitle"]').after(vnewHTML);
-		//pHTML.find(pto/*`div[data-tab="${cModuleName}"]`*/).append(vnewHTML);
-		return vnewHTML;
+		//pHTML.querySelector('[name="RideableTitle"]').after(vnewHTML);
+		//pHTML.querySelector(pto/*`div[data-tab="${cModuleName}"]`*/).append(vnewHTML);
+		return pAsDOM ? fromHTML(vnewHTML) : vnewHTML;
 	}
 	
 	static RegisterItemSheetTabChange() {
@@ -677,29 +677,46 @@ class PerceptiveSheetSettings {
 	}
 	
 	static FixSheetWindow(pHTML, pIndentifier) {
+		if (!pHTML.nodeType) pHTML = pHTML[0];
+		
 		let vNeededWidth = 0;
+
+		Array.from(pHTML.querySelector(pIndentifier).children).forEach(vElement => vNeededWidth = vNeededWidth + vElement.offsetWidth);
 		
-		pHTML.find(pIndentifier).children().each(function() {
-			vNeededWidth = vNeededWidth + $(this).outerWidth();
-		});
-		
-		let vWindow = pHTML.find(pIndentifier).closest(`div.app.window-app`);
-		
-		if (vNeededWidth > pHTML.width()) {
-			pHTML.width(vNeededWidth);
+		if (vNeededWidth > pHTML.offsetWidth) {
+			pHTML.style.width = vNeededWidth + "px";
 		}		
 	}
 }
 
+function fromHTML(pHTML) {
+	let vDIV = document.createElement('div');
+	
+	vDIV.innerHTML = pHTML;
+	
+	return vDIV.querySelector("*");
+}
+
 Hooks.once("ready", () => {
 	if (game.user.isGM) {
-		Hooks.on("renderWallConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.WallSheetSettings(pApp, pHTML, pData)); //for walls
-		
-		Hooks.on("renderTokenConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.TokenSheetSettings(pApp, pHTML, pData)); //for tokens
-		
-		Hooks.on("renderTileConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.TileSheetSettings(pApp, pHTML, pData)); //for tokens
-		
-		Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML, pData)); //for scenes 
+		if (game.release.generation <= 12) {
+			Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML[0], vData)); //for walls
+
+			Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML[0], vData)); //for tokens
+			
+			Hooks.on("renderTileConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TileSheetSettings(vApp, vHTML[0], vData)); //for tokens
+			
+			Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML[0], pData)); //for scenes
+		}
+		else {
+			Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML, vData)); //for walls
+
+			Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
+			
+			Hooks.on("renderTileConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TileSheetSettings(vApp, vHTML, vData)); //for tokens
+			
+			Hooks.on("renderSceneConfig", (pApp, pHTML, pData) => PerceptiveSheetSettings.SceneSheetSettings(pApp, pHTML, pData)); //for scenes
+		}
 	}
 });
 
