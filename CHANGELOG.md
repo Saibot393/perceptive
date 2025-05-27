@@ -1,3 +1,6 @@
+## v5.0.0
+- v13 compatibility
+
 ## v4.3.2
 - Bug fix for Pf2e effects
 - Updated Italien translation (thanks to [GregoryWarn ](https://github.com/GregoryWarn))
