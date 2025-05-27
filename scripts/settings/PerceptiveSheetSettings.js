@@ -63,12 +63,12 @@ class PerceptiveSheetSettings {
 			let vprevTab = pHTML.querySelector(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
 			
 			let vTabButtonHTML = 	fromHTML(`
-							<a class="item" data-tab="${cModuleName}" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'}>
+							<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-tab="${cModuleName}" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'}>
 								<i class="${cPerceptiveIcon}"></i>
 								${Translate("Titles."+cModuleName)}
 							</a>
 							`); //tab button HTML
-			let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
+			let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 			
 			vTabbar.append(vTabButtonHTML);
 			vprevTab.after(vTabContentHTML);	
@@ -200,12 +200,12 @@ class PerceptiveSheetSettings {
 				let vprevTab = pHTML.querySelector(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
 				
 				let vTabButtonHTML = 	fromHTML(`
-								<a class="item" ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
+								<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
 									<i class="fas ${cPerceptiveIcon}"></i>
 									${Translate("Titles."+cModuleName)}
 								</a>
 								`); //tab button HTML
-				let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
+				let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);	
@@ -298,12 +298,12 @@ class PerceptiveSheetSettings {
 				let vprevTab = pHTML.querySelector(`div[data-tab="overhead"]`);//pHTML.querySelector(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
 				
 				let vTabButtonHTML = 	fromHTML(`
-								<a class="item" ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
+								<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
 									<i class="fas ${cPerceptiveIcon}"></i>
 									${Translate("Titles."+cModuleName)}
 								</a>
 								`); //tab button HTML
-				let vTabContentHTML = fromHTML(`<div class="tab scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
+				let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
 				vprevTab.after(vTabContentHTML);
@@ -344,7 +344,6 @@ class PerceptiveSheetSettings {
 			let vTittleHTML = fromHTML(`<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`);
 			
 			pHTML.querySelector('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
-			console.log(pHTML.querySelector('input[name="darkness"]'))
 			
 			//scene bright end
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneBrightEndF +".name"), 

@@ -582,9 +582,7 @@ class SpottingManager {
 						if (!PerceptiveFlags.matchesAPPL(vSpotables[i], vLocalVisionData.vlastAPProf)) {
 							vSuccessDegree = 0;
 						}
-						console.log(PerceptiveFlags.matchesAPPL(vSpotables[i], vLocalVisionData.vlastAPProf));
-						console.log(vLocalVisionData.vlastAPProf);
-						console.log(vSpotables[i]);
+						
 						if ((vSuccessDegree > 0) || (game.settings.get(cModuleName, "ShowfailuresinGMconfirm") && (vSpotables[i].documentName == "Token" || vSpotables[i].documentName == "Tile"))) {
 							vSpotted.push(vSpotables[i]);
 							
@@ -1034,6 +1032,8 @@ class SpottingManager {
 
 	//ui
 	static async addPerceptiveHUD(pHUD, pHTML, pToken) {
+		if (!pHTML.nodeType) pHTML = pHTML[0];
+		
 		let vToken = PerceptiveUtils.TokenfromID(pToken._id);
 		
 		//Illumination Indicator
@@ -1094,7 +1094,7 @@ class SpottingManager {
 			let vLingeringAPPosition = game.settings.get(cModuleName, "LingeringAPIconPosition");
 
 			if (vLingeringAPPosition != "none") {
-				let vPositionDIV = pHTML[0].querySelector("div.col."+vLingeringAPPosition);
+				let vPositionDIV = pHTML.querySelector("div.col."+vLingeringAPPosition);
 				
 				let vLingeringDIV = document.createElement("div");
 				vLingeringDIV.classList.add("control-icon");
@@ -1123,7 +1123,7 @@ class SpottingManager {
 			let vDCPosition = game.settings.get(cModuleName, "PDCInputPosition");
 			
 			if (vDCPosition != "none") {
-				let vPositionDIV = pHTML[0].querySelector("div.col."+vDCPosition);
+				let vPositionDIV = pHTML.querySelector("div.col."+vDCPosition);
 				
 				let vPerceptionDCDIV = document.createElement("div");
 				vPerceptionDCDIV.classList.add("control-icon");
