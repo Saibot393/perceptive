@@ -1068,13 +1068,13 @@ class SpottingManager {
 		//Perceptive hidden "Effect"
 		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
 			if (PerceptiveFlags.isPerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))) {
-				pHTML.find(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`));
+				pHTML.querySelector(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`));
 			}
 			else {
-				pHTML.find(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`));
+				pHTML.querySelector(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`));
 			}
 			
-			pHTML.find(`i[data-action="${cModuleName}-Stealth"]`).click(async (pEvent) => {	let vToken = PerceptiveUtils.TokenfromID(pToken._id);
+			pHTML.querySelector(`i[data-action="${cModuleName}-Stealth"]`).click(async (pEvent) => {	let vToken = PerceptiveUtils.TokenfromID(pToken._id);
 																							await PerceptiveFlags.togglePerceptiveStealthing(vToken);
 																							
 																							if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
