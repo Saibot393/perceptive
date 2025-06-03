@@ -240,9 +240,11 @@ Hooks.once("init", () => {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cZnPOptions)) {
-		libWrapper.register(cModuleName, "MouseManager.prototype._onWheel", function(pWrapped, ...args) {if (allowCanvasZoom(args[0])) {return pWrapped(...args)}}, "MIXED");
-	
-		libWrapper.ignore_conflicts(cModuleName, [cZnPOptions, cMassEdit], "MouseManager.prototype._onWheel");
+		if (game.release.generation <= 12) {
+			libWrapper.register(cModuleName, "MouseManager.prototype._onWheel", function(pWrapped, ...args) {if (allowCanvasZoom(args[0])) {return pWrapped(...args)}}, "MIXED");
+		
+			libWrapper.ignore_conflicts(cModuleName, [cZnPOptions, cMassEdit], "MouseManager.prototype._onWheel");
+		}
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cMATT)) {
