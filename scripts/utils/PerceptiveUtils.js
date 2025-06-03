@@ -593,7 +593,15 @@ class PerceptiveUtils {
 	//keyboard
 	static KeyisDown(pKeyName, pnoKeyvalid = false) {
 		if (game.keybindings.bindings.get(cModuleName + "." + pKeyName).length > 0) {
-			return Boolean(game.keybindings.get(cModuleName, pKeyName).find(vKey => keyboard.downKeys.has(vKey.key)));
+			let vKeyboard;
+			if (game.release.generation <= 12) {
+				vKeyboard = keyboard;
+			}
+			else {
+				vKeyboard = game.keyboard;
+			}
+			
+			return Boolean(game.keybindings.get(cModuleName, pKeyName).find(vKey => vKeyboard.downKeys.has(vKey.key)));
 		}
 		
 		return Boolean(pnoKeyvalid);
