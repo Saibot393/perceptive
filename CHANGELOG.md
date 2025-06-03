@@ -1,3 +1,6 @@
+## v5.0.3
+- Compatibility fix
+
 ## v5.0.2
 - Small bug fix
 
