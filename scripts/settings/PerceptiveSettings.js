@@ -1095,10 +1095,10 @@ function collapseContentv12(pHTML, pTitle, pIndentifiers) {
 						</div>
 					</details>`);
 				
-	pHTML.querySelector(pIndentifiers).closest(".form-group").before(vCollapse);
-	let vCollapsediv = pHTML.querySelector(`div[content=${pTitle}]`);
+	pHTML.find(pIndentifiers)[0].closest(".form-group").before(vCollapse);
+	let vCollapsediv = pHTML.find(`div[content=${pTitle}]`);
 	
-	pHTML.querySelector(pIndentifiers).each(function () {
+	pHTML.find(pIndentifiers).each(function () {
 		vCollapsediv.append(this);
 	});
 }
@@ -1148,6 +1148,11 @@ function collapseContent(pHTML, pTitle, pIndentifiers) {
 //Hooks
 Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 	//add a few titles	
+	let vOriginalHTML = pHTML; //stupid but necessary for <v12 compatibility
+	
+	if (game.release.generation <= 12) {
+		pHTML = pHTML[0];
+	}
 	
 	let vnewHTML;
 	
@@ -1179,14 +1184,14 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 		pHTML.querySelector('input[name="' + cModuleName + '.followTokens"]').closest(".form-group").before(vnewHTML);	
 		
 		//collapses
-		collapseContent(pHTML, "GMuiandcontrol", 	["SimulatePlayerVision",
+		collapseContent(vOriginalHTML, "GMuiandcontrol", 	["SimulatePlayerVision",
 													"GMSpotconfirmDialogbehaviour",
 													"ShowfailuresinGMconfirm",
 													"ForceInvertIgnoreRollKey",
 													"GMReciveInformationWhisper",
 													"MacroSeekBehaviour"]);
 		
-		collapseContent(pHTML, "RulesAutomation", 	["AutoRerollPPDConMove",
+		collapseContent(vOriginalHTML, "RulesAutomation", 	["AutoRerollPPDConMove",
 													"resetSpottedbyMovedefault",
 													"CritMethod",
 													"AutomateTokenSpottable",
@@ -1198,21 +1203,21 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 													"RevealSpottedDooronClick",
 													"disableSpottableMATTTiles"]);
 
-		collapseContent(pHTML, "RollFormulas", 	["PassivePerceptionFormula",
+		collapseContent(vOriginalHTML, "RollFormulas", 	["PassivePerceptionFormula",
 												"PassivePerceptionProficiencyPath",
 												"ActivePerceptionProficiencyPath",
 												"PerceptionKeyWord",
 												"StealthKeyWord",
 												"AutoStealthDCbehaviour"]);
 																										
-		collapseContent(pHTML, "Effects", 	["applySystemStealthEffect",
+		collapseContent(vOriginalHTML, "Effects", 	["applySystemStealthEffect",
 											"usePerceptiveStealthEffect",
 											"PerceptiveStealthFriendliesvisible",
 											"syncEffectswithPerceptiveStealth",
 											"customStealthEffects",
 											"customPerceptionEffect"]);
 											
-		collapseContent(pHTML, "SightRange", 	["SpottingRange",
+		collapseContent(vOriginalHTML, "SightRange", 	["SpottingRange",
 												"SpottingConeRange",
 												"ApplyRange",
 												"UseBordertoBorderRange",
@@ -1220,12 +1225,12 @@ Hooks.on("renderSettingsConfig", (pApp, pHTML, pData) => {
 												"RangePDCModifier",
 												"Range3DCalculation"]);
 		
-		collapseContent(pHTML, "Illumination", 	["IlluminationPDCModifier",
+		collapseContent(vOriginalHTML, "Illumination", 	["IlluminationPDCModifier",
 												"UseIlluminationPDCModifierforAP",
 												"IlluminationAPDCBehaviour",
 												"Light3Dcalc"]);
 												
-		collapseContent(pHTML, "SoundnImages", 	["SpottedSound",
+		collapseContent(vOriginalHTML, "SoundnImages", 	["SpottedSound",
 												"SpottedSoundVolume",
 												"SpotterImagePing",
 												"SpotterImagePingDuration"]);

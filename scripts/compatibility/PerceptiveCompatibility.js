@@ -102,17 +102,19 @@ class PerceptiveCompatibility {
 	
 	//specific: MATT
 	static addTriggerSettings(pApp, pHTML, pData, pAddBasics = false) {
-		let vAddBasics = pAddBasics && !pHTML.find(`a[data-tab="triggers"]`).length;
+		let vAddBasics = pAddBasics && !pHTML.querySelector(`a[data-tab="triggers"]`);
 		
 		if (vAddBasics) {
-			let vTabbar = pHTML.find(`nav.sheet-tabs`);
+			console.log(pHTML);
+			let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+			console.log(vTabbar);
 			
-			let vTabButtonHTML = 	`
+			let vTabButtonHTML = 	fromHTML(`
 							<a class="item" data-tab="triggers">
 								<i class="fas ${cTriggersIcon}"></i>
 								${Translate("Titles.Triggers")}
 							</a>
-							`; //tab button HTML
+							`); //tab button HTML
 			
 			vTabbar.append(vTabButtonHTML);		
 		}
@@ -124,10 +126,10 @@ class PerceptiveCompatibility {
 			vContentTabName = "trigger-setup";
 		}
 		else {	
-			if (!pHTML.find(`div[data-tab="${vContentTabName}"]`).length) {
+			if (!pHTML.querySelector(`div[data-tab="${vContentTabName}"]`)) {
 				//create new tab field
-				let vprevTab = pHTML.find(`div[data-tab=${cModuleName}]`); //places triggers tab after last core tab "basic"
-				let vTabContentHTML = `<div class="tab" data-tab="${vContentTabName}"></div>`; //tab content sheet HTML
+				let vprevTab = pHTML.querySelector(`div[data-tab=${cModuleName}]`); //places triggers tab after last core tab "basic"
+				let vTabContentHTML = fromHTML(`<div class="tab" data-tab="${vContentTabName}"></div>`); //tab content sheet HTML
 				vprevTab.after(vTabContentHTML);
 			}
 		}
@@ -815,6 +817,14 @@ Hooks.once("setupTileActions", (pMATT) => {
 		}
 	}
 });
+
+function fromHTML(pHTML) {
+	let vDIV = document.createElement('div');
+	
+	vDIV.innerHTML = pHTML;
+	
+	return vDIV.querySelector("*");
+}
 
 function TriggerTilerequest(pData) {return PerceptiveCompatibility.TriggerTilerequest(pData)};
 
