@@ -193,6 +193,12 @@ class PerceptiveSheetSettings {
 	}
 	
 	static async TokenSheetSettings(pApp, pHTML, pData) {
+		if (!pApp.document) {
+			if (pApp.actor) {
+				pApp.document = pApp.actor.prototypeToken;
+			}
+		}
+		
 		if (game.user.isGM) {
 			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 				//add new tab
@@ -711,6 +717,8 @@ Hooks.once("ready", () => {
 			Hooks.on("renderWallConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.WallSheetSettings(vApp, vHTML, vData)); //for walls
 
 			Hooks.on("renderTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
+			
+			Hooks.on("renderPrototypeTokenConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TokenSheetSettings(vApp, vHTML, vData)); //for tokens
 			
 			Hooks.on("renderTileConfig", (vApp, vHTML, vData) => PerceptiveSheetSettings.TileSheetSettings(vApp, vHTML, vData)); //for tokens
 			
