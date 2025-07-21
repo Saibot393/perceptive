@@ -329,9 +329,9 @@ class PerceptiveSheetSettings {
 				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
 				
 				//infos 
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
 				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`);
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
 				
 				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
 			}
@@ -349,7 +349,12 @@ class PerceptiveSheetSettings {
 			//create title (under which all settings are placed)
 			let vTittleHTML = fromHTML(`<fieldset data-group="${cModuleName}" name="BrightDimEnd"><legend><p><i class="fas ${cPerceptiveIcon}"></i>  ${Translate("Titles.perceptive")}</p> </legend></fieldset>`);
 			
-			pHTML.querySelector('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
+			if (pHTML.querySelector('input[name="darkness"]')) {
+				pHTML.querySelector('input[name="darkness"]').closest(".form-group").after(vTittleHTML);
+			} 
+			else {
+				pHTML.querySelector('input[name="environment.darknessLock"]').closest(".form-group").after(vTittleHTML);
+			}
 			
 			//scene bright end
 			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cSceneBrightEndF +".name"), 
@@ -638,8 +643,16 @@ class PerceptiveSheetSettings {
 				vnewHTML = vnewHTML + `</select>`;
 				break;
 			case "range":
-				vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${vfullflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}" ${vlockedstate}>
-										<span class="${vtype}-value">${vvalue}</span>`;
+				if (game.release.generation <= 12) {
+					vnewHTML = vnewHTML + 	`<input type=${vtype} name="flags.${vfullflagname}" id=${vID} value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}" ${vlockedstate}>
+											<span class="${vtype}-value">${vvalue}</span>`;
+				}
+				else {
+					vnewHTML = vnewHTML + 	`<range-picker name="flags.${vfullflagname}" id="flags.${vfullflagname}" value="${vvalue}" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}">
+												<input type="range" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}>
+												<input type="number" min="${vrange[0]}" max="${vrange[1]}" step="${vstep}>
+											</range-picker>`
+				}
 				break;
 			case "numberpart":
 			case "numberinterval":

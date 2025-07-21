@@ -141,14 +141,14 @@ class SpottingManager {
 			let vTolerance;
 			let vCustomRange;
 		
+			if (PerceptiveFlags.HasSpottingRange(vWallObject.document)) {
+				vCustomRange = {Range : PerceptiveFlags.SpottingRange(vWallObject.document)};
+			}	
+		
 			if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 				if (vLocalVisionData.vUseRangeTollerance) {
 					vTolerance = {PointTolerance : 0};
-				}
-								
-				if (PerceptiveFlags.HasSpottingRange(vWallObject.document)) {
-					vCustomRange = {Range : PerceptiveFlags.SpottingRange(vWallObject.document)};
-				}		
+				}	
 			}
 			
 			let vRangeInfo = {};
@@ -216,13 +216,13 @@ class SpottingManager {
 		let vTolerance;
 		let vCustomRange;
 		
+		if (PerceptiveFlags.HasSpottingRange(pToken.document)) {
+			vCustomRange = {Range : PerceptiveFlags.SpottingRange(pToken.document)};
+		}
+		
 		if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 			if (vLocalVisionData.vUseRangeTollerance) {
 				vTolerance = {PointTolerance : Math.max(pToken.width, pToken.height)/2};
-			}
-							
-			if (PerceptiveFlags.HasSpottingRange(pToken.document)) {
-				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pToken.document)};
 			}		
 		}
 		
@@ -270,6 +270,10 @@ class SpottingManager {
 		let vTolerance;
 		let vCustomRange;
 		
+		if (PerceptiveFlags.HasSpottingRange(pTile.document)) {
+			vCustomRange = {Range : PerceptiveFlags.SpottingRange(pTile.document)};
+		}
+		
 		if (vLocalVisionData.vRangeDCModifier || vLocalVisionData.vPassiveRange || vCustomRange) {
 			if (vLocalVisionData.vUseRangeTollerance) {
 				if (pTile.mesh) {
@@ -278,10 +282,6 @@ class SpottingManager {
 				else {
 					vTolerance = {PointTolerance : Math.max(pTile.width, pTile.height)/2};
 				}
-			}
-							
-			if (PerceptiveFlags.HasSpottingRange(pTile.document)) {
-				vCustomRange = {Range : PerceptiveFlags.SpottingRange(pTile.document)};
 			}			
 		}
 		
@@ -293,6 +293,7 @@ class SpottingManager {
 			vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(pTile.document)}
 		}
 		
+		console.log(SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo));
 		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 			//performance reason (vLocalVisionData.vRangeDCModifier)
 			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
