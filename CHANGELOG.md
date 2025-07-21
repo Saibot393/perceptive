@@ -1,3 +1,6 @@
+## v5.0.5
+- Bug fix for prototype tokens
+
 ## v5.0.4
 - Small bug fix
 
