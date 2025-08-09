@@ -174,7 +174,7 @@ The following informations will be displayed in the settings (if applicable):
 - The setting Player perspective is incompatible with Less Fogs Reveal Token settings
 
 ## Vision Channels
-Vision channels allow GMs to make tokens, tiles and door controls conditionally visible and walls transparent or traversable to certain tokens. Colors or graphical filters may be applied to objects seen through these channels. The feature can be controlled via api, a few exmplae macros for this purpose are included.
+Vision channels allow GMs to make tokens, tiles and door controls conditionally visible and walls transparent or traversable to certain tokens. Colors or graphical filters (Tokens only) may be applied to objects seen through these channels. The feature can be controlled via api, a few exmplae macros for this purpose are included.
 
 ### Settings:
 
