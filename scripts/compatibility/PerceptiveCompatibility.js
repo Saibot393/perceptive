@@ -110,7 +110,7 @@ class PerceptiveCompatibility {
 			console.log(vTabbar);
 			
 			let vTabButtonHTML = 	fromHTML(`
-							<a class="item" data-tab="triggers">
+							<a class="item" data-tab="triggers" data-group="sheet" data-action="tab">
 								<i class="fas ${cTriggersIcon}"></i>
 								${Translate("Titles.Triggers")}
 							</a>
@@ -120,16 +120,18 @@ class PerceptiveCompatibility {
 		}
 		
 		let vContentTabName = "triggers";
+
+		let vObject = pApp.object || pData.document;
 		
-		if (pApp.object.documentName == "Tile") {
+		if (vObject.documentName == "Tile") {
 			//this is a tile, change tab
-			vContentTabName = "trigger-setup";
+			vContentTabName = game.release.generation > 12 ? "setup" : "trigger-setup";
 		}
 		else {	
 			if (!pHTML.querySelector(`div[data-tab="${vContentTabName}"]`)) {
 				//create new tab field
 				let vprevTab = pHTML.querySelector(`div[data-tab=${cModuleName}]`); //places triggers tab after last core tab "basic"
-				let vTabContentHTML = fromHTML(`<div class="tab" data-tab="${vContentTabName}"></div>`); //tab content sheet HTML
+				let vTabContentHTML = fromHTML(`<div class="tab" data-tab="${vContentTabName}" data-group="sheet"></div>`); //tab content sheet HTML
 				vprevTab.after(vTabContentHTML);
 			}
 		}
@@ -148,7 +150,7 @@ class PerceptiveCompatibility {
 														vhint : Translate("SheetSettings."+ cMATTTriggerTileF +".descrp"), 
 														vtype : "text",
 														vwide : true,
-														vvalue : PerceptiveCompUtils.MATTTriggerTileID(pApp.object),
+														vvalue : PerceptiveCompUtils.MATTTriggerTileID(vObject),
 														vfullflagname : vFlagPrefix + cMATTTriggerTileF
 														}, `div[data-tab="${vContentTabName}"]`);		
 		}
@@ -163,7 +165,7 @@ class PerceptiveCompatibility {
 														vtype : "select",
 														voptions : 	vTypeOptions,		
 														voptionsName : cMATTTriggerConditionsF,
-														vvalue : PerceptiveCompUtils.MattTriggerCondition(pApp.object, vTriggerType),
+														vvalue : PerceptiveCompUtils.MattTriggerCondition(vObject, vTriggerType),
 														vflagname : cMATTTriggerConditionsF + "." + vTriggerType
 														}, `div[data-tab="${vContentTabName}"]`);	
 		}
