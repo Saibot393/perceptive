@@ -21,6 +21,7 @@ const cEpicRolls = "epic-rolls-5e";
 const cMassEdit = "multi-token-edit";
 const cMWE = "monks-wall-enhancement";
 const cCPR = "chris-premades";
+const cPuzzleLocks = "puzzle-locks";
 
 //special words
 const cLockTypeDoor = "LTDoor"; //type for door locks
@@ -42,7 +43,7 @@ const cMATTTriggerConditionsF = "MATTTriggerConditionsFlag";
 
 export { cLockTypeDoor }
 
-export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit, cMWE, cCPR}
+export { cLibWrapper, cArmReach, cArmReachold, cLocknKey, cWallHeight, cDfredCE, cVision5e, cStealthy, cLevels, cZnPOptions, cRideable, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cTokenMagic, cEpicRolls, cMassEdit, cMWE, cCPR, cPuzzleLocks}
 
 class PerceptiveCompUtils {
 	//DECLARATIONS

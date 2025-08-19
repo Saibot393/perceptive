@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit, cMWE } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit, cMWE, cPuzzleLocks } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -105,9 +105,7 @@ class PerceptiveCompatibility {
 		let vAddBasics = pAddBasics && !pHTML.querySelector(`a[data-tab="triggers"]`);
 		
 		if (vAddBasics) {
-			console.log(pHTML);
 			let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
-			console.log(vTabbar);
 			
 			let vTabButtonHTML = 	fromHTML(`
 							<a class="item" data-tab="triggers" data-group="sheet" data-action="tab">
@@ -331,6 +329,12 @@ Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cMWE)) {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 			libWrapper.ignore_conflicts(cModuleName, cMWE, "ClockwiseSweepPolygon.prototype._testEdgeInclusion");
+		}
+	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cPuzzleLocks)) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.ignore_conflicts(cModuleName, cPuzzleLocks, "TileDocument.prototype.trigger");
 		}
 	}
 	

@@ -1058,7 +1058,7 @@ class SpottingManager {
 			}
 
 			let vButtonHTML = `<div class="control-icon" data-action="${cModuleName}-Illumination" title="${TranslateandReplace("Titles.SpottingInfos.LightLevel.name", {pLevel : Translate("Titles.SpottingInfos.LightLevel.value" + PerceptiveFlags.LightLevel(pToken))})}">
-									<i class="${vIlluminationIcon}"></i>
+									<i class="${vIlluminationIcon}" style="display:flex"></i>
 							  </div>`;
 
 			pHTML.querySelector("div.col."+vIlluminationPosition).append(fromHTML(vButtonHTML));
@@ -1069,24 +1069,25 @@ class SpottingManager {
 		//Perceptive hidden "Effect"
 		if (game.settings.get(cModuleName, "usePerceptiveStealthEffect")) {
 			if (PerceptiveFlags.isPerceptiveStealthing(PerceptiveUtils.TokenfromID(pToken._id))) {
-				pHTML.querySelector(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`));
+				pHTML.querySelector(`div.status-effects`).append(fromHTML(`	<i class="${cStealthIcon} active" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StopStealthing")}"></i>`));
 			}
 			else {
-				pHTML.querySelector(`div[class="status-effects"]`).append(fromHTML(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`));
+				pHTML.querySelector(`div.status-effects`).append(fromHTML(`	<i class="${cnotStealthIcon}" data-action="${cModuleName}-Stealth" title="${Translate("Titles.StartStealthing")}"></i>`));
 			}
 			
-			pHTML.querySelector(`i[data-action="${cModuleName}-Stealth"]`).click(async (pEvent) => {	let vToken = PerceptiveUtils.TokenfromID(pToken._id);
-																							await PerceptiveFlags.togglePerceptiveStealthing(vToken);
-																							
-																							if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
-																								if (PerceptiveFlags.isPerceptiveStealthing(vToken)) {
-																									//EffectManager.applyStealthEffects(vToken);
+			pHTML.querySelector(`i[data-action="${cModuleName}-Stealth"]`).onclick = async (pEvent) => {	
+																								let vToken = PerceptiveUtils.TokenfromID(pToken._id);
+																								await PerceptiveFlags.togglePerceptiveStealthing(vToken);
+																								
+																								if (game.settings.get(cModuleName, "syncEffectswithPerceptiveStealth")) {
+																									if (PerceptiveFlags.isPerceptiveStealthing(vToken)) {
+																										//EffectManager.applyStealthEffects(vToken);
+																									}
+																									else {
+																										EffectManager.removeStealthEffects(vToken);
+																									}
 																								}
-																								else {
-																									EffectManager.removeStealthEffects(vToken);
-																								}
-																							}
-																							});
+																							};
 		}
 		
 		//lingering AP ui
@@ -1126,10 +1127,6 @@ class SpottingManager {
 			if (vDCPosition != "none") {
 				let vPositionDIV = pHTML.querySelector("div.col."+vDCPosition);
 				
-				let vPerceptionDCDIV = document.createElement("div");
-				vPerceptionDCDIV.classList.add("control-icon");
-				vPerceptionDCDIV.setAttribute("data-action", `${cModuleName}-PassiveDC`);
-				
 				let vDCPassiveInput = document.createElement("input");
 				vDCPassiveInput.type = "number";
 				vDCPassiveInput.value = PerceptiveFlags.getPPDC(vToken, true);
@@ -1149,10 +1146,20 @@ class SpottingManager {
 					vDCActiveInput.title = Translate("Titles.SpottingInfos.ActiveDC");
 				}
 				
-				vPerceptionDCDIV.appendChild(vDCPassiveInput);
-				if (vDCActiveInput) vPerceptionDCDIV.appendChild(vDCActiveInput);
-				
-				vPositionDIV.appendChild(vPerceptionDCDIV);
+				if (game.release.generation > 12) {
+					vPositionDIV.appendChild(vDCPassiveInput);
+					if (vDCActiveInput) vPositionDIV.appendChild(vDCActiveInput);
+				}
+				else {
+					let vPerceptionDCDIV = document.createElement("div");
+					vPerceptionDCDIV.classList.add("control-icon");
+					vPerceptionDCDIV.setAttribute("data-action", `${cModuleName}-PassiveDC`);
+					
+					vPerceptionDCDIV.appendChild(vDCPassiveInput);
+					if (vDCActiveInput) vPerceptionDCDIV.appendChild(vDCActiveInput);
+					
+					vPositionDIV.appendChild(vPerceptionDCDIV);
+				}
 				
 				/*
 				vPositionDIV = ;

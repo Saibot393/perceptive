@@ -39,305 +39,311 @@ class PerceptiveSheetSettings {
 	//IMPLEMENTATIONS
 	
 	static WallSheetSettings(pApp, pHTML, pData) {
-		if (!PerceptiveFlags.isPerceptiveWall(pApp.document)) {
-			//create Tabs if necessary
-			WallTabInserter.InsertWallTabs(pApp, pHTML, pData);
-			
-			/*
-			//setup
-			let vprevElement = pHTML.querySelector(`fieldset.door-options`);
-			if (!vprevElement.length) {
-				//if door options was not found, try other search
-				vprevElement = pHTML.querySelector(`select[name="ds"]`).closest(".form-group");
-			}
-			
-			
-			let vNewSection = `	<fieldset class="${cModuleName}-options">
-									<legend><i class="${cPerceptiveIcon}"></i> ${Translate("Titles."+cModuleName)}</legend>
-								</fieldset>`;
-								
-			vprevElement.after(vNewSection);
-			*/
-			
-			let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
-			let vprevTab = pHTML.querySelector(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
-			
-			let vTabButtonHTML = 	fromHTML(`
-							<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-tab="${cModuleName}" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'}>
-								<i class="${cPerceptiveIcon}"></i>
-								${Translate("Titles."+cModuleName)}
-							</a>
-							`); //tab button HTML
-			let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
-			
-			vTabbar.append(vTabButtonHTML);
-			vprevTab.after(vTabContentHTML);	
-			
-			/*
-			let vCollapse = `<details>
-						<summary>${Translate("Titles."+"test")}</summary>
-						<div content=${"test"}>
-						</div>
-					</details>`;
-					
-			pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(vCollapse);
-			*/
-					
-			
-			
-			//wall can be lockpeeked
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
-														vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 
-														vtype : "checkbox", 
-														vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
-														vflagname : ccanbeLockpeekedF
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//lock peeking dc
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPeekingDCF +".name"), 
-														vhint : Translate("SheetSettings."+ cPeekingDCF +".descrp"), 
-														vtype : "number", 
-														vvalue : PerceptiveFlags.PeekingDC(pApp.document, true), 
-														vflagname : cPeekingDCF
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//lock peeking size
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
-														vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
-														vtype : "range", 
-														vrange : [0,1],
-														vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
-														vstep : 0.01,
-														vflagname : cLockPeekSizeF
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//lock peeking position
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekPositionF +".name"), 
-														vhint : Translate("SheetSettings."+ cLockPeekPositionF +".descrp"), 
-														vtype : "range", 
-														vrange : [0,1],
-														vvalue : PerceptiveFlags.LockPeekingPosition(pApp.document), 
-														vstep : 0.01,
-														vflagname : cLockPeekPositionF
-														}, `div[data-tab="${cModuleName}"]`);
-			
-			//wall movement type
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
-														vhint : Translate("SheetSettings."+ cDoorMovementF +".descrp"), 
-														vtype : "select", 
-														voptions : cDoorMoveTypes,
-														vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
-														vflagname : cDoorMovementF
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//prevent normal open if applicable
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPreventNormalOpenF +".name"), 
-														vhint : Translate("SheetSettings."+ cPreventNormalOpenF +".descrp"), 
-														vtype : "checkbox", 
-														vvalue : PerceptiveFlags.PreventNormalOpen(pApp.document, true), 
-														vflagname : cPreventNormalOpenF
-														}, `div[data-tab="${cModuleName}"]`);
-
-			//wall hinge position
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
-														vhint : Translate("SheetSettings."+ cDoorHingePositionF +".descrp"), 
-														vtype : "select", 
-														voptions : cHingePositions,
-														vvalue : PerceptiveFlags.DoorHingePosition(pApp.document), 
-														vflagname : cDoorHingePositionF
-														}, `div[data-tab="${cModuleName}"]`);
-												
-			//wall swing speed
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingSpeedF +".name"), 
-														vhint : Translate("SheetSettings."+ cDoorSwingSpeedF +".descrp"), 
-														vtype : "number", 
-														//vrange : cSwingSpeedRange,
-														vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
-														vflagname : cDoorSwingSpeedF
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//wall swing range
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingRangeF +".name"), 
-														vhint : Translate("SheetSettings."+ cDoorSwingRangeF +".descrp"), 
-														vtype : "numberinterval", 
-														//vrange : cSwingSpeedRange,
-														vvalue : PerceptiveFlags.getDoorSwingRange(pApp.document), 
-														vflagname : [cDoorSwingRangeF, cDoorSwingRangeF],
-														}, `div[data-tab="${cModuleName}"]`);
-														
-			//wall slide speed
-			PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSlideSpeedF +".name"), 
-														vhint : Translate("SheetSettings."+ cDoorSlideSpeedF +".descrp"), 
-														vtype : "number", 
-														//vrange : cSlideSpeedRange,
-														vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
-														vstep : 0.01,
-														vflagname : cDoorSlideSpeedF
-														}, `div[data-tab="${cModuleName}"]`);
-							
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {			
-				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+		if (!pHTML.querySelector(`a[data-tab="${cModuleName}"]`)) {
+			if (!PerceptiveFlags.isPerceptiveWall(pApp.document)) {
+				//create Tabs if necessary
+				WallTabInserter.InsertWallTabs(pApp, pHTML, pData);
 				
-				//infos 
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
+				/*
+				//setup
+				let vprevElement = pHTML.querySelector(`fieldset.door-options`);
+				if (!vprevElement.length) {
+					//if door options was not found, try other search
+					vprevElement = pHTML.querySelector(`select[name="ds"]`).closest(".form-group");
+				}
 				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
 				
-				Hooks.call(cModuleName + ".WallSpottingSettings", pApp, pHTML, pData);
-			}
-			
-			if (game.settings.get(cModuleName, "ActivateVCs")) {
-				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
-			}
-		}
-	}
-	
-	static async TokenSheetSettings(pApp, pHTML, pData) {
-		if (!pApp.document) {
-			if (pApp.actor) {
-				pApp.document = pApp.actor.prototypeToken;
-			}
-		}
-		
-		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
-				//add new tab
+				let vNewSection = `	<fieldset class="${cModuleName}-options">
+										<legend><i class="${cPerceptiveIcon}"></i> ${Translate("Titles."+cModuleName)}</legend>
+									</fieldset>`;
+									
+				vprevElement.after(vNewSection);
+				*/
+				
 				let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
-				let vprevTab = pHTML.querySelector(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
+				let vprevTab = pHTML.querySelector(`div[data-tab="basic"]`); //places rideable tab after last core tab "basic"
 				
 				let vTabButtonHTML = 	fromHTML(`
-								<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
-									<i class="fas ${cPerceptiveIcon}"></i>
-									${Translate("Titles."+cModuleName)}
-								</a>
-								`); //tab button HTML
-				let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
-				
-				vTabbar.append(vTabButtonHTML);
-				vprevTab.after(vTabContentHTML);	
-			}
-			
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {
-				
-				if (game.settings.get(cModuleName, "usePerceptiveStealthEffect") || PerceptiveFlags.isPerceptiveStealthing(pApp.document)) {
-					//if this token is perceptive stealthing
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPerceptiveStealthingF +".name"), 
-														vhint : Translate("SheetSettings."+ cPerceptiveStealthingF +".descrp"), 
-														vtype : "checkbox", 
-														vvalue : PerceptiveFlags.isPerceptiveStealthing(pApp.document), 
-														vflagname : cPerceptiveStealthingF
-														}, `div[data-tab="${cModuleName}"]`);
-				}
-													
-				//standard settings
-				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
-				
-				if (game.settings.get(cModuleName, "UsePf2eRules") && game.settings.get(cModuleName, "AutoRerollPPDConMove")) {
-					//lock APDC against move refreshes
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cLockPPDCF +".name"), 
-																	vhint : Translate("SheetSettings."+ cLockPPDCF +".descrp"), 
-																	vtype : "checkbox", 
-																	vvalue : PerceptiveFlags.PPDCLocked(pApp.document), 
-																	vflagname : cLockPPDCF
-																	}, `div[data-tab="${cModuleName}"]`);	
-				}
-				
-				//reset spotted by on move
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cresetSpottedbyMoveF +".name"), 
-																vhint : Translate("SheetSettings."+ cresetSpottedbyMoveF +".descrp"), 
-																vtype : "checkbox", 
-																vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
-																vflagname : cresetSpottedbyMoveF
-																}, `div[data-tab="${cModuleName}"]`);
-								
-				if (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
-					//stealth effects
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
-																	vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
-																	vtype : "text", 
-																	vwide : true,
-																	vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
-																	vflagname : cStealthEffectsF
-																	}, `div[data-tab="${cModuleName}"]`);			
-
-					//stealth effects override
-					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".name"), 
-																	vhint : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".descrp"), 
-																	vtype : "checkbox", 
-																	vwide : true,
-																	vvalue : PerceptiveFlags.OverrideWorldSEffects(pApp.document), 
-																	vflagname : cOverrideWorldSEffectsF
-																	}, `div[data-tab="${cModuleName}"]`);
-				}
-								
-				//infos 
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
-				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.PP", {pValue :  await VisionUtils.PassivPerception(pApp.document)})}</p>`));
-				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
-				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`));
-				
-				if (!game.settings.get(cModuleName, "UsePf2eRules")) {
-					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`));
-				}
-				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`));
-			
-				Hooks.call(cModuleName + ".TokenSpottingSettings", pApp, pHTML, pData);
-			}
-
-			if (game.settings.get(cModuleName, "ActivateVCs")) {
-				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
-			}			
-		}
-		
-		PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs`);
-	}
-	
-	static async TileSheetSettings(pApp, pHTML, pData) {
-		if (game.user.isGM) {
-			if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
-				//add new tab
-				let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
-				let vprevTab = pHTML.querySelector(`div[data-tab="overhead"]`);//pHTML.querySelector(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
-				
-				let vTabButtonHTML = 	fromHTML(`
-								<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
-									<i class="fas ${cPerceptiveIcon}"></i>
+								<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-tab="${cModuleName}" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'}>
+									<i class="${cPerceptiveIcon}"></i>
 									${Translate("Titles."+cModuleName)}
 								</a>
 								`); //tab button HTML
 				let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 				
 				vTabbar.append(vTabButtonHTML);
-				vprevTab.after(vTabContentHTML);
-			}
-			
-			if (game.settings.get(cModuleName, "ActivateSpotting")) {							
-				//Tile name for perceptive purposes (possible rideable synch)
-				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cTilePerceptiveNameF +".name"), 
-																vhint : Translate("SheetSettings."+ cTilePerceptiveNameF +".descrp"), 
-																vtype : "text", 
-																vwide : true,
-																vvalue : PerceptiveFlags.PerceptiveName(pApp.document),
-																vflagname : cTilePerceptiveNameF
-																}, `div[data-tab="${cModuleName}"]`);	
+				vprevTab.after(vTabContentHTML);	
+				
+				/*
+				let vCollapse = `<details>
+							<summary>${Translate("Titles."+"test")}</summary>
+							<div content=${"test"}>
+							</div>
+						</details>`;
+						
+				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(vCollapse);
+				*/
+						
+				
+				
+				//wall can be lockpeeked
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ ccanbeLockpeekedF +".name"), 
+															vhint : Translate("SheetSettings."+ ccanbeLockpeekedF +".descrp"), 
+															vtype : "checkbox", 
+															vvalue : PerceptiveFlags.canbeLockpeeked(pApp.document), 
+															vflagname : ccanbeLockpeekedF
+															}, `div[data-tab="${cModuleName}"]`);
 															
-				//standard settings
-				PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
+				//lock peeking dc
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPeekingDCF +".name"), 
+															vhint : Translate("SheetSettings."+ cPeekingDCF +".descrp"), 
+															vtype : "number", 
+															vvalue : PerceptiveFlags.PeekingDC(pApp.document, true), 
+															vflagname : cPeekingDCF
+															}, `div[data-tab="${cModuleName}"]`);
+															
+				//lock peeking size
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekSizeF +".name"), 
+															vhint : Translate("SheetSettings."+ cLockPeekSizeF +".descrp"), 
+															vtype : "range", 
+															vrange : [0,1],
+															vvalue : PerceptiveFlags.LockPeekingSize(pApp.document), 
+															vstep : 0.01,
+															vflagname : cLockPeekSizeF
+															}, `div[data-tab="${cModuleName}"]`);
+															
+				//lock peeking position
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cLockPeekPositionF +".name"), 
+															vhint : Translate("SheetSettings."+ cLockPeekPositionF +".descrp"), 
+															vtype : "range", 
+															vrange : [0,1],
+															vvalue : PerceptiveFlags.LockPeekingPosition(pApp.document), 
+															vstep : 0.01,
+															vflagname : cLockPeekPositionF
+															}, `div[data-tab="${cModuleName}"]`);
 				
-				//infos 
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
+				//wall movement type
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorMovementF +".name"), 
+															vhint : Translate("SheetSettings."+ cDoorMovementF +".descrp"), 
+															vtype : "select", 
+															voptions : cDoorMoveTypes,
+															vvalue : PerceptiveFlags.DoorMovementType(pApp.document), 
+															vflagname : cDoorMovementF
+															}, `div[data-tab="${cModuleName}"]`);
+															
+				//prevent normal open if applicable
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPreventNormalOpenF +".name"), 
+															vhint : Translate("SheetSettings."+ cPreventNormalOpenF +".descrp"), 
+															vtype : "checkbox", 
+															vvalue : PerceptiveFlags.PreventNormalOpen(pApp.document, true), 
+															vflagname : cPreventNormalOpenF
+															}, `div[data-tab="${cModuleName}"]`);
+
+				//wall hinge position
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorHingePositionF +".name"), 
+															vhint : Translate("SheetSettings."+ cDoorHingePositionF +".descrp"), 
+															vtype : "select", 
+															voptions : cHingePositions,
+															vvalue : PerceptiveFlags.DoorHingePosition(pApp.document), 
+															vflagname : cDoorHingePositionF
+															}, `div[data-tab="${cModuleName}"]`);
+													
+				//wall swing speed
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingSpeedF +".name"), 
+															vhint : Translate("SheetSettings."+ cDoorSwingSpeedF +".descrp"), 
+															vtype : "number", 
+															//vrange : cSwingSpeedRange,
+															vvalue : PerceptiveFlags.getDoorSwingSpeed(pApp.document), 
+															vflagname : cDoorSwingSpeedF
+															}, `div[data-tab="${cModuleName}"]`);
+															
+				//wall swing range
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSwingRangeF +".name"), 
+															vhint : Translate("SheetSettings."+ cDoorSwingRangeF +".descrp"), 
+															vtype : "numberinterval", 
+															//vrange : cSwingSpeedRange,
+															vvalue : PerceptiveFlags.getDoorSwingRange(pApp.document), 
+															vflagname : [cDoorSwingRangeF, cDoorSwingRangeF],
+															}, `div[data-tab="${cModuleName}"]`);
+															
+				//wall slide speed
+				PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cDoorSlideSpeedF +".name"), 
+															vhint : Translate("SheetSettings."+ cDoorSlideSpeedF +".descrp"), 
+															vtype : "number", 
+															//vrange : cSlideSpeedRange,
+															vvalue : PerceptiveFlags.getDoorSlideSpeed(pApp.document), 
+															vstep : 0.01,
+															vflagname : cDoorSlideSpeedF
+															}, `div[data-tab="${cModuleName}"]`);
+								
+				if (game.settings.get(cModuleName, "ActivateSpotting")) {			
+					PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+					
+					//infos 
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
+					
+					Hooks.call(cModuleName + ".WallSpottingSettings", pApp, pHTML, pData);
+				}
 				
-				pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
-				
-				Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
+				if (game.settings.get(cModuleName, "ActivateVCs")) {
+					PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+				}
+			}
+		}
+	}
+	
+	static async TokenSheetSettings(pApp, pHTML, pData) {
+		if (!pHTML.querySelector(`a[data-tab="${cModuleName}"]`)) {
+			if (!pApp.document) {
+				if (pApp.actor) {
+					pApp.document = pApp.actor.prototypeToken;
+				}
 			}
 			
-			if (game.settings.get(cModuleName, "ActivateVCs")) {
-				PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+			if (game.user.isGM) {
+				if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
+					//add new tab
+					let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+					let vprevTab = pHTML.querySelector(`div[data-tab="resources"]`); //places perceptive tab after last core tab "details"
+					
+					let vTabButtonHTML = 	fromHTML(`
+									<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
+										<i class="fas ${cPerceptiveIcon}"></i>
+										${Translate("Titles."+cModuleName)}
+									</a>
+									`); //tab button HTML
+					let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
+					
+					vTabbar.append(vTabButtonHTML);
+					vprevTab.after(vTabContentHTML);	
+				}
+				
+				if (game.settings.get(cModuleName, "ActivateSpotting")) {
+					
+					if (game.settings.get(cModuleName, "usePerceptiveStealthEffect") || PerceptiveFlags.isPerceptiveStealthing(pApp.document)) {
+						//if this token is perceptive stealthing
+						PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cPerceptiveStealthingF +".name"), 
+															vhint : Translate("SheetSettings."+ cPerceptiveStealthingF +".descrp"), 
+															vtype : "checkbox", 
+															vvalue : PerceptiveFlags.isPerceptiveStealthing(pApp.document), 
+															vflagname : cPerceptiveStealthingF
+															}, `div[data-tab="${cModuleName}"]`);
+					}
+														
+					//standard settings
+					PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+					
+					if (game.settings.get(cModuleName, "UsePf2eRules") && game.settings.get(cModuleName, "AutoRerollPPDConMove")) {
+						//lock APDC against move refreshes
+						PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cLockPPDCF +".name"), 
+																		vhint : Translate("SheetSettings."+ cLockPPDCF +".descrp"), 
+																		vtype : "checkbox", 
+																		vvalue : PerceptiveFlags.PPDCLocked(pApp.document), 
+																		vflagname : cLockPPDCF
+																		}, `div[data-tab="${cModuleName}"]`);	
+					}
+					
+					//reset spotted by on move
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cresetSpottedbyMoveF +".name"), 
+																	vhint : Translate("SheetSettings."+ cresetSpottedbyMoveF +".descrp"), 
+																	vtype : "checkbox", 
+																	vvalue : PerceptiveFlags.resetSpottedbyMove(pApp.document), 
+																	vflagname : cresetSpottedbyMoveF
+																	}, `div[data-tab="${cModuleName}"]`);
+									
+					if (PerceptiveUtils.isPf2e() || game.settings.get(cModuleName, "DFredsEffectsIntegration")) {
+						//stealth effects
+						PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cStealthEffectsF +".name"), 
+																		vhint : Translate("SheetSettings."+ cStealthEffectsF +".descrp"), 
+																		vtype : "text", 
+																		vwide : true,
+																		vvalue : PerceptiveFlags.StealthEffects(pApp.document, true), 
+																		vflagname : cStealthEffectsF
+																		}, `div[data-tab="${cModuleName}"]`);			
+
+						//stealth effects override
+						PerceptiveSheetSettings.AddHTMLOption(pHTML, {	vlabel : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".name"), 
+																		vhint : Translate("SheetSettings."+ cOverrideWorldSEffectsF +".descrp"), 
+																		vtype : "checkbox", 
+																		vwide : true,
+																		vvalue : PerceptiveFlags.OverrideWorldSEffects(pApp.document), 
+																		vflagname : cOverrideWorldSEffectsF
+																		}, `div[data-tab="${cModuleName}"]`);
+					}
+									
+					//infos 
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.PP", {pValue :  await VisionUtils.PassivPerception(pApp.document)})}</p>`));
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightModifier", {pValue :  PerceptiveFlags.getLightLevelModifier(pApp.document)})}</p>`));
+					
+					if (!game.settings.get(cModuleName, "UsePf2eRules")) {
+						pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.LightRollBehaviour", {pBehaviour :  PerceptiveFlags.getAPRollBehaviour(pApp.document)})}</p>`));
+					}
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.VisionLevel.name", {pLevel : Translate("Titles.SpottingInfos.VisionLevel.value" + VisionUtils.VisionLevel(pApp.document))})}</p>`));
+				
+					Hooks.call(cModuleName + ".TokenSpottingSettings", pApp, pHTML, pData);
+				}
+
+				if (game.settings.get(cModuleName, "ActivateVCs")) {
+					PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+				}			
+			}
+			
+			PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs`);
+		}
+	}
+	
+	static async TileSheetSettings(pApp, pHTML, pData) {
+		if (game.user.isGM) {
+			if (!pHTML.querySelector(`a[data-tab="${cModuleName}"]`)) {
+				if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
+					//add new tab
+					let vTabbar = pHTML.querySelector(`nav.sheet-tabs`);
+					let vprevTab = pHTML.querySelector(`div[data-tab="overhead"]`);//pHTML.querySelector(`div[data-tab="animation"]`); //places perceptive tab after last core tab "details"
+					
+					let vTabButtonHTML = 	fromHTML(`
+									<a class="item ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''}" data-action="tab" ${game.release.generation <= 12 ? 'data-group="main"' : 'data-group="sheet"'} data-tab="${cModuleName}">
+										<i class="fas ${cPerceptiveIcon}"></i>
+										${Translate("Titles."+cModuleName)}
+									</a>
+									`); //tab button HTML
+					let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
+					
+					vTabbar.append(vTabButtonHTML);
+					vprevTab.after(vTabContentHTML);
+				}
+				
+				if (game.settings.get(cModuleName, "ActivateSpotting")) {							
+					//Tile name for perceptive purposes (possible rideable synch)
+					PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cTilePerceptiveNameF +".name"), 
+																	vhint : Translate("SheetSettings."+ cTilePerceptiveNameF +".descrp"), 
+																	vtype : "text", 
+																	vwide : true,
+																	vvalue : PerceptiveFlags.PerceptiveName(pApp.document),
+																	vflagname : cTilePerceptiveNameF
+																	}, `div[data-tab="${cModuleName}"]`);	
+																
+					//standard settings
+					PerceptiveSheetSettings.AddSpottableSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);	
+					
+					//infos 
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p>${Translate("Titles.SpottingInfos.Title")}</p>`));
+					
+					pHTML.querySelector(`div[data-tab="${cModuleName}"]`).append(fromHTML(`<p class="hint">${TranslateandReplace("Titles.SpottingInfos.Spottedby", {pNames : PerceptiveFlags.SpottedbyNames(pApp.document)})}</p>`));
+					
+					Hooks.call(cModuleName + ".TileSpottingSettings", pApp, pHTML, pData);
+				}
+				
+				if (game.settings.get(cModuleName, "ActivateVCs")) {
+					PerceptiveSheetSettings.AddVCSettings(pApp, pHTML, pData, `div[data-tab="${cModuleName}"]`);
+				}
 			}
 		}
 		
