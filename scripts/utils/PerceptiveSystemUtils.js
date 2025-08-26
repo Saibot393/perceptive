@@ -96,9 +96,9 @@ class PerceptiveSystemUtils {
 							return vSystemInfo.context?.type == "perception-check";
 							break;
 						case cDnD5e:
-							pInfos["skill"] = vSystemInfo.roll.skillId;
+							pInfos["skill"] = vSystemInfo.roll?.skillId;
 						
-							return vSystemInfo.roll.skillId == "prc";
+							return vSystemInfo.roll?.skillId == "prc";
 							break;
 						case cAdvanced5e:
 							return vSystemInfo.rollData?.find(vRoll => vRoll.label.includes(CONFIG.A5E.skills.prc));

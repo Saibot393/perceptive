@@ -119,7 +119,7 @@ class PerceptiveCompatibility {
 		
 		let vContentTabName = "triggers";
 
-		let vObject = pApp.object || pData.document;
+		let vObject = pApp.object || pData.document || pApp.document;
 		
 		if (vObject.documentName == "Tile") {
 			//this is a tile, change tab
@@ -167,6 +167,8 @@ class PerceptiveCompatibility {
 														vflagname : cMATTTriggerConditionsF + "." + vTriggerType
 														}, `div[data-tab="${vContentTabName}"]`);	
 		}
+		
+		//PerceptiveSheetSettings.FixSheetWindow(pApp.element, `nav.sheet-tabs`);
 	}
 	
 	static async onPerceptiveSpotting(pObjects, pInfos, pSpotters) {

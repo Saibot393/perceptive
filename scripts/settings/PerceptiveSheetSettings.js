@@ -703,9 +703,14 @@ class PerceptiveSheetSettings {
 	static FixSheetWindow(pHTML, pIndentifier) {
 		if (!pHTML.nodeType) pHTML = pHTML[0];
 		
-		let vNeededWidth = 0;
+		let cRem = 16; //px
+		
+		let vNeededWidth = -cRem;
 
-		Array.from(pHTML.querySelector(pIndentifier).children).forEach(vElement => vNeededWidth = vNeededWidth + vElement.offsetWidth);
+		Array.from(pHTML.querySelector(pIndentifier).children).forEach(vElement => vNeededWidth = vNeededWidth + vElement.offsetWidth + cRem);
+		
+		pHTML.querySelector(pIndentifier).style.overflowX = "auto";
+		pHTML.querySelector(pIndentifier).style.overflowY = "hidden";
 		
 		if (vNeededWidth > pHTML.offsetWidth) {
 			pHTML.style.width = vNeededWidth + "px";
