@@ -1,3 +1,6 @@
+## v5.0.11
+- Small ui fix for v12
+
 ## v5.0.10
 - v12 ui fix
 
