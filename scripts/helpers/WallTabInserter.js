@@ -14,7 +14,7 @@ class WallTabInserter {
 				//save basic settings content
 				let vOriginalContent = pHTML.querySelector(`form`);
 				
-				if (!vOriginalContent.length) {
+				if (!vOriginalContent?.length) {
 					vOriginalContent = pHTML;
 				}
 				
