@@ -364,7 +364,7 @@
 
 	"IlluminationPDCModifier": {
 		"name": "Modificatori CD percezione illuminazione",
-		"descrp": "Modificatori applicati alle CD di percezione per diversi livelli di luce (Luce fioca, luce intensa, \"0,0\" per nessun modificatore)"
+		"descrp": "Modificatori applicati alle CD di percezione per diversi livelli di luce (Darkness, Dim Light, and Bright light, \"0,0,0\" per nessun modificatore)"
 	},
 
 	"UseIlluminationPDCModifierforAP": {

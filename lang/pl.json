@@ -364,7 +364,7 @@
 			
 			"IlluminationPDCModifier" : {
 				"name"					: "Modyfikatory ST percepcji oświetlenia",
-				"descrp"				: "Modyfikatory, które są stosowane do ST percepcji dla różnych poziomów oświetlenia (przyćmione światło, jasne światło, \"0,0\" dla braku modyfikatorów)"
+				"descrp"				: "Modyfikatory, które są stosowane do ST percepcji dla różnych poziomów oświetlenia (Darkness, Dim Light, and Bright light, \"0,0,0\" dla braku modyfikatorów)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {

@@ -346,7 +346,7 @@
 			
 			"IlluminationPDCModifier" : {
 				"name"					: "照明察觉DC修正值",
-				"descrp"				: "适用于不同光照等级的察觉 DC 修正值 (Dim-light,Bright-light , \"0,0\" for no modifiers)"
+				"descrp"				: "适用于不同光照等级的察觉 DC 修正值 (Darkness, Dim Light, and Bright light, \"0,0,0\" for no modifiers)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {

@@ -657,12 +657,14 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 		scope: "world",
 		config: true,
 		type: Array,
-		default: [0, 0],
-		onChange: async (pValues) => { 	if (game.user.isGM) {
-											if (pValues.length == 1) {await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue)))}; //prepare data
-											await game.settings.set(cModuleName, "useSpottingLightLevels",  game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
-										}
-									 }
+		default: [0, 0, 0], 
+		onChange: async (pValues) => {
+			if (game.user.isGM) {
+				if (pValues.length == 1) { await game.settings.set(cModuleName, "IlluminationPDCModifier", pValues[0].split(",").map(vValue => Number(vValue))) } 
+
+				await game.settings.set(cModuleName, "useSpottingLightLevels", game.settings.get(cModuleName, "IlluminationPDCModifier").find(vValue => (Number(vValue) != 0) && !(isNaN(Number(vValue))))) //auto detect if feature is active
+			}
+		}
 	  }); 
 	  
 	  game.settings.register(cModuleName, "UseIlluminationPDCModifierforAP", {
@@ -1268,6 +1270,17 @@ Hooks.on("ready", function() {
 		game.settings.set(cModuleName, "applySystemStealthEffect", true),
 		game.settings.set(cModuleName, "IlluminationAPDCBehaviour", ["=","="]),
 		game.settings.set(cModuleName, "CritMethod", "CritMethod-natCritpm10")
+	}
+	
+
+	//MIGRATION for setting "IlluminationPDCModifier"
+	// MIGRATION: Converted old two-element format to new three-elemtn format for backwords compatibility (did not work)
+	// MIGRATION: Use pValues directly, not game.settings.get()
+	let vValues = game.settings.get(cModuleName, "IlluminationPDCModifier");
+	if (Array.isArray(vValues) && vValues.length == 2 && !isNaN(vValues[0]) && !isNaN(vValues[1])) {
+		// Old format detected: [Dim,Bright], convert to [Dark=0,Dim,Bright]
+		game.settings.set(cModuleName, "IlluminationPDCModifier", [0, Number(vValues[0]), Number(vValues[1])]);
+		ui.notifications.info(`Perceptive: ${Translate("Settings.IlluminationPDCModifier.name")} setting has been migrated to new format with three values (Dark, Dim, Bright). Please review your settings.`);
 	}
 	
 	/*

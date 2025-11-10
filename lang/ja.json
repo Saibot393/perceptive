@@ -348,7 +348,7 @@
 			
 			"IlluminationPDCModifier" : {
 				"name"					: "光源による知覚難易度修正",
-				"descrp"				: "光源の度合いにより、知覚の難易度を修正します (薄暗い、明るい、 \"0,0\" で修正なし)"
+				"descrp"				: "光源の度合いにより、知覚の難易度を修正します (Darkness, Dim Light, and Bright light, \"0,0,0\" で修正なし)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {

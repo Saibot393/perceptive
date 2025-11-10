@@ -364,7 +364,7 @@
 			
 			"IlluminationPDCModifier" : {
 				"name"					: "Beleuchtung Wahrnehmungs SG Einfluss",
-				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Schwacheslicht,Helleslicht , \"0,0\" für keinen Einfluss)"
+				"descrp"				: "Einfluss der Beleuchtung auf den SG von Wahrnehmungs SGs (Dunkelheit, schwaches Licht, helles Licht , \"0,0,0\" für keinen Einfluss)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {

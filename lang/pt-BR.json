@@ -342,7 +342,7 @@
 			
 			"IlluminationPDCModifier" : {
 				"name" : "Modificadores de DC de percepção por iluminação",
-				"descrp" : "Modificadores aplicados aos DCs de percepção para diferentes níveis de luz (Luz fraca, Luz brilhante, \"0,0\" para nenhum modificador)"
+				"descrp" : "Modificadores aplicados aos DCs de percepção para diferentes níveis de luz (Darkness, Dim Light, and Bright light, \"0,0,0\" para nenhum modificador)"
 			},
 			
 			"UseIlluminationPDCModifierforAP" : {

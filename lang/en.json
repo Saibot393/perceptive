@@ -361,10 +361,10 @@
 				"name"					: "Reset spotted on token movement by default",
 				"descrp"				: "If the active spotters of a hidden token should be reset upon movement"
 			}, 
-			
+
 			"IlluminationPDCModifier" : {
 				"name"					: "Illumination perception DC modifiers",
-				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Dim-light,Bright-light , \"0,0\" for no modifiers)"
+				"descrp"				: "Modifiers that are applied to the perception DCs for different Light levels (Darkness, Dim Light, and Bright light, \"0,0,0\" for no modifiers)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {
