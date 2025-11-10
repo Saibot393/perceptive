@@ -1,3 +1,6 @@
+## v5.0.12
+- Added dark as an option for illumination DC modifiers (thanks to [hdwiggins](https://github.com/hdwiggins))
+
 ## v5.0.11
 - Small ui fix for v12
 
