@@ -1,3 +1,6 @@
+## v5.0.13
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+
 ## v5.0.12
 - Added dark as an option for illumination DC modifiers (thanks to [hdwiggins](https://github.com/hdwiggins))
 
