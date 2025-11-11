@@ -361,10 +361,10 @@
 				"name"					: "Domyślne resetowanie zauważenia przy ruchu tokena",
 				"descrp"				: "Jeśli aktywni obserwatorzy ukrytego tokena powinni zostać zresetowani po ruchu"
 			}, 
-			
+
 			"IlluminationPDCModifier" : {
 				"name"					: "Modyfikatory ST percepcji oświetlenia",
-				"descrp"				: "Modyfikatory, które są stosowane do ST percepcji dla różnych poziomów oświetlenia (Darkness, Dim Light, and Bright light, \"0,0,0\" dla braku modyfikatorów)"
+				"descrp"				: "Modyfikatory stosowane do wartości ST percepcji dla różnych poziomów oświetlenia (ciemność, słabe oświetlenie i jasne oświetlenie, „0,0,0” dla braku modyfikatorów)"
 			}, 
 			
 			"UseIlluminationPDCModifierforAP" : {
