@@ -396,19 +396,19 @@ class PerceptiveSheetSettings {
 				vContent = vContent + PerceptiveSheetSettings.createHTMLOption({	vlabel : TranslateandReplace("SheetSettings."+ cotherSkillADCsF +".entry", {pSkill : vSkill}), 
 																					//vhint : Translate("SheetSettings."+ vsubFlagname +".descrp"), 
 																					vtype : "text", 
-																					vvalue : PerceptiveFlags.getotherSkillADC(pApp.object, vSkill, true),
+																					vvalue : PerceptiveFlags.getotherSkillADC(pApp.object || pApp.document, vSkill, true),
 																					vflagname : cotherSkillADCsF + "." + vSkill,
 																					vID : vSkill
 																					}, true, false);
 			}
-			
+
 			new Dialog({
 			title: Translate("SheetSettings."+ cotherSkillADCsF + ".Title"),
 			content: vContent,
 			buttons: {
 				confirmButton: {
 					label: Translate("SheetSettings."+ cotherSkillADCsF + ".confirmButtonname"),
-					callback: (html) => {let vInputs = {}; for(let vSkill of vSkills){vInputs[vSkill] = html.find(`input#${vSkill}`).val()}; PerceptiveFlags.setotherSkillADCs(pApp.object, vInputs)},
+					callback: (html) => {let vInputs = {}; for(let vSkill of vSkills){vInputs[vSkill] = html.find(`input#${vSkill}`).val()}; PerceptiveFlags.setotherSkillADCs(pApp.object || pApp.document, vInputs)},
 					icon: `<i class="fas ${cPerceptiveIcon}"></i>`
 				}
 			},

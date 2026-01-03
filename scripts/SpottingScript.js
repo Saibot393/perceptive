@@ -293,7 +293,7 @@ class SpottingManager {
 			vSpotPoint = {...vSpotPoint, elevation : VisionUtils.objectelevation(pTile.document)}
 		}
 		
-		console.log(SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo));
+		//console.log(SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo));
 		if (vLocalVisionData.vRangeDCModifier && !SpottingManager.inCurrentVisionRange(PerceptiveUtils.selectedTokens(), vSpotPoint, {Tolerance : vTolerance, RangeReplacement : vCustomRange}, vRangeInfo)) {
 			//performance reason (vLocalVisionData.vRangeDCModifier)
 			if ((vLocalVisionData.vPassiveRange || vCustomRange)) {
