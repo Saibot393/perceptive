@@ -1,3 +1,6 @@
+## v5.0.14
+- Fix for other skill DCs menu
+
 ## v5.0.13
 - Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
 
