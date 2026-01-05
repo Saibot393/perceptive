@@ -940,6 +940,14 @@
 					"settings" : {
 						"target" : {
 							"name"			: "Ziel"
+						},
+						"ConfirmDialogBehaviour" : {
+							"name"			: "Bestätigungs Dialog Verhalten",
+							"options" : {
+								"world"		: "Welt Einstellung",
+								"force"		: "Dialog erzwingen",
+								"skip"		: "Dialog überspringen"
+							}
 						}
 					}
 				},

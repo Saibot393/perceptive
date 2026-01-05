@@ -782,7 +782,7 @@ class SpottingManager {
 							Tiles : PerceptiveUtils.IDsfromWalls(pObjects.filter(vObject => vObject.documentName == "Tile"))};
 		
 		if (game.user.isGM) {
-			if (["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) || pInfos.forceConfirmDialog) {
+			if ((["always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) && !pInfos.skipConfirmDialog) || pInfos.forceConfirmDialog) {
 				SpottingManager.openSpottingDialoge(vObjectIDs, PerceptiveUtils.IDsfromTokens(pSpotters), canvas.scene.id, pInfos);
 			}
 			else {
@@ -801,7 +801,7 @@ class SpottingManager {
 
 	static async SpotObjectsRequest(pObjectIDs, pSpotterIDs, pSceneID, pInfos) {
 		if (game.user.isGM) {
-			if (["playersonly", "always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) || pInfos.forceConfirmDialog) {
+			if ((["playersonly", "always"].includes(game.settings.get(cModuleName, "GMSpotconfirmDialogbehaviour")) && !pInfos.skipConfirmDialog) || pInfos.forceConfirmDialog) {
 				SpottingManager.openSpottingDialoge(pObjectIDs, pSpotterIDs, pSceneID, pInfos);
 			}
 			else {

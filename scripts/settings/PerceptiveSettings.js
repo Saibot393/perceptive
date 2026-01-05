@@ -291,7 +291,7 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 			"playersonly" :	Translate("Settings.GMSpotconfirmDialogbehaviour.options.playersonly"),
 			"always" : Translate("Settings.GMSpotconfirmDialogbehaviour.options.always")
 		},
-		default: false
+		default: "off"
 	  }); 
 	  
 	  game.settings.register(cModuleName, "ShowfailuresinGMconfirm", {

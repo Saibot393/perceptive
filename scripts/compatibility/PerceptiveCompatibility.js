@@ -398,8 +398,22 @@ Hooks.once("setupTileActions", (pMATT) => {
 						options: { show: ['token', 'tile', 'within', 'players', 'previous', 'tagger'] },
 						required: true,
 						restrict: (entity) => { return ((entity instanceof Token) || (entity instanceof Wall) || (entity instanceof Tile)); }
+					},
+					{
+						id: "ConfirmDialogBehaviour",
+						name: Translate(cMATT + ".actions." + "spot-object" + ".settings." + "ConfirmDialogBehaviour" + ".name"),
+						list: "ConfirmDialogBehaviour",
+						type: "list",
+						defvalue: "world"
 					}
 				],
+				values: {
+					"ConfirmDialogBehaviour": {
+						"world": Translate(cMATT + ".actions." + "spot-object" + ".settings." + "ConfirmDialogBehaviour" + ".options." + "world"),
+						"force": Translate(cMATT + ".actions." + "spot-object" + ".settings." + "ConfirmDialogBehaviour" + ".options." + "force"),
+						"skip": Translate(cMATT + ".actions." + "spot-object" + ".settings." + "ConfirmDialogBehaviour" + ".options." + "skip")
+					}
+				},
 				group: cModuleName,
 				fn: async (args = {}) => {
 					const { action } = args;
@@ -408,15 +422,18 @@ Hooks.once("setupTileActions", (pMATT) => {
 					
 					let vSpotted = await pMATT.getEntities(args, "tokens", action.data?.targets);
 					
+					let vConfirmDialogBehaviour = action.data?.ConfirmDialogBehaviour;
+					
 					let vTokenSpotted = {};
 					
 					for (let i = 0; i < vSpotted.length; i++) {
 						vTokenSpotted[vSpotted[i].id] = true; //technically only tokens and tiles are required, but oh well
 					}
-					
 					let vInfos = {TokenSpotted : vTokenSpotted,
 								  sendingPlayer : args.userid,
-							      forceConfirmDialog : true};
+							      forceConfirmDialog : vConfirmDialogBehaviour == "force",
+								  skipConfirmDialog : vConfirmDialogBehaviour == "skip",
+								  sendingPlayer : game.user.id};
 							
 					SpottingManager.RequestSpotObjects(vSpotted, vSpotters, vInfos);
 				},

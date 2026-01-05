@@ -940,6 +940,14 @@
 					"settings" : {
 						"target" : {
 							"name"			: "Target"
+						},
+						"ConfirmDialogBehaviour" : {
+							"name"			: "Confirm dialog behaviour",
+							"options" : {
+								"world"		: "World setting",
+								"force"		: "Force dialog",
+								"skip"		: "Skip dialog"
+							}
 						}
 					}
 				},
