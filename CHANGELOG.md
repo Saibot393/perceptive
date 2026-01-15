@@ -1,3 +1,6 @@
+## v5.0.15
+- Added setting for spotting dialog behaviour of spot object MATT action
+
 ## v5.0.14
 - Fix for other skill DCs menu
 
