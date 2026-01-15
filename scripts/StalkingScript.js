@@ -25,8 +25,15 @@ class StalkingManager {
 			
 			let vScreenWidth = canvas.screenDimensions[0];
 			
-			if (!ui.sidebar._collapsed) {
-				vScreenWidth = vScreenWidth - ui.sidebar.position.width;
+			if (game.data.release.generation > 12) {
+				if (ui.sidebar.expanded) {
+					vScreenWidth = vScreenWidth - ui.sidebar.element.clientWidth;
+				}
+			}
+			else {
+				if (!ui.sidebar._collapsed) {
+					vScreenWidth = vScreenWidth - ui.sidebar.position.width;
+				}
 			}
 			
 			let vPanTarget = {x : pCenter[0], y : pCenter[1]}
