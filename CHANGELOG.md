@@ -1,3 +1,6 @@
+## v5.0.16
+- Fix for token following feature
+
 ## v5.0.15
 - Added setting for spotting dialog behaviour of spot object MATT action
 
