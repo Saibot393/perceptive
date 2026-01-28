@@ -1,3 +1,6 @@
+## v5.0.17
+- Several small bug fixes
+
 ## v5.0.16
 - Fix for token following feature
 
