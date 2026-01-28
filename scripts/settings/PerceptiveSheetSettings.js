@@ -303,7 +303,7 @@ class PerceptiveSheetSettings {
 	static async TileSheetSettings(pApp, pHTML, pData) {
 		if (game.user.isGM) {
 			if (!pHTML.querySelector(`a[data-tab="${cModuleName}"]`)) {
-				const vCreateTab = !pHTML.querySelector(`div[data-tab="${cModuleName}"]`);
+				const cCreateTab = !pHTML.querySelector(`div[data-tab="${cModuleName}"]`);
 				
 				if (game.settings.get(cModuleName, "ActivateSpotting") || game.settings.get(cModuleName, "ActivateVCs")) {
 					//add new tab
@@ -319,10 +319,10 @@ class PerceptiveSheetSettings {
 					let vTabContentHTML = fromHTML(`<div class="tab ${pApp.tabGroups?.sheet == cModuleName ? 'active' : ''} scrollable" ${game.release.generation <= 12 ? '' : 'data-group="sheet"'} data-tab="${cModuleName}"></div>`); //tab content sheet HTML
 					
 					vTabbar.append(vTabButtonHTML);
-					if (vCreateTab) vprevTab.after(vTabContentHTML);
+					if (cCreateTab) vprevTab.after(vTabContentHTML);
 				}
 				
-				if (vCreateTab) {
+				if (cCreateTab) {
 					if (game.settings.get(cModuleName, "ActivateSpotting")) {							
 						//Tile name for perceptive purposes (possible rideable synch)
 						PerceptiveSheetSettings.AddHTMLOption(pHTML, {vlabel : Translate("SheetSettings."+ cTilePerceptiveNameF +".name"), 
