@@ -1005,7 +1005,7 @@ class PerceptiveFlags {
 	
 	static async #setLightLevel (pObject, pContent) {
 		//sets content of APDCFlag (number)
-		if (pObject && !isNaN(pContent)) {
+		if (pObject?.actor && !isNaN(pContent)) {
 			await pObject.setFlag(cModuleName, cLightLevelF, pContent); 
 			
 			if (pObject.actor) {
