@@ -1,3 +1,6 @@
+## v5.0.18
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
+
 ## v5.0.17
 - Several small bug fixes
 
