@@ -940,6 +940,14 @@
 					"settings" : {
 						"target" : {
 							"name"			: "Cel"
+						},
+						"ConfirmDialogBehaviour" : {
+							"name"			: "Potwierdź zachowanie okna dialogowego",
+							"options" : {
+								"world"		: "Ustawienie świata",
+								"force"		: "Wymuś okno dialogowe",
+								"skip"		: "Pomiń okno dialogowe"
+							}
 						}
 					}
 				},
