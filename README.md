@@ -267,7 +267,7 @@ The module should be compatible with all game systems and most modules on Foundr
 
 ### Languages:
 
-The module contains an English, a German,  a Chinese (thanks to Thousand (_thousand@Discord)), a Japanese (thanks to [doumoku](https://github.com/doumoku)), and a Polish (thanks to [Lioheart](https://github.com/Lioheart)), a Portuguese Brazil (thanks to [Andersants](https://github.com/Andersants)), and an Italien (thanks to [GregoryWarn ](https://github.com/GregoryWarn)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
+The module contains an English, a German,  a Chinese (thanks to Thousand (_thousand@Discord)), a Japanese (thanks to [doumoku](https://github.com/doumoku)), and a Polish (thanks to [Lioheart](https://github.com/Lioheart)), a Portuguese Brazil (thanks to [Andersants](https://github.com/Andersants) and [Kharmans](https://github.com/Kharmans)), and an Italien (thanks to [GregoryWarn ](https://github.com/GregoryWarn)) translation. If you want additional languages to be supported [let me know](https://github.com/Saibot393/perceptive/issues).
 
 ---
 

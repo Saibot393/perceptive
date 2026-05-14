@@ -1,3 +1,6 @@
+## v5.0.19
+- Updated Portuguese Brazil translation (thanks to [Kharmans](https://github.com/Kharmans))
+
 ## v5.0.18
 - Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
 
