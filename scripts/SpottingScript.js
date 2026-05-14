@@ -206,7 +206,10 @@ class SpottingManager {
 		pToken.detectionFilter = undefined;
 
 		// Some tokens are always visible
+		if ( pToken.isPreview ) return true;
+		if ( pToken._preview?._previewType === "config" ) return false;
 		if ( pToken.controlled ) return true;
+		//if ( pToken.layer.active && pToken.document.visible && (ui.placeables?.isEntryVisible(pToken) === false) ) return false;
 		//or invisible
 		if (!PerceptiveFlags.canbeSpotted(pToken.document)) return false;
 
@@ -249,10 +252,11 @@ class SpottingManager {
 				return false;
 			}
 				
-			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active ) return true;
+			if ( canvas.effects.visionSources.get(pToken.sourceId)?.active || pToken.vision?.active ) return true;
 			const tolerance = Math.min(pToken.w, pToken.h) / 4;
 			//return canvas.effects.visibility.testVisibility(pToken.center, {tolerance, object: pToken});
-			return VisionUtils.simpletestVisibility(pToken.center, {tolerance, object: pToken});
+			return VisionUtils.simpletestVisibility({...pToken.center, elevation : pToken.document.elevation}, {tolerance, object: pToken});
+			//return canvas.visibility.testVisibility(pToken.document.getVisibilityTestPoints(), {tolerance: 0, object: pToken});
 		}
 
 		return false;

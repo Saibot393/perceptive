@@ -94,7 +94,7 @@ class VisionChannelsManager {
 			case "Token":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject, true);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
-				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
+				vInfos.InVision = VisionUtils.simpletestVisibility({...pObject.object?.center, elevation : pObject.elevation});
 				break;
 			case "Tile":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject);

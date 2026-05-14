@@ -353,62 +353,64 @@ class PeekingManager {
 
 //Hooks
 Hooks.once("init", function() {
-	/*
-	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pwall, pbounds) {if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)){return false} return pWrapped(pwall, pbounds)}, "MIXED");
-	}
-	else {
-		const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
-		
-		ClockwiseSweepPolygon.prototype._testWallInclusion = function (pwall, pbounds) {
-			if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)) {
-				return false;
-			}
-			
-			let vTokenCallBuffer = vOldTokenCall.bind(this);
-			
-			return vTokenCallBuffer(pwall, pbounds);
-		}
-	}
-	*/
-	vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
-		if (pWall && pCheck?.config?.source?.object && PeekingManager.IgnoreWall(pWall.document, pCheck.config.source.object.document)) {
-			return false;
-		}		
-	});
-});
-
-Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
-	if (game.user.isGM) {	
-		if (pchanges.hasOwnProperty("ds")) {
-			if (WallUtils.isOpened(pWall)) {
-				PeekingManager.onDoorOpen(pWall);
-			}
-			else {
-				PeekingManager.onDoorClose(pWall);
-			}
+	if (game.settings.get(cModuleName, "activateWallFeatures")) {
+		/*
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pwall, pbounds) {if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)){return false} return pWrapped(pwall, pbounds)}, "MIXED");
 		}
 		else {
-			if (!pinfos.PerceptiveChange) {
-				await PeekingManager.updateDoorPeekingWall(pWall);
+			const vOldTokenCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
+			
+			ClockwiseSweepPolygon.prototype._testWallInclusion = function (pwall, pbounds) {
+				if (pwall && this?.config?.source?.object && PeekingManager.IgnoreWall(pwall.document, this.config.source.object.document)) {
+					return false;
+				}
+				
+				let vTokenCallBuffer = vOldTokenCall.bind(this);
+				
+				return vTokenCallBuffer(pwall, pbounds);
 			}
 		}
-	}
-});
-
-Hooks.on("updateToken", (...args) => PeekingManager.OnTokenupdate(...args));
-
-Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
-	if (game.user.isGM) {
-		PeekingManager.onDeleteWall(pWall);
-	}
-});
-
-Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
-	if (PerceptiveUtils.KeyisDown("MousePeekLock")) {
-		PeekingManager.PeekDoor(pWall, PerceptiveUtils.selectedTokens());
+		*/
+		vWallInclusionFunctions.unshift(function(pWall, pBounds, pCheck) {
+			if (pWall && pCheck?.config?.source?.object && PeekingManager.IgnoreWall(pWall.document, pCheck.config.source.object.document)) {
+				return false;
+			}		
+		});
 		
-		return false;
+		Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
+			if (game.user.isGM) {	
+				if (pchanges.hasOwnProperty("ds")) {
+					if (WallUtils.isOpened(pWall)) {
+						PeekingManager.onDoorOpen(pWall);
+					}
+					else {
+						PeekingManager.onDoorClose(pWall);
+					}
+				}
+				else {
+					if (!pinfos.PerceptiveChange) {
+						await PeekingManager.updateDoorPeekingWall(pWall);
+					}
+				}
+			}
+		});
+
+		Hooks.on("updateToken", (...args) => PeekingManager.OnTokenupdate(...args));
+
+		Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
+			if (game.user.isGM) {
+				PeekingManager.onDeleteWall(pWall);
+			}
+		});
+
+		Hooks.on(cModuleName + "." + "DoorRClick", (pWall, pKeyInfos) => {
+			if (PerceptiveUtils.KeyisDown("MousePeekLock")) {
+				PeekingManager.PeekDoor(pWall, PerceptiveUtils.selectedTokens());
+				
+				return false;
+			}
+		});
 	}
 });
 

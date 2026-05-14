@@ -228,63 +228,65 @@ class DoorMovingManager {
 //hooks
 
 Hooks.once("init", function() {
-	//replace control visible to allow moved door controls to be visible as long as the replacement is visible
-	if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
-		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
-	}
-	else {
-		const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
-		
-		DoorControl.prototype.__defineGetter__("isVisible", function () {
-			if (DoorMovingManager.DControlProxyVisible(this)) {
-				return true;
-			}
-			
-			let vDControlCallBuffer = vOldDControlCall.bind(this);
-			
-			return vDControlCallBuffer();
-		});
-	}
-});
-
-Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
-	if (PerceptiveUtils.KeyisDown("MouseMoveDoorFast")) {
-		DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y, game.settings.get(cModuleName, "SpeedDoorMovefactor"));
-	}
-	else {
-		if (PerceptiveUtils.KeyisDown("MouseMoveDoor", true)) {
-			DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y);
+	if (game.settings.get(cModuleName, "activateWallFeatures")) {
+		//replace control visible to allow moved door controls to be visible as long as the replacement is visible
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
+			libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
 		}
-	}
-}); 
-
-Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
-	if (game.user.isGM) {
-		if (!pinfos.PerceptiveChange) {		
-			if (pchanges.hasOwnProperty("ds")) {
-				if (WallUtils.isOpened(pWall)) {
-					DoorMovingManager.onDoorOpen(pWall);
+		else {
+			const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
+			
+			DoorControl.prototype.__defineGetter__("isVisible", function () {
+				if (DoorMovingManager.DControlProxyVisible(this)) {
+					return true;
 				}
-				else {
-					await DoorMovingManager.onDoorClose(pWall);
-				}
+				
+				let vDControlCallBuffer = vOldDControlCall.bind(this);
+				
+				return vDControlCallBuffer();
+			});
+		}
+		
+		Hooks.on(cModuleName + "." + "DoorWheel", (pWall, pKeyInfos, pScrollInfos) => {
+			if (PerceptiveUtils.KeyisDown("MouseMoveDoorFast")) {
+				DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y, game.settings.get(cModuleName, "SpeedDoorMovefactor"));
 			}
 			else {
-				await DoorMovingManager.updateDoorMovementWall(pWall);
+				if (PerceptiveUtils.KeyisDown("MouseMoveDoor", true)) {
+					DoorMovingManager.RequestDoorMove(pWall, pScrollInfos.y);
+				}
 			}
-		}
-	}
-	
-	DoorMovingManager.placeDoorControl(pWall);
-});
+		}); 
 
-Hooks.on("preUpdateWall", async (pWall, pchanges, pinfos) => {
-	DoorMovingManager.onPreupdateWall(pWall, pchanges, pinfos)
-});
+		Hooks.on("updateWall", async (pWall, pchanges, pinfos) => {
+			if (game.user.isGM) {
+				if (!pinfos.PerceptiveChange) {		
+					if (pchanges.hasOwnProperty("ds")) {
+						if (WallUtils.isOpened(pWall)) {
+							DoorMovingManager.onDoorOpen(pWall);
+						}
+						else {
+							await DoorMovingManager.onDoorClose(pWall);
+						}
+					}
+					else {
+						await DoorMovingManager.updateDoorMovementWall(pWall);
+					}
+				}
+			}
+			
+			DoorMovingManager.placeDoorControl(pWall);
+		});
 
-Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
-	if (game.user.isGM) {
-		DoorMovingManager.onDeleteWall(pWall);
+		Hooks.on("preUpdateWall", async (pWall, pchanges, pinfos) => {
+			DoorMovingManager.onPreupdateWall(pWall, pchanges, pinfos)
+		});
+
+		Hooks.on("deleteWall", (pWall, pchanges, pinfos) => {
+			if (game.user.isGM) {
+				DoorMovingManager.onDeleteWall(pWall);
+			}
+		});
 	}
 });
 

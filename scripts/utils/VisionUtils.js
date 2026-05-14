@@ -157,7 +157,7 @@ class VisionUtils {
 				// Otherwise, test visibility against current sight polygons
 				//if ( canvas.effects.visionSources.get(vTokens[i].sourceId)?.active ) return true;
 				const tolerance = Math.min(vTokens[i].w, vTokens[i].h) / 4;
-				vinVision = VisionUtils.simpletestVisibility(vTokens[i].center, {tolerance, object: vTokens[i]});
+				vinVision = VisionUtils.simpletestVisibility({...vTokens[i].center, elevation : vTokens[i].document.elevation}, {tolerance, object: vTokens[i]});
 			}
 			
 			if (vinVision) {
@@ -439,7 +439,8 @@ class VisionUtils {
 		else {
 			const t = pInfos.tolerance;
 			const offsets = t > 0 ? [[0, 0], [-t, -t], [-t, t], [t, t], [t, -t], [-t, 0], [t, 0], [0, -t], [0, t]] : [[0, 0]];
-			points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+			//points = offsets.map(o => new PIXI.Point(ppoint.x + o[0], ppoint.y + o[1]));
+			points = offsets.map(o => {return {...ppoint, x : ppoint.x + o[0], y : ppoint.y + o[1]}});
 		}
 
 		if (PerceptiveCompUtils.isactiveModule(cLevels)) {
@@ -461,6 +462,8 @@ class VisionUtils {
 				else {
 					return canvas.effects.visibility.testVisibility(p, {tolerance : 0, object : {document : null}});
 				}
+				
+				[172080 - 172154]
 			});
 		}
 	}

@@ -102,6 +102,16 @@ Hooks.once("init", () => {  // game.settings.get(cModuleName, "")
 	requiresReload: true
   });  
   
+  game.settings.register(cModuleName, "activateWallFeatures", {
+	name: Translate("Settings.activateWallFeatures.name"),
+	hint: Translate("Settings.activateWallFeatures.descrp"),
+	scope: "world",
+	config: true,
+	type: Boolean,
+	default: true,
+	requiresReload: true
+  });  
+  
   //peeking
   game.settings.register(cModuleName, "Peekablebydefault", {
 	name: Translate("Settings.Peekablebydefault.name"),
