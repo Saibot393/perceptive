@@ -94,6 +94,7 @@ class VisionChannelsManager {
 			case "Token":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject, true);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
+				console.log(pObject.elevation);
 				vInfos.InVision = VisionUtils.simpletestVisibility({...pObject.object?.center, elevation : pObject.elevation});
 				break;
 			case "Tile":
@@ -239,17 +240,21 @@ Hooks.once("ready", function() {
 			
 			let vWallChannels = [];
 			
+			const cDocument = pWall.document || pWall;
+			const cObject = pWall.object || pWall;
+			
 			switch (pCheck?.config?.type) {
 				case "sight":
-					vWallChannels = PerceptiveFlags.getVCSight(pWall.document);
+					vWallChannels = PerceptiveFlags.getVCSight(cDocument);
 					break;
 				case "move":
-					vWallChannels = PerceptiveFlags.getVCMovement(pWall.document);
+					vWallChannels = PerceptiveFlags.getVCMovement(cDocument);
 					break;
 			}
+			console.log(vWallChannels);
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
-							TargetPoint : pWall.center,
+							TargetPoint : cObject.center,
 							WallCheck : true,
 							RangeList : vLocalVisionData.vRangeList,
 							logicalOR : vLocalVisionData.vRequiredOrBehaviour
@@ -262,7 +267,7 @@ Hooks.once("ready", function() {
 			if (CONFIG.debug.perceptive.VCScript) {
 				console.log(vInfos);
 			}
-
+			console.log(vChannel);
 			if (vChannel) {
 				return false;
 			}
