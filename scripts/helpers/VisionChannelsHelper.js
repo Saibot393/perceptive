@@ -56,7 +56,7 @@ class VisionChannelsWindow extends Application {
 	
 	//app stuff
 	static get defaultOptions() {
-		return mergeObject(super.defaultOptions, {
+		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: [cWindowID],
 			popOut: true,
 			width: 800,
@@ -225,7 +225,7 @@ class VisionChannelsWindow extends Application {
 		
 		let vAddButton = pHTML.find(`button[name="${cWindowID}.addchannel"]`);
 		
-		vAddButton.on("click", () => {	this.vChannels[randomID()] = {...CONFIG[cModuleName].DefaultVC};
+		vAddButton.on("click", () => {	this.vChannels[foundry.utils.randomID()] = {...CONFIG[cModuleName].DefaultVC};
 										this.render();});
 											
 		let vChannelEntries = pHTML.find(`tr`);
@@ -602,14 +602,15 @@ class VisionChannelsUtils {
 	//graphics
 	static async ApplyGraphics(pObject, pChannel) {
 		if (pObject) {
-			if (pObject instanceof Token) {	
+			const cToken = foundry.canvas.placeables?.Token || Token
+			if (pObject instanceof cToken) {	
 				let vFilter;
 				
 				switch (pChannel.EffectFilter) {
 					case "outline":
 					case "waves":
 					case "outline_waves":
-						vFilter = OutlineOverlayFilter.create({
+						vFilter = (foundry.canvas.rendering?.filters?.OutlineOverlayFilter || OutlineOverlayFilter).create({
 							outlineColor : Color.fromString(pChannel.EffectFilterColor).rgb.concat([1]),
 							thickness : [1, 1],
 							knockout : false, //anti aliasing
@@ -617,7 +618,7 @@ class VisionChannelsUtils {
 						});
 						break;
 					case "glow" :
-						vFilter = GlowOverlayFilter.create({
+						vFilter = (foundry.canvas.rendering?.filters?.GlowOverlayFilter || GlowOverlayFilter).create({
 							glowColor :  Color.fromString(pChannel.EffectFilterColor).rgb.concat([1])
 						});
 						break;
@@ -638,10 +639,11 @@ class VisionChannelsUtils {
 				}
 			}
 			
-			if (pObject instanceof Wall) {
-				if (Wall.door && !Wall.object?.doorControl) {
-					Wall.object.doorControl = canvas.controls.doors.addChild(new DoorControl(Wall.object));
-					Wall.object.doorControl.draw();
+			const cWall = foundry.canvas.placeables?.Wall || Wall
+			if (pObject instanceof cWall) {
+				if (cWall.door && !cWall.object?.doorControl) {
+					cWall.object.doorControl = canvas.controls.doors.addChild(new DoorControl(cWall.object));
+					cWall.object.doorControl.draw();
 				}
 			}
 			
@@ -827,7 +829,7 @@ class VisionChannelsUtils {
 		let vID = pID;
 		
 		if (!vID.length) {
-			vID = randomID();
+			vID = foundry.utils.randomID();
 		}
 		
 		vChannels[vID] = pChannel;
