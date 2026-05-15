@@ -3,7 +3,7 @@ import {cModuleName} from "../utils/PerceptiveUtils.js";
 import {WallUtils} from "../utils/WallUtils.js";
 
 //hooks
-Hooks.once("init", function() {
+Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "activateWallFeatures")) {
 		Hooks.on("deactivateWallsLayer", () => {
 			//make Perceptive Walls invisble

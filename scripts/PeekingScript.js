@@ -352,7 +352,7 @@ class PeekingManager {
 }
 
 //Hooks
-Hooks.once("init", function() {
+Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "activateWallFeatures")) {
 		/*
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {

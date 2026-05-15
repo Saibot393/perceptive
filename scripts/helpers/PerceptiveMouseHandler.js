@@ -65,9 +65,11 @@ class PerceptiveMouseHandler {
 		else {
 		*/
 		if (FCore.Fversion() > 10) {
-			const vOldDoorCall = DoorControl.prototype.onclick;
+			const cDoorControl = (foundry.canvas.containers?.DoorControl || DoorControl);
 			
-			DoorControl.prototype.onclick = async function (pEvent) {
+			const vOldDoorCall = cDoorControl.prototype.onclick;
+			
+			cDoorControl.prototype.onclick = async function (pEvent) {
 				if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
 					if (vOldDoorCall) {
 						let vDoorCallBuffer = vOldDoorCall.bind(this);
@@ -76,9 +78,9 @@ class PerceptiveMouseHandler {
 				}
 			}		
 
-			const vOldDoorCallMD = DoorControl.prototype.onmousedown;
+			const vOldDoorCallMD = cDoorControl.prototype.onmousedown;
 			
-			DoorControl.prototype.onmousedown = async function (pEvent) {
+			cDoorControl.prototype.onmousedown = async function (pEvent) {
 				if (await PerceptiveMouseHandler.onDoorLeftClick(pEvent, this.wall)) {
 					if (vOldDoorCallMD) {
 						let vDoorCallBuffer = vOldDoorCallMD.bind(this);
@@ -114,9 +116,9 @@ class PerceptiveMouseHandler {
 			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", async function(vWrapped, ...args) {if (await PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
 		}
 		else {
-			const vOldDoorCall = DoorControl.prototype._onRightDown;
+			const vOldDoorCall = (foundry.canvas.containers?.DoorControl || DoorControl).prototype._onRightDown;
 			
-			DoorControl.prototype._onRightDown = async function (pEvent) {
+			(foundry.canvas.containers?.DoorControl || DoorControl).prototype._onRightDown = async function (pEvent) {
 				if (await PerceptiveMouseHandler.onDoorRightClick(pEvent, this.wall)) {
 				
 					let vDoorCallBuffer = vOldDoorCall.bind(this);
@@ -131,9 +133,9 @@ class PerceptiveMouseHandler {
 			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
 		}
 		else {
-			const vOldDoorCall = DoorControl.prototype.onwheel;
+			const vOldDoorCall = (foundry.canvas.containers?.DoorControl || DoorControl).prototype.onwheel;
 			
-			DoorControl.prototype.onwheel = function (pEvent) {
+			(foundry.canvas.containers?.DoorControl || DoorControl).prototype.onwheel = function (pEvent) {
 				PerceptiveMouseHandler.onDoorWheel(pEvent, this.wall);
 				
 				if (vOldDoorCall) {

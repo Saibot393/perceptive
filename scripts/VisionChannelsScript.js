@@ -99,7 +99,7 @@ class VisionChannelsManager {
 			case "Tile":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
-				vInfos.InVision = VisionUtils.simpletestVisibility(pObject.object?.center);
+				vInfos.InVision = VisionUtils.simpletestVisibility({...pObject.object?.center, elevation : pObject.elevation});
 				break;
 			case "Wall":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject);

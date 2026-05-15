@@ -63,9 +63,9 @@ Hooks.once("ready", function() {
 																											return pWrapped(args)}, "MIXED");
 		}
 		else {
-			const vOldTileCall = Tile.prototype.__lookupGetter__("isVisible");
+			const vOldTileCall = (foundry.canvas.placeables?.Tile || Tile).prototype.__lookupGetter__("isVisible");
 
-			Tile.prototype.__defineGetter__("isVisible", function () {
+			(foundry.canvas.placeables?.Tile || Tile).prototype.__defineGetter__("isVisible", function () {
 				let vBuffer;
 				
 				for (let i = 0; i < vTileVisionFunctions.length; i++) {
@@ -109,9 +109,9 @@ Hooks.once("ready", function() {
 																										return pWrapped(args)}, "MIXED");
 	}
 	else {
-		const vOldDControlCall = DoorControl.prototype.__lookupGetter__("isVisible");
+		const vOldDControlCall = (foundry.canvas.containers?.DoorControl || DoorControl).prototype.__lookupGetter__("isVisible");
 
-		DoorControl.prototype.__defineGetter__("isVisible", function () {
+		(foundry.canvas.containers?.DoorControl || DoorControl).prototype.__defineGetter__("isVisible", function () {
 			let vBuffer;
 			
 			for (let i = 0; i < vDCVisionFunctions.length; i++) {
@@ -175,9 +175,9 @@ Hooks.once("ready", function() {
 																																		return pWrapped(pEdge, pEdgeType, pBounds)}, "MIXED");
 		}
 		else {
-			const vOldWallCall = ClockwiseSweepPolygon.prototype._testEdgeInclusion;
+			const vOldWallCall = (foundry.canvas.geometry?.ClockwiseSweepPolygon || ClockwiseSweepPolygon).prototype._testEdgeInclusion;
 			
-			ClockwiseSweepPolygon.prototype._testEdgeInclusion = function (pEdge, pEdgeType, pBounds) {
+			(foundry.canvas.geometry?.ClockwiseSweepPolygon || ClockwiseSweepPolygon).prototype._testEdgeInclusion = function (pEdge, pEdgeType, pBounds) {
 				if (pEdge.object) {
 					let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
 					

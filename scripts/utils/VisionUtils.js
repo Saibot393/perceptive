@@ -197,7 +197,7 @@ class VisionUtils {
 					tolerance = Math.min(vTiles[i].width, vTiles[i].height) / 4;
 				}
 				
-				vinVision = VisionUtils.simpletestVisibility(vTiles[i].center, {tolerance, object: vTiles[i]});
+				vinVision = VisionUtils.simpletestVisibility({...vTiles[i].center, elevation : vTiles[i].document.elevation}, {tolerance, object: vTiles[i]});
 			}
 			
 			if (vinVision) {

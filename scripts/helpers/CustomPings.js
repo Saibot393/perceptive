@@ -10,7 +10,7 @@ const cDefaultoptions = {
 }
 
 //based on Foundry VTTs chevron ping
-class CustomPing extends Ping {
+class CustomPing extends (foundry.canvas.interaction?.Ping || Ping) {
   constructor(origin, options={}) {
 	let vOptions = foundry.utils.mergeObject(CONFIG.Canvas.pings.styles.CustomPing.default, options, {inplace : false});
 	  

@@ -323,7 +323,7 @@ class SpottingManager {
 				tolerance = Math.min(pTile.width, pTile.height) / 4;
 			}
 			
-			return VisionUtils.simpletestVisibility(pTile.center, {tolerance, object: pTile});
+			return VisionUtils.simpletestVisibility({...pTile.center, elevation : pTile.document.elevation}, {tolerance, object: pTile});
 			//return true;
 		}
 
