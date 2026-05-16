@@ -98,6 +98,11 @@
 				"descrp"				: "Maximum distance over which players can interact with objects (-1 for unlimited)"
 			},
 			
+			"activateWallFeatures" : {
+				"name"					: "Activate wall features",
+				"descrp"				: "Activate the door peeking and the door moving feature"
+			},
+			
 			"UseArmsreachDistance" : {
 				"name"					: "Use Arms Reach distance",
 				"descrp"				: "Use the Arms Reach distance for the maximum interaction distance"

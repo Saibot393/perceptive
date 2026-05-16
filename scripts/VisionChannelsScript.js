@@ -186,7 +186,7 @@ Hooks.once("ready", function() {
 			
 			let vInfos =  {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 							TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-							InVision : VisionUtils.simpletestVisibility(pObject.center, {object : pObject}),
+							InVision : VisionUtils.simpletestVisibility({...pObject.center, elevation : pObject.document.elevation}, {object : pObject}),
 							RangeList : vLocalVisionData.vRangeList,
 							logicalOR : vLocalVisionData.vRequiredOrBehaviour
 						};
@@ -214,7 +214,7 @@ Hooks.once("ready", function() {
 			if (vEmitterVCs.length) {
 				let vInfos = {	SourcePoints : VisionChannelsManager.CurrentSourcePoints(),
 								TargetPoint : VisionChannelsManager.VisionPoint(pObject),
-								InVision : VisionUtils.simpletestVisibility(pObject.center, {object : pObject}),
+								InVision : VisionUtils.simpletestVisibility({...pObject.center, elevation : pObject.document.elevation}, {object : pObject}),
 								RangeList : vLocalVisionData.vRangeList,
 								logicalOR : vLocalVisionData.vRequiredOrBehaviour
 							};

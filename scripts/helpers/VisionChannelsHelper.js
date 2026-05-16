@@ -430,7 +430,7 @@ class VisionChannelsUtils {
 				//check if see through walls is necessary for vision
 				if (pVCInfos.logicalOR) {
 					if (!vCommons.find(vChannelID => vChannels[vChannelID].SeethroughWalls && (!vrequirednotReceived || vChannels[vChannelID].RequiredtoSee))) {
-						//none of the necessary common channels cen see through Wall
+						//none of the necessary common channels can see through Wall
 						pVCInfos.Report.Reason = "noRequiredVCSeethroughWall";
 						return false;
 					}
@@ -570,7 +570,7 @@ class VisionChannelsUtils {
 						}
 						
 						if (vInRange) {
-								//range check succesful
+								//range check successful
 								pVCInfos.Report.Reason = "RangedVC";
 								
 								if (pVCInfos.returnasID) {

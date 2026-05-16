@@ -98,6 +98,11 @@
 				"descrp"				: "Maximale Distanz über welche Spieler mit Türen interagieren können (-1 für unbeschränkt)"
 			},
 			
+			"activateWallFeatures" : {
+				"name"					: "Wand Funktionen aktivieren",
+				"descrp"				: "Aktiviert Schloss durchschauen und Türbewegungs Funktionen"
+			},
+			
 			"UseArmsreachDistance" : {
 				"name"					: "Nutze Arms Reach Distanz",
 				"descrp"				: "Nutze die Arms Reach distance für die maximale Interaktionsdistanz"

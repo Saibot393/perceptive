@@ -38,7 +38,7 @@ Hooks.once("ready", function() {
 		});
 
 		Hooks.on("canvasReady", async (pCanvas) => { //precreate walls to prevent lag bugs
-			if (game.user == game.users.find(user => user.isGM && user.active)) {
+			if (game.user.isGM) {
 				let vWalls = pCanvas.walls.placeables.map(vWall => vWall?.document);
 				
 				vWalls = vWalls.filter(vWall => vWall);
@@ -62,5 +62,18 @@ Hooks.once("ready", function() {
 				}
 			}
 		})
+	}
+	else {
+		Hooks.on("canvasReady", async (pCanvas) => { //precreate walls to prevent lag bugs
+			if (game.user.isGM) {
+				let vWalls = pCanvas.walls.placeables.map(vWall => vWall?.document);
+				
+				for (let vWall of vWalls) {
+					if (PerceptiveFlags.isPerceptiveWall(vWall)) {
+						await WallUtils.deletewall(vWall);
+					}
+				}
+			}
+		})	
 	}
 })
