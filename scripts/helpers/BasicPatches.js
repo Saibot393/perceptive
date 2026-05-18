@@ -95,7 +95,7 @@ Hooks.once("ready", function() {
 		});
 	}
 	
-	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+	if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
 		const cPath = (foundry.canvas.containers?.DoorControl ? "foundry.canvas.containers.DoorControl" : "DoorControl" ) + ".prototype.isVisible";
 		libWrapper.register(cModuleName, cPath, function(pWrapped, ...args) {
 																										let vBuffer;
@@ -198,7 +198,8 @@ Hooks.once("ready", function() {
 	}
 	else {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testWallInclusion", function(pWrapped, pWall, pBounds) {
+			const cPath = (foundry.canvas.geometry?.ClockwiseSweepPolygon ? "foundry.canvas.geometry.ClockwiseSweepPolygon" : "ClockwiseSweepPolygon" ) + ".prototype._testWallInclusion";
+			libWrapper.register(cModuleName, cPath, function(pWrapped, pWall, pBounds) {
 																																		let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
 																															
 																																		if (vBuffer != undefined) {
@@ -208,9 +209,9 @@ Hooks.once("ready", function() {
 																																		return pWrapped(pWall, pBounds)}, "MIXED");
 		}
 		else {
-			const vOldWallCall = ClockwiseSweepPolygon.prototype._testWallInclusion;
+			const vOldWallCall = (foundry.canvas.geometry?.ClockwiseSweepPolygon || ClockwiseSweepPolygon).prototype._testWallInclusion;
 			
-			ClockwiseSweepPolygon.prototype._testWallInclusion = function (pWall, pBounds) {
+			(foundry.canvas.geometry?.ClockwiseSweepPolygon || ClockwiseSweepPolygon).prototype._testWallInclusion = function (pWall, pBounds) {
 				let vBuffer = PatchSupport.WallInclusion(pWall, pBounds, this);
 				
 				if (vBuffer != undefined) {

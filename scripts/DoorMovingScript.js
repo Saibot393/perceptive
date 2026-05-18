@@ -230,7 +230,7 @@ class DoorMovingManager {
 Hooks.once("ready", function() {
 	if (game.settings.get(cModuleName, "activateWallFeatures")) {
 		//replace control visible to allow moved door controls to be visible as long as the replacement is visible
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false) {
 			const cPath = (foundry.canvas.containers?.DoorControl ? "foundry.canvas.containers.DoorControl" : "DoorControl" ) + ".prototype.isVisible";
 			console.log(cPath);
 			libWrapper.register(cModuleName, cPath, function(vWrapped, ...args) {if (DoorMovingManager.DControlProxyVisible(this)){return true} return vWrapped(args)}, "MIXED");
