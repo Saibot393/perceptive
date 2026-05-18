@@ -113,7 +113,8 @@ class PerceptiveMouseHandler {
 	static async RegisterDoorRightClick() {
 		//register onDoorRightClick (if possible with lib-wrapper)
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "DoorControl.prototype._onRightDown", async function(vWrapped, ...args) {if (await PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
+			const cPath = (foundry.canvas.containers?.DoorControl ? "foundry.canvas.containers.DoorControl" : "DoorControl" ) + ".prototype._onRightDown";
+			libWrapper.register(cModuleName, cPath, async function(vWrapped, ...args) {if (await PerceptiveMouseHandler.onDoorRightClick(...args, this.wall)) {return vWrapped(...args)}}, "MIXED");
 		}
 		else {
 			const vOldDoorCall = (foundry.canvas.containers?.DoorControl || DoorControl).prototype._onRightDown;
@@ -129,8 +130,9 @@ class PerceptiveMouseHandler {
 	} 
 	
 	static RegisterDoorWheel() {
-		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) && false /*strange bug, turn off for now*/) {
-			libWrapper.register(cModuleName, "DoorControl.prototype.onwheel", function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper) /*strange bug, turn off for now*/) {
+			const cPath = (foundry.canvas.containers?.DoorControl ? "foundry.canvas.containers.DoorControl" : "DoorControl" ) + ".prototype.onwheel";
+			libWrapper.register(cModuleName, cPath, function(vWrapped, ...args) {PerceptiveMouseHandler.onDoorWheel(...args, this.wall); return vWrapped(...args)}, "WRAPPER");
 		}
 		else {
 			const vOldDoorCall = (foundry.canvas.containers?.DoorControl || DoorControl).prototype.onwheel;

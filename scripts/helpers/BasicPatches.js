@@ -49,7 +49,8 @@ class PatchSupport {
 Hooks.once("ready", function() {
 	if (game.release.generation >= 12) {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "Tile.prototype.isVisible", function(pWrapped, ...args) {
+			const cPath = (foundry.canvas.placeables?.Tile ? "foundry.canvas.placeables.Tile" : "Tile" ) + ".prototype.isVisible";
+			libWrapper.register(cModuleName, cPath, function(pWrapped, ...args) {
 																											let vBuffer;
 																											
 																											for (let i = 0; i < vTileVisionFunctions.length; i++) {
@@ -95,7 +96,8 @@ Hooks.once("ready", function() {
 	}
 	
 	if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-		libWrapper.register(cModuleName, "DoorControl.prototype.isVisible", function(pWrapped, ...args) {
+		const cPath = (foundry.canvas.containers?.DoorControl ? "foundry.canvas.containers.DoorControl" : "DoorControl" ) + ".prototype.isVisible";
+		libWrapper.register(cModuleName, cPath, function(pWrapped, ...args) {
 																										let vBuffer;
 																										
 																										for (let i = 0; i < vDCVisionFunctions.length; i++) {
@@ -163,7 +165,8 @@ Hooks.once("ready", function() {
 	
 	if (game.release.generation >= 12) {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
-			libWrapper.register(cModuleName, "ClockwiseSweepPolygon.prototype._testEdgeInclusion", function(pWrapped, pEdge, pEdgeType, pBounds) {
+			const cPath = (foundry.canvas.geometry?.ClockwiseSweepPolygon ? "foundry.canvas.geometry.ClockwiseSweepPolygon" : "ClockwiseSweepPolygon" ) + ".prototype._testEdgeInclusion";
+			libWrapper.register(cModuleName, cPath, function(pWrapped, pEdge, pEdgeType, pBounds) {
 																																		if (pEdge.object) {
 																																			let vBuffer = PatchSupport.WallInclusion(pEdge.object, pBounds, this);
 																																
