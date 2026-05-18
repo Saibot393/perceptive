@@ -1,3 +1,6 @@
+## v6.0.1
+- Compatibility fix for libwrapper in v14
+
 ## v6.0.0
 - v14 update
 - Added setting "Activate wall features" to deactivate door moving and lock peeking completely
