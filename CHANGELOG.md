@@ -1,3 +1,5 @@
+- Updated Portuguese Brazil translation (thanks to [Kharmans](https://github.com/Kharmans))
+
 ## v6.0.1
 - Compatibility fix for libwrapper in v14
 
