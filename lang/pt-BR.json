@@ -97,6 +97,11 @@
 				"name"					: "Distância Máxima de Interação",
 				"descrp"				: "Distância máxima na qual os jogadores podem interagir com objetos (-1 para ilimitada)."
 			},
+
+			"activateWallFeatures" : {
+				"name"					: "Ativar Recursos de Parede",
+				"descrp"				: "Ativa a função de espiar e movimentar a porta."
+			},
 			
 			"UseArmsreachDistance" : {
 				"name"					: "Use Alcance dos Braços",
