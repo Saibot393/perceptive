@@ -610,7 +610,7 @@
 			},
 
 			"InvertIgnoreRollKey" : {
-				"name" 					: "Inverter tecla \"Ignorar Rolagem\"",
+				"name" 					: "Inverter Tecla \"Ignorar Rolagem\"",
 				"descrp" 				: "Se rolagens só devem ser reconhecidos QUANDO a tecla configurada for pressionada."
 			},
 			
