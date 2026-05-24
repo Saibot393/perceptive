@@ -1,3 +1,5 @@
+## v6.0.2
+- Updated Polish translation (thanks to [Lioheart](https://github.com/Lioheart))
 - Updated Portuguese Brazil translation (thanks to [Kharmans](https://github.com/Kharmans))
 
 ## v6.0.1
