@@ -98,6 +98,11 @@
 				"descrp"				: "Maksymalna odległość, na jaką gracze mogą wchodzić w interakcje z obiektami (-1 dla nieograniczonej)"
 			},
 			
+			"activateWallFeatures" : {
+				"name"					: "Włącz funkcje ścian",
+				"descrp"				: "Włącz funkcję podglądu i otwierania drzwi"
+			},
+			
 			"UseArmsreachDistance" : {
 				"name"					: "Użyj odległości Arms Reach",
 				"descrp"				: "Użyj odległości Arms Reach dla maksymalnej odległości interakcji"
