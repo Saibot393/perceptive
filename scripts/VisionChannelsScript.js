@@ -94,7 +94,6 @@ class VisionChannelsManager {
 			case "Token":
 				vEmitters = PerceptiveFlags.getVCEmitters(pObject, true);
 				vInfos.TargetPoint = VisionChannelsManager.VisionPoint(pObject.object);
-				console.log(pObject.elevation);
 				vInfos.InVision = VisionUtils.simpletestVisibility({...pObject.object?.center, elevation : pObject.elevation});
 				break;
 			case "Tile":
@@ -166,8 +165,6 @@ Hooks.once("ready", function() {
 						};
 						
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.wall.document), vLocalVisionData.vReceiverChannels, vInfos);
-			
-			//console.log(vInfos);
 																																					
 			if (vChannel) {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -192,8 +189,6 @@ Hooks.once("ready", function() {
 						};
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels, vInfos);
-			
-			//console.log(vInfos, PerceptiveFlags.getVCEmitters(pObject.document, true), vLocalVisionData.vReceiverChannels);
 			
 			if (vChannel) {
 				VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -220,8 +215,6 @@ Hooks.once("ready", function() {
 							};
 
 				let vChannel = VisionChannelsUtils.isVCvisible(PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels, vInfos);
-				
-				//console.log(vInfos, PerceptiveFlags.getVCEmitters(pObject.document), vLocalVisionData.vReceiverChannels);
 				
 				if (vChannel) {
 					VisionChannelsUtils.ApplyGraphics(pObject, vChannel);
@@ -251,7 +244,6 @@ Hooks.once("ready", function() {
 					vWallChannels = PerceptiveFlags.getVCMovement(cDocument);
 					break;
 			}
-			console.log(vWallChannels);
 			
 			let vInfos = {	SourcePoints : canvas.tokens.controlled.map(vToken => vToken.center),
 							TargetPoint : cObject.center,
@@ -262,12 +254,10 @@ Hooks.once("ready", function() {
 			
 			let vChannel = VisionChannelsUtils.isVCvisible(vWallChannels, vLocalVisionData.vReceiverChannels, vInfos);
 			
-			//console.log(vInfos);
-			
 			if (CONFIG.debug.perceptive.VCScript) {
 				console.log(vInfos);
 			}
-			console.log(vChannel);
+
 			if (vChannel) {
 				return false;
 			}
