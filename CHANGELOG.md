@@ -1,3 +1,6 @@
+## v6.0.4
+- Bug fix for spotting messages
+
 ## v6.0.3
 - Some code clean up, less spam in the console for vision channels
 
