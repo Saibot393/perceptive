@@ -1516,7 +1516,7 @@ class SpottingManager {
 		if (vPingIgnoreVisionCycles <= 0) {
 			for (let i = 0; i < pObjects.length; i++) {
 				if (PerceptiveFlags.hasSpottingMessage(pObjects[i])) {
-					ChatMessage.create({user: game.user.id, flavor : PerceptiveFlags.SpottingMessage(pObjects[i]), type : 5, whisper : [game.user.id]}); //CHAT MESSAGE
+					ChatMessage.create({user: game.user.id, flavor : PerceptiveFlags.SpottingMessage(pObjects[i]), whisper : [game.user.id]}); //CHAT MESSAGE
 				}
 			}
 		}
