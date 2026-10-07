@@ -1,4 +1,4 @@
-import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit, cMWE, cPuzzleLocks } from "./PerceptiveCompUtils.js";
+import { PerceptiveCompUtils, cLocknKey, cLibWrapper, cArmReach, cWallHeight, cLockTypeDoor, cStealthy, cLevels, cZnPOptions, cMATT, cATV, cMATTTriggerTileF, cMATTTriggerConditionsF, cTConditions, cTTypes, cTTNewlySpotted, cEpicRolls, cMassEdit, cMWE, cPuzzleLocks, cWAVES } from "./PerceptiveCompUtils.js";
 import {cModuleName, Translate, TranslateandReplace} from "../utils/PerceptiveUtils.js";
 import {RequestPeekDoor, PeekingIgnoreWall} from "../PeekingScript.js";
 import {PerceptiveFlags} from "../helpers/PerceptiveFlags.js";
@@ -331,6 +331,12 @@ Hooks.once("init", () => {
 	if (PerceptiveCompUtils.isactiveModule(cMWE)) {
 		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
 			libWrapper.ignore_conflicts(cModuleName, cMWE, "ClockwiseSweepPolygon.prototype._testEdgeInclusion");
+		}
+	}
+	
+	if (PerceptiveCompUtils.isactiveModule(cWAVES)) {
+		if (PerceptiveCompUtils.isactiveModule(cLibWrapper)) {
+			libWrapper.ignore_conflicts(cModuleName, cWAVES, "foundry.canvas.geometry.ClockwiseSweepPolygon.prototype._testEdgeInclusion");
 		}
 	}
 	
