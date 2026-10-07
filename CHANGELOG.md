@@ -1,3 +1,6 @@
+## v6.0.9
+- Compatibility fix for WAVES module
+
 ## v6.0.8
 - Small ui compatibility fix
 
